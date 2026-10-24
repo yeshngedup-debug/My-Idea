@@ -141,6 +141,21 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
   const { supabase, error } = await requireAdmin();
   if (error) return { ok: false, message: error };
 
+  // Never confirm a payment without proof
+  const { data: order } = await supabase
+    .from('shortlist_orders')
+    .select('screenshot_path')
+    .eq('id', orderId)
+    .single();
+
+  if (!order) return { ok: false, message: 'Order not found.' };
+  if (!order.screenshot_path) {
+    return {
+      ok: false,
+      message: 'Cannot confirm yet: the founder has not uploaded a payment screenshot.',
+    };
+  }
+
   const { error: dbError } = await supabase
     .from('shortlist_orders')
     .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })

@@ -5,6 +5,7 @@
  * and shortlist generation for a founder/project.
  */
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 
 export interface AdminResult {
@@ -106,16 +107,12 @@ export async function generateShortlist(
     (a, b) => (a.rank ?? 9999) - (b.rank ?? 9999)
   );
 
-  // Fresh CV links (1 hour)
-  const cvLinks = new Map<string, string>();
-  for (const row of ordered) {
-    if (row.cv_path) {
-      const { data: signed } = await supabase.storage
-        .from('cvs')
-        .createSignedUrl(row.cv_path, 60 * 60);
-      if (signed?.signedUrl) cvLinks.set(row.id, signed.signedUrl);
-    }
-  }
+  // CV links via the /api/cv/[id] proxy — never expire, unlike signed URLs.
+  const headerList = await headers();
+  const proto = headerList.get('x-forwarded-proto') ?? 'http';
+  const host = headerList.get('host') ?? 'localhost:3000';
+  const origin = `${proto}://${host}`;
+  const cvLinkFor = (row: Row) => (row.cv_path ? `${origin}/api/cv/${row.id}` : '-');
 
   // Context: founder name, project title
   const { data: founder } = await supabase
@@ -158,17 +155,23 @@ export async function generateShortlist(
       `   Skills: ${(s.skills ?? []).join(', ') || 'None listed'}`,
       `   Availability: ${s.availability ? (AVAILABILITY[s.availability] ?? s.availability) : '-'}`,
       `   Contact: ${s.contact_email ?? '-'}`,
-      `   CV: ${cvLinks.get(s.id) ?? '-'}`,
+      `   CV: ${cvLinkFor(s)}`,
       ''
     );
   });
 
-  // Persist: regenerate replaces this founder's previous shortlist entries
-  const { error: delError } = await supabase
+  // Persist: replace this founder's entries for the SAME project only, so
+  // regenerating one project never wipes another project's shortlist.
+  let staleRows = supabase
     .from('shortlists')
     .delete()
     .eq('founder_id', founderId)
     .in('student_id', ordered.map((s) => s.id));
+  staleRows = projectId
+    ? staleRows.eq('project_id', projectId)
+    : staleRows.is('project_id', null);
+
+  const { error: delError } = await staleRows;
 
   if (delError) return { ok: false, message: `Failed to update shortlist: ${delError.message}` };
 

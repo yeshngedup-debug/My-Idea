@@ -94,15 +94,16 @@ export async function uploadCv(formData: FormData): Promise<SaveResult> {
 
   if (uploadError) return { ok: false, message: `Upload failed: ${uploadError.message}` };
 
-  const { data } = await supabase.storage.from('cvs').createSignedUrl(path, 60 * 60);
-
+  // Store only the storage path — signed URLs expire (1 hour), so they must
+  // never be persisted. CVs are opened via the /api/cv/[id] proxy, which
+  // creates a fresh signed URL on demand.
   const { error: dbError } = await supabase
     .from('student_profiles')
     .upsert(
       {
         id: user.id,
         cv_path: path,
-        cv_url: data?.signedUrl ?? null,
+        cv_url: null, // legacy column, deliberately kept empty
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'id' }

@@ -34,6 +34,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
   const [items, setItems] = useState(orders);
   const [, startTransition] = useTransition();
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   function update(id: string, action: 'confirm' | 'reject') {
     setBusyId(id);
@@ -48,6 +49,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
           )
         );
       }
+      setStatus({ ok: res.ok, msg: res.message });
       setBusyId(null);
     });
   }
@@ -64,7 +66,23 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
   }
 
   return (
-    <ul className="space-y-3">
+    <div className="space-y-4">
+      {/* Action result */}
+      {status && (
+        <p
+          role="status"
+          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
+            status.ok
+              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
+              : 'bg-red-400/10 border-red-400/30 text-red-300'
+          }`}
+        >
+          {status.ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+          {status.msg}
+        </p>
+      )}
+
+      <ul className="space-y-3">
       {items.map((o) => {
         const badge = STATUS_BADGE[o.status] ?? STATUS_BADGE.pending;
         const actionable = o.status === 'submitted' || o.status === 'pending';
@@ -109,7 +127,8 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  disabled={busyId === o.id}
+                  disabled={busyId === o.id || !o.screenshot_path}
+                  title={o.screenshot_path ? undefined : 'No payment screenshot uploaded yet'}
                   onClick={() => update(o.id, 'confirm')}
                   className="flex-1 inline-flex justify-center items-center gap-1.5 rounded-xl bg-emerald-400/10 border border-emerald-400/30 px-4 py-2.5 text-sm font-bold text-emerald-300 hover:bg-emerald-400/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 >
@@ -129,6 +148,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
           </li>
         );
       })}
-    </ul>
+      </ul>
+    </div>
   );
 }

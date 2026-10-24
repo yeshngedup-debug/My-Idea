@@ -41,7 +41,7 @@ export async function signup(formData: FormData) {
 
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -54,6 +54,13 @@ export async function signup(formData: FormData) {
 
   if (error) {
     redirect('/signup?error=exists');
+  }
+
+  // Email confirmation disabled in Supabase: a session comes back
+  // immediately — go straight to the dashboard instead of a dead
+  // "check your email" step.
+  if (data.session) {
+    redirect(await dashboardPathForCurrentUser(supabase));
   }
 
   // Profile row is created automatically by the on_auth_user_created trigger.

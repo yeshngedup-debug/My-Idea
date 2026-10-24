@@ -6,7 +6,7 @@
  */
 import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { Search, GraduationCap, CheckCircle2, Star } from 'lucide-react';
+import { Search, GraduationCap, CheckCircle2, XCircle, Star } from 'lucide-react';
 import { requestShortlist } from '@/app/actions/shortlist';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -50,6 +50,7 @@ export function BrowseClient({
   const [availability, setAvailability] = useState('');
   const [shortlisted, setShortlisted] = useState<Set<string>>(new Set(shortlistedIds));
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [, startTransition] = useTransition();
 
   const filtered = useMemo(() => {
@@ -71,6 +72,7 @@ export function BrowseClient({
       if (res.ok) {
         setShortlisted((prev) => new Set(prev).add(id));
       }
+      setStatus({ ok: res.ok, msg: res.message });
       setPendingId(null);
     });
   }
@@ -113,6 +115,21 @@ export function BrowseClient({
         {filtered.length} {filtered.length === 1 ? 'student' : 'students'}
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
+
+      {/* Shortlist request result */}
+      {status && (
+        <p
+          role="status"
+          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
+            status.ok
+              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
+              : 'bg-red-400/10 border-red-400/30 text-red-300'
+          }`}
+        >
+          {status.ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+          {status.msg}
+        </p>
+      )}
 
       {/* Cards */}
       {filtered.length === 0 ? (

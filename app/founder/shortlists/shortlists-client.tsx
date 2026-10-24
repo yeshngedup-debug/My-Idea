@@ -74,7 +74,11 @@ export function ShortlistsClient({
   students: ShortlistStudent[];
   projects: { id: string; title: string }[];
 }) {
+  // Any confirmed order reveals the unlocked shortlist section (rows are
+  // filtered per-project server-side). Only a general order (no project)
+  // permanently closes the purchase flow.
   const isUnlocked = orders.some((o) => o.status === 'confirmed');
+  const generalUnlocked = orders.some((o) => o.status === 'confirmed' && !o.project_id);
 
   const [step, setStep] = useState<'closed' | 'package' | 'pay'>(isUnlocked ? 'closed' : 'package');
   const [chosenPackage, setChosenPackage] = useState<PackageId | null>(null);
@@ -136,7 +140,7 @@ export function ShortlistsClient({
       )}
 
       {/* Get Shortlist CTA */}
-      {!isUnlocked && step === 'closed' && (
+      {!generalUnlocked && step === 'closed' && (
         <Button
           type="button"
           onClick={() => setStep('package')}
@@ -147,7 +151,7 @@ export function ShortlistsClient({
       )}
 
       {/* Package selection */}
-      {!isUnlocked && step === 'package' && (
+      {!generalUnlocked && step === 'package' && (
         <section className="space-y-3">
           <h2 className="text-lg font-extrabold tracking-tight">Choose a package</h2>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -231,7 +235,7 @@ export function ShortlistsClient({
       )}
 
       {/* Payment instructions + upload */}
-      {!isUnlocked && step === 'pay' && pendingOrder && (
+      {!generalUnlocked && step === 'pay' && pendingOrder && (
         <section className="space-y-4">
           <h2 className="text-lg font-extrabold tracking-tight">Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} - Nu {pendingOrder.amount?.toLocaleString('en-IN')}</h2>
 

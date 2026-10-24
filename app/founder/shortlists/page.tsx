@@ -37,16 +37,28 @@ export default async function FounderShortlistsPage() {
 
     projects = (p as { id: string; title: string }[]) ?? [];
 
-    // Unlocked content: admin-generated shortlist rows for this founder
-    const hasConfirmed = orders.some((o) => o.status === 'confirmed');
-    if (hasConfirmed) {
+    // Unlocked content: admin-generated shortlist rows for this founder.
+    // A general order (no project) unlocks everything; a project-specific
+    // order unlocks only that project's rows.
+    const confirmedProjectIds = new Set(
+      orders
+        .filter((o) => o.status === 'confirmed' && o.project_id)
+        .map((o) => o.project_id as string)
+    );
+    const generalUnlocked = orders.some((o) => o.status === 'confirmed' && !o.project_id);
+
+    if (generalUnlocked || confirmedProjectIds.size > 0) {
       const { data: sl } = await supabase
         .from('shortlists')
         .select('id, student_id, status, project_id')
         .eq('founder_id', user.id)
         .order('created_at', { ascending: true });
 
-      const rows = sl ?? [];
+      const rows = (sl ?? []).filter(
+        (r) =>
+          generalUnlocked ||
+          (r.project_id != null && confirmedProjectIds.has(r.project_id as string))
+      );
       const ids = rows.map((r) => r.student_id as string);
 
       if (ids.length > 0) {
