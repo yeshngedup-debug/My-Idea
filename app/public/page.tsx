@@ -5,16 +5,16 @@ export default function HomePage() {
   return (
     <main className="overflow-x-hidden w-full max-w-full bg-[#0c0b10] text-white font-sans">
       {/* Floating Glass Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 shadow-2xl shadow-black/20 flex items-center gap-4 md:gap-8">
-        <Link href="/" className="flex items-center gap-2 font-extrabold text-lg tracking-tight"><Mountain className="w-5 h-5 text-amber-400" /> Bhutan Tech</Link>
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 md:top-6 z-50 bg-[#13111a]/80 backdrop-blur-2xl border border-white/15 rounded-full px-4 py-2.5 md:px-6 md:py-3 shadow-2xl shadow-black/40 flex items-center gap-2.5 md:gap-8 max-w-[calc(100vw-1.5rem)]">
+        <Link href="/" className="flex items-center gap-2 font-extrabold text-base md:text-lg tracking-tight whitespace-nowrap"><Mountain className="w-5 h-5 text-amber-400" /> Bhutan Tech</Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/70">
           <Link href="#work" className="hover:text-white transition-colors">Work</Link>
           <Link href="#founders" className="hover:text-white transition-colors">Founders</Link>
           <Link href="#students" className="hover:text-white transition-colors">Students</Link>
         </div>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">Log in</Link>
-          <Link href="/signup" className="text-sm font-semibold bg-amber-400 text-black px-5 py-2 rounded-full hover:bg-amber-300 transition-colors">Start now</Link>
+        <div className="flex items-center gap-2 md:gap-3 ml-auto">
+          <Link href="/login" className="text-xs md:text-sm font-medium text-white/50 md:text-white/70 hover:text-white transition-colors whitespace-nowrap">Log in</Link>
+          <Link href="/signup" className="text-sm font-semibold bg-amber-400 text-black px-4 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-amber-300 transition-colors whitespace-nowrap">Start now</Link>
         </div>
       </nav>
 
@@ -82,8 +82,54 @@ export default function HomePage() {
               <Link href="/signup" className="bg-white/10 text-white px-6 py-3 rounded-full font-bold border border-white/10 hover:bg-white/20 transition">Post a project</Link>
             </div>
           </div>
-          <div className="relative rounded-3xl overflow-hidden">
-            <img src="https://picsum.photos/seed/foundersdesk/800/600" alt="" className="w-full h-auto object-cover grayscale mix-blend-luminosity contrast-125" />
+          <div className="relative">
+            {/* Product screenshot placeholder — swap this block for a real <img> when ready */}
+            <div className="rounded-3xl border border-white/10 bg-[#13111a] shadow-2xl shadow-black/40 overflow-hidden">
+              {/* Window chrome */}
+              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5 bg-white/[0.03]">
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
+                <span className="ml-3 text-[10px] text-white/30 font-medium">bhutantech — browse students</span>
+              </div>
+              {/* Mock UI: mirrors the real Browse Students screen */}
+              <div className="p-5 space-y-3">
+                <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-xs text-white/30">
+                  Search skills, college, or name…
+                </div>
+                {[
+                  { initials: 'TD', name: 'Tashi Dorji', meta: 'Royal Thimphu College · BSc CS', skills: ['React', 'Figma', 'Python'], avail: 'Weekdays' },
+                  { initials: 'PC', name: 'Pema Choden', meta: 'RTC · BCom Analytics', skills: ['SQL', 'Vue', 'Excel'], avail: 'Weekends' },
+                ].map((s) => (
+                  <div key={s.name} className="rounded-2xl bg-white/[0.04] border border-white/10 p-4">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="w-7 h-7 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-extrabold flex items-center justify-center shrink-0">
+                          {s.initials}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-white leading-none truncate">{s.name}</p>
+                          <p className="text-[10px] text-white/40 mt-1 truncate">{s.meta}</p>
+                        </div>
+                      </div>
+                      <span className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300">
+                        {s.avail}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {s.skills.map((k) => (
+                        <span key={k} className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white/10 text-white/50">
+                          {k}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-center text-xs text-white/40 mt-3">
+              The founder dashboard — browse student profiles and open CVs.
+            </p>
           </div>
         </div>
       </section>

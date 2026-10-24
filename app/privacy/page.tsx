@@ -74,8 +74,16 @@ export default function PrivacyPage() {
               Deleting your data
             </h2>
             <p>
-              Want your profile, CV, or account deleted? Contact us and we will remove it.
-              Reach us through the app or at our support email (see the site footer).
+              Want your profile, CV, or account deleted? We will remove it on request.
+            </p>
+            <p className="mt-3 text-white/50">
+              Questions or data requests:{' '}
+              <a
+                href="mailto:hello@bhutantech.bt"
+                className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
+              >
+                hello@bhutantech.bt
+              </a>
             </p>
           </section>
         </div>

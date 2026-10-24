@@ -81,7 +81,15 @@ export default function TermsPage() {
             <h2 className="text-base font-extrabold tracking-tight text-white mb-2">
               Questions
             </h2>
-            <p>Reach us through the app or at our support email (see the site footer).</p>
+            <p className="text-white/50">
+              Questions about these terms:{' '}
+              <a
+                href="mailto:hello@bhutantech.bt"
+                className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
+              >
+                hello@bhutantech.bt
+              </a>
+            </p>
           </section>
         </div>
       </div>
