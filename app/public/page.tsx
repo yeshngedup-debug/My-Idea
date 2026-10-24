@@ -5,14 +5,17 @@ export default function HomePage() {
   return (
     <main className="overflow-x-hidden w-full max-w-full bg-[#0c0b10] text-white font-sans">
       {/* Floating Glass Nav */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 shadow-2xl shadow-black/20 flex items-center gap-8">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-white/10 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 shadow-2xl shadow-black/20 flex items-center gap-4 md:gap-8">
         <Link href="/" className="flex items-center gap-2 font-extrabold text-lg tracking-tight"><Mountain className="w-5 h-5 text-amber-400" /> Bhutan Tech</Link>
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/70">
           <Link href="#work" className="hover:text-white transition-colors">Work</Link>
           <Link href="#founders" className="hover:text-white transition-colors">Founders</Link>
           <Link href="#students" className="hover:text-white transition-colors">Students</Link>
         </div>
-        <Link href="/signup" className="text-sm font-semibold bg-amber-400 text-black px-5 py-2 rounded-full hover:bg-amber-300 transition-colors">Start now</Link>
+        <div className="flex items-center gap-3">
+          <Link href="/login" className="text-sm font-medium text-white/70 hover:text-white transition-colors">Log in</Link>
+          <Link href="/signup" className="text-sm font-semibold bg-amber-400 text-black px-5 py-2 rounded-full hover:bg-amber-300 transition-colors">Start now</Link>
+        </div>
       </nav>
 
       {/* Attention — Cinematic Center Hero */}
@@ -26,7 +29,7 @@ export default function HomePage() {
             Build your <span className="text-amber-400">portfolio</span>.<br />
             Launch your <span className="text-amber-400">startup</span>.
           </h1>
-          <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10">Students meet founders. Real projects. Paid work. Verified skills.</p>
+          <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10">Students meet founders. Real projects. Paid work.</p>
           <div className="flex justify-center gap-4">
             <Link href="/signup" className="inline-flex items-center gap-2 bg-amber-400 text-black px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-amber-400/30 hover:bg-amber-300 transition-all hover:-translate-y-1">Get started <ArrowRight className="w-5 h-5" /></Link>
             <Link href="#work" className="inline-flex items-center gap-2 bg-white/10 text-white px-8 py-4 rounded-full font-bold text-lg border border-white/10 hover:bg-white/20 transition-all">See work</Link>
@@ -61,7 +64,7 @@ export default function HomePage() {
               <Users className="w-10 h-10 mb-4" />
               <div>
                 <h3 className="text-3xl font-extrabold tracking-tight mb-2">Build & get paid</h3>
-                <p className="text-black/60 leading-relaxed">Complete the project. Receive payment. Build your verified portfolio.</p>
+                <p className="text-black/60 leading-relaxed">Complete the project. Get paid. Build real experience for your resume.</p>
               </div>
             </div>
           </div>
@@ -105,8 +108,8 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { title: "Reviewed profiles", desc: "Our team reviews profiles and marks verified students, so founders can hire with confidence.", img: "https://picsum.photos/seed/verify/600/400" },
-              { title: "Short-term contracts", desc: "Projects run 1-4 weeks. Clear deliverables, fixed budgets, fast payments.", img: "https://picsum.photos/seed/short/600/400" },
-              { title: "Portfolio growth", desc: "Every completed project adds to a public, verified portfolio.", img: "https://picsum.photos/seed/portfolio/600/400" },
+              { title: "Short-term contracts", desc: "Projects run from one week to a few months. Clear deliverables and fixed budgets.", img: "https://picsum.photos/seed/short/600/400" },
+              { title: "Portfolio growth", desc: "Every completed project builds real experience and a track record for your resume.", img: "https://picsum.photos/seed/portfolio/600/400" },
             ].map((item, i) => (
               <div key={i} className="group relative overflow-hidden rounded-3xl bg-white/[0.03] border border-white/10 p-8 hover:bg-white/[0.06] transition-colors">
                 <img src={item.img} alt="" className="w-full h-40 object-cover rounded-xl mb-6 grayscale contrast-125 group-hover:scale-[1.03] transition-transform duration-700" />
