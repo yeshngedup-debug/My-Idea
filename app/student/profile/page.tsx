@@ -28,6 +28,8 @@ export default async function StudentProfilePage() {
     cv_path: null,
   };
 
+  let cvUrl: string | null = null;
+
   if (user) {
     const { data } = await supabase
       .from('student_profiles')
@@ -48,6 +50,14 @@ export default async function StudentProfilePage() {
       };
     } else if (user.user_metadata?.full_name) {
       initial = { ...initial, full_name: String(user.user_metadata.full_name) };
+    }
+
+    // Fresh signed URL so the student can open their own CV
+    if (initial.cv_path) {
+      const { data: signed } = await supabase.storage
+        .from('cvs')
+        .createSignedUrl(initial.cv_path, 60 * 60);
+      cvUrl = signed?.signedUrl ?? null;
     }
   }
 
@@ -85,7 +95,7 @@ export default async function StudentProfilePage() {
           <p className="text-white/50 mt-1">Complete your profile so founders can find and shortlist you.</p>
         </div>
 
-        <ProfileForm initial={initial} />
+        <ProfileForm initial={initial} cvUrl={cvUrl} />
       </main>
     </div>
   );

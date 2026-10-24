@@ -73,7 +73,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-6">For founders</h2>
-            <p className="text-xl text-white/50 leading-relaxed mb-8">Post a short paid project, browse verified student profiles, and hire within days. No long contracts, no overhead.</p>
+            <p className="text-xl text-white/50 leading-relaxed mb-8">Post a short paid project, browse student profiles, and hire within days. No long contracts, no overhead. Too busy to search? Buy a Premium Shortlist and we hand-pick and rank students for you.</p>
             <div className="flex gap-3">
               <Link href="/founder" className="bg-amber-400 text-black px-6 py-3 rounded-full font-bold hover:bg-amber-300 transition">Founder dashboard</Link>
               <Link href="/signup" className="bg-white/10 text-white px-6 py-3 rounded-full font-bold border border-white/10 hover:bg-white/20 transition">Post a project</Link>
@@ -104,7 +104,7 @@ export default function HomePage() {
           <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-16">What you get</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { title: "Verified profiles", desc: "Every student and founder is verified through college or business registration.", img: "https://picsum.photos/seed/verify/600/400" },
+              { title: "Reviewed profiles", desc: "Our team reviews profiles and marks verified students, so founders can hire with confidence.", img: "https://picsum.photos/seed/verify/600/400" },
               { title: "Short-term contracts", desc: "Projects run 1-4 weeks. Clear deliverables, fixed budgets, fast payments.", img: "https://picsum.photos/seed/short/600/400" },
               { title: "Portfolio growth", desc: "Every completed project adds to a public, verified portfolio.", img: "https://picsum.photos/seed/portfolio/600/400" },
             ].map((item, i) => (

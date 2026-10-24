@@ -36,7 +36,13 @@ const AVAILABILITY = [
 const inputCls =
   'w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400/60 transition-all text-base';
 
-export function ProfileForm({ initial }: { initial: StudentProfileData }) {
+export function ProfileForm({
+  initial,
+  cvUrl,
+}: {
+  initial: StudentProfileData;
+  cvUrl?: string | null;
+}) {
   const [fullName, setFullName] = useState(initial.full_name ?? '');
   const [college, setCollege] = useState(initial.college ?? '');
   const [course, setCourse] = useState(initial.course ?? '');
@@ -146,6 +152,16 @@ export function ProfileForm({ initial }: { initial: StudentProfileData }) {
               <p className="text-sm font-medium text-emerald-300 truncate">CV uploaded</p>
               {fileName && <p className="text-xs text-white/40 truncate">{fileName}</p>}
             </div>
+            {cvUrl && (
+              <a
+                href={cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto shrink-0 text-xs font-semibold text-emerald-300 underline underline-offset-2 hover:text-emerald-200 transition-colors"
+              >
+                View PDF
+              </a>
+            )}
           </div>
         ) : null}
 

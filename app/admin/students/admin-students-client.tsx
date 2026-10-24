@@ -262,8 +262,14 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
       {/* Student cards */}
       {filtered.length === 0 ? (
         <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-          <h3 className="text-xl font-extrabold tracking-tight mb-2">No students match</h3>
-          <p className="text-white/50 text-sm">Adjust the search or filters.</p>
+          <h3 className="text-xl font-extrabold tracking-tight mb-2">
+            {students.length === 0 ? 'No students yet' : 'No students match'}
+          </h3>
+          <p className="text-white/50 text-sm">
+            {students.length === 0
+              ? 'Students appear here once they sign up and save a profile.'
+              : 'Adjust the search or filters.'}
+          </p>
         </div>
       ) : (
         <ul className="space-y-3">
