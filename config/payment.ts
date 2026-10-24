@@ -1,6 +1,11 @@
 /**
  * Payment configuration — MVP manual payment details.
- * Replace the placeholder values with your real bank / mBoB details.
+ *
+ * ⚠️ TODO before real users pay:
+ *   1. Replace `accountNumber` with your real Bank of Bhutan account number.
+ *   2. Replace `number` (mBoB) with your real mobile banking number.
+ *   The values are intentionally empty — the payment screen will show
+ *   blanks until you fill them in, so fake numbers can never ship.
  */
 export const PACKAGES = {
   basic: {
@@ -36,12 +41,12 @@ export const PAYMENT_DETAILS = {
   bank: {
     bankName: 'Bank of Bhutan',
     accountName: 'Bhutan Tech Connect',
-    accountNumber: '0000000000', // TODO: replace with real account number
+    accountNumber: '', // TODO: paste your real Bank of Bhutan account number here
     branch: 'Thimphu',
   },
   mbob: {
     label: 'mBoB (mobile banking)',
-    number: '7777777777', // TODO: replace with real mBoB number
+    number: '', // TODO: paste your real mBoB number here
     name: 'Bhutan Tech Connect',
   },
   note: 'After paying, upload the payment screenshot below. The admin verifies it manually (usually within a day) and unlocks your shortlist.',

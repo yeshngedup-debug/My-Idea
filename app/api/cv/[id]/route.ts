@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -16,7 +16,8 @@ export async function GET(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return NextResponse.redirect(new URL('/login', process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'http://localhost:3000'));
+    // Same-site redirect — never build login URLs from the Supabase host
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   const { data: profile } = await supabase

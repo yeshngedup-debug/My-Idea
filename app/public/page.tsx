@@ -135,7 +135,13 @@ export default function HomePage() {
       <footer className="bg-[#0c0b10] border-t border-white/10 py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2 font-extrabold text-xl"><Mountain className="w-6 h-6 text-amber-400" /> Bhutan Tech Connect</div>
-          <p className="text-sm text-white/30">Built for Bhutan. Connecting students with real opportunity.</p>
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
+            <p className="text-sm text-white/30">Built for Bhutan. Connecting students with real opportunity.</p>
+            <nav aria-label="Legal" className="flex items-center gap-4 text-sm text-white/40">
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            </nav>
+          </div>
         </div>
       </footer>
     </main>

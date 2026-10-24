@@ -96,3 +96,50 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
   revalidatePath('/student/projects');
   return { ok: true, message: 'Project posted.' };
 }
+
+/** Student applies to an open project (one application per project). */
+export async function applyToProject(projectId: string): Promise<ProjectResult> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'Not signed in.' };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+  if (profile?.role !== 'student') {
+    return { ok: false, message: 'Only students can apply to projects.' };
+  }
+
+  const { data: project } = await supabase
+    .from('projects')
+    .select('id, status')
+    .eq('id', projectId)
+    .single();
+  if (!project) return { ok: false, message: 'Project not found.' };
+  if (project.status !== 'open') {
+    return { ok: false, message: 'This project is no longer open.' };
+  }
+
+  const { error } = await supabase.from('applications').insert({
+    student_id: user.id,
+    project_id: projectId,
+    status: 'pending',
+  });
+
+  if (error) {
+    if (error.code === '23505') {
+      return { ok: false, message: 'You already applied to this project.' };
+    }
+    return { ok: false, message: `Failed: ${error.message}` };
+  }
+
+  revalidatePath('/student/projects');
+  revalidatePath('/student/applications');
+  revalidatePath('/admin/students');
+  return { ok: true, message: 'Application sent.' };
+}
