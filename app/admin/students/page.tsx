@@ -21,42 +21,39 @@ export default async function AdminStudentsPage() {
   let projects: { id: string; title: string; founder_id: string }[] = [];
 
   if (user) {
-    const { data: sp } = await supabase
-      .from('student_profiles')
-      .select(
-        'id, full_name, college, course, year, skills, bio, availability, cv_path, rank, verified, contact_email'
-      )
-      .order('rank', { ascending: true, nullsFirst: false });
+    // All four lookups are independent — run them in one round-trip
+    const [sp, apps, f, p] = await Promise.all([
+      supabase
+        .from('student_profiles')
+        .select(
+          'id, full_name, college, course, year, skills, bio, availability, cv_path, rank, verified, contact_email'
+        )
+        .order('rank', { ascending: true, nullsFirst: false }),
+      supabase.from('applications').select('student_id'),
+      supabase
+        .from('profiles')
+        .select('id, full_name')
+        .eq('role', 'founder')
+        .order('full_name', { ascending: true }),
+      supabase
+        .from('projects')
+        .select('id, title, founder_id')
+        .order('created_at', { ascending: false }),
+    ]);
 
     // Application counts per student
-    const { data: apps } = await supabase
-      .from('applications')
-      .select('student_id');
-
     const counts = new Map<string, number>();
-    for (const a of apps ?? []) {
+    for (const a of apps.data ?? []) {
       counts.set(a.student_id as string, (counts.get(a.student_id as string) ?? 0) + 1);
     }
 
-    students = ((sp as unknown as AdminStudent[]) ?? []).map((s) => ({
+    students = ((sp.data as unknown as AdminStudent[]) ?? []).map((s) => ({
       ...s,
       applications: counts.get(s.id) ?? 0,
     }));
 
-    const { data: f } = await supabase
-      .from('profiles')
-      .select('id, full_name')
-      .eq('role', 'founder')
-      .order('full_name', { ascending: true });
-
-    founders = (f as { id: string; full_name: string | null }[]) ?? [];
-
-    const { data: p } = await supabase
-      .from('projects')
-      .select('id, title, founder_id')
-      .order('created_at', { ascending: false });
-
-    projects = (p as { id: string; title: string; founder_id: string }[]) ?? [];
+    founders = (f.data as { id: string; full_name: string | null }[]) ?? [];
+    projects = (p.data as { id: string; title: string; founder_id: string }[]) ?? [];
   }
 
   return (

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Mountain } from 'lucide-react';
 import { signup } from '@/app/actions/auth';
-import { Button } from '@/components/ui/button';
+import { SubmitButton } from '@/components/ui/submit-button';
 
 const ERRORS: Record<string, string> = {
   invalid: 'Please fill every field. Password must be at least 6 characters.',
@@ -133,12 +133,7 @@ export default async function SignupPage({
                 <option value="founder">Startup Founder</option>
               </select>
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-amber-400 text-black font-bold py-3.5 rounded-xl hover:bg-amber-300 shadow-lg shadow-amber-400/20 h-auto"
-            >
-              Create account
-            </Button>
+            <SubmitButton pendingLabel="Creating account…">Create account</SubmitButton>
           </form>
 
           <div className="mt-6 text-center text-sm text-white/40">

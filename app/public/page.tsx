@@ -24,7 +24,7 @@ export default function HomePage() {
           <img src="https://picsum.photos/seed/bhutanhero/1920/1080" alt="" aria-hidden="true" className="w-full h-full object-cover object-center opacity-40 mix-blend-luminosity contrast-125 grayscale" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0c0b10]/60 via-transparent to-[#0c0b10]" />
         </div>
-        <div className="relative z-10 text-center max-w-6xl mx-auto">
+        <div className="relative z-10 text-center max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-3 duration-700">
           <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.92] mb-6">
             Build your <span className="text-amber-400">portfolio</span>.<br />
             Launch your <span className="text-amber-400">startup</span>.

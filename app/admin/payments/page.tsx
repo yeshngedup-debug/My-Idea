@@ -24,15 +24,20 @@ export default async function AdminPaymentsPage() {
   const founderIds = [...new Set(rows.map((r) => r.founder_id))];
   const projectIds = [...new Set(rows.map((r) => r.project_id).filter((v): v is string => !!v))];
 
-  const { data: fp } = founderIds.length
-    ? await supabase.from('profiles').select('id, full_name').in('id', founderIds)
-    : { data: [] };
-  const { data: pj } = projectIds.length
-    ? await supabase.from('projects').select('id, title').in('id', projectIds)
-    : { data: [] };
+  // Founder names + project titles are independent — one round-trip
+  const [fpRes, pjRes] = await Promise.all([
+    founderIds.length
+      ? supabase.from('profiles').select('id, full_name').in('id', founderIds)
+      : Promise.resolve({ data: [] as { id: string; full_name: string | null }[] }),
+    projectIds.length
+      ? supabase.from('projects').select('id, title').in('id', projectIds)
+      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+  ]);
 
-  const founderNames = new Map((fp ?? []).map((f) => [f.id as string, f.full_name as string | null]));
-  const projectTitles = new Map((pj ?? []).map((p) => [p.id as string, p.title as string]));
+  const founderNames = new Map(
+    (fpRes.data ?? []).map((f) => [f.id as string, f.full_name as string | null])
+  );
+  const projectTitles = new Map((pjRes.data ?? []).map((p) => [p.id as string, p.title as string]));
 
   for (const row of rows) {
     if (row.screenshot_path) {

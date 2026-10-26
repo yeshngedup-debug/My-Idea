@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Mountain } from 'lucide-react';
 import { login } from '@/app/actions/auth';
-import { Button } from '@/components/ui/button';
+import { SubmitButton } from '@/components/ui/submit-button';
 
 const ERRORS: Record<string, string> = {
   missing: 'Email and password are required.',
@@ -89,12 +89,7 @@ export default async function LoginPage({
                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400/60 transition-all text-sm"
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-amber-400 text-black font-bold py-3.5 rounded-xl hover:bg-amber-300 shadow-lg shadow-amber-400/20 h-auto"
-            >
-              Log in
-            </Button>
+            <SubmitButton pendingLabel="Signing in…">Log in</SubmitButton>
           </form>
 
           <div className="mt-6 text-center text-sm text-white/40">

@@ -19,24 +19,25 @@ export default async function BrowseStudentsPage() {
   let shortlistedIds: string[] = [];
 
   if (user) {
-    // Completed profile = full_name + college + skills present; CV uploaded = cv_path set
-    const { data } = await supabase
-      .from('student_profiles')
-      .select('id, full_name, college, course, year, skills, bio, availability, cv_path')
-      .not('cv_path', 'is', null)
-      .not('full_name', 'is', null)
-      .not('college', 'is', null)
-      .not('skills', 'eq', '{}')
-      .order('updated_at', { ascending: false });
+    // Both lookups are independent — run them in one round-trip
+    const [dataRes, existingRes] = await Promise.all([
+      supabase
+        .from('student_profiles')
+        .select('id, full_name, college, course, year, skills, bio, availability, cv_path')
+        .not('cv_path', 'is', null)
+        .not('full_name', 'is', null)
+        .not('college', 'is', null)
+        .not('skills', 'eq', '{}')
+        .order('updated_at', { ascending: false }),
+      supabase.from('shortlists').select('student_id').eq('founder_id', user.id),
+    ]);
+
+    const data = dataRes.data;
+    const existing = existingRes.data;
 
     students = ((data as unknown as StudentCard[]) ?? []).filter(
       (s) => (s.full_name ?? '').trim() !== '' && (s.college ?? '').trim() !== ''
     );
-
-    const { data: existing } = await supabase
-      .from('shortlists')
-      .select('student_id')
-      .eq('founder_id', user.id);
 
     shortlistedIds = (existing ?? []).map((r) => r.student_id as string);
   }

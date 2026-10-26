@@ -22,22 +22,22 @@ export default async function FounderShortlistsPage() {
   let projects: { id: string; title: string }[] = [];
 
   if (user) {
-    const { data: o } = await supabase
-      .from('shortlist_orders')
-      .select('id, package, amount, status, screenshot_path, project_id, created_at')
-      .eq('founder_id', user.id)
-      .order('created_at', { ascending: false });
+    // Orders + projects are independent — one round-trip
+    const [oRes, pRes] = await Promise.all([
+      supabase
+        .from('shortlist_orders')
+        .select('id, package, amount, status, screenshot_path, project_id, created_at')
+        .eq('founder_id', user.id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('projects')
+        .select('id, title')
+        .eq('founder_id', user.id)
+        .order('created_at', { ascending: false }),
+    ]);
 
-    orders = (o as unknown as OrderRow[]) ?? [];
-
-    // Projects owned by this founder (for attaching an order to a project)
-    const { data: p } = await supabase
-      .from('projects')
-      .select('id, title')
-      .eq('founder_id', user.id)
-      .order('created_at', { ascending: false });
-
-    projects = (p as { id: string; title: string }[]) ?? [];
+    orders = (oRes.data as unknown as OrderRow[]) ?? [];
+    projects = (pRes.data as { id: string; title: string }[]) ?? [];
 
     // Unlocked content: admin-generated shortlist rows for this founder.
     // A general order (no project) unlocks everything; a project-specific

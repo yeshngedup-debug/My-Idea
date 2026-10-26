@@ -23,24 +23,24 @@ export default async function StudentProjectsPage() {
   let projects: OpenProject[] = [];
   let appliedIds: string[] = [];
 
-  const { data: rows } = await supabase
-    .from('projects')
-    .select(
-      'id, title, description, duration, work_mode, budget_min, budget_max, required_skills, deadline'
-    )
-    .eq('status', 'open')
-    .order('created_at', { ascending: false });
-
-  projects = (rows as unknown as OpenProject[]) ?? [];
-
-  if (user) {
-    const { data: apps } = await supabase
+  // Open projects + this student's applications — one round-trip
+  const [rowsRes, appsRes] = await Promise.all([
+    supabase
+      .from('projects')
+      .select(
+        'id, title, description, duration, work_mode, budget_min, budget_max, required_skills, deadline'
+      )
+      .eq('status', 'open')
+      .order('created_at', { ascending: false }),
+    supabase
       .from('applications')
       .select('project_id')
-      .eq('student_id', user.id);
+      .eq('student_id', user?.id ?? ''),
+  ]);
 
-    appliedIds = (apps ?? []).map((a) => a.project_id as string);
-  }
+  projects = (rowsRes.data as unknown as OpenProject[]) ?? [];
+
+  appliedIds = (appsRes.data ?? []).map((a) => a.project_id as string);
 
   return (
     <div className="min-h-screen bg-[#0c0b10] text-white">
