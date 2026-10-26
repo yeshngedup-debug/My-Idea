@@ -84,10 +84,10 @@ export default function TermsPage() {
             <p className="text-white/50">
               Questions about these terms:{' '}
               <a
-                href="mailto:hello@bhutantech.bt"
+                href="mailto:yeshngedup@gmail.com"
                 className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
               >
-                hello@bhutantech.bt
+                yeshngedup@gmail.com
               </a>
             </p>
           </section>

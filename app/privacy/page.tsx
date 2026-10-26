@@ -79,10 +79,10 @@ export default function PrivacyPage() {
             <p className="mt-3 text-white/50">
               Questions or data requests:{' '}
               <a
-                href="mailto:hello@bhutantech.bt"
+                href="mailto:yeshngedup@gmail.com"
                 className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors"
               >
-                hello@bhutantech.bt
+                yeshngedup@gmail.com
               </a>
             </p>
           </section>
