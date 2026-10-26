@@ -1,52 +1,179 @@
+/**
+ * Founder Dashboard — real data: project stats, applications received,
+ * shortlisted students, order status, recent projects, quick actions.
+ */
 import Link from 'next/link';
-import { Building2, Search, HeartHandshake, PlusCircle } from 'lucide-react';
+import { Briefcase, Inbox, Star, Wallet, ArrowRight, Plus } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
+import { StatCard } from '@/components/dashboard/stat-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
-export default function FounderDashboard() {
+export const metadata = { title: 'Founder Dashboard | Bhutan Tech Connect' };
+
+const STATUS_LABEL: Record<string, { label: string; cls: string }> = {
+  open: { label: 'Open', cls: 'bg-emerald-400/10 text-emerald-300' },
+  in_progress: { label: 'In progress', cls: 'bg-amber-400/10 text-amber-300' },
+  review: { label: 'In review', cls: 'bg-blue-400/10 text-blue-300' },
+  completed: { label: 'Completed', cls: 'bg-white/10 text-white/60' },
+};
+
+export default async function FounderDashboard() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let name = 'Founder';
+  let projects: {
+    id: string;
+    title: string;
+    status: string;
+    budget_min: number | null;
+    budget_max: number | null;
+    created_at: string;
+  }[] = [];
+  let applicationsReceived = 0;
+  let shortlistedCount = 0;
+  let confirmedOrders = 0;
+
+  if (user) {
+    const [profRes, projRes, slRes, ordRes] = await Promise.all([
+      supabase.from('profiles').select('full_name').eq('id', user.id).single(),
+      supabase
+        .from('projects')
+        .select('id, title, status, budget_min, budget_max, created_at')
+        .eq('founder_id', user.id)
+        .order('created_at', { ascending: false }),
+      supabase.from('shortlists').select('id').eq('founder_id', user.id),
+      supabase.from('shortlist_orders').select('id, status').eq('founder_id', user.id),
+    ]);
+
+    name = (profRes.data as { full_name: string | null } | null)?.full_name ?? name;
+    projects = (projRes.data as typeof projects) ?? [];
+    shortlistedCount = slRes.data?.length ?? 0;
+    confirmedOrders = (ordRes.data ?? []).filter((o) => o.status === 'confirmed').length;
+
+    const ids = projects.map((p) => p.id);
+    if (ids.length > 0) {
+      const { data: apps } = await supabase
+        .from('applications')
+        .select('id')
+        .in('project_id', ids);
+      applicationsReceived = apps?.length ?? 0;
+    }
+  }
+
+  const openProjects = projects.filter((p) => p.status === 'open').length;
+
   return (
-    <main className="min-h-screen bg-[#0c0b10]">
-      <aside className="fixed left-0 top-0 h-full w-72 bg-white/[0.03] backdrop-blur-xl border-r border-white/10 p-6 z-40">
-        <div className="flex items-center gap-2 mb-10">
-          <span className="font-extrabold text-xl text-white tracking-tighter">Founder</span>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter">
+            Welcome back, {name.split(' ')[0]}
+          </h2>
+          <p className="text-white/50 mt-1 text-sm">
+            Manage projects and find the right students.
+          </p>
         </div>
-        <nav className="flex flex-col gap-1">
-          <Link href="/founder" className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-amber-400 text-black font-bold text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]"><Building2 className="w-4 h-4" /> Dashboard</Link>
-          <Link href="/founder/projects" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]"><PlusCircle className="w-4 h-4" /> Projects</Link>
-          <Link href="/founder/browse-students" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]"><Search className="w-4 h-4" /> Browse Students</Link>
-          <Link href="/founder/shortlists" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]"><HeartHandshake className="w-4 h-4" /> Shortlists</Link>
-        </nav>
-      </aside>
-      <div className="ml-72 p-10">
-        <header className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter text-white">Founder Dashboard</h1>
-          <p className="text-white/50 mt-1">Manage your projects, find students, and build your team.</p>
-        </header>
-        <section aria-label="Key stats" className="grid md:grid-cols-3 gap-6 mb-12">
-          {[
-            { title: "Active Projects", value: "3", label: "Open for applications" },
-            { title: "Students Shortlisted", value: "12", label: "Ready to hire" },
-            { title: "Completed", value: "5", label: "Projects delivered" },
-          ].map((stat, i) => (
-            <div key={i} className="bg-white/[0.04] border border-white/10 rounded-3xl p-6">
-              <h3 className="text-white/40 text-sm mb-1">{stat.title}</h3>
-              <div className="text-4xl font-extrabold text-white tracking-tighter">{stat.value}</div>
-              <div className="text-amber-400 text-xs mt-2">{stat.label}</div>
-            </div>
-          ))}
-        </section>
-        <section aria-label="Quick actions" className="bg-white/[0.04] border border-white/10 rounded-3xl p-8">
-          <h2 className="font-bold text-white tracking-tighter mb-6">Quick Actions</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Link href="/founder/projects/post" className="block bg-amber-400 hover:bg-amber-300 rounded-xl p-6 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]">
-              <h3 className="font-bold text-black">Post a new project</h3>
-              <p className="text-sm text-black/70 mt-1">Define requirements, budget, and timeline for student applications.</p>
+        <Link href="/founder/projects/post">
+          <Button className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-10">
+            <Plus className="w-4 h-4 mr-1" /> Post a project
+          </Button>
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={Briefcase} label="Open projects" value={openProjects} sub={`${projects.length} total posted`} />
+        <StatCard icon={Inbox} label="Applications" value={applicationsReceived} sub="Received across projects" />
+        <StatCard icon={Star} label="Shortlisted" value={shortlistedCount} sub="Students on your lists" />
+        <StatCard icon={Wallet} label="Orders confirmed" value={confirmedOrders} sub="Premium shortlists" />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        {/* Recent projects */}
+        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5 lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold">Your projects</h3>
+            <Link
+              href="/founder/projects"
+              className="text-xs font-semibold text-amber-400 hover:text-amber-300"
+            >
+              View all
             </Link>
-            <Link href="/founder/browse-students" className="block bg-[#13111a] hover:bg-white/[0.06] rounded-xl p-6 border border-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c0b10]">
-              <h3 className="font-bold text-white">Browse students</h3>
-              <p className="text-sm text-white/50 mt-1">Search by skills, college, and availability.</p>
+          </div>
+          {projects.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-sm text-white/50 mb-4">
+                No projects yet. Post your first one to start receiving applications.
+              </p>
+              <Link href="/founder/projects/post">
+                <Button className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-10">
+                  Post a project <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <ul className="divide-y divide-white/5">
+              {projects.slice(0, 4).map((p) => {
+                const badge = STATUS_LABEL[p.status] ?? STATUS_LABEL.open;
+                const budget =
+                  p.budget_min != null
+                    ? p.budget_max != null && p.budget_max !== p.budget_min
+                      ? `Nu ${p.budget_min.toLocaleString('en-IN')}-${p.budget_max.toLocaleString('en-IN')}`
+                      : `Nu ${p.budget_min.toLocaleString('en-IN')}`
+                    : null;
+                return (
+                  <li
+                    key={p.id}
+                    className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold truncate">{p.title}</p>
+                      <p className="text-xs text-white/40">
+                        {budget ? `${budget} · ` : ''}
+                        Posted{' '}
+                        {new Date(p.created_at).toLocaleDateString('en-GB', {
+                          day: 'numeric',
+                          month: 'short',
+                        })}
+                      </p>
+                    </div>
+                    <Badge className={`shrink-0 ${badge.cls}`}>{badge.label}</Badge>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+
+        {/* Quick actions */}
+        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5">
+          <h3 className="text-base font-semibold mb-1">Quick actions</h3>
+          <p className="text-xs text-white/40 mb-4">Hire faster.</p>
+          <div className="space-y-2">
+            <Link
+              href="/founder/browse-students"
+              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
+            >
+              Browse students <ArrowRight className="w-4 h-4 text-white/40" />
+            </Link>
+            <Link
+              href="/founder/projects/post"
+              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
+            >
+              Post a new project <ArrowRight className="w-4 h-4 text-white/40" />
+            </Link>
+            <Link
+              href="/founder/shortlists"
+              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
+            >
+              Premium shortlists <ArrowRight className="w-4 h-4 text-white/40" />
             </Link>
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

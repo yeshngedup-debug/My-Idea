@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Student full profile — founder view.
  * Shows every completed-profile field plus a signed CV link.
  */
@@ -60,31 +60,7 @@ export default async function StudentProfileDetailPage({
     .maybeSingle();
 
   return (
-    <div className="min-h-screen bg-[#0c0b10] text-white">
-      <header className="lg:hidden sticky top-0 z-40 bg-[#0c0b10]/90 backdrop-blur-md border-b border-white/10 px-4 h-14 flex items-center gap-3">
-        <Link
-          href="/founder/browse-students"
-          aria-label="Back to browse students"
-          className="p-2 -ml-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <h1 className="text-base font-extrabold tracking-tight truncate">
-          {sp.full_name}
-        </h1>
-      </header>
-
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-72 bg-white/[0.03] backdrop-blur-xl border-r border-white/10 flex-col p-6 z-30">
-        <h1 className="text-lg font-extrabold tracking-tight mb-8">Student profile</h1>
-        <Link
-          href="/founder/browse-students"
-          className="px-3 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-        >
-          Back to browse
-        </Link>
-      </aside>
-
-      <main className="px-4 py-6 sm:px-6 lg:ml-72 lg:px-10 lg:py-10 max-w-2xl mx-auto lg:max-w-none lg:mx-0">
+    <>
         <div className="hidden lg:flex items-center gap-3 mb-8">
           <Link
             href="/founder/browse-students"
@@ -157,7 +133,6 @@ export default async function StudentProfileDetailPage({
             <ShortlistButton studentId={id} alreadyShortlisted={!!existing} />
           </div>
         </div>
-      </main>
-    </div>
+      </>
   );
 }
