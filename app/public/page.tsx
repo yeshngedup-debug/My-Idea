@@ -186,6 +186,7 @@ export default function HomePage() {
             <nav aria-label="Legal" className="flex items-center gap-4 text-sm text-white/40">
               <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+              <a href="mailto:yeshngedup@gmail.com" className="hover:text-white transition-colors">Contact</a>
             </nav>
           </div>
         </div>

@@ -150,6 +150,13 @@ export default async function MyProjectsPage() {
                       {applicants} {applicants === 1 ? 'applicant' : 'applicants'}
                     </span>
                   </div>
+
+                  <Link
+                    href={`/founder/projects/${p.id}`}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded"
+                  >
+                    View applicants →
+                  </Link>
                 </li>
               );
             })}

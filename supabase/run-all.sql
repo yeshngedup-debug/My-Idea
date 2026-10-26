@@ -86,7 +86,27 @@ create table if not exists public.projects (
 
 alter table public.projects enable row level security;
 
-create policy "anyone_read_open_projects" on public.projects for select using (true);
+-- Project visibility: open = public, founders see own, admins see all,
+-- students see projects they applied to (definer helper avoids recursion)
+create or replace function public.student_applied(p_project uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.applications
+    where project_id = p_project and student_id = auth.uid()
+  );
+$$;
+
+grant execute on function public.student_applied(uuid) to anon, authenticated, service_role;
+
+create policy "public_read_open_projects" on public.projects for select using (status = 'open');
+create policy "founders_read_own_projects" on public.projects for select using (founder_id = auth.uid());
+create policy "admins_read_all_projects" on public.projects for select using (public.has_role('admin'));
+create policy "students_read_applied_projects" on public.projects for select using (public.student_applied(id));
 create policy "founder_insert_projects" on public.projects for insert with check (founder_id = auth.uid());
 create policy "founder_update_own_projects" on public.projects for update using (founder_id = auth.uid());
 
@@ -104,6 +124,11 @@ alter table public.applications enable row level security;
 create policy "students_read_own_applications" on public.applications for select using (student_id = auth.uid());
 create policy "students_insert_applications" on public.applications for insert with check (student_id = auth.uid());
 create policy "founders_read_project_applications" on public.applications for select using (
+  exists (select 1 from public.projects p where p.id = project_id and p.founder_id = auth.uid())
+);
+create policy "founders_update_project_applications" on public.applications for update using (
+  exists (select 1 from public.projects p where p.id = project_id and p.founder_id = auth.uid())
+) with check (
   exists (select 1 from public.projects p where p.id = project_id and p.founder_id = auth.uid())
 );
 

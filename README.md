@@ -102,6 +102,11 @@ Open http://localhost:3000 — you will be redirected to the public landing page
 
 ## Notes
 
+- ⚠️ **Seed demo users are for testing only** (`supabase/migrations/20261024020000_seed_test_users.sql` adds admin/students/founders with the public password `TestPass123!`). **Delete them before real users sign up:**
+  ```sql
+  delete from auth.users where email like '%btc-test.com';
+  ```
 - CVs and payment screenshots live in **private** storage buckets — access goes through short-lived signed URLs; CVs are proxied via `/api/cv/[id]` with role checks.
 - All data access is enforced by Row Level Security — see `supabase/migrations/` for the exact policies (the `has_role()` helper prevents policy recursion).
 - Database schema changes should be added as new files in `supabase/migrations/` and pushed with `npx supabase db push`.
+- `20261026000000_fix_projects_rls.sql` scopes project visibility: open projects are public, founders see their own, admins see all, students see projects they applied to (via the `student_applied()` helper, which avoids RLS recursion). It also adds `founders_update_project_applications` so founders can set applicant statuses on their own projects.

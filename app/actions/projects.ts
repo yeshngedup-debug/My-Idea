@@ -143,3 +143,96 @@ export async function applyToProject(projectId: string): Promise<ProjectResult> 
   revalidatePath('/admin/students');
   return { ok: true, message: 'Application sent.' };
 }
+
+const PROJECT_STATUSES = ['open', 'in_progress', 'review', 'completed'] as const;
+const APPLICATION_STATUSES = ['pending', 'shortlisted', 'accepted', 'rejected'] as const;
+
+/** Founder sets a project's status — only on their own project. */
+export async function updateProjectStatus(
+  projectId: string,
+  status: string
+): Promise<ProjectResult> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'Not signed in.' };
+
+  if (!(PROJECT_STATUSES as readonly string[]).includes(status)) {
+    return { ok: false, message: 'Invalid project status.' };
+  }
+
+  // Ownership check: the project must belong to this founder
+  const { data: project } = await supabase
+    .from('projects')
+    .select('id, founder_id')
+    .eq('id', projectId)
+    .single();
+
+  if (!project) return { ok: false, message: 'Project not found.' };
+  if (project.founder_id !== user.id) {
+    return { ok: false, message: 'You can only update your own projects.' };
+  }
+
+  const { error } = await supabase
+    .from('projects')
+    .update({ status })
+    .eq('id', projectId)
+    .eq('founder_id', user.id);
+
+  if (error) return { ok: false, message: `Failed: ${error.message}` };
+
+  revalidatePath(`/founder/projects/${projectId}`);
+  revalidatePath('/founder/projects');
+  revalidatePath('/student/projects');
+  return { ok: true, message: 'Project status updated.' };
+}
+
+/** Founder sets an applicant's status — only on their own project. */
+export async function updateApplicationStatus(
+  applicationId: string,
+  status: string
+): Promise<ProjectResult> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: 'Not signed in.' };
+
+  if (!(APPLICATION_STATUSES as readonly string[]).includes(status)) {
+    return { ok: false, message: 'Invalid application status.' };
+  }
+
+  // Load the application and verify the founder owns its project
+  const { data: application } = await supabase
+    .from('applications')
+    .select('id, project_id')
+    .eq('id', applicationId)
+    .single();
+
+  if (!application) return { ok: false, message: 'Application not found.' };
+
+  const { data: project } = await supabase
+    .from('projects')
+    .select('id, founder_id')
+    .eq('id', application.project_id)
+    .single();
+
+  if (!project || project.founder_id !== user.id) {
+    return { ok: false, message: 'You can only manage applicants on your own projects.' };
+  }
+
+  const { error } = await supabase
+    .from('applications')
+    .update({ status })
+    .eq('id', applicationId);
+
+  if (error) return { ok: false, message: `Failed: ${error.message}` };
+
+  revalidatePath(`/founder/projects/${project.id}`);
+  revalidatePath('/student/applications');
+  revalidatePath('/admin/students');
+  return { ok: true, message: 'Applicant status updated.' };
+}
