@@ -98,7 +98,7 @@ export default async function StudentProjectDetailPage({
           href="/student/projects"
           className="mb-6 inline-flex min-h-9 items-center gap-2 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
         >
-          <span aria-hidden="true">←</span> Back to open projects
+          Back to open projects
         </Link>
 
         <div className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-6">

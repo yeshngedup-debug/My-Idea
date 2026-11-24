@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/neon-data";
 import { Logo } from "@/components/ui/logo";
 import { WorkspaceNav, WorkspaceMobileNav } from "./workspace-nav";
+import { WorkspaceClock } from "./workspace-clock";
 import pressStyles from "../ui/pressable.module.css";
 
 const ROLE_LABEL: Record<string, string> = {
@@ -81,6 +82,7 @@ export default async function SimpleLayout({
             <WorkspaceNav links={roleLinks} />
 
             <div className="flex min-w-0 items-center gap-3">
+              <WorkspaceClock />
               <span className="hidden max-w-36 truncate text-sm text-[#4c5a52] sm:inline">
                 {profile?.full_name ?? "Signed in"}
               </span>

@@ -103,14 +103,14 @@ export function ProjectDetailClient({
 
       <section className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-lg font-semibold tracking-tight text-[#17352b] sm:text-xl">{project.title}</h2>
+          <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{project.title}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#657069]">
             {project.duration && <span>{project.duration}</span>}
             {project.work_mode === 'onsite' ? (
               <span className="inline-flex items-center gap-1">{project.work_mode === 'onsite' ? 'On-site' : 'Remote'}</span>
             ) : null}
             {project.budget_min != null && (
-              <span className="font-bold text-[#17352b]">
+              <span className="font-semibold text-[#17352b]">
                 Nu {project.budget_min.toLocaleString('en-IN')}
                 {project.budget_max != null && project.budget_max !== project.budget_min ? ` - ${project.budget_max.toLocaleString('en-IN')}` : ''}
               </span>
@@ -125,7 +125,7 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`rounded-full px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                 projectStatus === s.value
                   ? 'bg-[#17352b] text-[#fffefa]'
                   : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
@@ -214,7 +214,7 @@ export function ProjectDetailClient({
                           type="button"
                           disabled={busy || current === st}
                           onClick={() => setApplication(a.id, st)}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+                          className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                             current === st
                               ? 'bg-[#17352b] text-[#fffefa]'
                               : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'

@@ -86,7 +86,7 @@ export function SegmentedControl({
             className={cn(
               `inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] sm:px-5`,
               selected
-                ? "bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]"
+                ? "bg-[#17352b] text-[#fffefa] ring-1 ring-[#17352b] ring-offset-2 ring-offset-[#eae5d9]/70 hover:bg-[#244b3e]"
                 : "text-[#17352b] hover:bg-[#fffefa]",
             )}
           >

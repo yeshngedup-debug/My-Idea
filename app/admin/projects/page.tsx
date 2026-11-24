@@ -3,6 +3,7 @@
  */
 import { listAllProjectsWithDetails, listProfilesByIds } from "@/lib/neon-data";
 import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { ProjectsClient, type ProjectRow } from "./projects-client";
 
 export const metadata = { title: "Projects | Admin | Bhutan Tech Connect" };
@@ -32,9 +33,11 @@ export default async function AdminProjectsPage() {
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Projects
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Admin workspace"
+              title="Projects"
+              description="Every posted brief, with its current review stage."
+            />
           }
         >
           <ProjectsClient rows={rows} />

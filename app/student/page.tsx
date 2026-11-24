@@ -1,13 +1,17 @@
 /**
- * Student Dashboard — welcome, browse projects, recent applications.
+ * Student Dashboard — applications health, recent applications, shortcuts.
  */
 import Link from "next/link";
-import { BriefcaseBusiness, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { listStudentApplications, getStudentProfile } from "@/lib/neon-data";
+import { listStudentApplications } from "@/lib/neon-data";
 import { WorkspaceHero } from "@/components/layout/workspace-hero";
+import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import {
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/ui/motion";
 
 export const metadata = { title: "Student Dashboard | Bhutan Tech Connect" };
 
@@ -17,7 +21,6 @@ export default async function StudentDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let name = "Student";
   let applications: {
     id: string;
     status: string;
@@ -26,21 +29,13 @@ export default async function StudentDashboard() {
   }[] = [];
 
   if (user) {
-    const [appRows, studentProfile] = await Promise.all([
-      listStudentApplications(user.id),
-      getStudentProfile(user.id),
-    ]);
-
+    const appRows = await listStudentApplications(user.id);
     applications = appRows.map((a) => ({
       id: a.id,
       status: a.status,
       created_at: a.created_at,
       project: a.project,
     }));
-    name =
-      studentProfile?.full_name ??
-      user.user_metadata?.full_name ??
-      name;
   }
 
   const awaitingResponse = applications.filter(
@@ -50,117 +45,135 @@ export default async function StudentDashboard() {
     (application) => application.status === "accepted",
   ).length;
 
+  const stats = [
+    { label: "Applications sent", value: applications.length, detail: null },
+    { label: "Awaiting response", value: awaitingResponse, detail: null },
+    { label: "Accepted", value: acceptedApplications, detail: null },
+  ];
+
+  const statusLabel = (status: string) =>
+    status.charAt(0).toUpperCase() + status.slice(1);
+
   return (
     <div className="space-y-8">
       <Reveal>
         <WorkspaceHero
           eyebrow="Student workspace"
-          title={`Welcome back, ${name.split(" ")[0]}.`}
-          description="Find work that fits your skills."
+          title="Projects and applications"
+          description="Find paid work that fits your skills and track where you stand."
         >
           <Link
             href="/student/projects"
-            className="pressable inline-flex items-center gap-2 rounded-full bg-amber-300 px-5 py-3 text-sm font-bold text-[#17352b] transition-colors hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+            className="pressable inline-flex min-h-11 items-center rounded-lg bg-amber-300 px-5 py-3 text-sm font-semibold text-[#17352b] transition-colors hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
           >
             Browse projects
           </Link>
           <Link
             href="/student/profile"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/35 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/35 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
           >
-            <UserRound aria-hidden="true" className="h-4 w-4" /> Update profile
+            Update profile
           </Link>
         </WorkspaceHero>
       </Reveal>
 
       <Reveal>
-        <dl className="border-t border-[#17352b]/10">
-          {[
-            { label: "Applications sent", value: applications.length },
-            { label: "Awaiting response", value: awaitingResponse },
-            { label: "Accepted", value: acceptedApplications },
-          ].map(({ label, value }, index) => (
-            <div
-              key={label}
-              className="flex min-w-0 items-baseline justify-between gap-x-4 border-b border-[#17352b]/10 py-4"
-            >
-              <dt className="text-sm text-[#657069]">{label}</dt>
-              <dd
-                className={`tabular-nums tracking-tight text-[#17352b] ${
-                  index === 0 ? "text-3xl font-semibold" : "text-xl font-medium"
-                }`}
-              >
-                {value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <WorkspaceStats stats={stats} />
       </Reveal>
 
-      <section>
-        <Reveal>
+      <section className="grid grid-cols-12 gap-6 lg:gap-8">
+        <div className="col-span-12 min-w-0 lg:col-span-8">
           <div className="mb-4 flex items-end justify-between gap-4">
-            <h3 className="text-lg font-semibold tracking-tight text-[#17352b]">
+            <h2 className="text-lg font-semibold tracking-tight text-[#17352b]">
               Recent applications
-            </h3>
+            </h2>
             {applications.length > 0 && (
               <Link
                 href="/student/applications"
-                className="inline-flex items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="inline-flex shrink-0 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
               >
                 View all
               </Link>
             )}
           </div>
-        </Reveal>
-        {applications.length === 0 ? (
-          <Reveal>
-            <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] px-6 py-10 text-center">
-              <BriefcaseBusiness
-                aria-hidden="true"
-                className="mx-auto h-8 w-8 text-[#8d948e]"
-              />
-              <h4 className="mt-3 font-semibold text-[#17352b]">
+          {applications.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-[#ded8cb] bg-[#fffefa] px-6 py-10">
+              <h3 className="text-base font-semibold text-[#17352b]">
                 Your next opportunity is waiting
-              </h4>
-              <p className="mt-1 text-sm text-[#657069]">
+              </h3>
+              <p className="mt-1 text-sm leading-6 text-[#657069]">
                 Explore open projects and apply when one feels right.
               </p>
               <Link
                 href="/student/projects"
-                className="mt-5 inline-flex min-h-10 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
               >
                 Browse open projects
               </Link>
             </div>
-          </Reveal>
-        ) : (
-          <StaggerGroup className="space-y-2.5">
-            {applications.slice(0, 5).map((application) => (
-              <StaggerItem key={application.id}>
-                <div className="flex items-center justify-between gap-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 transition-colors duration-150 hover:border-[#17352b]/25">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[#17352b]">
-                      {application.project?.title ?? "Project"}
-                    </p>
-                    <p className="mt-1 text-xs text-[#657069]">
-                      Applied{" "}
-                      {new Date(application.created_at).toLocaleDateString(
-                        "en-GB",
-                        { day: "numeric", month: "short" },
-                      )}
-                    </p>
-                  </div>
-                  <Badge
-                    className={`shrink-0 capitalize ${application.status === "accepted" ? "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]" : application.status === "rejected" ? "border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]" : "border-amber-200 bg-amber-50 text-[#8a5a00]"}`}
+          ) : (
+            <StaggerGroup className="divide-y divide-[#ded8cb] border-y border-[#ded8cb]">
+              {applications.slice(0, 5).map((application) => (
+                <StaggerItem key={application.id}>
+                  <Link
+                    href="/student/applications"
+                    className="flex min-w-0 items-center justify-between gap-4 py-3.5 transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
                   >
-                    {application.status}
-                  </Badge>
-                </div>
-              </StaggerItem>
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium text-[#17352b]">
+                        {application.project?.title ?? "Project"}
+                      </span>
+                      <span className="mt-0.5 block text-xs tabular-nums text-[#657069]">
+                        Applied{" "}
+                        {new Date(application.created_at).toLocaleDateString(
+                          "en-GB",
+                          { day: "numeric", month: "short" },
+                        )}
+                      </span>
+                    </span>
+                    <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                      <span
+                        aria-hidden="true"
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          application.status === "accepted"
+                            ? "bg-[#17352b]"
+                            : application.status === "rejected"
+                              ? "bg-[#b23c26]"
+                              : "bg-[#b08947]"
+                        }`}
+                      />
+                      {statusLabel(application.status)}
+                    </Badge>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          )}
+        </div>
+
+        <div className="col-span-12 min-w-0 lg:col-span-4">
+          <h2 className="mb-4 text-lg font-semibold tracking-tight text-[#17352b]">
+            Go to
+          </h2>
+          <nav aria-label="Student shortcuts" className="workspace-paper divide-y divide-[#ded8cb] border-y border-[#ded8cb]">
+            {[
+              { href: "/student/projects", title: "Projects", description: "Open briefs you can apply to" },
+              { href: "/student/applications", title: "Applications", description: "Track where each one stands" },
+              { href: "/student/profile", title: "Profile", description: "Keep your details and CV current" },
+            ].map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col gap-0.5 py-3.5 text-sm font-medium text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              >
+                {item.title}
+                <span className="text-xs font-normal text-[#657069]">
+                  {item.description}
+                </span>
+              </Link>
             ))}
-          </StaggerGroup>
-        )}
+          </nav>
+        </div>
       </section>
     </div>
   );

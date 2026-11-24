@@ -49,9 +49,11 @@ export default async function StudentProfileDetailPage({
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link href="/founder/browse-students" className="inline-flex min-h-9 items-center text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
-            <span aria-hidden="true">←</span> Browse students
+            Browse students
           </Link>
-          <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{sp.full_name}</h1>
+          <div className="min-w-0 text-right">
+            <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{sp.full_name}</h1>
+          </div>
         </div>
 
         <div className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-6">

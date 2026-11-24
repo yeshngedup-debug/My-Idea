@@ -40,6 +40,13 @@ const STATUS_BADGE: Record<string, string> = {
   completed: "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]",
 };
 
+const STATUS_DOT: Record<string, string> = {
+  open: "bg-[#b08947]",
+  in_progress: "bg-[#17352b]",
+  review: "bg-[#b23c26]",
+  completed: "bg-[#657069]",
+};
+
 export function ProjectsClient({ rows }: { rows: ProjectRow[] }) {
   const [filter, setFilter] = useState<string>("all");
 
@@ -117,8 +124,9 @@ export function ProjectsClient({ rows }: { rows: ProjectRow[] }) {
                     {row.title}
                   </h3>
                   <Badge
-                    className={`shrink-0 ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}
+                    className={`shrink-0 gap-1.5 ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}
                   >
+                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[row.status] ?? STATUS_DOT.open}`} />
                     {statusLabel(row.status)}
                   </Badge>
                 </div>
@@ -130,9 +138,9 @@ export function ProjectsClient({ rows }: { rows: ProjectRow[] }) {
             ))}
           </ul>
 
-          <div className="hidden rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
-            <table className="w-full text-left text-sm">
-              <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs uppercase tracking-wide text-[#657069]">
+          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+            <table className="w-full text-left text-sm" aria-label="All projects by status">
+              <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs font-medium text-[#657069]">
                 <tr>
                   <th
                     scope="col"
@@ -168,12 +176,13 @@ export function ProjectsClient({ rows }: { rows: ProjectRow[] }) {
                     </td>
                     <td className="px-4 py-3.5">
                       <Badge
-                        className={STATUS_BADGE[row.status] ?? STATUS_BADGE.open}
+                        className={`gap-1.5 ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}
                       >
+                        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[row.status] ?? STATUS_DOT.open}`} />
                         {statusLabel(row.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 text-[#657069]">
+                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#657069]">
                       {date(row.created_at)}
                     </td>
                   </tr>

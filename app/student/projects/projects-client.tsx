@@ -71,7 +71,7 @@ export function ProjectCard({
         type="button"
         disabled={applied || applying}
         onClick={handleApply}
-        className={`pressable mt-auto w-full font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+        className={`pressable mt-auto w-full font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
           applied
             ? 'cursor-not-allowed bg-[#f5f2ea] text-[#657069]'
             : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'

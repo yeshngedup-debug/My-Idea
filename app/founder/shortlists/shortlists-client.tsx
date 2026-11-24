@@ -118,7 +118,7 @@ export function ShortlistsClient({
       )}
 
       {!generalUnlocked && step === 'closed' && (
-        <Button type="button" onClick={() => setStep('package')} disabled={!PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+        <Button type="button" onClick={() => setStep('package')} disabled={!PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
           Get Shortlist
         </Button>
       )}
@@ -146,7 +146,7 @@ export function ShortlistsClient({
                   <h3 className="text-base font-semibold text-[#17352b]">{pkg.name}</h3>
                   {chosenPackage === pkg.id && <span className="h-2.5 w-2.5 rounded-full bg-[#d84f37]" aria-hidden="true" />}
                 </div>
-                <p className="mb-3 text-sm font-bold text-[#b23c26]">{pkg.priceRange}</p>
+                <p className="mb-3 text-sm font-semibold text-[#b23c26]">{pkg.priceRange}</p>
                 <ul className="space-y-1.5 text-xs text-[#657069]">
                   {pkg.features.map((f) => (
                     <li key={f} className="flex items-start gap-1.5">
@@ -191,7 +191,7 @@ export function ShortlistsClient({
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <Button type="button" onClick={handleCreateOrder} disabled={creating} className="w-full pressable bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+              <Button type="button" onClick={handleCreateOrder} disabled={creating} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
                 {creating ? 'Creating order...' : 'Continue to payment'}
               </Button>
             </div>
@@ -208,7 +208,7 @@ export function ShortlistsClient({
           <div className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
             <div className="flex items-start gap-3">
               <div className="text-sm">
-                <p className="font-bold text-[#17352b]">Bank transfer</p>
+                <p className="font-semibold text-[#17352b]">Bank transfer</p>
                 <p className="text-[#4c5a52]">
                   {PAYMENT_DETAILS.bank.bankName} - {PAYMENT_DETAILS.bank.branch}<br />
                   {PAYMENT_DETAILS.bank.accountName}
@@ -219,7 +219,7 @@ export function ShortlistsClient({
             </div>
             <div className="flex items-start gap-3">
               <div className="text-sm">
-                <p className="font-bold text-[#17352b]">{PAYMENT_DETAILS.mbob.label}</p>
+                <p className="font-semibold text-[#17352b]">{PAYMENT_DETAILS.mbob.label}</p>
                 <p className="text-[#4c5a52]">
                   {PAYMENT_DETAILS.mbob.name}
                   <br />
@@ -231,12 +231,12 @@ export function ShortlistsClient({
           </div>
 
           <form onSubmit={handleUpload} className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
-            <h3 className="text-sm font-bold text-[#17352b]">Upload payment screenshot</h3>
+            <h3 className="text-sm font-semibold text-[#17352b]">Upload payment screenshot</h3>
             <label htmlFor="screenshot" className="flex items-center justify-center gap-2 w-full border border-dashed border-[#ded8cb] rounded-xl px-4 py-4 text-sm text-[#4c5a52] hover:border-[#17352b]/40 hover:text-[#17352b] transition-colors cursor-pointer">
               Choose image (PNG / JPG / WEBP)
             </label>
             <input id="screenshot" name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" />
-            <Button type="submit" disabled={uploading || !PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+            <Button type="submit" disabled={uploading || !PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
               {uploading ? 'Submitting...' : 'Submit screenshot'}
             </Button>
             <button type="button" onClick={() => setStep('package')} className="text-sm text-[#657069] hover:text-[#17352b] transition-colors">
@@ -253,7 +253,7 @@ export function ShortlistsClient({
             {orders.map((o) => (
               <li key={o.id} className="bg-[#fffefa] border border-[#ded8cb] rounded-2xl p-4 space-y-3">
                 <div className="min-w-0">
-                  <p className="text-sm font-bold truncate">
+                  <p className="text-sm font-semibold truncate">
                     {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
                     {o.project_id && ` - ${projects.find((p) => p.id === o.project_id)?.title ?? 'project'}`}
                   </p>
@@ -288,7 +288,7 @@ export function ShortlistsClient({
               {students.map((s, i) => (
                 <li key={s.shortlistId} className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="w-7 h-7 rounded-full bg-[#17352b] text-[#fffefa] font-bold text-sm flex items-center justify-center shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-[#17352b] text-[#fffefa] font-semibold text-sm flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
                     <h3 className="truncate text-base font-semibold text-[#17352b]">{s.full_name}</h3>
@@ -321,7 +321,7 @@ export function ShortlistsClient({
       )}
 
       <section className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
-        <h2 className="text-sm font-bold text-[#17352b] mb-1">Service agreement</h2>
+        <h2 className="text-sm font-semibold text-[#17352b] mb-1">Service agreement</h2>
         <a href="/founder/shortlists/agreement" download className="inline-flex items-center gap-2 rounded-xl border border-[#ded8cb] px-4 py-2.5 text-sm font-semibold text-[#17352b] hover:bg-[#f5f2ea] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
           Download agreement (PDF)
         </a>

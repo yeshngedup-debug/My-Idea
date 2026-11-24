@@ -5,10 +5,18 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { listProjectsByFounder } from "@/lib/neon-data";
 import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export const metadata = { title: "My Projects | Bhutan Tech Connect" };
+
+const STATUS_DOT: Record<string, string> = {
+  open: "bg-[#b08947]",
+  in_progress: "bg-[#17352b]",
+  review: "bg-[#b23c26]",
+  completed: "bg-[#657069]",
+};
 
 export default async function MyProjectsPage() {
   const supabase = await createClient();
@@ -43,19 +51,16 @@ export default async function MyProjectsPage() {
     <div className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
       <PinnedHeadingSection
         heading={
-          <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              My Projects
-            </h2>
-            <p className="mt-1 text-sm text-[#657069]">
-              {projects.length} posted
-            </p>
-          </div>
+          <WorkspacePageHeading
+            eyebrow="Founder workspace"
+            title="My Projects"
+            description={`${projects.length} posted. Open a brief to review its applicants.`}
+          />
         }
       >
         <div className="mb-6 flex justify-end">
           <Link href="/founder/projects/post">
-            <Button className="pressable bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+            <Button className="pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
               Post a project
             </Button>
           </Link>
@@ -71,7 +76,7 @@ export default async function MyProjectsPage() {
               away.
             </p>
             <Link href="/founder/projects/post">
-              <Button className="pressable w-full bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+              <Button className="pressable w-full bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
                 Post your first project
               </Button>
             </Link>
@@ -88,8 +93,9 @@ export default async function MyProjectsPage() {
                     <p className="min-w-0 truncate text-sm font-semibold text-[#17352b]">
                       {p.title}
                     </p>
-                    <Badge className="shrink-0 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
-                      {p.status.replace("_", " ")}
+                    <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                      <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? "bg-[#657069]"}`} />
+                      {p.status === "in_progress" ? "In progress" : p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                     </Badge>
                   </div>
                   <p className="mt-1 text-xs text-[#657069]">
@@ -105,9 +111,9 @@ export default async function MyProjectsPage() {
               ))}
             </ul>
 
-            <div className="hidden rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
-              <table className="w-full text-left text-sm">
-                <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs uppercase tracking-wide text-[#657069]">
+            <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+              <table className="w-full text-left text-sm" aria-label="My projects">
+                <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs font-medium text-[#657069]">
                   <tr>
                     <th
                       scope="col"
@@ -139,11 +145,12 @@ export default async function MyProjectsPage() {
                         {p.title}
                       </td>
                       <td className="px-4 py-3.5">
-                        <Badge className="border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
-                          {p.status.replace("_", " ")}
+                        <Badge className="gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                          <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? "bg-[#657069]"}`} />
+                          {p.status === "in_progress" ? "In progress" : p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                         </Badge>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3.5 text-[#657069]">
+                      <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#657069]">
                         {date(p.created_at)}
                       </td>
                       <td className="px-4 py-3.5 text-right">

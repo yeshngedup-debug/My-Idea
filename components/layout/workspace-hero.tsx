@@ -28,16 +28,16 @@ export function WorkspaceHero({
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#10241c] via-[#10241c]/90 to-[#10241c]/70" />
       </div>
-      <div className="relative z-10 max-w-3xl">
-        <p className="text-xs font-medium text-white/70">{eyebrow}</p>
-        <h2 className="mt-4 text-[clamp(1.75rem,4vw,2.6rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-white">
+      <div className="relative z-10 min-w-0 max-w-3xl">
+        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-white text-balance">
           {title}
-        </h2>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-white/75 sm:text-base">
+        </h1>
+        <p className="mt-3 max-w-lg text-sm leading-6 text-white/75 sm:text-base">
+          <span className="font-medium text-amber-200/90">{eyebrow} ·</span>{" "}
           {description}
         </p>
         {children && (
-          <div className="mt-6 flex flex-wrap items-center gap-2.5">{children}</div>
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">{children}</div>
         )}
       </div>
       <div className="relative z-10 mt-8 border-t border-white/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">

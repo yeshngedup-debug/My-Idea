@@ -37,6 +37,13 @@ const STATUS_LABEL: Record<string, string> = {
   rejected: "Rejected",
 };
 
+const STATUS_DOT: Record<string, string> = {
+  pending: "bg-[#b08947]",
+  shortlisted: "bg-[#17352b]",
+  accepted: "bg-[#17352b]",
+  rejected: "bg-[#b23c26]",
+};
+
 export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
   const [filter, setFilter] = useState<string>("all");
 
@@ -57,7 +64,7 @@ export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
         </p>
         <Link
           href="/student/projects"
-          className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-bold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
+          className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-semibold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
         >
           Browse projects
         </Link>
@@ -119,8 +126,9 @@ export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
                     })}
                   </p>
                 </div>
-                <Badge className="shrink-0 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
-                  {item.status.replace("_", " ")}
+                <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                  <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-[#657069]"}`} />
+                  {STATUS_LABEL[item.status] ?? item.status}
                 </Badge>
               </div>
               <StatusTimeline

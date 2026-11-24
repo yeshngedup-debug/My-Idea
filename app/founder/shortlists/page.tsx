@@ -12,6 +12,7 @@ import {
 } from "@/lib/neon-data";
 import { sealFounderOrders, type LiveOrderRow } from "@/lib/neon-realtime";
 import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { LiveOrderStatus } from "@/components/founder/live-order-status";
 import { StatusTimeline, ORDER_STEPS } from "@/components/ui/status-timeline";
 import {
@@ -127,9 +128,11 @@ export default async function FounderShortlistsPage() {
       <div className="mx-auto max-w-6xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Premium Shortlist
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Founder workspace"
+              title="Premium Shortlist"
+              description="Choose a package, track payment and read your shortlist."
+            />
           }
           split="lg:grid-cols-[0.2fr_0.8fr]"
         >

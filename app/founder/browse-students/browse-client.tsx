@@ -178,7 +178,7 @@ export function BrowseClient({
                     type="button"
                     disabled={isShortlisted || pendingId === s.id}
                     onClick={() => handleShortlist(s.id)}
-                    className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                    className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                       isShortlisted
                         ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
                         : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'

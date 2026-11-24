@@ -29,7 +29,7 @@ export function ShortlistButton({
             if (res.ok) setShortlisted(true);
           })
         }
-        className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-80 ${
+        className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-80 ${
           shortlisted
             ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
             : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'

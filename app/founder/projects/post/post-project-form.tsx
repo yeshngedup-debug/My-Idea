@@ -262,7 +262,7 @@ export function PostProjectForm() {
       <Button
         type="submit"
         disabled={saving}
-        className="pressable h-12 w-full bg-[#17352b] text-base font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+        className="pressable h-12 w-full bg-[#17352b] text-base font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
       >
         {saving ? 'Posting...' : 'Post project'}
       </Button>

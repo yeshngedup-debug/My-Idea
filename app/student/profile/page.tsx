@@ -5,6 +5,7 @@
  */
 import { createClient } from '@/lib/supabase/server';
 import { getStudentProfile } from '@/lib/neon-data';
+import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { ProfileForm, type StudentProfileData } from './profile-form';
 
 export const metadata = { title: 'My Profile | Bhutan Tech Connect' };
@@ -57,10 +58,12 @@ export default async function StudentProfilePage() {
 
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-          My Profile
-        </h1>
+      <div className="mx-auto max-w-3xl space-y-7">
+        <WorkspacePageHeading
+          eyebrow="Student workspace"
+          title="My Profile"
+          description="Keep your details and CV current so founders can find you."
+        />
         <ProfileForm initial={initial} cvUrl={cvUrl} />
       </div>
     </section>

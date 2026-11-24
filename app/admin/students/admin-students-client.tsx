@@ -294,7 +294,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
 
                   {/* Rank */}
                   <div className="shrink-0">
-                    <label htmlFor={`rank-${s.id}`} className="block text-[10px] uppercase tracking-wide text-[#657069] mb-1 text-center">
+                    <label htmlFor={`rank-${s.id}`} className="block text-xs text-[#657069] mb-1 text-center">
                       Rank
                     </label>
                     <input
@@ -363,7 +363,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                   <button
                     type="button"
                     onClick={() => toggleVerified(s)}
-                    className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                    className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                       isVerified
                         ? 'border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b] hover:bg-[#17352b]/12'
                         : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
@@ -389,7 +389,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
       {/* Shortlist generation result */}
       {shortlistText && (
         <div className="bg-[#fffefa] border border-[#d84f37]/25 rounded-2xl p-5 space-y-3">
-          <h3 className="text-sm font-bold text-[#8a5a00]">Generated shortlist</h3>
+          <h3 className="text-sm font-semibold text-[#8a5a00]">Generated shortlist</h3>
           <textarea
             readOnly
             value={shortlistText}
@@ -402,7 +402,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
               <CopyButton
                 text={shortlistText}
                 label="Copy"
-                className="w-full rounded-xl border-amber-300 bg-amber-300 font-bold text-[#17352b] hover:bg-amber-200"
+                className="w-full rounded-xl border-amber-300 bg-amber-300 font-semibold text-[#17352b] hover:bg-amber-200"
               />
             </div>
             <Button
@@ -459,7 +459,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                 type="button"
                 onClick={handleGenerate}
                 disabled={generating || !founderId}
-                className="pressable bg-amber-300 text-[#17352b] font-bold hover:bg-amber-200 h-11 shrink-0"
+                className="pressable bg-amber-300 text-[#17352b] font-semibold hover:bg-amber-200 h-11 shrink-0"
               >
                 <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                 {generating ? 'Generating...' : 'Generate'}

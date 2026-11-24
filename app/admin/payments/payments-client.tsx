@@ -85,18 +85,18 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
         </p>
       )}
 
-      <ul className="space-y-3">
+      <ul className="divide-y divide-[#ded8cb] border-y border-[#ded8cb]">
       {items.map((o) => {
         const badge = STATUS_BADGE[o.status] ?? STATUS_BADGE.pending;
         const actionable = o.status === 'submitted' || o.status === 'pending';
         return (
-          <li key={o.id} className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
+          <li key={o.id} className="py-5">
             <div className="mb-2 flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h3 className="truncate text-base font-semibold text-[#17352b]">
                   {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
                 </h3>
-                <p className="truncate text-xs text-[#657069]">
+                <p className="truncate text-xs tabular-nums text-[#657069]">
                   {o.founderName ?? 'Founder'} - Nu {o.amount?.toLocaleString('en-IN')}
                   {o.projectTitle ? ` - ${o.projectTitle}` : ''}
                   {' - '}
@@ -133,7 +133,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                   disabled={busyId === o.id || !o.screenshot_path}
                   title={o.screenshot_path ? undefined : 'No payment screenshot uploaded yet'}
                   onClick={() => update(o.id, 'confirm')}
-                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-2.5 text-sm font-bold text-[#17352b] hover:bg-[#17352b]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-2.5 text-sm font-semibold text-[#17352b] hover:bg-[#17352b]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
                   <CheckCircle className="w-4 h-4" aria-hidden="true" />
                   {busyId === o.id ? 'Working...' : 'Confirm payment'}
@@ -142,7 +142,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                   type="button"
                   disabled={busyId === o.id}
                   onClick={() => setConfirmingId(o.id)}
-                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-2.5 text-sm font-bold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-2.5 text-sm font-semibold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
                   <X className="w-4 h-4" aria-hidden="true" /> Reject
                 </button>
@@ -167,7 +167,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     type="button"
                     disabled={busyId === o.id}
                     onClick={() => update(o.id, 'reject')}
-                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-5 py-2.5 text-sm font-bold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-5 py-2.5 text-sm font-semibold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                   >
                     <X className="w-4 h-4" aria-hidden="true" />
                     {busyId === o.id ? 'Rejecting...' : 'Reject payment'}

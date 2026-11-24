@@ -6,6 +6,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { listOpenProjects, listStudentAppliedProjectIds } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
+import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { ProjectsClient, type OpenProject } from './projects-client';
 
 export const metadata = { title: 'Open Projects | Bhutan Tech Connect' };
@@ -35,9 +36,11 @@ export default async function StudentProjectsPage() {
       <div className="mx-auto max-w-6xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Open Projects
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Student workspace"
+              title="Open Projects"
+              description="Paid briefs you can apply to, posted by founders."
+            />
           }
           split="lg:grid-cols-[0.2fr_0.8fr]"
         >

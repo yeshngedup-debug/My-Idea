@@ -121,6 +121,15 @@
   grid-auto-flow: dense;
 }
 
+/* Quiet paper grid behind a workspace's secondary column. Derived from the
+   Synapse Folio reference's blueprint-paper motif, but drawn in the brand's
+   forest at very low opacity and never animated. Purely structural. */
+.workspace-paper {
+  background-image: linear-gradient(to right, rgba(23, 53, 43, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 53, 43, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pressable:active {
     transform: none;

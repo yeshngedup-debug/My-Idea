@@ -6,6 +6,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { listStudentApplications } from "@/lib/neon-data";
 import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import {
   ApplicationsClient,
   type ApplicationRow,
@@ -36,9 +37,11 @@ export default async function StudentApplicationsPage() {
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              My Applications
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Student workspace"
+              title="My Applications"
+              description="Every brief you applied to and where it stands."
+            />
           }
         >
           <ApplicationsClient rows={rows} />

@@ -11,6 +11,7 @@ import {
   listAllProjects,
 } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
+import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import {
   AdminStudentsClient,
   type AdminStudent,
@@ -68,9 +69,11 @@ export default async function AdminStudentsPage() {
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Students
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Admin workspace"
+              title="Students"
+              description="Review profiles, verify identity and build a ranked shortlist."
+            />
           }
         >
           <div className="rounded-2xl border border-[#ded8cb] bg-[#f5f2ea] p-4 sm:p-6">

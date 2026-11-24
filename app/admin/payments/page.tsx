@@ -6,6 +6,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { listOrders, listProfilesByIds, listAllProjects } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
+import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { PaymentsClient, type AdminOrder } from './payments-client';
 
 export const metadata = { title: 'Payments | Admin | Bhutan Tech Connect' };
@@ -65,9 +66,11 @@ export default async function AdminPaymentsPage() {
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Payments
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Admin workspace"
+              title="Payments"
+              description="Verify proof of payment, then confirm or reject each order."
+            />
           }
         >
           <div className="rounded-2xl border border-[#ded8cb] bg-[#f5f2ea] p-4 sm:p-6">

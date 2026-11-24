@@ -6,6 +6,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { listBrowseableStudents, listShortlistedStudentIds } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
+import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { BrowseClient, type StudentCard } from './browse-client';
 
 export const metadata = { title: 'Browse Students | Bhutan Tech Connect' };
@@ -48,9 +49,11 @@ export default async function BrowseStudentsPage() {
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
-            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-              Browse Students
-            </h2>
+            <WorkspacePageHeading
+              eyebrow="Founder workspace"
+              title="Browse Students"
+              description="Find students by skill, college and availability."
+            />
           }
         >
           <BrowseClient students={students} shortlistedIds={shortlistedIds} />
