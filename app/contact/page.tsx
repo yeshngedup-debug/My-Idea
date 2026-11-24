@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CaretRight, Envelope } from "@phosphor-icons/react/dist/ssr";
+import { Envelope } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { CtaBand } from "@/components/marketing/cta-band";
@@ -163,14 +163,8 @@ export default function ContactPage() {
                     "Name the page or feature your question is about.",
                     "Share the project or order reference, if you have one.",
                   ].map((item) => (
-                    <li key={item} className="flex gap-3 text-sm leading-6 text-[#56645c]">
-                      <CaretRight
-                        aria-hidden="true"
-                        weight="light"
-                        strokeWidth={1.5}
-                        className="mt-1 h-4 w-4 shrink-0 text-[#b23c26]"
-                      />
-                      <span>{item}</span>
+                    <li key={item} className="text-sm leading-6 text-[#56645c]">
+                      {item}
                     </li>
                   ))}
                 </ul>
@@ -274,22 +268,14 @@ export default function ContactPage() {
               <StaggerItem key={item.href}>
                 <Link
                   href={item.href}
-                  className="group flex h-full flex-col justify-between gap-8 border-t border-[#17352b]/15 py-6 pr-6 transition hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] md:border-r md:pl-6 md:first:pl-0 md:last:border-r-0"
+                  className="flex h-full flex-col border-t border-[#17352b]/15 py-6 pr-6 transition hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] md:border-r md:pl-6 md:first:pl-0 md:last:border-r-0"
                 >
-                  <div>
-                    <h3 className="text-lg font-semibold leading-snug sm:text-xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-[#18251f]/65">
-                      {item.note}
-                    </p>
-                  </div>
-                  <CaretRight
-                    aria-hidden="true"
-                    weight="light"
-                    strokeWidth={1.5}
-                    className="h-5 w-5 text-[#17352b]/40 transition group-hover:translate-x-1 group-hover:text-[#b23c26]"
-                  />
+                  <h3 className="text-lg font-semibold leading-snug sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#18251f]/65">
+                    {item.note}
+                  </p>
                 </Link>
               </StaggerItem>
             ))}

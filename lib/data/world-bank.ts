@@ -196,6 +196,7 @@ async function fetchWorldBankIndicator(
   try {
     const response = await fetch(url, {
       next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {
@@ -291,6 +292,7 @@ async function fetchWhoLifeExpectancy(): Promise<IndicatorFetchResult> {
   try {
     const response = await fetch(WHO_LIFE_EXPECTANCY_URL, {
       next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!response.ok) {

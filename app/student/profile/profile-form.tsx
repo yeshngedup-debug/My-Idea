@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/shadcn/progress';
 
 const YEARS = ['1st', '2nd', '3rd', '4th', 'Graduate'];
 const AVAILABILITY = [
@@ -50,18 +51,23 @@ export function ProfileForm({
   const [saving, startSave] = useTransition();
   const [uploading, startUpload] = useTransition();
 
-  const completion = useMemo(() => {
+  const { completion, completed, missing } = useMemo(() => {
     const checks = [
-      fullName.trim().length > 1,
-      college.trim().length > 1,
-      course.trim().length > 1,
-      year !== '',
-      skills.length > 0,
-      bio.trim().length > 20,
-      availability !== '',
-      cvPath !== null,
+      { label: 'Full name', done: fullName.trim().length > 1 },
+      { label: 'College', done: college.trim().length > 1 },
+      { label: 'Course', done: course.trim().length > 1 },
+      { label: 'Year', done: year !== '' },
+      { label: 'Skills', done: skills.length > 0 },
+      { label: 'Bio', done: bio.trim().length > 20 },
+      { label: 'Availability', done: availability !== '' },
+      { label: 'CV', done: cvPath !== null },
     ];
-    return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+    const done = checks.filter((c) => c.done).length;
+    return {
+      completion: Math.round((done / checks.length) * 100),
+      completed: done,
+      missing: checks.filter((c) => !c.done).map((c) => c.label),
+    };
   }, [fullName, college, course, year, skills, bio, availability, cvPath]);
 
   function addSkill() {
@@ -102,14 +108,16 @@ export function ProfileForm({
   return (
     <div className="space-y-6">
       <section className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-[#17352b]">Profile completion</h2>
-          <span className="text-2xl font-semibold tabular-nums text-[#17352b]">{completion}%</span>
-        </div>
-        <p className="mt-2 text-xs text-[#657069]">
-          {completion === 100
-            ? 'Complete. Founders can shortlist you.'
-            : 'Add more details to appear higher in founder searches.'}
+        <Progress
+          value={completion}
+          label="Profile completion"
+          valueLabel={`${completed} of 8 details`}
+          aria-valuetext={`${completion}% complete, ${completed} of 8 details`}
+        />
+        <p className="mt-3 text-xs text-[#657069]">
+          {missing.length === 0
+            ? 'Complete. Founders see a full profile.'
+            : `Still needed: ${missing.join(', ')}`}
         </p>
       </section>
 

@@ -5,9 +5,10 @@
  * Confirm (unlock) and Reject actions.
  */
 import { useState, useTransition } from 'react';
-import { CheckCircle, X, FileImage, Clock } from '@phosphor-icons/react';
+import { CheckCircle, WarningCircle, X, FileImage, Clock } from '@phosphor-icons/react';
 import { confirmOrder, rejectOrder } from '@/app/actions/shortlist-order';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/shadcn/alert';
 
 export interface AdminOrder {
   id: string;
@@ -34,9 +35,11 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
   const [items, setItems] = useState(orders);
   const [, startTransition] = useTransition();
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   function update(id: string, action: 'confirm' | 'reject') {
+    setConfirmingId(null);
     setBusyId(id);
     startTransition(async () => {
       const res = action === 'confirm' ? await confirmOrder(id) : await rejectOrder(id);
@@ -123,14 +126,14 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
               </a>
             )}
 
-            {actionable && (
+            {actionable && confirmingId !== o.id && (
               <div className="flex gap-2">
                 <button
                   type="button"
                   disabled={busyId === o.id || !o.screenshot_path}
                   title={o.screenshot_path ? undefined : 'No payment screenshot uploaded yet'}
                   onClick={() => update(o.id, 'confirm')}
-                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-2.5 text-sm font-bold text-[#17352b] transition-colors hover:bg-[#17352b]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-2.5 text-sm font-bold text-[#17352b] hover:bg-[#17352b]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
                   <CheckCircle className="w-4 h-4" aria-hidden="true" />
                   {busyId === o.id ? 'Working...' : 'Confirm payment'}
@@ -138,12 +141,39 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                 <button
                   type="button"
                   disabled={busyId === o.id}
-                  onClick={() => update(o.id, 'reject')}
-                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-2.5 text-sm font-bold text-[#b23c26] transition-colors hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  onClick={() => setConfirmingId(o.id)}
+                  className="pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-2.5 text-sm font-bold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
                   <X className="w-4 h-4" aria-hidden="true" /> Reject
                 </button>
               </div>
+            )}
+
+            {actionable && confirmingId === o.id && (
+              <Alert variant="warning" icon={<WarningCircle />}>
+                <AlertTitle>Reject this payment?</AlertTitle>
+                <AlertDescription>
+                  The founder&apos;s shortlist stays locked. They need a new order to try again.
+                </AlertDescription>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingId(null)}
+                    className="pressable inline-flex min-h-11 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-5 py-2.5 text-sm font-semibold text-[#17352b] hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  >
+                    Keep order
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busyId === o.id}
+                    onClick={() => update(o.id, 'reject')}
+                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-5 py-2.5 text-sm font-bold text-[#b23c26] hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  >
+                    <X className="w-4 h-4" aria-hidden="true" />
+                    {busyId === o.id ? 'Rejecting...' : 'Reject payment'}
+                  </button>
+                </div>
+              </Alert>
             )}
           </li>
         );

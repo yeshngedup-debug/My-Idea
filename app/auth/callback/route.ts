@@ -5,6 +5,7 @@
  */
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getProfileRole } from '@/lib/neon-data';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -18,13 +19,14 @@ export async function GET(request: Request) {
         data: { user },
       } = await supabase.auth.getUser();
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user?.id ?? '')
-        .single();
-
-      const role = profile?.role ?? 'student';
+      let role = 'student';
+      if (user?.id) {
+        try {
+          role = (await getProfileRole(user.id)) ?? 'student';
+        } catch {
+          // Fall back to the student dashboard if the role lookup fails.
+        }
+      }
       const dest =
         role === 'founder' ? '/founder' : role === 'admin' ? '/admin' : '/student';
       return NextResponse.redirect(`${origin}${dest}`);

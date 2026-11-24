@@ -6,6 +6,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getProject } from '@/lib/neon-data';
 import { Badge } from '@/components/ui/badge';
 
 export const metadata = { title: 'Project Details | Bhutan Tech Connect' };
@@ -38,14 +39,22 @@ export default async function StudentProjectDetailPage({
   let project: ProjectDetail | null = null;
 
   if (user) {
-    const { data } = await supabase
-      .from('projects')
-      .select(
-        'id, title, description, required_skills, duration, work_mode, budget_min, budget_max, deadline, status, created_at'
-      )
-      .eq('id', id)
-      .single();
-    project = (data as unknown as ProjectDetail) ?? null;
+    const row = await getProject(id);
+    project = row
+      ? {
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          required_skills: row.required_skills,
+          duration: row.duration,
+          work_mode: row.work_mode,
+          budget_min: row.budget_min,
+          budget_max: row.budget_max,
+          deadline: row.deadline,
+          status: row.status,
+          created_at: row.created_at,
+        }
+      : null;
   }
 
   if (!project) notFound();

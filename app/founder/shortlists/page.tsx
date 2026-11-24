@@ -3,11 +3,24 @@
  * Packages, payment instructions, screenshot upload and order status
  * are handled by the client component; this page owns data loading.
  */
-import { createClient } from '@/lib/supabase/server';
-import { StatusTimeline, ORDER_STEPS } from '@/components/ui/status-timeline';
-import { ShortlistsClient, type OrderRow, type ShortlistStudent } from './shortlists-client';
+import { createClient } from "@/lib/supabase/server";
+import {
+  listFounderOrders,
+  listProjectsByFounder,
+  listFounderShortlists,
+  listStudentProfiles,
+} from "@/lib/neon-data";
+import { sealFounderOrders, type LiveOrderRow } from "@/lib/neon-realtime";
+import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { LiveOrderStatus } from "@/components/founder/live-order-status";
+import { StatusTimeline, ORDER_STEPS } from "@/components/ui/status-timeline";
+import {
+  ShortlistsClient,
+  type OrderRow,
+  type ShortlistStudent,
+} from "./shortlists-client";
 
-export const metadata = { title: 'Premium Shortlist | Bhutan Tech Connect' };
+export const metadata = { title: "Premium Shortlist | Bhutan Tech Connect" };
 
 export default async function FounderShortlistsPage() {
   const supabase = await createClient();
@@ -18,75 +31,92 @@ export default async function FounderShortlistsPage() {
   let orders: OrderRow[] = [];
   let students: ShortlistStudent[] = [];
   let projects: { id: string; title: string }[] = [];
+  let live: {
+    sealedQuery: Awaited<ReturnType<typeof sealFounderOrders>>;
+    initialData: LiveOrderRow[];
+    url: string;
+  } | null = null;
 
   if (user) {
     // Orders and projects are independent — one round-trip.
-    const [oRes, pRes] = await Promise.all([
-      supabase
-        .from('shortlist_orders')
-        .select('id, package, amount, status, screenshot_path, project_id, created_at')
-        .eq('founder_id', user.id)
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('projects')
-        .select('id, title')
-        .eq('founder_id', user.id)
-        .order('created_at', { ascending: false }),
+    const [orderRows, projectRows] = await Promise.all([
+      listFounderOrders(user.id),
+      listProjectsByFounder(user.id),
     ]);
 
-    orders = (oRes.data as unknown as OrderRow[]) ?? [];
-    projects = (pRes.data as { id: string; title: string }[]) ?? [];
+    orders = orderRows.map((o) => ({
+      id: o.id,
+      package: o.package,
+      amount: o.amount,
+      status: o.status,
+      screenshot_path: o.screenshot_path,
+      project_id: o.project_id,
+      created_at: o.created_at,
+    }));
+    projects = projectRows.map((p) => ({ id: p.id, title: p.title }));
+
+    const realtimeUrl = process.env.NEXT_PUBLIC_NEON_REALTIME_URL;
+    if (realtimeUrl) {
+      try {
+        const sealedQuery = await sealFounderOrders(user.id);
+        live = {
+          sealedQuery,
+          initialData: orderRows.map((o) => ({
+            id: o.id,
+            status: o.status,
+            package: o.package,
+            project_id: o.project_id,
+            created_at: o.created_at,
+          })),
+          url: realtimeUrl,
+        };
+      } catch {
+        // The status list still renders from the server-loaded rows.
+      }
+    }
 
     // A general order (no project) unlocks all rows; a project-specific
     // order unlocks only that project's shortlist rows.
     const confirmedProjectIds = new Set(
       orders
-        .filter((o) => o.status === 'confirmed' && o.project_id)
-        .map((o) => o.project_id as string)
+        .filter((o) => o.status === "confirmed" && o.project_id)
+        .map((o) => o.project_id as string),
     );
     const generalUnlocked = orders.some(
-      (o) => o.status === 'confirmed' && !o.project_id
+      (o) => o.status === "confirmed" && !o.project_id,
     );
 
     if (generalUnlocked || confirmedProjectIds.size > 0) {
-      const { data: sl } = await supabase
-        .from('shortlists')
-        .select('id, student_id, status, project_id')
-        .eq('founder_id', user.id)
-        .order('created_at', { ascending: true });
+      const shortlistRows = await listFounderShortlists(user.id);
 
-      const rows = (sl ?? []).filter(
+      const rows = shortlistRows.filter(
         (r) =>
           generalUnlocked ||
-          (r.project_id != null && confirmedProjectIds.has(r.project_id as string))
+          (r.project_id != null && confirmedProjectIds.has(r.project_id)),
       );
-      const ids = [...new Set(rows.map((r) => r.student_id as string))];
+      const ids = [...new Set(rows.map((r) => r.student_id))];
 
       if (ids.length > 0) {
-        const { data: sps } = await supabase
-          .from('student_profiles')
-          .select('id, full_name, college, course, year, skills, availability, contact_email, cv_path')
-          .in('id', ids);
-
-        const byId = new Map((sps ?? []).map((s) => [s.id as string, s]));
+        const sps = await listStudentProfiles(ids);
+        const byId = new Map(sps.map((s) => [s.id, s]));
         students = rows.flatMap((r) => {
-          const sp = byId.get(r.student_id as string) as
-            | Record<string, unknown>
-            | undefined;
+          const sp = byId.get(r.student_id);
           if (!sp) return [];
-          return [{
-            shortlistId: r.id as string,
-            projectId: (r.project_id as string | null) ?? null,
-            id: r.student_id as string,
-            full_name: (sp.full_name as string | null) ?? null,
-            college: (sp.college as string | null) ?? null,
-            course: (sp.course as string | null) ?? null,
-            year: (sp.year as string | null) ?? null,
-            skills: (sp.skills as string[] | null) ?? [],
-            availability: (sp.availability as string | null) ?? null,
-            contact_email: (sp.contact_email as string | null) ?? null,
-            cv_path: (sp.cv_path as string | null) ?? null,
-          }];
+          return [
+            {
+              shortlistId: r.id,
+              projectId: r.project_id,
+              id: r.student_id,
+              full_name: sp.full_name,
+              college: sp.college,
+              course: sp.course,
+              year: sp.year,
+              skills: sp.skills ?? [],
+              availability: sp.availability,
+              contact_email: sp.contact_email,
+              cv_path: sp.cv_path,
+            },
+          ];
         });
       }
     }
@@ -94,23 +124,43 @@ export default async function FounderShortlistsPage() {
 
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-          Premium Shortlist
-        </h2>
+      <div className="mx-auto max-w-6xl">
+        <PinnedHeadingSection
+          heading={
+            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
+              Premium Shortlist
+            </h2>
+          }
+          split="lg:grid-cols-[0.2fr_0.8fr]"
+        >
+          {orders.length > 0 && (
+            <div className="mb-6">
+              <StatusTimeline
+                steps={ORDER_STEPS}
+                status={orders[0].status}
+                label="Payment process for your latest order"
+                compact
+              />
+            </div>
+          )}
 
-        {orders.length > 0 && (
-          <div className="mt-6">
-            <StatusTimeline
-              steps={ORDER_STEPS}
-              status={orders[0].status}
-              label="Payment process for your latest order"
-              compact
-            />
-          </div>
-        )}
+          {live ? (
+            <div className="mb-6">
+              <LiveOrderStatus
+                key={live.sealedQuery.queryFingerprint}
+                sealedQuery={live.sealedQuery}
+                initialData={live.initialData}
+                realtimeUrl={live.url}
+              />
+            </div>
+          ) : null}
 
-        <ShortlistsClient orders={orders} students={students} projects={projects} />
+          <ShortlistsClient
+            orders={orders}
+            students={students}
+            projects={projects}
+          />
+        </PinnedHeadingSection>
       </div>
     </section>
   );

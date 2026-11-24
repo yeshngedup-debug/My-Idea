@@ -44,9 +44,11 @@ test.describe('Premium Shortlist payment flow', () => {
         .locator('input[name="screenshot"]')
         .setInputFiles('tests/e2e/fixtures/test-screenshot.png');
       await page.getByRole('button', { name: 'Submit screenshot' }).click();
-      await expect(page.getByRole('status')).toContainText(
-        'Screenshot submitted'
-      );
+      // The live Neon Realtime status is also role=status, so scope to the
+      // action result message instead of matching every status on the page.
+      await expect(
+        page.getByRole('status').filter({ hasText: 'Screenshot submitted' })
+      ).toContainText('Screenshot submitted');
     });
 
     await test.step('Admin confirms payment', async () => {

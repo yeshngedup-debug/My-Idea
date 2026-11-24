@@ -14,6 +14,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
+import { getProfileRole } from '@/lib/neon-data';
 
 const ROLE_HOME: Record<string, string> = {
   student: '/student',
@@ -23,6 +24,15 @@ const ROLE_HOME: Record<string, string> = {
 
 const PROTECTED_PREFIXES = ['/student', '/founder', '/admin'];
 
+/** Roles live in Neon; a lookup failure must never hard-fail navigation. */
+async function safeRole(userId: string): Promise<string | null> {
+  try {
+    return await getProfileRole(userId);
+  } catch {
+    return null;
+  }
+}
+
 export async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const isDev = process.env.NODE_ENV === 'development';
@@ -31,7 +41,7 @@ export async function proxy(request: NextRequest) {
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''}`,
     "style-src 'self' 'unsafe-inline'",
     'img-src \'self\' data: https:',
-    `connect-src 'self' https://*.supabase.co${isDev ? ' http://127.0.0.1:54321 http://localhost:54321 http://host.docker.internal:54321 ws://localhost:* ws://127.0.0.1:*' : ''}`,
+    `connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.neon.tech${isDev ? ' http://127.0.0.1:54321 http://localhost:54321 http://host.docker.internal:54321 ws://localhost:* ws://127.0.0.1:*' : ''}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -104,26 +114,16 @@ export async function proxy(request: NextRequest) {
 
   // Logged in on an auth page -> send to their dashboard
   if (isAuthPage && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
+    const role = await safeRole(user.id);
     return redirectWithCsp(
-      new URL(ROLE_HOME[profile?.role ?? 'student'], request.url)
+      new URL(ROLE_HOME[role ?? 'student'], request.url)
     );
   }
 
   // Logged in but in someone else's area -> bounce to their own dashboard
   if (isProtected && user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    const role = profile?.role ?? 'student';
-    const home = ROLE_HOME[role] ?? '/student';
+    const role = await safeRole(user.id);
+    const home = ROLE_HOME[role ?? 'student'] ?? '/student';
 
     const ownsArea = pathname.startsWith(home);
     if (!ownsArea) {

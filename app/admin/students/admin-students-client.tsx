@@ -13,7 +13,6 @@ import {
   Star,
   CheckSquare,
   Square,
-  Copy,
   Download,
   FileText,
   CheckCircle,
@@ -27,6 +26,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { CopyButton } from '@/components/interactive/copy-button';
 
 export interface AdminStudent {
   id: string;
@@ -73,7 +73,6 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
   const [founderId, setFounderId] = useState('');
   const [projectId, setProjectId] = useState('');
   const [shortlistText, setShortlistText] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [generating, startGenerate] = useTransition();
   const [, startRank] = useTransition();
@@ -140,7 +139,8 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
     });
   }
 
-  function toggleVerified(id: string) {
+  function toggleVerified(student: AdminStudent) {
+    const id = student.id;
     const next = !verified[id];
     setVerified((prev) => ({ ...prev, [id]: next })); // optimistic
     startVerify(async () => {
@@ -148,6 +148,11 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
       if (!res.ok) {
         setVerified((prev) => ({ ...prev, [id]: !next })); // revert
         setStatus({ ok: false, msg: res.message });
+      } else {
+        setStatus({
+          ok: true,
+          msg: `Verification saved for ${student.full_name ?? 'student'}.`,
+        });
       }
     });
   }
@@ -163,17 +168,6 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
         setStatus({ ok: false, msg: res.message });
       }
     });
-  }
-
-  async function copyShortlist() {
-    if (!shortlistText) return;
-    try {
-      await navigator.clipboard.writeText(shortlistText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setStatus({ ok: false, msg: 'Copy failed. Select the text manually.' });
-    }
   }
 
   function downloadShortlist() {
@@ -368,7 +362,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                 <div className="flex justify-end mt-2">
                   <button
                     type="button"
-                    onClick={() => toggleVerified(s.id)}
+                    onClick={() => toggleVerified(s)}
                     className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                       isVerified
                         ? 'border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b] hover:bg-[#17352b]/12'
@@ -404,13 +398,13 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
             aria-label="Generated shortlist text"
           />
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button
-              type="button"
-              onClick={copyShortlist}
-              className="flex-1 pressable bg-amber-300 text-[#17352b] font-bold hover:bg-amber-200 h-11"
-            >
-              <Copy className="w-4 h-4 mr-1" aria-hidden="true" /> {copied ? 'Copied!' : 'Copy'}
-            </Button>
+            <div className="flex-1">
+              <CopyButton
+                text={shortlistText}
+                label="Copy"
+                className="w-full rounded-xl border-amber-300 bg-amber-300 font-bold text-[#17352b] hover:bg-amber-200"
+              />
+            </div>
             <Button
               type="button"
               onClick={downloadShortlist}

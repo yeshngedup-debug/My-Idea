@@ -103,3 +103,35 @@ Every item from the previous section is now verified fixed:
 **Gates re-run on this final source at 10:51:** `npx tsc --noEmit` exit 0; `npm run lint` exit 0 (0 errors, 2 warnings in generated `coverage/`); `npm test` exit 0, 45/45; `npm run build` exit 0, 33 routes, no deprecation warnings.
 
 **Explicitly outside my verdict:** E2E 4/4 (parent running independently), production Core Web Vitals / field RUM, physical screen-reader testing, 200% zoom. Caveat unchanged: I ran `next build` while dev was live, so I used no post-build DOM as evidence — all DOM checks above were done before the final build.
+
+---
+
+## NEON MIGRATION — FINAL AUDIT 2026-11-24 15:24 +06:00
+
+**Final verdict: APPROVE** for the implemented scope. No HIGH defect found in the Neon migration; three MEDIUM hardening/operational items remain. All gates I can run are green.
+
+### Independently verified
+
+- **Provider wiring:** `GET /api/health` → `{"status":"ok","db":"up","provider":"neon"}`; `GET /api/neon` → `ok:true` with live counts; the deployed Function at `https://br-young-lake-bd6zvogz-platform.compute.c-8.us-east-2.aws.neon.tech/` → **200** `{"ok":true,"source":"neon-function",...}`. `functions/platform.ts:34-85` serves only GET `/` and `/status`, uses static parameterized SQL, and returns 503 on failure.
+- **Application-layer authorization** (no Neon RLS): `proxy.ts:100-132` validates the Supabase JWT with `getUser()` and reads the Neon role; lookup failure fails closed to `student` (`:28-34`). `createProject` requires `founder` (`actions/projects.ts:34-38`); `applyToProject` requires `student` (`:111-114`); `updateProjectStatus`/`updateApplicationStatus` verify founder ownership (`:157-162`, `:193-201`); `createShortlistOrder` checks founder + rate limit (`shortlist-order.ts:40-51`); `uploadPaymentScreenshot` checks order ownership (`:127-134`); `confirmOrder`/`rejectOrder` call `requireAdmin()` (`:156-167`); admin write actions call `requireAdmin()` (`admin-students.ts:29-40`). All SQL in `lib/neon-data.ts` is parameterized — no string interpolation found.
+- **CV proxy** (`app/api/cv/[id]/route.ts:31-92`): role gate, admin unrestricted, founder requires application-to-own-project OR shortlist + confirmed paid order. Mirrors the old RLS intent.
+- **Realtime:** `POST /api/realtime/orders` with no session → **401** (verified live). `route.ts:15-18` checks founder role then seals with the verified `user.id`; the browser never supplies it. `neon-realtime.ts:34-43` parameterizes `$1`. `components/founder/live-order-status.tsx:25-31` renews via that authenticated endpoint.
+- **CSP:** header present on `/public`; `connect-src` gained `https://*.neon.tech wss://*.neon.tech` — a widening, but no script-source weakening (`strict-dynamic` + nonce retained, `object-src 'none'`, `frame-ancestors 'none'` intact).
+- **Secrets:** no tracked `.env*`/`.neon` files; no connection strings or API keys in tracked source; `.gitignore` now ignores `.neon`. `.env`/`.env.local` hold Neon vars but are untracked. No AI Gateway usage anywhere in source — consistent with "no AI feature added".
+- **Gate integrity:** E2E locator edits are scope fixes, not weakened assertions (`founder-flow:28,61` unique title; `payment-flow:47-49` scopes status to text still asserted). Unit-test diffs mechanically migrate Supabase-chain mocks to Neon helper mocks with the same expectations. Build route table counted independently: **38 routes**, matching the report; no deprecation warnings.
+- **Rendered spot-check:** `/how-it-works` at 1440 has 2 sticky section headings at `top: 96px` plus the header; at 320 only the header (intentional `lg:sticky`); `main` `overflow-x: clip`, 0 horizontal overflow, one `h1`, 0 console errors at both widths.
+- **Gates re-run at 15:23:** `tsc` 0; `lint` 0 errors / 2 generated `coverage/` warnings; `test` 45/45; `build` 0 (38 routes).
+
+### Remaining MEDIUM items
+
+1. **`lib/neon-realtime.ts:30` fails open on a missing secret:** `process.env.NEON_REALTIME_SECRET ?? ""` silently seals with an empty string. `lib/env.ts:8-11` validates only the two Supabase vars, so a deployment injecting env vars without `.env` would not fail fast. Add `NEON_REALTIME_SECRET` (and `DATABASE_URL`) to required-env validation.
+2. **Two-provider identity sync is a real fail-open path:** roles are read from Neon (`getProfileRole`), identity lives in Supabase. A demotion made only in Supabase leaves the elevated Neon role active until `scripts/neon-mirror-identities.mjs` is re-run (documented in `FINAL-AUDIT.md:57-60`). Make the mirror automatic or read the authoritative role from the identity provider.
+3. **`.env.local.backup` at repo root contains `SUPABASE_SERVICE_ROLE_KEY`** (untracked/ignored, but present on disk). Delete or move outside the working tree before any archive or deployment.
+
+### LOW / not verified
+
+- `app/api/neon/route.ts:65` returns internal error text in the 503 `detail` field; prefer a generic message.
+- `connect-src` permits any `*.neon.tech` host rather than the two specific endpoints.
+- Not run by me: E2E 4/4 (parent running), AI Gateway 403 (disclosed, no feature), Neon Auth adoption (deliberately declined), production CWV, physical screen reader.
+
+**Bottom line:** the Neon migration is coherent and the security-sensitive paths (proxy, actions, CV, Realtime) are guarded in application code with parameterized SQL. APPROVE with the three MEDIUM items tracked as pre-production hardening; none blocks the current implementation.

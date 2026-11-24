@@ -3,13 +3,10 @@
  */
 import Link from "next/link";
 import {
-  ArrowRight,
-  BriefcaseBusiness,
-  CreditCard,
-  Users,
-  GraduationCap,
-} from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+  listRoleCounts,
+  listProjectStatuses,
+  listOrders,
+} from "@/lib/neon-data";
 import { WorkspaceHero } from "@/components/layout/workspace-hero";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,30 +19,19 @@ import {
 export const metadata = { title: "Admin Dashboard | Bhutan Tech Connect" };
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
-
-  const [profRes, projRes, ordRes] = await Promise.all([
-    supabase.from("profiles").select("role"),
-    supabase.from("projects").select("id, status"),
-    supabase
-      .from("shortlist_orders")
-      .select("id, package, amount, status, created_at")
-      .order("created_at", { ascending: false }),
+  const [profileCounts, projectStatuses, allOrders] = await Promise.all([
+    listRoleCounts(),
+    listProjectStatuses(),
+    listOrders(),
   ]);
 
-  const profiles = (profRes.data ?? []) as { role: string }[];
-  const projects = (projRes.data ?? []) as { status: string }[];
-  const orders = (ordRes.data ?? []) as {
-    id: string;
-    package: string;
-    amount: number | null;
-    status: string;
-    created_at: string;
-  }[];
+  const profiles = profileCounts.flatMap((c) => Array<string>(c.count).fill(c.role));
+  const projects = projectStatuses.map((status) => ({ status }));
+  const orders = allOrders;
 
   const totalUsers = profiles.length;
-  const students = profiles.filter((p) => p.role === "student").length;
-  const founders = profiles.filter((p) => p.role === "founder").length;
+  const students = profiles.filter((role) => role === "student").length;
+  const founders = profiles.filter((role) => role === "founder").length;
   const openProjects = projects.filter((p) => p.status === "open").length;
   const verifying = orders.filter((o) => o.status === "submitted").length;
 
@@ -54,25 +40,21 @@ export default async function AdminDashboard() {
       label: "Total members",
       value: totalUsers,
       detail: `${founders} founders · ${students} students`,
-      icon: Users,
     },
     {
       label: "Student accounts",
       value: students,
       detail: null,
-      icon: GraduationCap,
     },
     {
       label: "Open projects",
       value: openProjects,
       detail: `${projects.length} projects total`,
-      icon: BriefcaseBusiness,
     },
     {
       label: "Payments to review",
       value: verifying,
       detail: "Awaiting confirmation",
-      icon: CreditCard,
     },
   ];
 
@@ -86,24 +68,32 @@ export default async function AdminDashboard() {
         />
       </Reveal>
 
-      <StaggerGroup className="grid grid-flow-dense grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#17352b]/10 bg-[#17352b]/10 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map(({ label, value, detail, icon: Icon }) => (
-          <StaggerItem key={label} className="bg-[#fffefa]">
-            <div className="flex h-full items-start justify-between gap-3 p-5">
-              <div>
-                <p className="text-xs font-medium text-[#657069]">{label}</p>
-                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-[#17352b]">
-                  {value}
-                </p>
-                {detail && <p className="mt-2 text-xs text-[#657069]">{detail}</p>}
-              </div>
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17352b]/6 text-[#17352b]">
-                <Icon aria-hidden="true" className="h-4.5 w-4.5" />
-              </span>
+      <Reveal>
+        <dl className="border-t border-[#17352b]/10">
+          {stats.map(({ label, value, detail }, index) => (
+            <div
+              key={label}
+              className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-[#17352b]/10 py-4"
+            >
+              <dt className="text-sm text-[#657069]">
+                {label}
+                {detail && (
+                  <span className="mt-1 block text-xs text-[#657069] sm:mt-0 sm:ml-2 sm:inline">
+                    {detail}
+                  </span>
+                )}
+              </dt>
+              <dd
+                className={`tabular-nums tracking-tight text-[#17352b] ${
+                  index === 0 ? "text-3xl font-semibold" : "text-xl font-medium"
+                }`}
+              >
+                {value}
+              </dd>
             </div>
-          </StaggerItem>
-        ))}
-      </StaggerGroup>
+          ))}
+        </dl>
+      </Reveal>
 
       {verifying > 0 && (
         <Reveal>
@@ -117,20 +107,16 @@ export default async function AdminDashboard() {
             </span>
             <Link
               href="/admin/payments"
-              className="group inline-flex shrink-0 items-center gap-1 text-sm font-bold text-[#b23c26] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              className="inline-flex shrink-0 items-center text-sm font-semibold text-[#b23c26] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
             >
               Review payments
-              <ArrowRight
-                aria-hidden="true"
-                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
-              />
             </Link>
           </div>
         </Reveal>
       )}
 
       <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <div>
+        <div className="min-w-0">
           <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#17352b]">
             Recent payment orders
           </h3>
@@ -142,9 +128,9 @@ export default async function AdminDashboard() {
             <StaggerGroup className="space-y-2.5">
               {orders.slice(0, 5).map((order) => (
                 <StaggerItem key={order.id}>
-                  <div className="flex items-center justify-between gap-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5">
+                  <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-[#17352b]">
+                      <p className="text-sm font-semibold text-[#17352b]">
                         {order.package === "full" ? "Full Support" : "Basic"} shortlist
                         {order.amount != null
                           ? ` · Nu ${order.amount.toLocaleString("en-IN")}`
@@ -157,7 +143,7 @@ export default async function AdminDashboard() {
                         )}
                       </p>
                     </div>
-                    <Badge className="shrink-0 capitalize border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                    <Badge className="capitalize border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
                       {order.status}
                     </Badge>
                   </div>
@@ -167,7 +153,7 @@ export default async function AdminDashboard() {
           )}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#17352b]">
             Quick links
           </h3>
@@ -181,7 +167,7 @@ export default async function AdminDashboard() {
                 <HoverLift>
                   <Link
                     href={item.href}
-                    className="group flex items-center justify-between gap-3 px-4 py-4 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                    className="flex items-center justify-between gap-3 px-4 py-4 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                   >
                     <span>
                       {item.title}
@@ -189,10 +175,6 @@ export default async function AdminDashboard() {
                         {item.description}
                       </span>
                     </span>
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-4 w-4 shrink-0 text-[#b23c26] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
-                    />
                   </Link>
                 </HoverLift>
               </StaggerItem>

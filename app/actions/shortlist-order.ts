@@ -2,10 +2,18 @@
 
 /**
  * Premium Shortlist order actions — manual payment flow.
- * Founder creates order + uploads screenshot; admin confirms/rejects.
+ * Founder creates order + uploads screenshot to Supabase Storage;
+ * admin confirms/rejects. Order rows live in Neon.
  */
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import {
+  getProfileRole,
+  insertOrder,
+  getOrder,
+  setOrderScreenshot,
+  setOrderStatus,
+} from '@/lib/neon-data';
 import { PACKAGES, type PackageId } from '@/config/payment';
 import { shortlistOrderSchema } from '@/lib/validators';
 import { rateLimit } from '@/lib/rate-limit';
@@ -29,12 +37,8 @@ export async function createShortlistOrder(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'founder') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'founder') {
     return { ok: false, message: 'Only founders can order shortlists.' };
   }
 
@@ -79,23 +83,22 @@ export async function createShortlistOrder(
     };
   }
 
-  const { data, error } = await supabase
-    .from('shortlist_orders')
-    .insert({
-      founder_id: user.id,
-      project_id: projectId || null,
+  let orderId: string;
+  try {
+    const row = await insertOrder({
+      founderId: user.id,
+      projectId: projectId || null,
       package: packageId,
       amount: cleanAmount,
-      status: 'pending',
-    })
-    .select('id')
-    .single();
-
-  if (error) return { ok: false, message: 'Could not create order. Try again.' };
+    });
+    orderId = row.id;
+  } catch {
+    return { ok: false, message: 'Could not create order. Try again.' };
+  }
 
   revalidatePath('/founder/shortlists');
   revalidatePath('/admin/payments');
-  return { ok: true, message: 'Order created. Upload your payment screenshot.', orderId: data.id };
+  return { ok: true, message: 'Order created. Upload your payment screenshot.', orderId };
 }
 
 export async function uploadPaymentScreenshot(
@@ -121,11 +124,7 @@ export async function uploadPaymentScreenshot(
   }
 
   // Order must belong to this founder and be payable
-  const { data: order } = await supabase
-    .from('shortlist_orders')
-    .select('id, founder_id, status')
-    .eq('id', orderId)
-    .single();
+  const order = await getOrder(orderId);
 
   if (!order || order.founder_id !== user.id) {
     return { ok: false, message: 'Order not found.' };
@@ -143,45 +142,36 @@ export async function uploadPaymentScreenshot(
 
   if (uploadError) return { ok: false, message: 'Could not upload screenshot. Try again.' };
 
-  const { error: dbError } = await supabase
-    .from('shortlist_orders')
-    .update({ screenshot_path: path, status: 'submitted' })
-    .eq('id', orderId);
-
-  if (dbError) return { ok: false, message: 'Screenshot uploaded. Could not update order status. Try again.' };
+  try {
+    await setOrderScreenshot(orderId, path);
+  } catch {
+    return { ok: false, message: 'Screenshot uploaded. Could not update order status. Try again.' };
+  }
 
   revalidatePath('/founder/shortlists');
   revalidatePath('/admin/payments');
   return { ok: true, message: 'Screenshot submitted. An admin will check it.' };
 }
 
-async function requireAdmin(): Promise<{ supabase: Awaited<ReturnType<typeof createClient>>; error: string | null }> {
+async function requireAdmin(): Promise<{ error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { supabase, error: 'Not signed in.' };
+  if (!user) return { error: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'admin') return { supabase, error: 'Admins only.' };
+  const role = await getProfileRole(user.id);
+  if (role !== 'admin') return { error: 'Admins only.' };
 
-  return { supabase, error: null };
+  return { error: null };
 }
 
 export async function confirmOrder(orderId: string): Promise<OrderResult> {
-  const { supabase, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return { ok: false, message: error };
 
   // Never confirm a payment without proof
-  const { data: order } = await supabase
-    .from('shortlist_orders')
-    .select('screenshot_path')
-    .eq('id', orderId)
-    .single();
+  const order = await getOrder(orderId);
 
   if (!order) return { ok: false, message: 'Order not found.' };
   if (!order.screenshot_path) {
@@ -191,12 +181,11 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
     };
   }
 
-  const { error: dbError } = await supabase
-    .from('shortlist_orders')
-    .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
-    .eq('id', orderId);
-
-  if (dbError) return { ok: false, message: 'Could not confirm payment. Try again.' };
+  try {
+    await setOrderStatus(orderId, 'confirmed', new Date().toISOString());
+  } catch {
+    return { ok: false, message: 'Could not confirm payment. Try again.' };
+  }
 
   revalidatePath('/admin/payments');
   revalidatePath('/founder/shortlists');
@@ -204,15 +193,14 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
 }
 
 export async function rejectOrder(orderId: string): Promise<OrderResult> {
-  const { supabase, error } = await requireAdmin();
+  const { error } = await requireAdmin();
   if (error) return { ok: false, message: error };
 
-  const { error: dbError } = await supabase
-    .from('shortlist_orders')
-    .update({ status: 'rejected' })
-    .eq('id', orderId);
-
-  if (dbError) return { ok: false, message: 'Could not reject order. Try again.' };
+  try {
+    await setOrderStatus(orderId, 'rejected');
+  } catch {
+    return { ok: false, message: 'Could not reject order. Try again.' };
+  }
 
   revalidatePath('/admin/payments');
   revalidatePath('/founder/shortlists');

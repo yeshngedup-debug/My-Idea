@@ -43,7 +43,13 @@ Two patterns often suggested here are **already implemented**: `whileInView` rev
 2. **`MotionConfig transition` as a house style** → `components/ui/motion-provider.tsx:7`. `MotionConfig` currently sets only `reducedMotion="user"`; components hardcode two different curves (`EASE_OUT` cubic-bezier in `site-header`/`hero-motion` versus the `easeOut` string in `ui/motion.tsx`). Setting one default duration/easing enforces unslop §9's *"one easing curve and a few durations across the screen"* and Apple Design §4's critically-damped default. Docs: https://motion.dev/docs/react-transitions.
 3. **`useSpring`/`useMotionValue` numeric tween for a changed figure** → `components/data/live-context.tsx` `IndicatorItem`, where hourly-refreshed statistics update in place. unslop §9 explicitly allows *"a changed number tweens."* Tween only on value change, snap under reduced motion, keep `tabular-nums` and the accessible value truthful. Docs: https://motion.dev/docs/react-animation.
 
-None are implemented by this assessment.
+**Amended 2026-11-24:** patterns 1 and 2 are now implemented in
+`components/marketing/site-header.tsx` (one `layoutId` hairline inside a
+`LayoutGroup`) and `components/ui/motion-provider.tsx` (one house
+`MotionConfig` transition). Pattern 3 was not used: the statistics panel got a
+real manual refresh control and polite status announcement instead of a numeric
+tween, because the figure is a cited annual estimate and a tween would imply it
+is live. All three passed the same build, unit, E2E and browser gates.
 
 ## Licence and credit obligations
 

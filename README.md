@@ -6,7 +6,54 @@ A mobile-first MVP that connects Bhutanese college students with startup founder
 - **Founders** post short paid projects, browse student profiles, view CVs, and can buy a manually curated **Premium Shortlist** (paid by bank/mBoB transfer, confirmed by an admin).
 - **Admins** verify and rank students, confirm manual payments, and deliver ranked shortlists.
 
-Built with Next.js (App Router), Supabase (Auth + Postgres + Storage + Row Level Security), Tailwind CSS, and TypeScript.
+Built with Next.js (App Router), Tailwind CSS, and TypeScript. **Supabase provides Auth and private file Storage. Application data lives in Neon Postgres.** Authorization that used to rely on Supabase RLS is now enforced in server actions, route handlers and `proxy.ts`.
+
+---
+
+## Data setup with Neon
+
+Put the pooled connection string in `.env.local` (never commit it):
+
+```
+DATABASE_URL=<pooled Neon connection string>
+```
+
+`neon deploy` writes the Neon-managed variables to `.env` (Postgres, branch,
+Auth, Functions, AI Gateway and Realtime). Run it once with the CLI signed in:
+
+```bash
+neon deploy
+```
+
+The browser needs the Realtime URL. Copy the value of `NEON_REALTIME_URL` from
+`.env` into `.env.local` as `NEXT_PUBLIC_NEON_REALTIME_URL`. This URL is public
+by design; the sealing secret stays server-only.
+
+Apply the Neon schema and mirror the local Supabase identities into it:
+
+```bash
+node scripts/neon-setup.mjs                # create tables and seed demo rows
+node scripts/neon-mirror-identities.mjs    # copy real auth IDs + data from local Supabase
+```
+
+`scripts/neon-mirror-identities.mjs` reads `DATABASE_URL` from `.env.local` and connects to local Postgres at `postgresql://postgres:postgres@127.0.0.1:54322/postgres` (override with `LOCAL_SUPABASE_DB_URL`). It uses the Supabase auth user IDs as `public.profiles.id`, so JWTs from Supabase Auth resolve to the correct Neon role. Run it again before E2E tests to reset seeded data.
+
+`GET /api/neon` reports Neon table counts and open projects. It calls the
+deployed `platform` Neon Function first and falls back to a direct query.
+`GET /api/health` reports Neon reachability.
+
+**Provisioned services and scope**
+
+| Service | Status | Use in this app |
+| --- | --- | --- |
+| Postgres | Migrated | All application reads and writes |
+| Functions | `platform` deployed | Public status endpoint behind `/api/neon` |
+| Realtime | Enabled | Founder shortlist payment status updates live after admin confirmation |
+| Auth | Enabled on the branch, not adopted | Supabase Auth remains the identity provider; Managed Better Auth would require replacing sessions and users, so it was not wired |
+| AI Gateway | Enabled but unusable | `/v1/models` returns models, but `/v1/chat/completions` returns 403 `paid_plan_required`; no feature was added |
+
+Signup mirrors the new student profile into Neon, while roles changed out of
+band in Supabase need a re-run of `scripts/neon-mirror-identities.mjs`.
 
 ---
 

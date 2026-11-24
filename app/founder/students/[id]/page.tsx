@@ -4,6 +4,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import {
+  getProfileRole,
+  getStudentProfile,
+  getShortlist,
+} from '@/lib/neon-data';
 import { Badge } from '@/components/ui/badge';
 import { ShortlistButton } from './shortlist-button';
 
@@ -28,25 +33,16 @@ export default async function StudentProfileDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: target } = await supabase.from('profiles').select('role').eq('id', id).single();
+  const targetRole = await getProfileRole(id);
 
-  if (!target || target.role !== 'student') notFound();
+  if (targetRole !== 'student') notFound();
 
-  const { data: sp } = await supabase
-    .from('student_profiles')
-    .select('full_name, college, course, year, skills, bio, availability, cv_path')
-    .eq('id', id)
-    .single();
+  const sp = await getStudentProfile(id);
 
   if (!sp || !sp.cv_path) notFound();
 
   // Is this student already on this founder's shortlist?
-  const { data: existing } = await supabase
-    .from('shortlists')
-    .select('id')
-    .eq('founder_id', user?.id ?? '')
-    .eq('student_id', id)
-    .maybeSingle();
+  const existing = user ? await getShortlist(user.id, id) : null;
 
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">

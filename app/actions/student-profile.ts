@@ -1,10 +1,17 @@
 'use server';
 
 /**
- * Student profile server actions — save profile fields + upload CV to Storage.
+ * Student profile server actions — save profile fields + upload CV to
+ * Supabase Storage. Profile rows themselves live in Neon.
  */
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import {
+  getProfileRole,
+  upsertStudentProfile,
+  updateProfileFullName,
+  setStudentProfileCv,
+} from '@/lib/neon-data';
 import { saveStudentProfileSchema } from '@/lib/validators';
 
 export interface SaveResult {
@@ -20,12 +27,8 @@ export async function saveStudentProfile(formData: FormData): Promise<SaveResult
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'student') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'student') {
     return { ok: false, message: 'Only students can save a profile.' };
   }
 
@@ -59,14 +62,14 @@ export async function saveStudentProfile(formData: FormData): Promise<SaveResult
     updated_at: new Date().toISOString(),
   };
 
-  const { error } = await supabase
-    .from('student_profiles')
-    .upsert(row, { onConflict: 'id' });
-
-  if (error) return { ok: false, message: `Could not save profile: ${error.message}` };
-
-  // Keep profiles.full_name in sync
-  await supabase.from('profiles').update({ full_name: full_name }).eq('id', user.id);
+  try {
+    await upsertStudentProfile(row);
+    // Keep profiles.full_name in sync
+    await updateProfileFullName(user.id, full_name);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'database error';
+    return { ok: false, message: `Could not save profile: ${message}` };
+  }
 
   revalidatePath('/student/profile');
   revalidatePath('/student');
@@ -81,12 +84,8 @@ export async function uploadCv(formData: FormData): Promise<SaveResult> {
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'student') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'student') {
     return { ok: false, message: 'Only students can upload a CV.' };
   }
 
@@ -112,19 +111,11 @@ export async function uploadCv(formData: FormData): Promise<SaveResult> {
   // Store only the storage path — signed URLs expire (1 hour), so they must
   // never be persisted. CVs are opened via the /api/cv/[id] proxy, which
   // creates a fresh signed URL on demand.
-  const { error: dbError } = await supabase
-    .from('student_profiles')
-    .upsert(
-      {
-        id: user.id,
-        cv_path: path,
-        cv_url: null, // legacy column, deliberately kept empty
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'id' }
-    );
-
-  if (dbError) return { ok: false, message: 'CV uploaded. Could not save the link. Try again.' };
+  try {
+    await setStudentProfileCv(user.id, path, new Date().toISOString());
+  } catch {
+    return { ok: false, message: 'CV uploaded. Could not save the link. Try again.' };
+  }
 
   revalidatePath('/student/profile');
   return { ok: true, message: 'CV uploaded.' };

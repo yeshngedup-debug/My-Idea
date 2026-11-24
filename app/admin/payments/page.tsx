@@ -1,51 +1,43 @@
 ﻿/**
  * Admin Payments — confirm or reject shortlist orders.
- * Server loads orders + founder names + project titles + fresh screenshot links,
- * then hands them to the interactive PaymentsClient.
+ * Server loads orders + founder names + project titles + fresh screenshot
+ * links, then hands them to the interactive PaymentsClient.
  */
-import { createClient } from "@/lib/supabase/server";
-import { PaymentsClient, type AdminOrder } from "./payments-client";
+import { createClient } from '@/lib/supabase/server';
+import { listOrders, listProfilesByIds, listAllProjects } from '@/lib/neon-data';
+import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
+import { PaymentsClient, type AdminOrder } from './payments-client';
 
-export const metadata = { title: "Payments | Admin | Bhutan Tech Connect" };
+export const metadata = { title: 'Payments | Admin | Bhutan Tech Connect' };
 
 export default async function AdminPaymentsPage() {
   const supabase = await createClient();
+  const allOrders = await listOrders();
 
-  const { data: o } = await supabase
-    .from("shortlist_orders")
-    .select(
-      "id, founder_id, project_id, package, amount, status, screenshot_path, created_at",
-    )
-    .order("created_at", { ascending: false });
+  const rows: AdminOrder[] = allOrders.map((o) => ({
+    id: o.id,
+    founder_id: o.founder_id,
+    project_id: o.project_id,
+    package: o.package,
+    amount: o.amount,
+    status: o.status,
+    screenshot_path: o.screenshot_path,
+    created_at: o.created_at,
+  }));
 
-  const rows = (o ?? []) as unknown as AdminOrder[];
-
-  // Batch-load display names — never issue .in('id', []) on an empty list.
+  // Batch-load display names — never issue a lookup on an empty list.
   const founderIds = [...new Set(rows.map((r) => r.founder_id))];
   const projectIds = [
     ...new Set(rows.map((r) => r.project_id).filter((v): v is string => !!v)),
   ];
 
-  const [fpRes, pjRes] = await Promise.all([
-    founderIds.length
-      ? supabase.from("profiles").select("id, full_name").in("id", founderIds)
-      : Promise.resolve({
-          data: [] as { id: string; full_name: string | null }[],
-        }),
-    projectIds.length
-      ? supabase.from("projects").select("id, title").in("id", projectIds)
-      : Promise.resolve({ data: [] as { id: string; title: string }[] }),
+  const [founders, projects] = await Promise.all([
+    founderIds.length ? listProfilesByIds(founderIds) : Promise.resolve([]),
+    projectIds.length ? listAllProjects() : Promise.resolve([]),
   ]);
 
-  const founderNames = new Map(
-    (fpRes.data ?? []).map((f) => [
-      f.id as string,
-      f.full_name as string | null,
-    ]),
-  );
-  const projectTitles = new Map(
-    (pjRes.data ?? []).map((p) => [p.id as string, p.title as string]),
-  );
+  const founderNames = new Map(founders.map((f) => [f.id, f.full_name]));
+  const projectTitles = new Map(projects.map((p) => [p.id, p.title]));
 
   // Each proof needs a fresh short-lived signed URL (1 hour).
   const orders: AdminOrder[] = await Promise.all(
@@ -53,7 +45,7 @@ export default async function AdminPaymentsPage() {
       let screenshotUrl: string | null = null;
       if (row.screenshot_path) {
         const { data: signed } = await supabase.storage
-          .from("payment-screenshots")
+          .from('payment-screenshots')
           .createSignedUrl(row.screenshot_path, 3600);
         screenshotUrl = signed?.signedUrl ?? null;
       }
@@ -71,13 +63,17 @@ export default async function AdminPaymentsPage() {
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
       <div className="mx-auto max-w-5xl">
-        <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-          Payments
-        </h2>
-
-        <div className="mt-6 rounded-2xl border border-[#ded8cb] bg-[#f5f2ea] p-4 sm:p-6">
-          <PaymentsClient orders={orders} />
-        </div>
+        <PinnedHeadingSection
+          heading={
+            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
+              Payments
+            </h2>
+          }
+        >
+          <div className="rounded-2xl border border-[#ded8cb] bg-[#f5f2ea] p-4 sm:p-6">
+            <PaymentsClient orders={orders} />
+          </div>
+        </PinnedHeadingSection>
       </div>
     </section>
   );

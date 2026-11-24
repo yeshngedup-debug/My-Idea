@@ -183,3 +183,62 @@ A follow-up scan of `.next` invalidated one piece of supporting evidence and con
 - `ScrollTrigger` appears in 15 files under `.next/dev`, including `.next/dev/static/chunks/_1yri-pfn1tr_h._.js:636-664`. That chunk contains an **older** `DesireChapter` with `useGSAP`, `gsap.matchMedia()` and a scrollTrigger timeline — code that does **not** exist in the current `components/marketing/home/desire-chapter.tsx`, which is static. The compiled output is stale. This reinforces, rather than weakens, Finding 1: current source has zero GSAP consumers, and the running dev server may be serving stale component code.
 - Consequence: **all runtime numbers remain diagnostic only** (already marked Not verified for production CWV). The DOM-level SEO evidence is unaffected — duplicate titles/descriptions, missing canonicals, static OG tags, and the `/logo.png` 404 were all read from the served HTML and independently match current source lines.
 - No severity, verdict, or top-three ranking changes.
+
+---
+
+# FINAL PASS — 2026-11-24 (Neon final state)
+
+**Scope:** re-audit after Neon migration. Production server started with `npx next start -p 3001` (later 3002 after the 120 s shell timeout): no HMR scripts in HTML, 13 script tags, 2 stylesheets — a real production render, unlike the earlier dev-only checks. Dev server on 3000 also live. Playwright via Code Mode on both.
+
+## Cross-reference with other reports (this pass)
+
+- `reports/orchestrator.md` claims all earlier HIGH fixes landed; **independently confirmed** here on a production server.
+- `reports/orchestrator-audit.md` lines 61-69 already verified the OG PNG, GSAP removal and 1920 px hero; this pass adds production-render evidence and Neon-specific checks, so no duplication.
+- `reports/visual-critic.md` row 10 explicitly cedes hero *resolution* to this report and owns the hero *scrim* separately — no overlap.
+- `reports/accessibility-critic.md` still describes the deleted GSAP scroll kit (stale observation); current source and client bundles contain no GSAP.
+- `reports/FINAL-AUDIT.md` and `reports/orchestrator.md` report no production RUM; unchanged.
+
+## Resolved since first audit
+
+| Prior finding | Final-state evidence |
+|---|---|
+| F1 HIGH GSAP dead weight | `package.json` has no `gsap`/`@gsap/react`; production client chunks contain **no** `gsap`, `ScrollTrigger`, `useGSAP` or `anime.js` markers. MotionConfig present — Motion is the only animation runtime. Unused deps `@next/bundle-analyzer` / `@tanstack/react-virtual` also gone. |
+| F5 HIGH under-resolution hero | `public/images/bhutanese-students.jpg` now **1920×1163 / 294,704 B** (was 960×581 / 130,440 B). Production render: desktop `naturalWidth 1536` vs `clientWidth 1521`; mobile 375 px `naturalWidth 375` vs `clientWidth 360`. Properly sized at both. |
+| F7 HIGH duplicate title/description | Production HTML on all 10 routes: exactly **1 `<title>`, 1 description**. `lib/metadata.ts` `pageMetadata()` used by all seven public pages. |
+| F8 HIGH OG/Twitter | Production: per-page `og:title`/`og:url` on all seven public pages, `og:image = https://bhutantech.bt/og-image.png` with width 1200 / height 630 / alt, and `twitter:image` present. `public/og-image.png` is 53,506 B; GET 200. |
+| F9 MEDIUM canonicals | Production: **all 10 routes** have one canonical matching their own path (`/public`, `/how-it-works`, `/for-students`, …). |
+| F10 MEDIUM JSON-LD | Single Organization block; logo `https://bhutantech.bt/icon-512.png` (8,438 B, GET 200); **no SearchAction**; `suppressHydrationWarning` added. |
+| Runtime caveat | Production server exercised; lab CWV now measured (below). |
+
+## New Neon-specific checks
+
+- **No env leak.** Compared all `.env`/`.env.local` values against concatenated production client chunks: `NEON_REALTIME_SECRET` (53 chars), `DATABASE_URL` (146), `NEON_REALTIME_URL` (59), `NEON_BRANCH_ID` (22), `NEON_FUNCTION_HOST_SUFFIX` (36) — **none found in client chunks**. Literal markers `NEON_REALTIME_SECRET`, `neon.tech`, `paid_plan_required` also absent. Native `@neon/realtime` is not in the public bundle.
+- **CSP correct.** Production response header contains `https://*.neon.tech` and `wss://*.neon.tech` from `proxy.ts:44`; header length 334 chars.
+- **Neon adds no marketing-route SSR cost.** `/public` still calls only `getLiveContext()` (`app/public/page.tsx:32`, `app/about/page.tsx:61`). `getNeonStats/getOpenProjects` appear in no page component. `/api/neon` is a standalone status endpoint (only referenced in `functions/platform.ts:5` comment); `/api/realtime/orders` is client-called from `components/founder/live-order-status.tsx:26` on a founder dashboard. Neither is in the public SSR path.
+- **Neon endpoint latency (not page-blocking):** `/api/neon` 1979 / 909 / 677 ms and `/api/health` 1971 / 533 / 368 ms over three warm calls (first call includes Neon Function cold start). `app/api/neon/route.ts:28-31` correctly uses `AbortSignal.timeout(5000)` with a direct-SQL fallback. AI Gateway unusable by plan and Neon Auth unadopted — no client code or bundle impact.
+
+## Production lab Core Web Vitals
+
+| Viewport | TTFB | FCP | LCP (element) | CLS |
+|---|---|---|---|---|
+| 1521 px desktop | 26 ms | 164 ms | **632 ms** — hero `/_next/image?...w=1920` | not captured desktop |
+| 375 px mobile | 318 ms (cold server) | 496 ms | **552 ms** — hero `w=640` | **0** |
+
+`/public` HTML fetch repeated warm: 17 / 16 / 15 ms. Client payload on `/public`: **12 JS requests / 214 KB**, 2 CSS / 16 KB, 3 optimized images / 348 KB. All measured values are far inside LCP ≤ 2.5 s and CLS ≤ 0.1. INP was not interactively measured; no long-running client work on public routes. **Field RUM at p75 (mobile/desktop): still Not verified** — no telemetry source exists; these are localhost lab numbers.
+
+## Residual findings (non-blocking)
+
+**R1 — MEDIUM — live-statistics SSR still has no fetch timeout.** `lib/data/world-bank.ts:191-199` and `:292-294` use `next: { revalidate: 3600 }` with no `AbortSignal.timeout` and no static seed, unlike the Neon endpoints which do add a 5 s timeout. Warm production SSR is 15-17 ms, so the risk is cold-cache/hung-upstream only. Fix: mirror the `/api/neon` timeout-and-fallback pattern.
+
+**R2 — LOW — home signal and legal-page social previews.** `app/page.tsx:2` 307-redirects `/` → `/public` (verified production 307), but `app/sitemap.ts:5-17` still lists both with priority 1 and the canonical is `/public`. `/privacy` and `/terms` have no `pageMetadata()`, so their production OG title/URL fall back to root (`Bhutan Tech Connect | Paid project work in Bhutan` / `https://bhutantech.bt`), unlike the other eight routes. Also no `FAQPage` JSON-LD for the 11 Q&As.
+
+**R3 — LOW — minor image/meta polish.** Six unreferenced images still ship in `public/images` (~1.82 MiB). The priority hero has `rel=preload imagesrcset` but no `fetchpriority="high"` (`fp: null`) in production. `app/robots.ts:4-9` has no `Disallow: /api/`; `sitemap.ts` uses `new Date()` for every `lastModified`. None affect measured CWV.
+
+## Verdict — APPROVE
+
+All six HIGH/MEDIUM blockers from the first audit are independently verified fixed on a production server, and the Neon integration introduces no SSR cost, no env leak, and no client bundle bloat. Lab CWV pass comfortably on desktop and mobile. The three residual items are non-blocking cleanup; field RUM instrumentation remains an observation, not a release blocker for this local build.
+
+### Top three findings (residual, ranked)
+1. **R1 MEDIUM** — add a fetch timeout + static fallback to the 7 live-statistics calls (`lib/data/world-bank.ts:191-199,292-294`); copy the proven pattern from `app/api/neon/route.ts:28-31`.
+2. **R2 LOW** — resolve the `/` vs `/public` sitemap/canonical duplication (`app/sitemap.ts:5-17`) and give `/privacy` / `/terms` their own `pageMetadata()` OG values.
+3. **R3 LOW** — remove ~1.82 MiB of unreferenced images and add `fetchPriority="high"` to the priority hero.

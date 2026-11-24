@@ -2,9 +2,12 @@
 
 /**
  * Shortlist actions — founders request/shortlist students.
+ * The old SECURITY DEFINER RPC is reproduced in application code in
+ * lib/neon-data.ts, including the relationship and idempotency checks.
  */
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { getProfileRole, requestShortlist as createShortlistRow, NeonDataError } from '@/lib/neon-data';
 
 export interface ShortlistResult {
   ok: boolean;
@@ -19,40 +22,29 @@ export async function requestShortlist(studentId: string): Promise<ShortlistResu
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'founder') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'founder') {
     return { ok: false, message: 'Only founders can shortlist students.' };
   }
 
   // Make sure the target actually is a student
-  const { data: target } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', studentId)
-    .single();
-  if (!target || target.role !== 'student') {
+  const targetRole = await getProfileRole(studentId);
+  if (targetRole !== 'student') {
     return { ok: false, message: 'Student not found.' };
   }
 
-  // Creation is handled by a SECURITY DEFINER RPC: direct INSERTs are not
-  // permitted by RLS. The RPC rechecks the role and requires a real
-  // relationship (an application, or a confirmed paid order).
-  const { error } = await supabase.rpc('request_shortlist', {
-    p_student_id: studentId,
-    p_project_id: null,
-  });
-
-  if (error) {
-    const detail = error.message ?? '';
+  try {
+    await createShortlistRow(user.id, studentId, null);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : '';
     if (detail.includes('No relationship')) {
       return {
         ok: false,
         message: 'Shortlist students who applied to your projects, or any student once a premium shortlist is confirmed.',
       };
+    }
+    if (error instanceof NeonDataError && error.code === '23505') {
+      return { ok: true, message: 'Shortlist request sent.' };
     }
     return { ok: false, message: `Shortlist request failed: ${detail}` };
   }

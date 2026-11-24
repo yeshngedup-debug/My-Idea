@@ -29,10 +29,7 @@ export function WorkspaceHero({
         <div className="absolute inset-0 bg-gradient-to-r from-[#10241c] via-[#10241c]/90 to-[#10241c]/70" />
       </div>
       <div className="relative z-10 max-w-3xl">
-        <span className="inline-flex items-center gap-2 rounded-full border border-amber-200/40 bg-amber-200/10 px-3 py-1 text-xs font-semibold text-amber-200">
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-300" aria-hidden="true" />
-          {eyebrow}
-        </span>
+        <p className="text-xs font-medium text-white/70">{eyebrow}</p>
         <h2 className="mt-4 text-[clamp(1.75rem,4vw,2.6rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-white">
           {title}
         </h2>

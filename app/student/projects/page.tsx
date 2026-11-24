@@ -4,6 +4,8 @@
  * both to the interactive client cards (apply + status feedback).
  */
 import { createClient } from '@/lib/supabase/server';
+import { listOpenProjects, listStudentAppliedProjectIds } from '@/lib/neon-data';
+import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
 import { ProjectsClient, type OpenProject } from './projects-client';
 
 export const metadata = { title: 'Open Projects | Bhutan Tech Connect' };
@@ -19,32 +21,28 @@ export default async function StudentProjectsPage() {
 
   if (user) {
     // Open projects + this student's applications — one round-trip.
-    // `created_at` is part of the OpenProject prop shape the client expects.
-    const [rowsRes, appsRes] = await Promise.all([
-      supabase
-        .from('projects')
-        .select(
-          'id, title, description, duration, work_mode, budget_min, budget_max, required_skills, deadline, created_at'
-        )
-        .eq('status', 'open')
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('applications')
-        .select('project_id')
-        .eq('student_id', user.id),
+    const [rows, applied] = await Promise.all([
+      listOpenProjects(),
+      listStudentAppliedProjectIds(user.id),
     ]);
 
-    projects = (rowsRes.data as unknown as OpenProject[]) ?? [];
-    appliedIds = (appsRes.data ?? []).map((a) => a.project_id as string);
+    projects = rows as OpenProject[];
+    appliedIds = applied;
   }
 
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-          Open Projects
-        </h2>
-        <ProjectsClient projects={projects} appliedIds={appliedIds} />
+      <div className="mx-auto max-w-6xl">
+        <PinnedHeadingSection
+          heading={
+            <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
+              Open Projects
+            </h2>
+          }
+          split="lg:grid-cols-[0.2fr_0.8fr]"
+        >
+          <ProjectsClient projects={projects} appliedIds={appliedIds} />
+        </PinnedHeadingSection>
       </div>
     </section>
   );

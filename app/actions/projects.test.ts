@@ -2,16 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createProject } from '@/app/actions/projects';
 import { mockSupabaseClient, setMockUser } from '@/test/supabase.mock';
 import { createClient } from '@/lib/supabase/server';
+import { getProfileRole, insertProject } from '@/lib/neon-data';
 
 const mockedCreateClient = vi.mocked(createClient);
+const mockedGetProfileRole = vi.mocked(getProfileRole);
+const mockedInsertProject = vi.mocked(insertProject);
 
 describe('createProject', () => {
   let client: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  let chain: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   beforeEach(() => {
-    ({ client, chain } = mockSupabaseClient());
+    ({ client } = mockSupabaseClient());
     vi.clearAllMocks();
+    mockedInsertProject.mockResolvedValue({ id: 'project-id' });
   });
 
   it('rejects when not signed in', async () => {
@@ -30,7 +33,7 @@ describe('createProject', () => {
 
   it('rejects when user is not a founder', async () => {
     setMockUser(client, { id: 'user-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'student' }, error: null });
+    mockedGetProfileRole.mockResolvedValue('student');
     const fd = new FormData();
     fd.set('title', 'Valid Title');
     fd.set('description', 'A valid description that is long enough.');
@@ -45,7 +48,7 @@ describe('createProject', () => {
 
   it('rejects invalid form data', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'founder' }, error: null });
+    mockedGetProfileRole.mockResolvedValue('founder');
     const fd = new FormData();
     fd.set('title', 'Hi'); // too short
     fd.set('description', 'Too short');
@@ -60,8 +63,7 @@ describe('createProject', () => {
 
   it('creates a project with valid data', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'founder' }, error: null });
-    chain.insert.mockResolvedValue({ data: [{ id: 'project-id' }], error: null });
+    mockedGetProfileRole.mockResolvedValue('founder');
 
     const fd = new FormData();
     fd.set('title', 'Build a landing page');
@@ -77,24 +79,22 @@ describe('createProject', () => {
 
     expect(result.ok).toBe(true);
     expect(result.message).toBe('Project posted.');
-    expect(chain.insert).toHaveBeenCalledWith({
+    expect(mockedInsertProject).toHaveBeenCalledWith({
       title: 'Build a landing page',
-      description:
-        'A simple landing page for my startup with a contact form.',
-      founder_id: 'founder-uuid',
-      required_skills: ['React', 'Tailwind'],
+      description: 'A simple landing page for my startup with a contact form.',
+      founderId: 'founder-uuid',
+      requiredSkills: ['React', 'Tailwind'],
       duration: '1 month',
-      budget_min: 500,
-      budget_max: 1000,
-      work_mode: 'remote',
+      budgetMin: 500,
+      budgetMax: 1000,
+      workMode: 'remote',
       deadline: null,
-      status: 'open',
     });
   });
 
   it('rejects budget min greater than max', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'founder' }, error: null });
+    mockedGetProfileRole.mockResolvedValue('founder');
     const fd = new FormData();
     fd.set('title', 'Valid Title');
     fd.set('description', 'A valid description that is long enough.');
@@ -109,8 +109,7 @@ describe('createProject', () => {
 
   it('verify createClient is called', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'founder' }, error: null });
-    chain.insert.mockResolvedValue({ data: [{ id: 'id' }], error: null });
+    mockedGetProfileRole.mockResolvedValue('founder');
     const fd = new FormData();
     fd.set('title', 'Valid Title');
     fd.set('description', 'A valid description that is long enough.');

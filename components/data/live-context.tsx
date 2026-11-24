@@ -35,6 +35,9 @@ type LiveState = {
   unavailable: boolean;
   now: number;
   paused: boolean;
+  refreshing: boolean;
+  notice: string | null;
+  refresh: () => void;
   togglePaused: () => void;
 };
 
@@ -74,10 +77,14 @@ function useLiveContext(initial: LiveContextResult): LiveState {
   const inFlight = useRef(false);
   const pausedRef = useRef(false);
   const [paused, setPaused] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     if (inFlight.current) return;
     inFlight.current = true;
+    setRefreshing(true);
+    setNotice(null);
 
     try {
       const response = await fetch("/api/context-data", { cache: "no-store" });
@@ -87,14 +94,18 @@ function useLiveContext(initial: LiveContextResult): LiveState {
       if (next.ok && next.indicators.length > 0) {
         setData(next);
         setUnavailable(false);
+        setNotice("Updated just now");
       } else {
         setUnavailable(true);
+        setNotice("Update unavailable. Showing last values");
       }
     } catch {
       // Keep the last good values on screen when a poll fails.
       setUnavailable(true);
+      setNotice("Update failed. Showing last values");
     } finally {
       inFlight.current = false;
+      setRefreshing(false);
     }
   }, []);
 
@@ -116,6 +127,9 @@ function useLiveContext(initial: LiveContextResult): LiveState {
     unavailable,
     now,
     paused,
+    refreshing,
+    notice,
+    refresh: () => void refresh(),
     togglePaused: () => {
       pausedRef.current = !pausedRef.current;
       setPaused(pausedRef.current);
@@ -123,23 +137,46 @@ function useLiveContext(initial: LiveContextResult): LiveState {
   };
 }
 
-/** WCAG 2.2.2: a moving/auto-updating region needs a keyboard-operable pause. */
-function RefreshPill({
+/** WCAG 2.2.2: an auto-updating region needs a keyboard-operable pause. */
+function RefreshControls({
   paused,
+  refreshing,
+  notice,
+  onRefresh,
   onToggle,
 }: {
   paused: boolean;
+  refreshing: boolean;
+  notice: string | null;
+  onRefresh: () => void;
   onToggle: () => void;
 }) {
+  const control =
+    "inline-flex min-h-9 items-center rounded-lg border border-[#17352b]/15 bg-[#fffefa]/70 px-3 text-xs font-medium text-[#17352b] transition-colors hover:border-[#17352b]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] disabled:cursor-wait disabled:opacity-60";
+
   return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={paused}
-      className="inline-flex min-h-8 items-center rounded-lg border border-[#17352b]/15 bg-[#fffefa]/70 px-3 py-1 text-xs font-medium text-[#17352b] transition-colors hover:border-[#17352b]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
-    >
-      {paused ? "Updates paused · Resume" : "Auto-refreshing · Pause"}
-    </button>
+    <div className="flex flex-wrap items-center gap-2">
+      <button
+        type="button"
+        onClick={onRefresh}
+        disabled={refreshing}
+        aria-busy={refreshing}
+        className={control}
+      >
+        {refreshing ? "Refreshing..." : "Refresh now"}
+      </button>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-pressed={paused}
+        className={control}
+      >
+        {paused ? "Updates paused · Resume" : "Auto-refreshing · Pause"}
+      </button>
+      <p role="status" aria-live="polite" className="sr-only">
+        {notice ?? ""}
+      </p>
+    </div>
   );
 }
 
@@ -268,6 +305,9 @@ function FullPanel({
   unavailable,
   now,
   paused,
+  refreshing,
+  notice,
+  refresh,
   togglePaused,
   className,
 }: LiveState & { className?: string }) {
@@ -292,7 +332,13 @@ function FullPanel({
           >
             Auto-refreshing official statistics
           </h2>
-          <RefreshPill paused={paused} onToggle={togglePaused} />
+          <RefreshControls
+            paused={paused}
+            refreshing={refreshing}
+            notice={notice}
+            onRefresh={refresh}
+            onToggle={togglePaused}
+          />
         </div>
         <p className="mt-4 max-w-2xl text-sm leading-6 text-body-secondary">
           Annual releases and modeled estimates from international datasets.
@@ -336,6 +382,9 @@ function CompactPanel({
   unavailable,
   now,
   paused,
+  refreshing,
+  notice,
+  refresh,
   togglePaused,
   className,
 }: LiveState & { className?: string }) {
@@ -357,7 +406,13 @@ function CompactPanel({
             >
               Auto-refreshing official statistics
             </h2>
-            <RefreshPill paused={paused} onToggle={togglePaused} />
+            <RefreshControls
+            paused={paused}
+            refreshing={refreshing}
+            notice={notice}
+            onRefresh={refresh}
+            onToggle={togglePaused}
+          />
           </div>
           <CheckedLabel checkedAt={data.checkedAt} now={now} />
         </div>

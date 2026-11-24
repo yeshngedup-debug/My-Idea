@@ -4,6 +4,7 @@
  * the editable client form.
  */
 import { createClient } from '@/lib/supabase/server';
+import { getStudentProfile } from '@/lib/neon-data';
 import { ProfileForm, type StudentProfileData } from './profile-form';
 
 export const metadata = { title: 'My Profile | Bhutan Tech Connect' };
@@ -28,11 +29,7 @@ export default async function StudentProfilePage() {
   let cvUrl: string | null = null;
 
   if (user) {
-    const { data } = await supabase
-      .from('student_profiles')
-      .select('full_name, college, course, year, skills, bio, availability, cv_path')
-      .eq('id', user.id)
-      .single();
+    const data = await getStudentProfile(user.id);
 
     if (data) {
       initial = {

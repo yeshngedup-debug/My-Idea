@@ -1,11 +1,10 @@
 /**
  * Health check — GET /api/health
- * Verifies the app can reach the Supabase database. Used by the
- * keep-alive cron (GitHub Actions) so the free-tier Supabase project
- * never pauses, and by any uptime monitor.
+ * Verifies the app can reach Neon Postgres. Used by the keep-alive cron
+ * (GitHub Actions) and by any uptime monitor.
  */
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { pingDatabase } from '@/lib/neon-data';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,24 +12,13 @@ export async function GET() {
   const started = Date.now();
 
   try {
-    const supabase = await createClient();
-    // Head request with count — touches the DB without transferring rows
-    const { error } = await supabase
-      .from('profiles')
-      .select('id', { count: 'exact', head: true });
-
+    await pingDatabase();
     const dbLatencyMs = Date.now() - started;
-
-    if (error) {
-      return NextResponse.json(
-        { status: 'degraded', db: 'down', error: error.message, checkedAt: new Date().toISOString() },
-        { status: 503 }
-      );
-    }
 
     return NextResponse.json({
       status: 'ok',
       db: 'up',
+      provider: 'neon',
       dbLatencyMs,
       checkedAt: new Date().toISOString(),
     });

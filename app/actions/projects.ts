@@ -2,9 +2,20 @@
 
 /**
  * Project server actions — create a project posting as a founder.
+ * Identity comes from Supabase Auth; all application data lives in Neon.
  */
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import {
+  getProfileRole,
+  getProject,
+  getApplication,
+  insertProject,
+  insertApplication,
+  updateProjectStatus as updateProjectStatusRow,
+  updateApplicationStatus as updateApplicationStatusRow,
+  NeonDataError,
+} from '@/lib/neon-data';
 import { createProjectSchema } from '@/lib/validators';
 
 export interface ProjectResult {
@@ -21,12 +32,8 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
   if (!user) return { ok: false, message: 'Not signed in.' };
 
   // Confirm the signed-in user is actually a founder
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'founder') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'founder') {
     return { ok: false, message: 'Only founders can post projects.' };
   }
 
@@ -61,20 +68,21 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
     deadlineValue = deadline;
   }
 
-  const { error } = await supabase.from('projects').insert({
-    title,
-    description,
-    founder_id: user.id,
-    required_skills: skills,
-    duration,
-    budget_min: budgetMin,
-    budget_max: budgetMax,
-    work_mode: workMode,
-    deadline: deadlineValue,
-    status: 'open',
-  });
-
-  if (error) return { ok: false, message: 'Could not post project. Try again.' };
+  try {
+    await insertProject({
+      title,
+      description,
+      founderId: user.id,
+      requiredSkills: skills,
+      duration,
+      budgetMin,
+      budgetMax,
+      workMode,
+      deadline: deadlineValue,
+    });
+  } catch {
+    return { ok: false, message: 'Could not post project. Try again.' };
+  }
 
   revalidatePath('/founder/projects');
   revalidatePath('/founder');
@@ -100,33 +108,21 @@ export async function applyToProject(projectId: string): Promise<ProjectResult> 
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, message: 'Not signed in.' };
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-  if (profile?.role !== 'student') {
+  const role = await getProfileRole(user.id);
+  if (role !== 'student') {
     return { ok: false, message: 'Only students can apply.' };
   }
 
-  const { data: project } = await supabase
-    .from('projects')
-    .select('id, status')
-    .eq('id', projectId)
-    .single();
+  const project = await getProject(projectId);
   if (!project) return { ok: false, message: 'Project not found.' };
   if (project.status !== 'open') {
     return { ok: false, message: 'This project is no longer open.' };
   }
 
-  const { error } = await supabase.from('applications').insert({
-    student_id: user.id,
-    project_id: projectId,
-    status: 'pending',
-  });
-
-  if (error) {
-    if (error.code === '23505') {
+  try {
+    await insertApplication(user.id, projectId);
+  } catch (error) {
+    if (error instanceof NeonDataError && error.code === '23505') {
       return { ok: false, message: 'You already applied to this project.' };
     }
     return { ok: false, message: 'Could not send application. Try again.' };
@@ -158,24 +154,18 @@ export async function updateProjectStatus(
   }
 
   // Ownership check: the project must belong to this founder
-  const { data: project } = await supabase
-    .from('projects')
-    .select('id, founder_id')
-    .eq('id', projectId)
-    .single();
+  const project = await getProject(projectId);
 
   if (!project) return { ok: false, message: 'Project not found.' };
   if (project.founder_id !== user.id) {
     return { ok: false, message: 'You can only update your own projects.' };
   }
 
-  const { error } = await supabase
-    .from('projects')
-    .update({ status })
-    .eq('id', projectId)
-    .eq('founder_id', user.id);
-
-  if (error) return { ok: false, message: 'Could not update project status. Try again.' };
+  try {
+    await updateProjectStatusRow(projectId, user.id, status);
+  } catch {
+    return { ok: false, message: 'Could not update project status. Try again.' };
+  }
 
   revalidatePath(`/founder/projects/${projectId}`);
   revalidatePath('/founder/projects');
@@ -200,30 +190,21 @@ export async function updateApplicationStatus(
   }
 
   // Load the application and verify the founder owns its project
-  const { data: application } = await supabase
-    .from('applications')
-    .select('id, project_id')
-    .eq('id', applicationId)
-    .single();
+  const application = await getApplication(applicationId);
 
   if (!application) return { ok: false, message: 'Application not found.' };
 
-  const { data: project } = await supabase
-    .from('projects')
-    .select('id, founder_id')
-    .eq('id', application.project_id)
-    .single();
+  const project = await getProject(application.project_id);
 
   if (!project || project.founder_id !== user.id) {
     return { ok: false, message: 'You can only manage applicants on your own projects.' };
   }
 
-  const { error } = await supabase
-    .from('applications')
-    .update({ status })
-    .eq('id', applicationId);
-
-  if (error) return { ok: false, message: 'Could not update applicant status. Try again.' };
+  try {
+    await updateApplicationStatusRow(applicationId, status);
+  } catch {
+    return { ok: false, message: 'Could not update applicant status. Try again.' };
+  }
 
   revalidatePath(`/founder/projects/${project.id}`);
   revalidatePath('/student/applications');

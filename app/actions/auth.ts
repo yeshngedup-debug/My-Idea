@@ -14,6 +14,7 @@
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { getProfileRole, ensureProfile, syncProfileRole } from '@/lib/neon-data';
 import { rateLimit } from '@/lib/rate-limit';
 
 type Role = 'student' | 'founder' | 'admin';
@@ -46,6 +47,32 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     redirect('/login?error=invalid');
+  }
+
+  // Mirror the identity provider's current role/full name into Neon so a
+  // Supabase-only role change cannot leave stale elevated access in app code.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role, full_name')
+      .eq('id', user.id)
+      .single();
+    const role = (profile?.role === 'admin' || profile?.role === 'founder'
+      ? profile.role
+      : 'student') as 'student' | 'founder' | 'admin';
+    try {
+      await syncProfileRole(
+        user.id,
+        (profile?.full_name as string | null) ?? null,
+        role,
+      );
+    } catch {
+      // Keep the login usable; middleware still checks the Neon role on every
+      // request and will fail closed if the profile is absent.
+    }
   }
 
   redirect(await dashboardPathForCurrentUser(supabase));
@@ -90,7 +117,14 @@ export async function signup(formData: FormData) {
   // Email confirmation disabled in Supabase: a session comes back
   // immediately — go straight to the dashboard instead of a dead
   // "check your email" step.
-  if (data.session) {
+  if (data.session && data.user) {
+    // The Supabase trigger creates the auth-side profile; mirror the
+    // server-assigned student role into Neon so lookups agree.
+    try {
+      await ensureProfile(data.user.id, [firstName, lastName].filter(Boolean).join(' ') || null);
+    } catch {
+      // The profile also gets mirrored on the next identity sync.
+    }
     redirect(await dashboardPathForCurrentUser(supabase));
   }
 
@@ -114,13 +148,14 @@ async function dashboardPathForCurrentUser(
 
   if (!user) return '/login';
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
+  let role: Role | null = null;
+  try {
+    role = await getProfileRole(user.id);
+  } catch {
+    // A transient Neon outage must not turn a valid login into a 500.
+  }
 
-  switch (profile?.role as Role | undefined) {
+  switch (role as Role | undefined) {
     case 'founder':
       return '/founder';
     case 'admin':

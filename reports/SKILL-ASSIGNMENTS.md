@@ -26,6 +26,7 @@ When skills conflict, use this precedence:
 | Content integrity | documentation-engineer, better-writing | Preserve facts, prices, links, legal text |
 | Verification / gates | verification-loop, e2e-testing, install-and-verify | Run the seven gates; never claim an unverified pass |
 | Security regression check | security-review, api-security-testing | Re-verify RLS fixes after any data-layer change |
+| Component library / interaction | unslop, design-taste-frontend, apple-design, animate, emil-design-eng, frontend-a11y, better-accessibility | Feature-tied components only; no decorative gallery widgets, no second animation runtime, no glow/blur/marquee/parallax; cite source URL and licence in `reports/orchestrator.md` |
 
 ## Delegation rule
 

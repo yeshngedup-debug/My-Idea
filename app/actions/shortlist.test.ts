@@ -2,24 +2,30 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { requestShortlist } from '@/app/actions/shortlist';
 import { mockSupabaseClient, setMockUser } from '@/test/supabase.mock';
 import { createClient } from '@/lib/supabase/server';
+import {
+  getProfileRole,
+  requestShortlist as createShortlistRow,
+  NeonDataError,
+} from '@/lib/neon-data';
 
 const mockedCreateClient = vi.mocked(createClient);
+const mockedGetProfileRole = vi.mocked(getProfileRole);
+const mockedCreateShortlistRow = vi.mocked(createShortlistRow);
 
 describe('requestShortlist', () => {
   let client: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  let chain: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   const asFounder = () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single
-      .mockResolvedValueOnce({ data: { role: 'founder' }, error: null }) // caller
-      .mockResolvedValueOnce({ data: { role: 'student' }, error: null }); // target
+    mockedGetProfileRole
+      .mockResolvedValueOnce('founder') // caller
+      .mockResolvedValueOnce('student'); // target
   };
 
   beforeEach(() => {
-    ({ client, chain } = mockSupabaseClient());
+    ({ client } = mockSupabaseClient());
     vi.clearAllMocks();
-    client.rpc.mockResolvedValue({ data: { id: 'shortlist-id' }, error: null });
+    mockedCreateShortlistRow.mockResolvedValue();
   });
 
   it('rejects when not signed in', async () => {
@@ -31,7 +37,7 @@ describe('requestShortlist', () => {
 
   it('rejects when user is not a founder', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single.mockResolvedValue({ data: { role: 'student' }, error: null });
+    mockedGetProfileRole.mockResolvedValue('student');
     const result = await requestShortlist('student-uuid');
     expect(result.ok).toBe(false);
     expect(result.message).toBe('Only founders can shortlist students.');
@@ -39,32 +45,32 @@ describe('requestShortlist', () => {
 
   it('rejects when target is not a student', async () => {
     setMockUser(client, { id: 'founder-uuid', email: 'x@y.com' });
-    chain.single
-      .mockResolvedValueOnce({ data: { role: 'founder' }, error: null }) // caller
-      .mockResolvedValueOnce({ data: { role: 'founder' }, error: null }); // target
+    mockedGetProfileRole
+      .mockResolvedValueOnce('founder') // caller
+      .mockResolvedValueOnce('founder'); // target
     const result = await requestShortlist('founder-uuid');
     expect(result.ok).toBe(false);
     expect(result.message).toBe('Student not found.');
   });
 
-  it('creates the shortlist through the checked RPC', async () => {
+  it('creates the shortlist through the checked helper', async () => {
     asFounder();
     const result = await requestShortlist('student-uuid');
 
     expect(result.ok).toBe(true);
     expect(result.message).toBe('Shortlist request sent.');
-    expect(client.rpc).toHaveBeenCalledWith('request_shortlist', {
-      p_student_id: 'student-uuid',
-      p_project_id: null,
-    });
+    expect(mockedCreateShortlistRow).toHaveBeenCalledWith(
+      'founder-uuid',
+      'student-uuid',
+      null
+    );
   });
 
   it('reports a missing relationship without leaking internals', async () => {
     asFounder();
-    client.rpc.mockResolvedValue({
-      data: null,
-      error: { message: 'No relationship with this student' },
-    });
+    mockedCreateShortlistRow.mockRejectedValueOnce(
+      new NeonDataError('No relationship with this student')
+    );
 
     const result = await requestShortlist('student-uuid');
 
@@ -74,10 +80,9 @@ describe('requestShortlist', () => {
 
   it('returns error message for other DB errors', async () => {
     asFounder();
-    client.rpc.mockResolvedValue({
-      data: null,
-      error: { code: '42P01', message: 'relation does not exist' },
-    });
+    mockedCreateShortlistRow.mockRejectedValueOnce(
+      new NeonDataError('relation does not exist', '42P01')
+    );
 
     const result = await requestShortlist('student-uuid');
 

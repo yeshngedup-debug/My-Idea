@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { List, X } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -67,6 +67,7 @@ export function SiteHeader() {
             </span>
           </Link>
 
+          <LayoutGroup id="site-nav">
           <div className="hidden items-center gap-6 lg:flex xl:gap-8">
             {NAV_LINKS.map((link) => {
               const active = isActivePath(pathname, link.href);
@@ -83,19 +84,21 @@ export function SiteHeader() {
                   )}
                 >
                   {link.label}
-                  {/* The one signature hairline: a 1px vermilion mark for the
-                      active handoff. It is not used as a section-label device. */}
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "absolute inset-x-0 bottom-2 h-px bg-[#d84f37]",
-                      active ? "opacity-100" : "opacity-0",
-                    )}
-                  />
+                  {/* One shared hairline moves with the active route. It is a
+                      transform-only layout animation, not a new decoration. */}
+                  {active ? (
+                    <motion.span
+                      layoutId="site-nav-hairline"
+                      aria-hidden="true"
+                      transition={{ duration: reduce ? 0 : 0.18, ease: EASE_OUT }}
+                      className="absolute inset-x-0 bottom-2 h-px bg-[#d84f37]"
+                    />
+                  ) : null}
                 </Link>
               );
             })}
           </div>
+          </LayoutGroup>
 
           <div className="hidden shrink-0 items-center gap-4 md:flex lg:justify-self-end">
             <Link

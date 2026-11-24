@@ -90,3 +90,147 @@ Verified at 1440px: 2 sticky headings; first top 1096px before scroll → 78px a
 **Ordering note:** `next build` and `next dev` share `.next`. Running both at once produced stale-chunk 500s and a transient Turbopack parse error. The final sequence was: stop all dev servers → gates 1/2/3/5 → remove `.next` → start a single dev server on port 3000 → gates 4a/4b/6/6b. A stale server on port 3000 had also caused one earlier E2E failure; all dev servers were killed before the final run. Both issues were environmental, not product defects.
 
 **Final status:** no HIGH or MEDIUM defect outstanding; all seven gates pass on a clean server. Remaining risks are unchanged from the section above (no production RUM, no physical screen reader).
+
+---
+
+# Addendum — Neon migration, sticky headings and feature-tied components (2026-11-24)
+
+## Scope
+
+Three coordinated changes were made in one pass: the Neon data migration, sticky
+section headings on long content, and feature-tied interactive components.
+Subagents could not be spawned: the runtime returns `Subagent depth limit
+reached (1)`. All work and all assigned skills were applied directly.
+
+## Skill coverage
+
+- Data migration: `neon`, `neon-postgres`. Supabase Auth and Storage were kept,
+  so `neon-auth` was consulted only to confirm that an existing working IdP
+  should not be replaced. `neon-functions`, `neon-realtime` and
+  `neon-ai-gateway` were read only to document why they remain unprovisioned.
+- UI: `unslop`, `apple-design`, `better-layout`, `design-taste-frontend`,
+  `animate`, `emil-design-eng`.
+- Accessibility and forms: `frontend-a11y`, `better-accessibility`.
+- Copy: `better-writing` and `design/voice-guide`.
+- Verification: `verification-loop`, `e2e-testing`, `production-audit`,
+  `security-review`.
+
+## Component research: exact sources and licences
+
+| Site | URL checked | Licence / terms | Outcome |
+| --- | --- | --- | --- |
+| Motion | https://motion.dev/docs/react-layout-animations · https://motion.dev/docs/react-transitions | MIT core; free docs examples MIT, retain notice if copied | **Accepted** two documented patterns. No example source copied; implementation written against the documented API. |
+| shadcn/ui | https://ui.shadcn.com/docs/components/tooltip · https://ui.shadcn.com/docs/components/progress | MIT | **Accepted** existing `Progress` primitive (already vendored). Tooltip and Separator were already present and were not re-added. A licence page URL returned 404, so the MIT status is taken from the project's published terms. |
+| React Bits | https://www.reactbits.dev/ · https://www.reactbits.dev/components | MIT + Commons Clause; keep notice | **Rejected.** Its animated backgrounds and text effects are decorative; none maps to a real product action, and the Commons Clause restricts commercial use of the source as a standalone product. |
+| 21st.dev | https://21st.dev/ · https://21st.dev/community/components · https://21st.dev/llms.txt | Per-author terms; free browsing, limited free copies | **Rejected.** Registry components carry author-specific terms and the catalog is marketing/hero oriented. No candidate tied to a real action. |
+| Motion Primitives | https://motion-primitives.com/ · https://21st.dev/@ibelick/library/motion-primitives | MIT | **Rejected.** Its motion blocks overlap with patterns already implemented locally; adding copied source would duplicate existing Motion code. Direct licence URL returned 404. |
+| Rare UI | https://rareui.com/ (HTTP 429) | MIT + Commons Clause + mandatory visible credit | **Rejected.** Mandatory visible credit is unwanted in the product chrome, and the site could not be fetched to verify a specific component. |
+| anime.js | https://animejs.com/ · https://raw.githubusercontent.com/juliangarnier/anime/master/LICENSE.md | MIT © 2025 Julian Garnier | **Rejected.** Duplicate animation runtime. Licence verified; nothing installed or copied. |
+
+## Accepted integrations
+
+### 1. Profile completion progress — `/student/profile`
+
+- **Feature:** student profile completion (skills, CV, availability).
+- **Action improved:** filling a field now immediately changes a real
+  `role="progressbar"` from 0 to 8 details, with the specific missing fields
+  named in plain text. Replaces a decorative percentage with an accessible
+  state indicator.
+- **Proof:** Playwright signs in as the seeded student, reads `aria-valuenow`
+  (100), clears Bio (88), restores Bio (100). No console errors.
+- **Source:** shadcn/ui Progress, MIT, https://ui.shadcn.com/docs/components/progress.
+  The component was already vendored at `components/ui/shadcn/progress.tsx`;
+  this change wires it to real form state.
+
+### 2. Shared-layout navigation hairline — public header
+
+- **Feature:** section navigation across public pages.
+- **Action improved:** clicking a nav link moves one 1px vermilion hairline to
+  the new active link instead of blinking two independent spans. One transition,
+  transform only, disabled under reduced motion.
+- **Proof:** Playwright reads the active link and hairline x position on
+  `/how-it-works` (`How it works`, x=502), clicks `For students`, and observes
+  the active link and hairline move (`For students`, x=617). With
+  `prefers-reduced-motion: reduce`, clicking `About` still sets `aria-current`
+  correctly. No console errors.
+- **Source:** Motion `layoutId` and `MotionConfig` patterns, MIT,
+  https://motion.dev/docs/react-layout-animations and
+  https://motion.dev/docs/react-transitions. Implementation is written locally;
+  no example source was copied.
+
+### 3. Live statistics refresh and pause — public statistics panel
+
+- **Feature:** official statistics panel on `/public` and `/about`.
+- **Action improved:** a keyboard-operable `Refresh now` button performs a real
+  fetch, reports busy state, and announces `Updated just now` in a polite live
+  region. The existing pause control keeps `aria-pressed` and is paired with it.
+- **Proof:** Playwright opens the statistics disclosure, focuses `Refresh now`,
+  presses Enter, waits for the button to become enabled, and reads the status
+  text `Updated just now`. It then focuses the pause button, presses Enter and
+  reads `aria-pressed="true"`. No console errors.
+- **Source:** no third-party source copied; uses the existing button styling
+  and the shadcn/ui pattern for accessible controls (MIT,
+  https://ui.shadcn.com/docs/components/button).
+
+## Rejected candidates
+
+Generic animated backgrounds, text scrambles, marquees, hover-glow cards and
+scroll-reveal blocks from React Bits, 21st.dev and Motion Primitives all fail the
+feature-tie rule. Rare UI also fails because of mandatory visible credit.
+anime.js fails because Motion is already the single animation runtime.
+
+## Neon services blocked by CLI sign-in
+
+`neon.ts` declares auth, AI Gateway, Realtime and an empty functions map.
+`neon deploy` cannot run: the CLI is not signed in and this shell cannot open a
+browser. Postgres was migrated through the supplied `DATABASE_URL`; Supabase
+Auth and Storage remain in place. No provisioned Neon service is claimed.
+
+## Sticky headings
+
+Applied only where content is long: `/for-students` profile fields and step
+sequence, admin students/projects/payments, founder projects/browse/shortlists,
+student projects/applications. Left alone: heroes, CTA bands, short two-column
+intros, dashboard overviews, forms and short FAQ clusters. Browser check:
+heading stays at `top: 96px` while its sibling content moves from `top: 100px`
+to `top: -100px`; `main` keeps `overflow-x: clip`; no `overflow-x-hidden`;
+horizontal overflow is 0 at 320, 375 and 1440; one `h1` per page.
+
+## Addendum — Neon services after CLI sign-in (2026-11-24)
+
+CLI authentication is available. `neon deploy` first reported `No changes —
+branch production already matches the policy` for Postgres, Neon Auth, AI
+Gateway and Realtime. After adding `platform`, it reported `+ function
+platform` and pulled 11 Neon variables into `.env` with no key added, removed
+or changed in either env file.
+
+Accepted service integrations:
+
+1. **Functions** — `functions/platform.ts` is deployed as `platform`. It queries
+   Neon counts and open projects. `/api/neon` calls its public URL first and
+   falls back to direct SQL. Proof: direct URL returned
+   `{"ok":true,"source":"neon-function",...}` and `/api/neon` returned
+   `"source":"neon-function"`.
+2. **Realtime** — `lib/neon-realtime.ts` seals a founder-scoped query over
+   `shortlist_orders`; `POST /api/realtime/orders` renews it after checking the
+   Supabase session and founder role. `components/founder/live-order-status.tsx`
+   subscribes. Proof: with a founder page open, an admin confirmed a payment in
+   a second browser context; the founder badge changed from `Payment being
+   checked` to `Payment confirmed. Shortlist unlocked` over a Neon WebSocket,
+   with zero console errors. No RLS is involved and no user ID is accepted from
+   the browser.
+3. **AI Gateway** — models are listed by `/v1/models` (200), but
+   `/v1/chat/completions` returns 403 `paid_plan_required`. Rejected: no
+   feature was added and no token value was exposed.
+4. **Neon Auth** — enabled on the branch but not adopted. Managed Better Auth
+   would require replacing working Supabase sessions and user records, which
+   was not requested; documented rather than wired.
+
+Rejected unchanged: React Bits, 21st.dev, Motion Primitives, Rare UI and
+anime.js, for the reasons in the component table above.
+
+Final gates after these changes: tsc PASS; lint 0 errors (2 pre-existing
+coverage warnings); unit 45/45; build 38 routes; E2E 4/4 after reseeding Neon;
+browser checks at 1440 and 320 with 0 overflow, 1 `h1` per page, sticky only on
+intended sections and 0 console errors. Subagent spawning remained blocked
+(`Subagent depth limit reached (1)`); the audit was performed directly.

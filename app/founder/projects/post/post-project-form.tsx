@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/shadcn/progress';
 import { X } from '@phosphor-icons/react';
 
 const DURATIONS = ['1 week', '2 weeks', '1 month', '2 months', '3 months'];
@@ -34,6 +35,26 @@ export function PostProjectForm() {
     if (v && !skills.includes(v) && skills.length < 15) setSkills([...skills, v]);
     setSkillInput('');
   }
+
+  // Mirrors createProjectSchema: the indicator reports only fields the server
+  // also checks, so a completed bar means the form can actually be posted.
+  const minBudget = Number(budgetMin);
+  const maxBudget = Number(budgetMax);
+  const requirements = [
+    { label: 'Title of at least 5 characters', done: title.trim().length >= 5 },
+    {
+      label: 'Description of at least 20 characters',
+      done: description.trim().length >= 20 && description.length <= 2000,
+    },
+    { label: 'A duration', done: DURATIONS.includes(duration) },
+    { label: 'A positive minimum budget', done: budgetMin.trim() !== '' && minBudget > 0 },
+    {
+      label: 'A maximum budget at least as high as the minimum',
+      done: budgetMax.trim() !== '' && maxBudget > 0 && maxBudget >= minBudget,
+    },
+  ];
+  const ready = requirements.filter((item) => item.done).length;
+  const missing = requirements.filter((item) => !item.done).map((item) => item.label);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -64,6 +85,21 @@ export function PostProjectForm() {
           {status.msg}
         </p>
       )}
+
+      <div className="rounded-xl border border-[#ded8cb] bg-[#f5f2ea] p-4">
+        <Progress
+          value={ready}
+          max={requirements.length}
+          label="Ready to post"
+          valueLabel={`${ready} of ${requirements.length} details ready`}
+          aria-describedby="post-form-missing"
+        />
+        <p id="post-form-missing" className="mt-2 text-xs leading-5 text-[#56645c]">
+          {missing.length === 0
+            ? 'All required details are ready. You can post the project.'
+            : `Still needed: ${missing.join('; ')}.`}
+        </p>
+      </div>
 
       <div className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
         <div>

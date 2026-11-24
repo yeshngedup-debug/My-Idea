@@ -3,6 +3,7 @@
  */
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getProject, listProjectApplicants } from '@/lib/neon-data';
 import {
   ProjectDetailClient,
   type Applicant,
@@ -22,11 +23,7 @@ export default async function ProjectDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: p } = await supabase
-    .from('projects')
-    .select('id, title, status, founder_id, budget_min, budget_max, duration, work_mode')
-    .eq('id', id)
-    .single();
+  const p = await getProject(id);
 
   // Not found, or not owned by this founder.
   if (!p || (user && p.founder_id !== user.id)) notFound();
@@ -41,15 +38,8 @@ export default async function ProjectDetailPage({
     work_mode: p.work_mode,
   };
 
-  const { data: apps } = await supabase
-    .from('applications')
-    .select(
-      'id, status, created_at, student_id, student:student_profiles(full_name, college, course, year, skills, availability, cv_path, contact_email)'
-    )
-    .eq('project_id', id)
-    .order('created_at', { ascending: true });
-
-  const applicants: Applicant[] = (apps as unknown as Applicant[]) ?? [];
+  const apps = await listProjectApplicants(id);
+  const applicants: Applicant[] = apps;
 
   return (
     <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">

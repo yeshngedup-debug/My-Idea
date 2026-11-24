@@ -6,6 +6,7 @@
 import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 import { createClient } from "@/lib/supabase/server";
+import { getProfile } from "@/lib/neon-data";
 import { Logo } from "@/components/ui/logo";
 import { WorkspaceNav, WorkspaceMobileNav } from "./workspace-nav";
 import pressStyles from "../ui/pressable.module.css";
@@ -25,13 +26,7 @@ export default async function SimpleLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const { data: profile } = user
-    ? await supabase
-        .from("profiles")
-        .select("full_name, role")
-        .eq("id", user.id)
-        .single()
-    : { data: null };
+  const profile = user ? await getProfile(user.id) : null;
 
   const roleLinks =
     profile?.role === "student"

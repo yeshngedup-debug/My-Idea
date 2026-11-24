@@ -15,7 +15,11 @@ import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { Reveal } from "@/components/ui/motion";
 import { GuideHero } from "@/components/marketing/guides/guide-hero";
-import { Chapter, TextLink, ActionLink } from "@/components/marketing/guides/primitives";
+import {
+  Chapter,
+  TextLink,
+  ActionLink,
+} from "@/components/marketing/guides/primitives";
 import { pageMetadata } from "@/lib/metadata";
 
 type Icon = typeof NotePencil;
@@ -92,11 +96,15 @@ export default function ForStudentsPage() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="overflow-x-clip bg-[#f5f2ea] text-[#18251f]">
+      <main
+        id="main-content"
+        className="overflow-x-clip bg-[#f5f2ea] text-[#18251f]"
+      >
         <GuideHero
           title={
             <>
-              Turn your skills into <span className="text-[#b23c26]">paid work.</span>
+              Turn your skills into{" "}
+              <span className="text-[#b23c26]">paid work.</span>
             </>
           }
           lead="Build a profile, find a focused project, and get paid for the work you do."
@@ -149,20 +157,22 @@ export default function ForStudentsPage() {
 
         <Chapter labelledBy="profile-heading">
           <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-            <Reveal>
-              <h2
-                id="profile-heading"
-                className="max-w-2xl text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
-              >
-                Make your profile complete
-              </h2>
-              <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
-                Fill in every field before you apply.
-              </p>
-              <ActionLink href="/signup" className="mt-8">
-                Start your profile
-              </ActionLink>
-            </Reveal>
+            <div className="lg:sticky lg:top-24 lg:self-start">
+              <Reveal>
+                <h2
+                  id="profile-heading"
+                  className="max-w-2xl text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
+                >
+                  Make your profile complete
+                </h2>
+                <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
+                  Fill in every field before you apply.
+                </p>
+                <ActionLink href="/signup" className="mt-8">
+                  Start your profile
+                </ActionLink>
+              </Reveal>
+            </div>
 
             <Reveal direction="right" delay={0.08}>
               <div className="rounded-2xl border border-[#17352b]/15 bg-[#fffefa] p-6 sm:p-8">
@@ -205,7 +215,9 @@ export default function ForStudentsPage() {
                     className="mt-0.5 shrink-0 text-[#b23c26]"
                   />
                   <span>
-                    <span className="font-semibold text-[#17352b]">Your CV:</span>{" "}
+                    <span className="font-semibold text-[#17352b]">
+                      Your CV:
+                    </span>{" "}
                     PDF only, up to 5 MB, stored privately.
                   </span>
                 </p>
@@ -244,48 +256,52 @@ export default function ForStudentsPage() {
         </Chapter>
 
         <Chapter labelledBy="apply-heading" tone="surface">
-          <Reveal className="max-w-3xl">
-            <h2
-              id="apply-heading"
-              className="max-w-sm text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl"
-            >
-              Browse, apply, and track
-            </h2>
-            <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
-              Everything you need after your profile is done lives in your
-              student workspace.
-            </p>
-          </Reveal>
-          <ol className="mt-14 max-w-3xl space-y-10">
-            {applicationSteps.map((step, index) => {
-              const StepIcon = step.Icon;
-              return (
-                <li
-                  key={step.title}
-                  className="grid gap-3 sm:grid-cols-[5rem_1fr] sm:gap-8"
+          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
+            <div className="lg:sticky lg:top-24 lg:self-start">
+              <Reveal>
+                <h2
+                  id="apply-heading"
+                  className="max-w-sm text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl"
                 >
-                  <span className="text-4xl font-semibold tracking-[-0.05em] text-[#b23c26] tabular-nums sm:text-5xl">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <div>
-                    <h3 className="flex items-center gap-3 text-2xl font-semibold leading-tight text-[#17352b] sm:text-3xl">
-                      <StepIcon
-                        aria-hidden="true"
-                        weight="light"
-                        size={22}
-                        strokeWidth={1.5}
-                        className="shrink-0 text-[#56645c]"
-                      />
-                      {step.title}
-                    </h3>
-                    <p className="mt-3 max-w-2xl text-base leading-7 text-[#56645c]">
-                      {step.body}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+                  Browse, apply, and track
+                </h2>
+                <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
+                  Everything you need after your profile is done lives in your
+                  student workspace.
+                </p>
+              </Reveal>
+            </div>
+            <ol className="space-y-10">
+              {applicationSteps.map((step, index) => {
+                const StepIcon = step.Icon;
+                return (
+                  <li
+                    key={step.title}
+                    className="grid gap-3 sm:grid-cols-[5rem_1fr] sm:gap-8"
+                  >
+                    <span className="text-4xl font-semibold tracking-[-0.05em] text-[#b23c26] tabular-nums sm:text-5xl">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="flex items-center gap-3 text-2xl font-semibold leading-tight text-[#17352b] sm:text-3xl">
+                        <StepIcon
+                          aria-hidden="true"
+                          weight="light"
+                          size={22}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-[#56645c]"
+                        />
+                        {step.title}
+                      </h3>
+                      <p className="mt-3 max-w-2xl text-base leading-7 text-[#56645c]">
+                        {step.body}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </Chapter>
 
         <Chapter labelledBy="pay-heading">

@@ -25,7 +25,9 @@ test.describe('Founder flow', () => {
       await page.getByRole('link', { name: 'Post a project' }).click();
       await expect(page).toHaveURL('/founder/projects/post');
 
-      await page.getByLabel('Project title').fill('Mobile app UI redesign');
+      // Unique per run so other flows can resolve their project card by title.
+      const projectTitle = `Mobile app UI redesign ${Date.now()}`;
+      await page.getByLabel('Project title').fill(projectTitle);
       await page
         .getByLabel('Description')
         .fill(
@@ -58,7 +60,7 @@ test.describe('Founder flow', () => {
       // Success redirects to the founder's project list.
       await expect(page).toHaveURL('/founder/projects');
       await expect(
-        page.getByRole('cell', { name: 'Mobile app UI redesign' })
+        page.getByRole('cell', { name: projectTitle })
       ).toBeVisible();
     });
 

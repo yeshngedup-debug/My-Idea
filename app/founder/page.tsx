@@ -2,14 +2,9 @@
  * Founder Dashboard — welcome, post project, recent projects.
  */
 import Link from "next/link";
-import {
-  ArrowRight,
-  BriefcaseBusiness,
-  CircleCheck,
-  Plus,
-  Rocket,
-} from "lucide-react";
+import { BriefcaseBusiness, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getProfile, listProjectsByFounder } from "@/lib/neon-data";
 import { WorkspaceHero } from "@/components/layout/workspace-hero";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -36,18 +31,18 @@ export default async function FounderDashboard() {
   }[] = [];
 
   if (user) {
-    const [profRes, projRes] = await Promise.all([
-      supabase.from("profiles").select("full_name").eq("id", user.id).single(),
-      supabase
-        .from("projects")
-        .select("id, title, status, created_at")
-        .eq("founder_id", user.id)
-        .order("created_at", { ascending: false }),
+    const [profile, rows] = await Promise.all([
+      getProfile(user.id),
+      listProjectsByFounder(user.id),
     ]);
 
-    name =
-      (profRes.data as { full_name: string | null } | null)?.full_name ?? name;
-    projects = (projRes.data as typeof projects) ?? [];
+    name = profile?.full_name ?? name;
+    projects = rows.map((p) => ({
+      id: p.id,
+      title: p.title,
+      status: p.status,
+      created_at: p.created_at,
+    }));
   }
 
   const openProjects = projects.filter(
@@ -74,27 +69,29 @@ export default async function FounderDashboard() {
         </WorkspaceHero>
       </Reveal>
 
-      <StaggerGroup className="grid grid-flow-dense grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#17352b]/10 bg-[#17352b]/10 sm:grid-cols-3">
-        {[
-          { label: "Projects posted", value: projects.length, icon: BriefcaseBusiness },
-          { label: "Open projects", value: openProjects, icon: Rocket },
-          { label: "In progress", value: inProgressProjects, icon: CircleCheck },
-        ].map(({ label, value, icon: Icon }) => (
-          <StaggerItem key={label} className="bg-[#fffefa]">
-            <div className="flex items-start justify-between gap-3 p-5">
-              <div>
-                <p className="text-xs font-medium text-[#657069]">{label}</p>
-                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-[#17352b]">
-                  {value}
-                </p>
-              </div>
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17352b]/6 text-[#17352b]">
-                <Icon aria-hidden="true" className="h-4.5 w-4.5" />
-              </span>
+      <Reveal>
+        <dl className="border-t border-[#17352b]/10">
+          {[
+            { label: "Projects posted", value: projects.length },
+            { label: "Open projects", value: openProjects },
+            { label: "In progress", value: inProgressProjects },
+          ].map(({ label, value }, index) => (
+            <div
+              key={label}
+              className="flex min-w-0 items-baseline justify-between gap-x-4 border-b border-[#17352b]/10 py-4"
+            >
+              <dt className="text-sm text-[#657069]">{label}</dt>
+              <dd
+                className={`tabular-nums tracking-tight text-[#17352b] ${
+                  index === 0 ? "text-3xl font-semibold" : "text-xl font-medium"
+                }`}
+              >
+                {value}
+              </dd>
             </div>
-          </StaggerItem>
-        ))}
-      </StaggerGroup>
+          ))}
+        </dl>
+      </Reveal>
 
       <section>
         <Reveal>
@@ -105,13 +102,9 @@ export default async function FounderDashboard() {
             {projects.length > 0 && (
               <Link
                 href="/founder/projects"
-                className="group inline-flex items-center gap-1 text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="inline-flex items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
               >
                 View all
-                <ArrowRight
-                  aria-hidden="true"
-                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
-                />
               </Link>
             )}
           </div>
@@ -132,9 +125,9 @@ export default async function FounderDashboard() {
               </p>
               <Link
                 href="/founder/projects/post"
-                className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="mt-5 inline-flex min-h-10 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
               >
-                Create your first project <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                Create your first project
               </Link>
             </div>
           </Reveal>
