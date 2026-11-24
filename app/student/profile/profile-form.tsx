@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { X, Upload, FileText, CheckCircle, Warning } from '@phosphor-icons/react';
 import { saveStudentProfile, uploadCv } from '@/app/actions/student-profile';
 import { Button } from '@/components/ui/button';
@@ -32,10 +33,13 @@ export interface StudentProfileData {
 export function ProfileForm({
   initial,
   cvUrl,
+  cvPreviewUnavailable = false,
 }: {
   initial: StudentProfileData;
   cvUrl?: string | null;
+  cvPreviewUnavailable?: boolean;
 }) {
+  const router = useRouter();
   const [fullName, setFullName] = useState(initial.full_name ?? '');
   const [college, setCollege] = useState(initial.college ?? '');
   const [course, setCourse] = useState(initial.course ?? '');
@@ -44,12 +48,17 @@ export function ProfileForm({
   const [skillInput, setSkillInput] = useState('');
   const [bio, setBio] = useState(initial.bio ?? '');
   const [availability, setAvailability] = useState(initial.availability ?? '');
-  const [cvPath, setCvPath] = useState(initial.cv_path);
+  const [cvUploaded, setCvUploaded] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   const [saving, startSave] = useTransition();
   const [uploading, startUpload] = useTransition();
+
+  // The upload marker is derived: the server row wins once the refresh lands,
+  // while an in-flight upload keeps the optimistic state visible. No fake path
+  // is ever stored or shown as if it came from the database.
+  const hasCv = Boolean(initial.cv_path) || cvUploaded;
 
   const { completion, completed, missing } = useMemo(() => {
     const checks = [
@@ -60,7 +69,7 @@ export function ProfileForm({
       { label: 'Skills', done: skills.length > 0 },
       { label: 'Bio', done: bio.trim().length > 20 },
       { label: 'Availability', done: availability !== '' },
-      { label: 'CV', done: cvPath !== null },
+      { label: 'CV', done: hasCv },
     ];
     const done = checks.filter((c) => c.done).length;
     return {
@@ -68,7 +77,7 @@ export function ProfileForm({
       completed: done,
       missing: checks.filter((c) => !c.done).map((c) => c.label),
     };
-  }, [fullName, college, course, year, skills, bio, availability, cvPath]);
+  }, [fullName, college, course, year, skills, bio, availability, hasCv]);
 
   function addSkill() {
     const v = skillInput.trim();
@@ -98,8 +107,11 @@ export function ProfileForm({
     startUpload(async () => {
       const res = await uploadCv(fd);
       if (res.ok) {
-        setCvPath(`uploaded`);
+        setCvUploaded(true);
         setFileName(fd.get('cv') instanceof File ? (fd.get('cv') as File).name : null);
+        // Re-run the server component so the CV preview uses a fresh signed
+        // URL instead of the URL captured when this page first loaded.
+        router.refresh();
       }
       setStatus({ ok: res.ok, msg: res.message });
     });
@@ -107,27 +119,59 @@ export function ProfileForm({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
-        <Progress
-          value={completion}
-          label="Profile completion"
-          valueLabel={`${completed} of 8 details`}
-          aria-valuetext={`${completion}% complete, ${completed} of 8 details`}
-        />
-        <p className="mt-3 text-xs text-[#657069]">
-          {missing.length === 0
-            ? 'Complete. Founders see a full profile.'
-            : `Still needed: ${missing.join(', ')}`}
-        </p>
+      <section
+        aria-label="Profile summary"
+        className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5"
+      >
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="min-w-0">
+            <dt className="text-xs text-[#657069]">Name</dt>
+            <dd className="mt-1 truncate text-sm font-semibold text-[#17352b]">
+              {fullName.trim() || 'Not set'}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-[#657069]">Completion</dt>
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-[#17352b]">
+              {completion}%
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-[#657069]">CV</dt>
+            <dd className="mt-1 text-sm font-semibold text-[#17352b]">
+              {hasCv ? 'Uploaded' : 'Not uploaded'}
+            </dd>
+          </div>
+        </dl>
+        <div className="mt-4 border-t border-[#ded8cb] pt-4">
+          <Progress
+            value={completion}
+            label="Profile completion"
+            valueLabel={`${completed} of 8 details`}
+            aria-valuetext={`${completion}% complete, ${completed} of 8 details`}
+          />
+          <p className="mt-3 text-xs text-[#657069]">
+            {missing.length === 0
+              ? 'Complete. Founders see a full profile.'
+              : `Still needed: ${missing.join(', ')}`}
+          </p>
+        </div>
       </section>
 
       {status && (
-        <p role="status" className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
-          status.ok
-            ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-            : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
-        }`}>
-          {status.ok ? <CheckCircle className="w-4 h-4 shrink-0" /> : <Warning className="w-4 h-4 shrink-0" />}
+        <p
+          role={status.ok ? 'status' : 'alert'}
+          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
+            status.ok
+              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+              : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+          }`}
+        >
+          {status.ok ? (
+            <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <Warning className="h-4 w-4 shrink-0" aria-hidden="true" />
+          )}
           {status.msg}
         </p>
       )}
@@ -136,7 +180,7 @@ export function ProfileForm({
         <h2 className="mb-1 text-sm font-semibold text-[#17352b]">CV / Resume</h2>
         <p className="mb-4 text-xs text-[#657069]">PDF only, max 5 MB.</p>
 
-        {cvPath ? (
+        {hasCv ? (
           <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-3">
             <FileText className="h-5 w-5 shrink-0 text-[#17352b]" aria-hidden="true" />
             <div className="min-w-0">
@@ -144,18 +188,43 @@ export function ProfileForm({
               {fileName && <p className="truncate text-xs text-[#657069]">{fileName}</p>}
             </div>
             {cvUrl && (
-              <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 text-xs font-semibold text-[#17352b] underline underline-offset-2 transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+              <a
+                href={cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded text-xs font-semibold text-[#17352b] underline underline-offset-2 transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+              >
                 View PDF
               </a>
             )}
           </div>
         ) : null}
+        {hasCv && !cvUrl && cvPreviewUnavailable && (
+          <p className="mb-4 text-xs leading-5 text-[#b23c26]">
+            Preview is unavailable right now. The uploaded CV is saved.
+          </p>
+        )}
 
-        <label htmlFor="cv" className="mb-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#ded8cb] px-4 py-4 text-sm text-[#4c5a52] transition-colors hover:border-[#17352b]/40 hover:text-[#17352b]">
+        <input
+          id="cv"
+          name="cv"
+          type="file"
+          accept="application/pdf,.pdf"
+          className="peer sr-only"
+          onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
+        />
+        <label
+          htmlFor="cv"
+          className="mb-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#ded8cb] px-4 py-4 text-sm text-[#4c5a52] transition-colors hover:border-[#17352b]/40 hover:text-[#17352b] peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#b23c26] peer-focus-visible:ring-offset-2"
+        >
           <Upload className="h-4 w-4" aria-hidden="true" />
-          {cvPath ? 'Replace PDF' : 'Choose PDF file'}
+          {hasCv ? 'Replace PDF' : 'Choose PDF file'}
         </label>
-        <input id="cv" name="cv" type="file" accept="application/pdf,.pdf" className="sr-only" onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)} />
+        {fileName && !hasCv && (
+          <p className="mb-4 truncate text-xs text-[#657069]">
+            Selected file: <span className="font-medium text-[#17352b]">{fileName}</span>
+          </p>
+        )}
         <Button type="submit" disabled={uploading} variant="outline" className="h-11 w-full border-[#ded8cb] bg-[#fffefa] text-[#17352b] hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
           {uploading ? 'Uploading...' : 'Upload CV'}
         </Button>

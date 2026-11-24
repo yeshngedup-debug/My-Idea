@@ -68,9 +68,9 @@ export default async function MyProjectsPage() {
 
         {projects.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+            <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
               No projects yet
-            </h3>
+            </h2>
             <p className="mb-6 text-sm text-[#657069]">
               Post your first short paid project and students can apply right
               away.
@@ -98,7 +98,7 @@ export default async function MyProjectsPage() {
                       {p.status === "in_progress" ? "In progress" : p.status.charAt(0).toUpperCase() + p.status.slice(1)}
                     </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-[#657069]">
+                  <p className="mt-1 text-xs tabular-nums text-[#657069]">
                     {date(p.created_at)}
                   </p>
                   <Link

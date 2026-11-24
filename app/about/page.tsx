@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { GlobeHemisphereWest } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
@@ -10,10 +11,12 @@ import { InlineImageText } from "@/components/editorial/inline-image-text";
 import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import { Reveal } from "@/components/ui/motion";
 import { ScrubbedTextReveal } from "@/components/motion";
 import { LiveContext } from "@/components/data/live-context";
 import { LocalBridgeDifferences } from "@/components/brand/local-bridge-differences";
+import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
 import { getLiveContext } from "@/lib/data/world-bank";
 import { pageMetadata } from "@/lib/metadata";
 import {
@@ -145,54 +148,90 @@ export default async function AboutPage() {
           className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
         >
           <div className="mx-auto max-w-[1440px]">
-            <SectionIntro
-              headingId="context-heading"
-              title="The context behind the work"
-            />
-            <StaggerGroup className="mt-10 max-w-3xl border-t border-[#18251f]/15">
-              {CONTEXT_FACTS.map((fact) => (
-                <StaggerItem
-                  key={fact.label}
-                  className="grid gap-2 border-b border-[#18251f]/15 py-6 sm:grid-cols-[8rem_1fr] sm:gap-8"
-                >
-                  <p className="text-2xl font-semibold text-[#17352b] sm:text-3xl">
-                    {fact.value}
-                  </p>
-                  <div>
-                    <h3 className="text-base font-semibold leading-snug text-[#17352b] sm:text-lg">
-                      {fact.label}
-                    </h3>
-                    <p className="mt-1 text-xs leading-5 text-[#56645c]">
-                      {fact.note}
-                    </p>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
+            <PinnedHeadingSection
+              split="lg:grid-cols-[0.3fr_0.7fr]"
+              heading={
+                <div>
+                  <GlobeHemisphereWest
+                    aria-hidden="true"
+                    weight="light"
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[#b23c26]"
+                  />
+                  <SectionIntro
+                    headingId="context-heading"
+                    title="The context behind the work"
+                    className="mt-3"
+                  />
+                </div>
+              }
+            >
+              <AnimatedDisclosureList
+                label="National context indicators"
+                defaultValue={CONTEXT_FACTS[0].label}
+                className="mt-2 max-w-3xl lg:mt-0"
+                items={CONTEXT_FACTS.map((fact) => ({
+                  id: fact.label,
+                  trigger: (
+                    <span className="grid gap-2 py-1 sm:grid-cols-[8rem_1fr] sm:gap-8">
+                      <span className="text-2xl font-semibold text-[#17352b] sm:text-3xl">
+                        {fact.value}
+                      </span>
+                      <span
+                        role="heading"
+                        aria-level={3}
+                        className="text-base font-semibold leading-snug text-[#17352b] sm:text-lg"
+                      >
+                        {fact.label}
+                      </span>
+                    </span>
+                  ),
+                  children: (
+                    <p className="text-xs leading-5 text-[#56645c]">{fact.note}</p>
+                  ),
+                }))}
+              />
 
-            <Reveal className="mt-12 grid gap-8 border-t border-[#18251f]/15 pt-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-              <blockquote className="border-l-2 border-[#d84f37] pl-6 text-xl leading-relaxed text-[#17352b] sm:text-2xl">
-                &ldquo;{CONTEXT_QUOTE.text}&rdquo;
-              </blockquote>
-              <p className="self-end text-sm leading-6 text-[#56645c]">
-                {CONTEXT_QUOTE.author}
-              </p>
-            </Reveal>
+              <figure className="mt-10">
+                <div className="relative isolate aspect-[4/1] overflow-hidden rounded-lg border border-[#18251f]/15 bg-[#fffefa]">
+                  <Image
+                    src="/images/thimphu-market.webp"
+                    alt="Open sacks of spices and grain at a market stall in Thimphu"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 65vw"
+                    className="object-cover object-center"
+                  />
+                </div>
+                <figcaption className="mt-2 text-xs leading-5 text-[#56645c]">
+                  A market stall in Thimphu.
+                </figcaption>
+              </figure>
 
-            <Reveal className="mt-10 border-t border-[#18251f]/15 pt-6">
-              <p className="text-xs leading-5 text-[#56645c]">
-                Source:{" "}
-                <a
-                  href={WORLD_BANK_SOURCE.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]"
-                >
-                  {WORLD_BANK_SOURCE.label}
-                </a>
-                . National figures, not platform results.
-              </p>
-            </Reveal>
+              <Reveal className="mt-12 grid gap-8 border-t border-[#18251f]/15 pt-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+                <blockquote className="border-l-2 border-[#d84f37] pl-6 text-xl leading-relaxed text-[#17352b] sm:text-2xl">
+                  &ldquo;{CONTEXT_QUOTE.text}&rdquo;
+                </blockquote>
+                <p className="self-end text-sm leading-6 text-[#56645c]">
+                  {CONTEXT_QUOTE.author}
+                </p>
+              </Reveal>
+
+              <Reveal className="mt-10 border-t border-[#18251f]/15 pt-6">
+                <p className="text-xs leading-5 text-[#56645c]">
+                  Source:{" "}
+                  <a
+                    href={WORLD_BANK_SOURCE.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]"
+                  >
+                    {WORLD_BANK_SOURCE.label}
+                  </a>
+                  . National figures, not platform results.
+                </p>
+              </Reveal>
+            </PinnedHeadingSection>
           </div>
         </section>
 

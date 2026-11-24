@@ -96,7 +96,6 @@ export function ProjectDetailClient({
             ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
             : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
         }`}>
-          {status.ok ? <span className="h-4 w-4 shrink-0" /> : <span className="h-4 w-4 shrink-0" />}
           {status.msg}
         </p>
       )}
@@ -106,11 +105,11 @@ export function ProjectDetailClient({
           <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{project.title}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#657069]">
             {project.duration && <span>{project.duration}</span>}
-            {project.work_mode === 'onsite' ? (
-              <span className="inline-flex items-center gap-1">{project.work_mode === 'onsite' ? 'On-site' : 'Remote'}</span>
-            ) : null}
+            <span className="inline-flex items-center gap-1">
+              {project.work_mode === 'onsite' ? 'On-site' : 'Remote'}
+            </span>
             {project.budget_min != null && (
-              <span className="font-semibold text-[#17352b]">
+              <span className="font-semibold tabular-nums text-[#17352b]">
                 Nu {project.budget_min.toLocaleString('en-IN')}
                 {project.budget_max != null && project.budget_max !== project.budget_min ? ` - ${project.budget_max.toLocaleString('en-IN')}` : ''}
               </span>
@@ -125,7 +124,7 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+              className={`inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                 projectStatus === s.value
                   ? 'bg-[#17352b] text-[#fffefa]'
                   : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
@@ -145,9 +144,9 @@ export function ProjectDetailClient({
         />
 
         <section className="space-y-3">
-          <h3 className="text-base font-semibold text-[#17352b]">
-            Applicants <span className="font-normal text-[#657069]">({applicants.length})</span>
-          </h3>
+          <h2 className="text-base font-semibold text-[#17352b]">
+            Applicants <span className="font-normal tabular-nums text-[#657069]">({applicants.length})</span>
+          </h2>
 
           {applicants.length === 0 ? (
             <div className="rounded-xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
@@ -163,9 +162,9 @@ export function ProjectDetailClient({
                   <li key={a.id} className="space-y-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h4 className="truncate text-base font-semibold text-[#17352b]">
+                        <h3 className="truncate text-base font-semibold text-[#17352b]">
                           {s?.full_name ?? 'Applicant'}
-                        </h4>
+                        </h3>
                         <p className="text-xs text-[#657069]">
                           {s?.college ?? 'College not set'}
                           {s?.course ? ` - ${s.course}` : ''}
@@ -193,7 +192,7 @@ export function ProjectDetailClient({
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                       {s?.cv_path && (
-                        <a href={`/api/cv/${a.student_id}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 text-[#b23c26] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 text-[#b23c26] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
                           View CV
                         </a>
                       )}
@@ -202,7 +201,7 @@ export function ProjectDetailClient({
                           {s.contact_email}
                         </a>
                       )}
-                      <span className="inline-flex items-center gap-1.5 text-xs text-[#657069]">
+                      <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-[#657069]">
                         Applied {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                       </span>
                     </div>
@@ -214,7 +213,8 @@ export function ProjectDetailClient({
                           type="button"
                           disabled={busy || current === st}
                           onClick={() => setApplication(a.id, st)}
-                          className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+                          aria-pressed={current === st}
+                          className={`inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                             current === st
                               ? 'bg-[#17352b] text-[#fffefa]'
                               : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'

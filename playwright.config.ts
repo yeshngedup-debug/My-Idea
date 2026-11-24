@@ -55,5 +55,8 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    // Mesurer is a local design tool; its toolbar buttons share prefixes with
+    // app selectors and must not be present during automated runs.
+    env: { NEXT_PUBLIC_MESURER_ENABLED: '0' },
   },
 });

@@ -204,21 +204,21 @@ export function PostProjectForm() {
                 placeholder="Min"
                 required
                 aria-label="Budget minimum"
-                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
+                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base tabular-nums text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
               />
             </div>
             <div>
               <Input
                 type="number"
                 inputMode="numeric"
-                min={100}
+                min={Number(budgetMin) > 100 ? budgetMin : 100}
                 step={100}
                 value={budgetMax}
                 onChange={(e) => setBudgetMax(e.target.value)}
                 placeholder="Max"
                 required
                 aria-label="Budget maximum"
-                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
+                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base tabular-nums text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
               />
             </div>
           </div>

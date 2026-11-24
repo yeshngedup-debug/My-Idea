@@ -106,7 +106,11 @@ export default async function StudentProjectDetailPage({
             <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">
               {project.title}
             </h1>
-            <Badge className="shrink-0 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
+            <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full bg-[#17352b]"
+              />
               {project.status.replace('_', ' ')}
             </Badge>
           </div>
@@ -121,7 +125,7 @@ export default async function StudentProjectDetailPage({
                 <dt className="text-xs font-medium text-[#657069]">
                   {field.label}
                 </dt>
-                <dd className="mt-1 text-sm font-semibold text-[#17352b]">
+                <dd className="mt-1 text-sm font-semibold tabular-nums text-[#17352b]">
                   {field.value}
                 </dd>
               </div>

@@ -156,6 +156,41 @@ Open http://localhost:3000 — you will be redirected to the public landing page
 
 > **Before real users pay:** the bank account and mBoB number in `config/payment.ts` are placeholders. Replace them with real details.
 
+### Frontend inspection with Mesurer
+
+Mesurer is an open-source UI inspector for precise visual feedback. It is mounted
+in `app/layout.tsx` through `components/dev/mesurer-panel.tsx`, but only in
+development and only when `NEXT_PUBLIC_MESURER_ENABLED=1`. Production builds and
+normal visitors never load it. The flag is already set in `.env.local` for local
+work.
+
+Enable or disable it:
+
+```bash
+# .env.local
+NEXT_PUBLIC_MESURER_ENABLED=1   # on (default for local work)
+NEXT_PUBLIC_MESURER_ENABLED=0   # off
+```
+
+It starts minimized to a toolbar button in the top-left. Useful shortcuts while
+redesigning:
+
+| Key | Action |
+|---|---|
+| `I` | Inspect element bounds and spacing |
+| `G` | Pixel guides; `H` horizontal, `V` vertical |
+| `R` | Pixel rulers; hold `Alt` for distance overlays |
+| `D` / `N` / `T` | Arrows, freehand pen, text notes |
+| `M` | Comments pinned to live elements |
+| `X` / `B` | X-ray structure / responsive preview |
+| `C` / `V` | Region screenshot / short video capture |
+| `Cmd/Ctrl + K` | Copy comments as structured feedback for a coding agent |
+| `Esc` | Cancel the current tool, then minimize |
+
+Use **Comments** (`M`) to pin feedback to an element, then `Cmd/Ctrl + K` to copy
+it and paste it into a prompt for an agent. Workspace state persists per page in
+local storage under `bhutan-tech-connect-mesurer`.
+
 ---
 
 ## 6. Main user flows

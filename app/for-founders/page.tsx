@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   CalendarBlank,
@@ -6,6 +7,8 @@ import {
   Clock,
   FileText,
   MagnifyingGlass,
+  Receipt,
+  Signpost,
   Wallet,
 } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
@@ -15,11 +18,13 @@ import { SectionIntro } from "@/components/marketing/section-intro";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
 import { ShortlistPreview } from "@/components/marketing/product-preview/shortlist-preview";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
+import { Reveal } from "@/components/ui/motion";
 import { TextReveal } from "@/components/ui/text-reveal";
 import { StackedCards } from "@/components/motion";
 import { Accordion } from "@/components/interactive/accordion";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
 import { PACKAGES } from "@/config/payment";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -177,37 +182,69 @@ export default function ForFoundersPage() {
           className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
         >
           <div className="mx-auto max-w-[1440px]">
-            <div className="grid gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-20">
-              <SectionIntro
-                headingId="access-heading"
-                title="Three steps to get going"
-              />
+            <PinnedHeadingSection
+              className="gap-10 lg:gap-20"
+              split="lg:grid-cols-[1fr_1.25fr]"
+              heading={
+                <div>
+                  <Signpost
+                    aria-hidden="true"
+                    weight="light"
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[#b23c26]"
+                  />
+                  <SectionIntro
+                    headingId="access-heading"
+                    title="Three steps to get going"
+                    className="mt-3"
+                  />
+                </div>
+              }
+            >
               <Reveal direction="right" delay={0.08}>
                 <p className="max-w-xl text-balance text-3xl font-medium leading-[1.15] tracking-[-0.02em] text-[#17352b] sm:text-4xl">
                   Access is assigned by an admin.
                 </p>
-                <StaggerGroup className="mt-10 grid gap-0">
-                  {accessSteps.map((step, index) => (
-                    <StaggerItem key={step.number}>
-                      <div
-                        className={
-                          index === 0
-                            ? "pb-5 sm:pb-6"
-                            : "border-t border-[#18251f]/15 py-5 sm:py-6"
-                        }
-                      >
-                        <p className="max-w-xl text-sm leading-7 text-body-secondary sm:text-base">
-                          <span className="font-semibold text-[#17352b]">
-                            {step.title}.
-                          </span>{" "}
-                          {step.text}
-                        </p>
-                      </div>
-                    </StaggerItem>
-                  ))}
-                </StaggerGroup>
+                <AnimatedDisclosureList
+                  label="Founder access steps"
+                  defaultValue={accessSteps[0].number}
+                  className="mt-8"
+                  items={accessSteps.map((step) => ({
+                    id: step.number,
+                    trigger: (
+                      <span className="grid gap-1 py-1 sm:grid-cols-[2.5rem_1fr] sm:gap-4">
+                        <span className="font-semibold tabular-nums text-[#b23c26]">
+                          {step.number}
+                        </span>
+                        <span className="font-semibold text-[#17352b]">
+                          {step.title}.
+                        </span>
+                      </span>
+                    ),
+                    children: (
+                      <p className="max-w-xl text-sm leading-7 text-body-secondary sm:text-base">
+                        {step.text}
+                      </p>
+                    ),
+                  }))}
+                />
+                <figure className="mt-10">
+                  <div className="relative isolate aspect-[4/1] overflow-hidden rounded-lg border border-[#18251f]/15 bg-[#fffefa]">
+                    <Image
+                      src="/images/founder-briefing.jpg"
+                      alt="Team members planning around a wall of sticky notes in a meeting room"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 55vw"
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <figcaption className="mt-2 text-xs leading-5 text-[#56645c]">
+                    Planning a brief with the team.
+                  </figcaption>
+                </figure>
               </Reveal>
-            </div>
+            </PinnedHeadingSection>
             <Reveal className="mt-9 border-t border-[#18251f]/15 pt-7">
               <Link href="/contact" className={textLink}>
                 Ask for founder access
@@ -407,21 +444,37 @@ export default function ForFoundersPage() {
           className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
         >
           <div className="mx-auto max-w-[1440px]">
-            <SectionIntro
-              headingId="payment-heading"
-              title="Payment is manual"
-              lead="No card checkout; every order is checked by a person."
-            />
-            <StackedCards
-              className="mt-10 border-t border-[#18251f]/15 pt-8"
-              label="Payment steps"
-              items={paymentSteps.map((step) => ({
-                key: step.number,
-                number: step.number,
-                title: step.title,
-                body: step.text,
-              }))}
-            />
+            <PinnedHeadingSection
+              split="lg:grid-cols-[0.34fr_0.66fr]"
+              heading={
+                <div>
+                  <Receipt
+                    aria-hidden="true"
+                    weight="light"
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[#b23c26]"
+                  />
+                  <SectionIntro
+                    headingId="payment-heading"
+                    title="Payment is manual"
+                    lead="No card checkout; every order is checked by a person."
+                    className="mt-3"
+                  />
+                </div>
+              }
+            >
+              <StackedCards
+                className="mt-2 border-t border-[#18251f]/15 pt-8 lg:mt-0"
+                label="Payment steps"
+                items={paymentSteps.map((step) => ({
+                  key: step.number,
+                  number: step.number,
+                  title: step.title,
+                  body: step.text,
+                }))}
+              />
+            </PinnedHeadingSection>
           </div>
         </section>
 

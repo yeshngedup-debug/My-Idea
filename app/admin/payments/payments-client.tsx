@@ -85,6 +85,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
         </p>
       )}
 
+      <h2 className="sr-only">Payment orders</h2>
       <ul className="divide-y divide-[#ded8cb] border-y border-[#ded8cb]">
       {items.map((o) => {
         const badge = STATUS_BADGE[o.status] ?? STATUS_BADGE.pending;
@@ -97,7 +98,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                   {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
                 </h3>
                 <p className="truncate text-xs tabular-nums text-[#657069]">
-                  {o.founderName ?? 'Founder'} - Nu {o.amount?.toLocaleString('en-IN')}
+                  {o.founderName ?? 'Founder'} - {o.amount != null ? `Nu ${o.amount.toLocaleString('en-IN')}` : 'Amount not set'}
                   {o.projectTitle ? ` - ${o.projectTitle}` : ''}
                   {' - '}
                   {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}

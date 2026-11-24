@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ChartLineUp } from "@phosphor-icons/react/dist/ssr";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { ScaleFadeImage } from "@/components/editorial/scale-fade-image";
 import { Reveal } from "@/components/ui/motion";
@@ -12,6 +13,8 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { ShortlistPreviewCompact } from "@/components/marketing/product-preview/shortlist-preview";
+import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
+import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
 import { CTA_HREFS, CTA_LABELS, PHOTO_CREDITS } from "@/components/marketing/nav";
 import {
   CONTEXT_FACTS,
@@ -209,50 +212,84 @@ export default async function HomePage() {
         className="bg-[#17352b] px-5 py-20 text-white sm:px-8 md:py-24 lg:px-12"
       >
         <div className="mx-auto max-w-[1440px]">
-          <Reveal>
-            <h2
-              id="bhutan-heading"
-              className="max-w-3xl text-4xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl"
-            >
-              The national context for young people
-            </h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
-              The World Bank&apos;s April 2026 update projects continued growth
-              but warns that job creation is not keeping pace, particularly for
-              young people.
-            </p>
-          </Reveal>
-
-          <Reveal className="mt-16 border-t border-white/15 pt-10">
-            <dl className="max-w-4xl">
-              {CONTEXT_FACTS.map((fact) => (
-                <div
-                  key={fact.label}
-                  className="grid gap-2 border-b border-white/15 py-6 sm:grid-cols-[8rem_12rem_1fr] sm:items-baseline sm:gap-8"
+          <PinnedHeadingSection
+            split="lg:grid-cols-[0.32fr_0.68fr]"
+            heading={
+              <Reveal>
+                <ChartLineUp
+                  aria-hidden="true"
+                  weight="light"
+                  size={16}
+                  strokeWidth={1.5}
+                  className="text-[#e7b648]"
+                />
+                <h2
+                  id="bhutan-heading"
+                  className="mt-4 text-4xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl"
                 >
-                  <dt className="text-2xl font-semibold text-[#e7b648] sm:text-3xl">
-                    {fact.value}
-                  </dt>
-                  <dd className="text-sm leading-6 text-white sm:text-base">
-                    {fact.label}
-                  </dd>
-                  <p className="text-xs leading-5 text-white/70">{fact.note}</p>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-12 text-xs leading-5 text-white/60">
-              Source:{" "}
-              <a
-                href={WORLD_BANK_SOURCE.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-amber-300 underline decoration-white/35 underline-offset-4 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
-              >
-                {WORLD_BANK_SOURCE.label}
-              </a>
-              . National indicators, not platform results.
-            </p>
-          </Reveal>
+                  The national context for young people
+                </h2>
+              </Reveal>
+            }
+          >
+            <Reveal>
+              <p className="max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
+                The World Bank&apos;s April 2026 update projects continued
+                growth but warns that job creation is not keeping pace,
+                particularly for young people.
+              </p>
+            </Reveal>
+            <figure className="mt-8">
+              <div className="relative isolate aspect-[4/1] overflow-hidden rounded-lg border border-white/15 bg-[#0d1813]">
+                <Image
+                  src="/images/punakha-dzong.webp"
+                  alt="Punakha Dzong beside a river, with forested hills behind it"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 65vw"
+                  className="object-cover object-center"
+                />
+              </div>
+              <figcaption className="mt-2 text-xs leading-5 text-white/60">
+                Punakha Dzong, Bhutan.
+              </figcaption>
+            </figure>
+            <Reveal className="mt-8">
+              <AnimatedDisclosureList
+                tone="dark"
+                label="National context indicators"
+                defaultValue={CONTEXT_FACTS[0].label}
+                className="max-w-4xl"
+                items={CONTEXT_FACTS.map((fact) => ({
+                  id: fact.label,
+                  trigger: (
+                    <span className="grid gap-2 py-1 sm:grid-cols-[8rem_12rem_1fr] sm:items-baseline sm:gap-8">
+                      <span className="text-2xl font-semibold text-[#e7b648] sm:text-3xl">
+                        {fact.value}
+                      </span>
+                      <span className="text-sm leading-6 text-white sm:text-base">
+                        {fact.label}
+                      </span>
+                    </span>
+                  ),
+                  children: (
+                    <p className="text-xs leading-5 text-white/70">{fact.note}</p>
+                  ),
+                }))}
+              />
+              <p className="mt-10 text-xs leading-5 text-white/60">
+                Source:{" "}
+                <a
+                  href={WORLD_BANK_SOURCE.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-amber-300 underline decoration-white/35 underline-offset-4 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+                >
+                  {WORLD_BANK_SOURCE.label}
+                </a>
+                . National indicators, not platform results.
+              </p>
+            </Reveal>
+          </PinnedHeadingSection>
         </div>
       </section>
 

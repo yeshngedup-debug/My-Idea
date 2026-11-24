@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
+import {
+  IdentificationCard,
+  ListChecks,
+  Plus,
+  UsersThree,
+} from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { CtaBand } from "@/components/marketing/cta-band";
@@ -10,6 +15,7 @@ import { PhotoCredit } from "@/components/ui/photo-credit";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { Chapter } from "@/components/marketing/guides/primitives";
+import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -25,6 +31,7 @@ type Cluster = {
   id: string;
   title: string;
   lead: string;
+  Icon: typeof UsersThree;
   questions: Question[];
 };
 
@@ -34,17 +41,17 @@ const MARKET_CREDIT =
 const topics = [
   {
     href: "#getting-started",
-    title: "Who this is for",
+    title: "The basics",
     text: "Who the platform serves, and how each side gets in.",
   },
   {
     href: "#profiles-and-projects",
-    title: "How profiles work",
+    title: "Profiles and projects",
     text: "How profiles become findable, and how work begins.",
   },
   {
     href: "#shortlists-and-payments",
-    title: "Payments and launch",
+    title: "Shortlists, payments and launch",
     text: "What happens after a founder decides to go further.",
   },
 ];
@@ -54,6 +61,7 @@ const clusters: Cluster[] = [
     id: "getting-started",
     title: "The basics",
     lead: "Who the platform serves, and how each side gets in.",
+    Icon: UsersThree,
     questions: [
       {
         q: "Who is this for?",
@@ -106,6 +114,7 @@ const clusters: Cluster[] = [
     id: "profiles-and-projects",
     title: "Profiles and projects",
     lead: "How profiles become findable, and how work begins.",
+    Icon: IdentificationCard,
     questions: [
       {
         q: "What makes a profile visible to founders?",
@@ -161,6 +170,7 @@ const clusters: Cluster[] = [
     id: "shortlists-and-payments",
     title: "Shortlists, payments and launch",
     lead: "What happens after a founder decides to go further.",
+    Icon: ListChecks,
     questions: [
       {
         q: "How does the Premium Shortlist payment work?",
@@ -217,7 +227,7 @@ export default function FaqPage() {
             <div className="grid gap-12 lg:grid-cols-[1.3fr_0.7fr] lg:gap-20">
               <HeroCopyEntrance>
                 <h1 className="max-w-[18ch] text-balance text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[1.04] tracking-[-0.03em] text-[#17352b]">
-                  Who is Bhutan Tech Connect for?
+                  Frequently asked questions
                 </h1>
                 <p className="mt-8 max-w-xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
                   Bhutanese students and startup founders, covered across
@@ -268,49 +278,64 @@ export default function FaqPage() {
           </div>
         </section>
 
-        {clusters.map((cluster) => (
-          <Chapter
-            key={cluster.id}
-            id={cluster.id}
-            labelledBy={`${cluster.id}-heading`}
-            className="scroll-mt-24"
-          >
-            <Reveal className="max-w-3xl">
-              <h2
-                id={`${cluster.id}-heading`}
-                className="text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
+        {clusters.map((cluster) => {
+          const ClusterIcon = cluster.Icon;
+          return (
+            <Chapter
+              key={cluster.id}
+              id={cluster.id}
+              labelledBy={`${cluster.id}-heading`}
+              className="scroll-mt-24"
+            >
+              <PinnedHeadingSection
+                split="lg:grid-cols-[0.34fr_0.66fr]"
+                heading={
+                  <Reveal className="max-w-3xl">
+                    <ClusterIcon
+                      aria-hidden="true"
+                      weight="light"
+                      size={16}
+                      strokeWidth={1.5}
+                      className="text-[#b23c26]"
+                    />
+                    <h2
+                      id={`${cluster.id}-heading`}
+                      className="mt-4 text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
+                    >
+                      {cluster.title}
+                    </h2>
+                  </Reveal>
+                }
               >
-                {cluster.title}
-              </h2>
-              <p className="mt-6 max-w-xl text-sm leading-7 text-[#18251f]/70 sm:text-base">
-                {cluster.lead}
-              </p>
-            </Reveal>
-
-            <StaggerGroup className="mt-14 grid gap-x-16">
-              {cluster.questions.map((question) => (
-                <StaggerItem key={question.q}>
-                  <details className="group grid gap-x-10 border-t border-[#17352b]/15 py-8 transition-colors hover:bg-[#fffefa] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-                    <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f2ea] [&::-webkit-details-marker]:hidden">
-                      <span className="text-lg font-semibold leading-snug text-[#17352b] sm:text-xl">
-                        {question.q}
-                      </span>
-                      <Plus
-                        aria-hidden="true"
-                        weight="light"
-                        strokeWidth={1.5}
-                        className="mt-1 h-5 w-5 shrink-0 text-[#b23c26] transition-transform duration-300 group-open:rotate-45"
-                      />
-                    </summary>
-                    <div className="mt-5 max-w-2xl pr-8 text-sm leading-7 text-[#18251f]/70 sm:text-base lg:mt-0 lg:pr-12">
-                      {question.a}
-                    </div>
-                  </details>
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
-          </Chapter>
-        ))}
+                <p className="max-w-xl text-sm leading-7 text-[#18251f]/70 sm:text-base">
+                  {cluster.lead}
+                </p>
+                <StaggerGroup className="mt-10 grid gap-x-16">
+                  {cluster.questions.map((question) => (
+                    <StaggerItem key={question.q}>
+                      <details className="group grid gap-x-10 border-t border-[#17352b]/15 py-8 transition-colors hover:bg-[#fffefa] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f2ea] [&::-webkit-details-marker]:hidden">
+                          <span className="text-lg font-semibold leading-snug text-[#17352b] sm:text-xl">
+                            {question.q}
+                          </span>
+                          <Plus
+                            aria-hidden="true"
+                            weight="light"
+                            strokeWidth={1.5}
+                            className="mt-1 h-5 w-5 shrink-0 text-[#b23c26] transition-transform duration-300 group-open:rotate-45"
+                          />
+                        </summary>
+                        <div className="mt-5 max-w-2xl pr-8 text-sm leading-7 text-[#18251f]/70 sm:text-base lg:mt-0 lg:pr-12">
+                          {question.a}
+                        </div>
+                      </details>
+                    </StaggerItem>
+                  ))}
+                </StaggerGroup>
+              </PinnedHeadingSection>
+            </Chapter>
+          );
+        })}
 
         <Chapter className="py-24 md:py-32" label="Photograph">
           <Reveal className="mx-auto max-w-[1440px]">

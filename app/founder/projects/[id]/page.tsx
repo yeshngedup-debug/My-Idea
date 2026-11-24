@@ -25,8 +25,8 @@ export default async function ProjectDetailPage({
 
   const p = await getProject(id);
 
-  // Not found, or not owned by this founder.
-  if (!p || (user && p.founder_id !== user.id)) notFound();
+  // Fail closed: no session, no project, or someone else's project.
+  if (!p || !user || p.founder_id !== user.id) notFound();
 
   const project: ProjectInfo = {
     id: p.id,

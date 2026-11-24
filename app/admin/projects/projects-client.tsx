@@ -84,6 +84,7 @@ export function ProjectsClient({ rows }: { rows: ProjectRow[] }) {
 
   return (
     <div className="space-y-4">
+      <h2 className="sr-only">Project list</h2>
       <SegmentedControl
         options={FILTERS.map((item) => ({ label: item.label, value: item.value }))}
         value={filter}

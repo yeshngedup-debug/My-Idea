@@ -103,18 +103,18 @@ export function BrowseClient({
         ))}
       </div>
 
-      <p className="text-xs text-[#657069]" role="status">
+      <h2 className="sr-only">Student profiles</h2>
+      <p className="text-xs tabular-nums text-[#657069]" role="status" aria-live="polite">
         {filtered.length} {filtered.length === 1 ? 'student' : 'students'}
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
 
       {status && (
-        <p role="status" className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
+        <p role={status.ok ? 'status' : 'alert'} className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
           status.ok
             ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
             : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
         }`}>
-          {status.ok ? <span className="w-4 h-4 shrink-0" /> : <span className="w-4 h-4 shrink-0" />}
           {status.msg}
         </p>
       )}

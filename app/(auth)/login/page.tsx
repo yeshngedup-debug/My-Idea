@@ -19,6 +19,9 @@ const ERRORS: Record<string, string> = {
     "Too many login attempts. Wait a minute and try again.",
 };
 
+/** Unknown codes must still surface a message; a silent login failure reads as a dead button. */
+const GENERIC_ERROR = "We couldn't log you in. Please try again.";
+
 const MESSAGES: Record<string, string> = {
   "check-email":
     "Account created. Check your inbox to confirm your email, then log in.",
@@ -39,7 +42,7 @@ export default async function LoginPage({
 
       <div className="mt-6">
         <LoginForm
-          serverError={error ? ERRORS[error] : undefined}
+          serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
           serverMessage={message ? MESSAGES[message] : undefined}
         />
       </div>

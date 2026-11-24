@@ -43,7 +43,7 @@ export default function TermsPage() {
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 py-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+            className="inline-flex min-h-8 items-center gap-2 rounded-sm text-sm font-semibold text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
           >
             Back to home
           </Link>

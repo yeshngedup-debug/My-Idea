@@ -19,6 +19,9 @@ const ERRORS: Record<string, string> = {
     "Too many signup attempts. Wait a minute and try again.",
 };
 
+/** Unknown codes must still surface a message; a silent signup failure reads as a dead button. */
+const GENERIC_ERROR = "We couldn't create your account. Please try again.";
+
 export default async function SignupPage({
   searchParams,
 }: {
@@ -33,7 +36,7 @@ export default async function SignupPage({
       </h2>
 
       <div className="mt-6">
-        <SignupForm serverError={error ? ERRORS[error] : undefined} />
+        <SignupForm serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined} />
       </div>
 
       <p className="mt-7 text-center text-sm leading-6 text-slate-600">

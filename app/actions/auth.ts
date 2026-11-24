@@ -49,33 +49,37 @@ export async function login(formData: FormData) {
     redirect('/login?error=invalid');
   }
 
-  // Mirror the identity provider's current role/full name into Neon so a
-  // Supabase-only role change cannot leave stale elevated access in app code.
+  // One Supabase read + one Neon write: mirror the identity provider's current
+  // role/name into Neon (so an out-of-band demotion cannot leave elevated app
+  // access) and use that same role to pick the dashboard. This replaces the
+  // previous extra getUser() + getProfileRole() pair that doubled login time.
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, full_name')
-      .eq('id', user.id)
-      .single();
-    const role = (profile?.role === 'admin' || profile?.role === 'founder'
+  if (!user) redirect('/login');
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, full_name')
+    .eq('id', user.id)
+    .single();
+  const role: Role =
+    profile?.role === 'admin' || profile?.role === 'founder'
       ? profile.role
-      : 'student') as 'student' | 'founder' | 'admin';
-    try {
-      await syncProfileRole(
-        user.id,
-        (profile?.full_name as string | null) ?? null,
-        role,
-      );
-    } catch {
-      // Keep the login usable; middleware still checks the Neon role on every
-      // request and will fail closed if the profile is absent.
-    }
+      : 'student';
+
+  try {
+    await syncProfileRole(
+      user.id,
+      (profile?.full_name as string | null) ?? null,
+      role,
+    );
+  } catch {
+    // Keep login usable on a transient Neon outage; middleware re-checks the
+    // Neon role on every request and fails closed if the profile is absent.
   }
 
-  redirect(await dashboardPathForCurrentUser(supabase));
+  redirect(role === 'admin' ? '/admin' : role === 'founder' ? '/founder' : '/student');
 }
 
 export async function signup(formData: FormData) {

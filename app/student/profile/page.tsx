@@ -28,6 +28,7 @@ export default async function StudentProfilePage() {
   };
 
   let cvUrl: string | null = null;
+  let cvPreviewUnavailable = false;
 
   if (user) {
     const data = await getStudentProfile(user.id);
@@ -48,11 +49,13 @@ export default async function StudentProfilePage() {
     }
 
     // Signed URLs expire after an hour, so always mint a fresh one.
+    // A failed mint is surfaced in the form rather than silently hidden.
     if (initial.cv_path) {
-      const { data: signed } = await supabase.storage
+      const { data: signed, error } = await supabase.storage
         .from('cvs')
         .createSignedUrl(initial.cv_path, 60 * 60);
       cvUrl = signed?.signedUrl ?? null;
+      cvPreviewUnavailable = Boolean(error) || cvUrl === null;
     }
   }
 
@@ -64,7 +67,11 @@ export default async function StudentProfilePage() {
           title="My Profile"
           description="Keep your details and CV current so founders can find you."
         />
-        <ProfileForm initial={initial} cvUrl={cvUrl} />
+        <ProfileForm
+          initial={initial}
+          cvUrl={cvUrl}
+          cvPreviewUnavailable={cvPreviewUnavailable}
+        />
       </div>
     </section>
   );

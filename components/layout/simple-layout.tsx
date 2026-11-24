@@ -41,8 +41,10 @@ export default async function SimpleLayout({
         ? [
             { href: "/founder", label: "Overview" },
             { href: "/founder/browse-students", label: "Find talent" },
+            { href: "/founder/browse-projects", label: "Browse projects" },
             { href: "/founder/projects", label: "Projects" },
             { href: "/founder/shortlists", label: "Shortlists" },
+            { href: "/founder/profile", label: "Profile" },
           ]
         : profile?.role === "admin"
           ? [

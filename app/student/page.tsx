@@ -90,7 +90,7 @@ export default async function StudentDashboard() {
             {applications.length > 0 && (
               <Link
                 href="/student/applications"
-                className="inline-flex shrink-0 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
               >
                 View all
               </Link>
@@ -106,7 +106,7 @@ export default async function StudentDashboard() {
               </p>
               <Link
                 href="/student/projects"
-                className="mt-4 inline-flex min-h-10 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                className="mt-4 inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
               >
                 Browse open projects
               </Link>

@@ -221,6 +221,8 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
         ))}
       </div>
 
+      <h2 className="sr-only">Student profiles</h2>
+
       {/* Status banner */}
       {status && (
         <p
@@ -307,7 +309,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                       onBlur={() => saveRank(s.id)}
                       onKeyDown={(e) => e.key === 'Enter' && saveRank(s.id)}
                       placeholder="-"
-                      className="w-14 h-11 rounded-xl bg-[#f5f2ea] border border-[#ded8cb] text-center text-[#17352b] text-base focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 [color-scheme:light]"
+                      className="w-14 h-11 rounded-xl bg-[#f5f2ea] border border-[#ded8cb] text-center text-[#17352b] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] [color-scheme:light]"
                     />
                   </div>
 
@@ -318,9 +320,9 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                         {s.full_name}
                       </h3>
                       {isVerified ? (
-                        <SealCheck className="w-4 h-4 text-[#17352b] shrink-0" aria-hidden="true" aria-label="Verified" />
+                        <SealCheck className="w-4 h-4 text-[#17352b] shrink-0" aria-hidden="true" />
                       ) : (
-                        <Bag className="w-4 h-4 text-[#17352b]/30 shrink-0" aria-hidden="true" aria-label="Not verified" />
+                        <Bag className="w-4 h-4 text-[#17352b]/30 shrink-0" aria-hidden="true" />
                       )}
                     </div>
                     <p className="text-xs text-[#657069] truncate">
@@ -419,7 +421,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
 
       {/* Sticky action bar */}
       {selected.size > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#fffefa]/95 backdrop-blur-md border-t border-[#ded8cb] px-4 py-3">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#fffefa] border-t border-[#ded8cb] px-4 py-3">
           <div className="max-w-2xl mx-auto space-y-2">
             <p className="text-xs text-[#657069] text-center sm:text-left">
               {selected.size} {selected.size === 1 ? 'student' : 'students'} selected
@@ -432,7 +434,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                   setProjectId('');
                 }}
                 aria-label="Choose founder"
-                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 [&>option]:bg-[#fffefa]"
+                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] [&>option]:bg-[#fffefa]"
               >
                 <option value="">Choose founder...</option>
                 {founders.map((f) => (
@@ -446,7 +448,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                 onChange={(e) => setProjectId(e.target.value)}
                 aria-label="Choose project"
                 disabled={!founderId}
-                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 disabled:opacity-40 [&>option]:bg-[#fffefa]"
+                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-40 [&>option]:bg-[#fffefa]"
               >
                 <option value="">No specific project</option>
                 {founderProjects.map((p) => (

@@ -5,26 +5,30 @@ import Link from "next/link";
 import {
   listRoleCounts,
   listProjectStatuses,
+  listAllProjectsWithDetails,
   listOrders,
 } from "@/lib/neon-data";
 import { WorkspaceHero } from "@/components/layout/workspace-hero";
 import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
+import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import {
-  HoverLift,
-  Reveal,
-  StaggerGroup,
-  StaggerItem,
-} from "@/components/ui/motion";
+  AdminChartDefs,
+  RoleDonut,
+  ProjectStageBars,
+  ActivityTrend,
+} from "./admin-charts";
 
 export const metadata = { title: "Admin Dashboard | Bhutan Tech Connect" };
 
 export default async function AdminDashboard() {
-  const [profileCounts, projectStatuses, allOrders] = await Promise.all([
-    listRoleCounts(),
-    listProjectStatuses(),
-    listOrders(),
-  ]);
+  const [profileCounts, projectStatuses, projectRows, allOrders] =
+    await Promise.all([
+      listRoleCounts(),
+      listProjectStatuses(),
+      listAllProjectsWithDetails(),
+      listOrders(),
+    ]);
 
   const profiles = profileCounts.flatMap((c) => Array<string>(c.count).fill(c.role));
   const projects = projectStatuses.map((status) => ({ status }));
@@ -73,6 +77,21 @@ export default async function AdminDashboard() {
         <WorkspaceStats stats={stats} />
       </Reveal>
 
+      <AdminChartDefs />
+      <Reveal>
+        <section aria-label="Platform data visuals" className="space-y-4">
+          <h2 className="sr-only">Platform data by role, stage and month</h2>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <RoleDonut counts={profileCounts} />
+            <ProjectStageBars statuses={projectStatuses} />
+          </div>
+          <ActivityTrend
+            projectDates={projectRows.map((p) => p.created_at)}
+            orderDates={allOrders.map((o) => o.created_at)}
+          />
+        </section>
+      </Reveal>
+
       {verifying > 0 && (
         <Reveal>
           <div
@@ -85,7 +104,7 @@ export default async function AdminDashboard() {
             </span>
             <Link
               href="/admin/payments"
-              className="inline-flex shrink-0 items-center text-sm font-semibold text-[#b23c26] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              className="inline-flex min-h-9 shrink-0 items-center text-sm font-semibold text-[#b23c26] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
             >
               Review payments
             </Link>
@@ -101,7 +120,7 @@ export default async function AdminDashboard() {
             </h2>
             <Link
               href="/admin/payments"
-              className="inline-flex shrink-0 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              className="inline-flex min-h-9 shrink-0 items-center text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
             >
               All orders
             </Link>
@@ -124,7 +143,7 @@ export default async function AdminDashboard() {
                 <StaggerItem key={order.id}>
                   <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3.5">
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-[#17352b]">
+                      <p className="text-sm font-medium tabular-nums text-[#17352b]">
                         {order.package === "full" ? "Full Support" : "Basic"} shortlist
                         {order.amount != null
                           ? ` · Nu ${order.amount.toLocaleString("en-IN")}`
@@ -170,17 +189,16 @@ export default async function AdminDashboard() {
               { href: "/admin/payments", title: "Payments", description: "Confirm or reject orders" },
               { href: "/admin/projects", title: "Projects", description: "Review all listings" },
             ].map((item) => (
-              <HoverLift key={item.href}>
-                <Link
-                  href={item.href}
-                  className="flex flex-col gap-0.5 py-3.5 text-sm font-medium text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
-                >
-                  {item.title}
-                  <span className="text-xs font-normal text-[#657069]">
-                    {item.description}
-                  </span>
-                </Link>
-              </HoverLift>
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col gap-0.5 py-3.5 text-sm font-medium text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              >
+                {item.title}
+                <span className="text-xs font-normal text-[#657069]">
+                  {item.description}
+                </span>
+              </Link>
             ))}
           </nav>
         </div>

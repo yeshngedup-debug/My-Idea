@@ -839,24 +839,42 @@ export async function replaceAdminShortlist(
 ): Promise<void> {
   const sql = getSql();
   try {
+    // Upsert the desired rows first, then remove stale ones. A DELETE and
+    // INSERT in one statement is unsafe here: the unique indexes are checked
+    // against the pre-statement snapshot, so re-adding a row that already
+    // existed collides. ON CONFLICT handles existing rows per row; a failure
+    // can only leave extra stale rows, never a missing selected student.
     if (projectId) {
+      await sql`
+        insert into public.shortlists
+          (founder_id, student_id, project_id, status, source)
+        select ${founderId}, student_id::uuid, ${projectId}, 'requested', 'admin'
+        from unnest(${studentIds}::uuid[]) as student_id
+        on conflict (founder_id, student_id, project_id)
+          where project_id is not null
+        do update set status = 'requested'
+      `;
       await sql`
         delete from public.shortlists
         where founder_id = ${founderId} and source = 'admin'
           and project_id = ${projectId}
+          and student_id <> all(${studentIds}::uuid[])
       `;
     } else {
+      await sql`
+        insert into public.shortlists
+          (founder_id, student_id, project_id, status, source)
+        select ${founderId}, student_id::uuid, null, 'requested', 'admin'
+        from unnest(${studentIds}::uuid[]) as student_id
+        on conflict (founder_id, student_id, source)
+          where project_id is null
+        do update set status = 'requested'
+      `;
       await sql`
         delete from public.shortlists
         where founder_id = ${founderId} and source = 'admin'
           and project_id is null
-      `;
-    }
-    for (const studentId of studentIds) {
-      await sql`
-        insert into public.shortlists
-          (founder_id, student_id, project_id, status, source)
-        values (${founderId}, ${studentId}, ${projectId}, 'requested', 'admin')
+          and student_id <> all(${studentIds}::uuid[])
       `;
     }
   } catch (error) {
@@ -975,17 +993,25 @@ export async function setOrderStatus(
   confirmedAt?: string
 ): Promise<void> {
   const sql = getSql();
+  const nextStatus = status === "confirmed" ? "confirmed" : "rejected";
   try {
-    if (status === "confirmed") {
-      await sql`
-        update public.shortlist_orders
-        set status = 'confirmed', confirmed_at = ${confirmedAt ?? new Date().toISOString()}
-        where id = ${id}
-      `;
-    } else {
-      await sql`
-        update public.shortlist_orders set status = 'rejected' where id = ${id}
-      `;
+    // Only a payment still awaiting review may be confirmed or rejected.
+    // The guard lives in the UPDATE, not just the action, so a stale page
+    // cannot confirm an already rejected order.
+    const rows = await sql`
+      update public.shortlist_orders
+      set status = ${nextStatus},
+          confirmed_at = case
+            when ${nextStatus} = 'confirmed'
+            then ${confirmedAt ?? new Date().toISOString()}
+            else confirmed_at
+          end
+      where id = ${id}
+        and status in ('pending', 'submitted')
+      returning id
+    `;
+    if (rows.length === 0) {
+      throw new Error("This order can no longer be reviewed.");
     }
   } catch (error) {
     throw asError(error);

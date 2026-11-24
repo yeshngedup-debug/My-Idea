@@ -56,9 +56,9 @@ export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
   if (rows.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-        <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+        <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
           You haven&apos;t applied to any projects yet
-        </h3>
+        </h2>
         <p className="mb-6 text-sm text-[#657069]">
           Browse open projects and apply to ones that match your skills.
         </p>
@@ -92,9 +92,9 @@ export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
 
       {filtered.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+          <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
             No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} applications
-          </h3>
+          </h2>
           <p className="mb-6 text-sm text-[#657069]">
             None of your applications are at this stage right now.
           </p>
@@ -118,7 +118,7 @@ export function ApplicationsClient({ rows }: { rows: ApplicationRow[] }) {
                   <p className="truncate text-sm font-semibold text-[#17352b]">
                     {item.project?.title ?? "Project"}
                   </p>
-                  <p className="mt-1 text-xs text-[#657069]">
+                  <p className="mt-1 text-xs tabular-nums text-[#657069]">
                     Applied{" "}
                     {new Date(item.created_at).toLocaleDateString("en-GB", {
                       day: "numeric",

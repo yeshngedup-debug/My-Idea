@@ -101,12 +101,11 @@ export function ShortlistsClient({
   return (
     <div className="space-y-5 pb-10">
       {status && (
-        <p role="status" className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
+        <p role={status.ok ? 'status' : 'alert'} className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
           status.ok
             ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
             : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
         }`}>
-          {status.ok ? <span className="w-4 h-4 shrink-0" /> : <span className="w-4 h-4 shrink-0" />}
           {status.msg}
         </p>
       )}
@@ -202,7 +201,7 @@ export function ShortlistsClient({
       {!generalUnlocked && step === 'pay' && pendingOrder && (
         <section className="space-y-4">
           <h2 className="text-base font-semibold text-[#17352b]">
-            Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} - Nu {pendingOrder.amount?.toLocaleString('en-IN')}
+            Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} - Nu <span className="tabular-nums">{pendingOrder.amount?.toLocaleString('en-IN')}</span>
           </h2>
 
           <div className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
@@ -232,14 +231,14 @@ export function ShortlistsClient({
 
           <form onSubmit={handleUpload} className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
             <h3 className="text-sm font-semibold text-[#17352b]">Upload payment screenshot</h3>
-            <label htmlFor="screenshot" className="flex items-center justify-center gap-2 w-full border border-dashed border-[#ded8cb] rounded-xl px-4 py-4 text-sm text-[#4c5a52] hover:border-[#17352b]/40 hover:text-[#17352b] transition-colors cursor-pointer">
+            <input id="screenshot" name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" className="peer sr-only" />
+            <label htmlFor="screenshot" className="flex min-h-11 items-center justify-center gap-2 w-full border border-dashed border-[#ded8cb] rounded-xl px-4 py-4 text-sm text-[#4c5a52] hover:border-[#17352b]/40 hover:text-[#17352b] transition-colors cursor-pointer peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#b23c26]">
               Choose image (PNG / JPG / WEBP)
             </label>
-            <input id="screenshot" name="screenshot" type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" />
             <Button type="submit" disabled={uploading || !PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
               {uploading ? 'Submitting...' : 'Submit screenshot'}
             </Button>
-            <button type="button" onClick={() => setStep('package')} className="text-sm text-[#657069] hover:text-[#17352b] transition-colors">
+            <button type="button" onClick={() => setStep('package')} className="inline-flex min-h-9 items-center rounded text-sm text-[#657069] hover:text-[#17352b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
               Change package
             </button>
           </form>
@@ -257,7 +256,7 @@ export function ShortlistsClient({
                     {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
                     {o.project_id && ` - ${projects.find((p) => p.id === o.project_id)?.title ?? 'project'}`}
                   </p>
-                  <p className="text-xs text-[#657069]">
+                  <p className="text-xs tabular-nums text-[#657069]">
                     Nu {o.amount?.toLocaleString('en-IN')} -{' '}
                     {new Date(o.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                   </p>
@@ -288,7 +287,7 @@ export function ShortlistsClient({
               {students.map((s, i) => (
                 <li key={s.shortlistId} className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="w-7 h-7 rounded-full bg-[#17352b] text-[#fffefa] font-semibold text-sm flex items-center justify-center shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-[#17352b] text-[#fffefa] font-semibold text-sm tabular-nums flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
                     <h3 className="truncate text-base font-semibold text-[#17352b]">{s.full_name}</h3>
@@ -308,7 +307,7 @@ export function ShortlistsClient({
                       </a>
                     )}
                     {s.cv_path && (
-                      <a href={`/api/cv/${s.id}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[#17352b] hover:text-[#17352b] transition-colors">
+                      <a href={`/api/cv/${encodeURIComponent(s.id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 rounded text-[#17352b] hover:text-[#17352b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
                         View CV
                       </a>
                     )}

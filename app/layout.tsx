@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { headers } from "next/headers";
 import { MotionProvider } from "@/components/ui/motion-provider";
+import { MesurerPanel } from "@/components/dev/mesurer-panel";
 import "./globals.css";
 
 const geist = Geist({
@@ -134,6 +135,8 @@ export default async function RootLayout({
         {/* Single polite live region for app-wide status messages. */}
         <div id="global-status" aria-live="polite" className="sr-only" />
         <MotionProvider>{children}</MotionProvider>
+        {process.env.NODE_ENV === "development" &&
+          process.env.NEXT_PUBLIC_MESURER_ENABLED === "1" && <MesurerPanel />}
       </body>
     </html>
   );

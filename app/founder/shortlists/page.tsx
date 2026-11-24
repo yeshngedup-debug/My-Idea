@@ -71,8 +71,12 @@ export default async function FounderShortlistsPage() {
           })),
           url: realtimeUrl,
         };
-      } catch {
-        // The status list still renders from the server-loaded rows.
+      } catch (error) {
+        // Degrade to the server-loaded rows, but never hide the failure.
+        console.warn(
+          '[founder/shortlists] Live order status unavailable; showing server-loaded status.',
+          error,
+        );
       }
     }
 
