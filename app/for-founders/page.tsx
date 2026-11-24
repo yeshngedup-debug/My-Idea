@@ -17,6 +17,8 @@ import { PhotoFeature } from "@/components/marketing/photo-feature";
 import { ShortlistPreview } from "@/components/marketing/product-preview/shortlist-preview";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { TextReveal } from "@/components/ui/text-reveal";
+import { StackedCards } from "@/components/motion";
+import { Accordion } from "@/components/interactive/accordion";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { PACKAGES } from "@/config/payment";
 import { pageMetadata } from "@/lib/metadata";
@@ -119,6 +121,39 @@ const paymentSteps = [
   },
 ];
 
+const packageComparison = [
+  {
+    question: "How many students are in each shortlist",
+    answer: (
+      <p>
+        {PACKAGES.basic.name}: {PACKAGES.basic.features[0]}.{" "}
+        {PACKAGES.full.name}: {PACKAGES.full.features[1]}. Both ranges are
+        advertised; an admin curates every shortlist.
+      </p>
+    ),
+  },
+  {
+    question: "What details come with the shortlist",
+    answer: (
+      <p>
+        {PACKAGES.basic.features[1]} and {PACKAGES.basic.features[2]}.{" "}
+        {PACKAGES.full.name} includes {PACKAGES.full.features[0].toLowerCase()}.
+      </p>
+    ),
+  },
+  {
+    question: "Availability, introductions, and a replacement",
+    answer: (
+      <p>
+        {PACKAGES.full.name} includes {PACKAGES.full.features[2].toLowerCase()},{" "}
+        {PACKAGES.full.features[3].toLowerCase()}, and{" "}
+        {PACKAGES.full.features[4].toLowerCase()}. These are listed under Full
+        Support only.
+      </p>
+    ),
+  },
+];
+
 const textLink =
   "inline-flex items-center gap-1.5 font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]";
 
@@ -127,7 +162,7 @@ export default function ForFoundersPage() {
     <div className="min-h-screen bg-[#f5f2ea] text-[#18251f]">
       <SiteHeader />
 
-      <main id="main-content">
+      <main id="main-content" className="overflow-x-clip">
         <PageHero
           title="Post a paid brief for Bhutanese students"
           lead="Post a brief, meet students, build together."
@@ -351,6 +386,20 @@ export default function ForFoundersPage() {
           </div>
         </section>
 
+        <section
+          aria-labelledby="compare-heading"
+          className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+        >
+          <div className="mx-auto max-w-[1440px]">
+            <SectionIntro
+              headingId="compare-heading"
+              title="Compare what each package includes"
+              lead="Both shortlists are prepared by an admin."
+            />
+            <Accordion items={packageComparison} className="mt-10 max-w-3xl" />
+          </div>
+        </section>
+
         <ShortlistPreview />
 
         <section
@@ -363,23 +412,16 @@ export default function ForFoundersPage() {
               title="Payment is manual"
               lead="No card checkout; every order is checked by a person."
             />
-            <StaggerGroup className="mt-10 grid gap-8 border-t border-[#18251f]/15 pt-8 sm:grid-cols-3 sm:gap-6">
-              {paymentSteps.map((step) => (
-                <StaggerItem key={step.number}>
-                  <article>
-                    <p className="text-sm font-semibold text-[#b23c26]">
-                      {step.number}
-                    </p>
-                    <h3 className="mt-5 text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">
-                      {step.title}
-                    </h3>
-                    <p className="mt-3 max-w-sm text-sm leading-6 text-body-secondary">
-                      {step.text}
-                    </p>
-                  </article>
-                </StaggerItem>
-              ))}
-            </StaggerGroup>
+            <StackedCards
+              className="mt-10 border-t border-[#18251f]/15 pt-8"
+              label="Payment steps"
+              items={paymentSteps.map((step) => ({
+                key: step.number,
+                number: step.number,
+                title: step.title,
+                body: step.text,
+              }))}
+            />
           </div>
         </section>
 

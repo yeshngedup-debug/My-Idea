@@ -11,7 +11,7 @@ import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
-import { TextReveal } from "@/components/ui/text-reveal";
+import { ScrubbedTextReveal } from "@/components/motion";
 import { LiveContext } from "@/components/data/live-context";
 import { LocalBridgeDifferences } from "@/components/brand/local-bridge-differences";
 import { getLiveContext } from "@/lib/data/world-bank";
@@ -122,7 +122,10 @@ export default async function AboutPage() {
             <SectionIntro
               headingId="why-heading"
               title={
-                <TextReveal text="Young people need work close to home" />
+                <ScrubbedTextReveal
+                  as="span"
+                  text="Young people need work close to home"
+                />
               }
               lead="A practical first step for students and founders."
             />

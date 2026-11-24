@@ -135,6 +135,16 @@
   background-size: 24px 24px;
 }
 
+/* Scroll-stacked chapters: each card sticks at its own offset on desktop, so
+   the deck overlaps as the reader moves down the list. The cards stay in
+   normal flow and every link inside them remains tabbable. */
+@media (min-width: 768px) {
+  [data-stacked-card] {
+    position: sticky;
+    top: var(--stack-top);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pressable:active {
     transform: none;
@@ -145,6 +155,15 @@
   [data-scale-fade] {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  [data-stacked-card] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .scrub-word {
+    opacity: 1 !important;
   }
 }
 

@@ -10,7 +10,11 @@ import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { GuideHero } from "@/components/marketing/guides/guide-hero";
-import { PinnedStepChapter } from "@/components/marketing/guides/pinned-step-chapter";
+import {
+  ChapterProgress,
+  PinnedScrollChapter,
+  type ChapterLink,
+} from "@/components/motion";
 import { Chapter, TextLink } from "@/components/marketing/guides/primitives";
 import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
@@ -90,6 +94,14 @@ const protections = [
   },
 ];
 
+const guideChapters: ChapterLink[] = [
+  { id: "journey", label: "Three steps" },
+  { id: "brief", label: "The brief" },
+  { id: "place", label: "Built for work here" },
+  { id: "care", label: "Both sides protected" },
+  { id: "shortlist", label: "After a shortlist" },
+];
+
 const afterShortlist = [
   {
     title: "An admin verifies and ranks students",
@@ -125,54 +137,57 @@ export default function HowItWorksPage() {
           creditFileUrl="https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg"
         />
 
-        <Chapter id="journey" labelledBy="journey-heading">
-          <PinnedStepChapter
-            title={
-              <Reveal>
-                <h2
-                  id="journey-heading"
-                  className="max-w-lg text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
-                >
-                  Three steps, one clear brief
-                </h2>
-                <p className="mt-6 max-w-sm text-sm leading-6 text-[#56645c] sm:text-base">
-                  Each step keeps the work focused and the expectations visible
-                  to everyone involved.
-                </p>
-              </Reveal>
-            }
-          >
-            <StaggerGroup className="border-t border-[#17352b]/15">
-              {steps.map((step) => {
-                const StepIcon = step.Icon;
-                return (
-                  <StaggerItem key={step.number}>
-                    <article className="grid gap-4 border-b border-[#17352b]/15 py-10 sm:grid-cols-[4rem_1fr_auto] sm:items-start sm:gap-8 sm:py-14">
-                      <span className="text-2xl font-semibold tracking-[-0.04em] text-[#b23c26] sm:text-3xl">
-                        {step.number}
-                      </span>
-                      <div>
-                        <h3 className="text-balance text-2xl font-semibold leading-tight tracking-[-0.035em] text-[#17352b] sm:text-3xl">
-                          {step.title}
-                        </h3>
-                        <p className="mt-4 max-w-2xl text-sm leading-7 text-[#56645c] sm:text-base">
-                          {step.body}
-                        </p>
-                      </div>
-                      <StepIcon
-                        aria-hidden="true"
-                        weight="light"
-                        size={30}
-                        strokeWidth={1.5}
-                        className="hidden text-[#56645c] sm:block"
-                      />
-                    </article>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerGroup>
-          </PinnedStepChapter>
-        </Chapter>
+        <ChapterProgress chapters={guideChapters} className="bg-[#fffefa]" />
+
+        <PinnedScrollChapter
+          id="journey"
+          labelledBy="journey-heading"
+          className="px-5 py-20 sm:px-8 md:py-24 lg:px-12"
+          title={
+            <Reveal>
+              <h2
+                id="journey-heading"
+                className="max-w-lg text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
+              >
+                Three steps, one clear brief
+              </h2>
+              <p className="mt-6 max-w-sm text-sm leading-6 text-[#56645c] sm:text-base">
+                Each step keeps the work focused and the expectations visible
+                to everyone involved.
+              </p>
+            </Reveal>
+          }
+        >
+          <StaggerGroup className="border-t border-[#17352b]/15">
+            {steps.map((step) => {
+              const StepIcon = step.Icon;
+              return (
+                <StaggerItem key={step.number}>
+                  <article className="grid gap-4 border-b border-[#17352b]/15 py-10 sm:grid-cols-[4rem_1fr_auto] sm:items-start sm:gap-8 sm:py-14">
+                    <span className="text-2xl font-semibold tracking-[-0.04em] text-[#b23c26] sm:text-3xl">
+                      {step.number}
+                    </span>
+                    <div>
+                      <h3 className="text-balance text-2xl font-semibold leading-tight tracking-[-0.035em] text-[#17352b] sm:text-3xl">
+                        {step.title}
+                      </h3>
+                      <p className="mt-4 max-w-2xl text-sm leading-7 text-[#56645c] sm:text-base">
+                        {step.body}
+                      </p>
+                    </div>
+                    <StepIcon
+                      aria-hidden="true"
+                      weight="light"
+                      size={30}
+                      strokeWidth={1.5}
+                      className="hidden text-[#56645c] sm:block"
+                    />
+                  </article>
+                </StaggerItem>
+              );
+            })}
+          </StaggerGroup>
+        </PinnedScrollChapter>
 
         <Chapter labelledBy="brief-heading">
           <Reveal className="max-w-3xl">

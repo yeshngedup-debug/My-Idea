@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { ScaleFadeImage } from "@/components/editorial/scale-fade-image";
 import { Reveal } from "@/components/ui/motion";
+import { ScrubbedTextReveal } from "@/components/motion";
 import { LiveContext } from "@/components/data/live-context";
 import { LocalBridgeDifferences } from "@/components/brand/local-bridge-differences";
 import { getLiveContext } from "@/lib/data/world-bank";
@@ -116,10 +117,11 @@ export default async function HomePage() {
             >
               From a brief to work you can show
             </h2>
-            <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
-              Keep the first collaboration focused, useful, and clear for
-              everyone involved.
-            </p>
+            <ScrubbedTextReveal
+              as="p"
+              className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8"
+              text="Keep the first collaboration focused, useful, and clear for everyone involved."
+            />
           </Reveal>
 
           <div className="grid grid-flow-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:gap-4">
