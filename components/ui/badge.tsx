@@ -1,27 +1,21 @@
-import * as React from 'react';
-import { cn } from '@/lib/utils';
-
-type BadgeVariant = 'default' | 'secondary' | 'outline';
-
-const badgeVariants: Record<BadgeVariant, string> = {
-  default: 'bg-amber-400 text-black',
-  secondary: 'bg-white/10 text-white border border-white/10',
-  outline: 'border border-white/20 text-white/80 bg-transparent',
-};
-
 export function Badge({
-  className,
-  variant = 'secondary',
-  ...props
-}: React.HTMLAttributes<HTMLSpanElement> & { variant?: BadgeVariant }) {
+  children,
+  className = '',
+  variant = 'default',
+}: {
+  children: React.ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline' | 'secondary';
+}) {
+  const variantStyles = {
+    default: 'border-[#ded8cb] bg-[#eeeae1] text-[#17352b]',
+    outline: 'border-[#ded8cb] bg-[#fffefa] text-[#5e554a]',
+    secondary: 'border-[#17352b] bg-[#17352b] text-[#fffefa]',
+  };
+
   return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors',
-        badgeVariants[variant],
-        className
-      )}
-      {...props}
-    />
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variantStyles[variant]} ${className}`}>
+      {children}
+    </span>
   );
 }

@@ -60,7 +60,7 @@ begin
   insert into public.profiles (id, role, full_name)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'role', 'student'),
+    'student',
     new.raw_user_meta_data->>'full_name'
   );
   return new;
@@ -226,9 +226,36 @@ create policy "students_insert_own"
   on public.student_profiles for insert
   with check (auth.uid() = id);
 
+-- RLS cannot reference NEW/OLD; the admin-only fields are protected by a
+-- BEFORE UPDATE trigger instead.
 create policy "students_update_own"
   on public.student_profiles for update
-  using (auth.uid() = id);
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
+
+create or replace function public.protect_student_profile_admin_fields()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin') then
+    return new;
+  end if;
+  if new.rank is distinct from old.rank
+     or new.verified is distinct from old.verified
+     or new.contact_email is distinct from old.contact_email then
+    raise exception 'Only admins may change rank, verified or contact_email';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_student_profile_admin_fields on public.student_profiles;
+create trigger protect_student_profile_admin_fields
+  before update on public.student_profiles
+  for each row execute function public.protect_student_profile_admin_fields();
 
 -- Founders (and admins) can read student profiles for browsing/shortlisting
 create policy "founders_read_student_profiles"
@@ -270,9 +297,21 @@ create policy "users_read_cvs"
     bucket_id = 'cvs'
     and (
       (storage.foldername(name))[1] = auth.uid()::text
+      or public.has_role('admin')
       or exists (
-        select 1 from public.profiles p
-        where p.id = auth.uid() and p.role in ('founder', 'admin')
+        select 1
+        from public.applications a
+        join public.projects p on p.id = a.project_id
+        join public.student_profiles sp on sp.id = a.student_id
+        where p.founder_id = auth.uid()
+          and sp.cv_path = name
+      )
+      or exists (
+        select 1
+        from public.shortlists s
+        join public.student_profiles sp on sp.id = s.student_id
+        where s.founder_id = auth.uid()
+          and sp.cv_path = name
       )
     )
   );
@@ -586,4 +625,160 @@ create policy "students_insert_own"
       where p.id = auth.uid() and p.role = 'student'
     )
   );
+
+-- ============================================================
+-- FINAL HARDENING — keep this file equivalent to the migrations.
+-- Without this block, the documented one-paste setup leaves the
+-- recursive profile policies and the founder payment/CV bypasses.
+-- ============================================================
+
+-- Non-recursive role helper
+create or replace function public.has_role(target_role text)
+returns boolean language sql stable security definer set search_path = public
+as $$
+  select exists (select 1 from public.profiles where id = auth.uid() and role = target_role);
+$$;
+grant execute on function public.has_role(text) to anon, authenticated, service_role;
+
+drop policy if exists "admins_read_all_profiles" on public.profiles;
+create policy "admins_read_all_profiles" on public.profiles for select
+  using (public.has_role('admin'));
+
+drop policy if exists "founders_read_student_profile_rows" on public.profiles;
+create policy "founders_read_student_profile_rows" on public.profiles for select
+  using (role = 'student' and public.has_role('founder'));
+
+drop policy if exists "founders_read_student_profiles" on public.student_profiles;
+create policy "founders_read_student_profiles" on public.student_profiles for select
+  using (public.has_role('founder') or public.has_role('admin'));
+
+drop policy if exists "admins_update_student_profiles" on public.student_profiles;
+create policy "admins_update_student_profiles" on public.student_profiles for update
+  using (public.has_role('admin')) with check (public.has_role('admin'));
+
+drop policy if exists "students_insert_own" on public.student_profiles;
+create policy "students_insert_own" on public.student_profiles for insert
+  with check (auth.uid() = id and public.has_role('student'));
+
+drop policy if exists "admins_manage_all_shortlists" on public.shortlists;
+create policy "admins_manage_all_shortlists" on public.shortlists for all
+  using (public.has_role('admin')) with check (public.has_role('admin'));
+
+drop policy if exists "admins_read_all_applications" on public.applications;
+create policy "admins_read_all_applications" on public.applications for select
+  using (public.has_role('admin'));
+
+drop policy if exists "admin_manage_all_orders" on public.shortlist_orders;
+create policy "admin_manage_all_orders" on public.shortlist_orders for all
+  using (public.has_role('admin')) with check (public.has_role('admin'));
+
+-- Payment orders: founders cannot confirm/reject their own order
+drop policy if exists "founders_manage_own_orders" on public.shortlist_orders;
+create policy "founders_read_own_orders" on public.shortlist_orders for select
+  using (auth.uid() = founder_id);
+create policy "founders_insert_own_orders" on public.shortlist_orders for insert
+  with check (auth.uid() = founder_id);
+create policy "founders_update_own_order_receipt" on public.shortlist_orders for update
+  using (auth.uid() = founder_id) with check (auth.uid() = founder_id);
+
+create or replace function public.protect_shortlist_order_status()
+returns trigger language plpgsql security definer set search_path = public
+as $$
+begin
+  if not public.has_role('admin') then
+    if new.founder_id is distinct from old.founder_id
+       or new.package is distinct from old.package
+       or new.amount is distinct from old.amount
+       or new.project_id is distinct from old.project_id then
+      raise exception 'Only admins may change payment order details';
+    end if;
+    if new.status is distinct from old.status and new.status in ('confirmed', 'rejected') then
+      raise exception 'Only admins may confirm or reject a payment order';
+    end if;
+  end if;
+  return new;
+end;
+$$;
+drop trigger if exists protect_shortlist_order_status on public.shortlist_orders;
+create trigger protect_shortlist_order_status before update on public.shortlist_orders
+  for each row execute function public.protect_shortlist_order_status();
+
+-- Shortlists: read-only for founders; creation through a checked RPC
+drop policy if exists "founders_manage_own_shortlists" on public.shortlists;
+create policy "founders_read_own_shortlists" on public.shortlists for select
+  using (auth.uid() = founder_id);
+
+drop index if exists public.shortlists_one_per_founder_student_general;
+create unique index shortlists_one_per_founder_student_general
+  on public.shortlists (founder_id, student_id, source) where project_id is null;
+
+create or replace function public.request_shortlist(p_student_id uuid, p_project_id uuid default null)
+returns public.shortlists language plpgsql security definer set search_path = public
+as $$
+declare v_row public.shortlists;
+begin
+  if not public.has_role('founder') then
+    raise exception 'Only founders can shortlist students';
+  end if;
+  if not exists (select 1 from public.profiles where id = p_student_id and role = 'student') then
+    raise exception 'Student not found';
+  end if;
+  if not exists (
+    select 1 from public.applications a join public.projects p on p.id = a.project_id
+    where a.student_id = p_student_id and p.founder_id = auth.uid()
+  ) and not exists (
+    select 1 from public.shortlist_orders o
+    where o.founder_id = auth.uid() and o.status = 'confirmed'
+      and (o.project_id is null or o.project_id = p_project_id)
+  ) then
+    raise exception 'No relationship with this student';
+  end if;
+  if p_project_id is null then
+    select * into v_row from public.shortlists
+     where founder_id = auth.uid() and student_id = p_student_id
+       and project_id is null and source = 'founder';
+    if found then return v_row; end if;
+  end if;
+  insert into public.shortlists (founder_id, student_id, project_id, status, source)
+  values (auth.uid(), p_student_id, p_project_id, 'requested', 'founder')
+  on conflict (founder_id, student_id, project_id) do update set status = 'requested'
+  returning * into v_row;
+  return v_row;
+end;
+$$;
+revoke all on function public.request_shortlist(uuid, uuid) from public;
+grant execute on function public.request_shortlist(uuid, uuid) to authenticated;
+
+-- CV access: a shortlist row needs a confirmed order as well
+drop policy if exists "users_read_cvs" on storage.objects;
+create policy "users_read_cvs" on storage.objects for select using (
+  bucket_id = 'cvs' and (
+    (storage.foldername(name))[1] = auth.uid()::text
+    or public.has_role('admin')
+    or exists (
+      select 1 from public.applications a
+      join public.projects p on p.id = a.project_id
+      join public.student_profiles sp on sp.id = a.student_id
+      where p.founder_id = auth.uid() and sp.cv_path = name
+    )
+    or exists (
+      select 1 from public.shortlists s
+      join public.student_profiles sp on sp.id = s.student_id
+      join public.shortlist_orders o on o.founder_id = s.founder_id
+        and o.status = 'confirmed' and (o.project_id is null or o.project_id = s.project_id)
+      where s.founder_id = auth.uid() and sp.cv_path = name
+    )
+  )
+);
+
+drop policy if exists "screenshots_readable_by_owner_or_admin" on storage.objects;
+create policy "screenshots_readable_by_owner_or_admin" on storage.objects for select using (
+  bucket_id = 'payment-screenshots' and (
+    (storage.foldername(name))[1] = auth.uid()::text or public.has_role('admin')
+  )
+);
+
+drop policy if exists "users_insert_own_profile" on public.profiles;
+create policy "users_insert_own_profile" on public.profiles for insert
+  with check (auth.uid() = id and role = 'student');
 

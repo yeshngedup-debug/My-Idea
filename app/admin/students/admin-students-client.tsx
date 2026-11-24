@@ -6,20 +6,19 @@
  * Mobile-first: cards with 44px+ touch targets, sticky action bar.
  */
 import { useMemo, useState, useTransition } from 'react';
-import Link from 'next/link';
 import {
-  Search,
-  BadgeCheck,
-  BadgeX,
+  MagnifyingGlass,
+  SealCheck,
+  Bag,
   Star,
   CheckSquare,
   Square,
   Copy,
   Download,
   FileText,
-  CheckCircle2,
-  AlertCircle,
-} from 'lucide-react';
+  CheckCircle,
+  Warning,
+} from '@phosphor-icons/react';
 import {
   setStudentRank,
   setStudentVerified,
@@ -173,7 +172,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      setStatus({ ok: false, msg: 'Copy failed — select the text manually.' });
+      setStatus({ ok: false, msg: 'Copy failed. Select the text manually.' });
     }
   }
 
@@ -192,7 +191,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
     <div className="space-y-4 pb-28">
       {/* Search + filters */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
+        <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#17352b]/30 pointer-events-none" aria-hidden="true" />
         <Input
           type="search"
           value={query}
@@ -217,10 +216,10 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
             type="button"
             onClick={() => setVerifiedFilter(f.value)}
             aria-pressed={verifiedFilter === f.value}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`min-h-9 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
               verifiedFilter === f.value
-                ? 'bg-amber-400 text-black'
-                : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10'
+                ? 'bg-amber-300 text-[#17352b]'
+                : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
             }`}
           >
             {f.label}
@@ -234,11 +233,11 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
           role="status"
           className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
             status.ok
-              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
-              : 'bg-red-400/10 border-red-400/30 text-red-300'
+              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+              : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
           }`}
         >
-          {status.ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+          {status.ok ? <CheckCircle className="w-4 h-4 shrink-0" /> : <Warning className="w-4 h-4 shrink-0" />}
           {status.msg}
         </p>
       )}
@@ -248,10 +247,10 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
         <button
           type="button"
           onClick={toggleSelectAll}
-          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-lg px-1"
+          className="inline-flex min-h-9 items-center gap-2 rounded-lg px-1 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
         >
           {allVisibleSelected ? (
-            <CheckSquare className="w-4 h-4 text-amber-400" />
+            <CheckSquare className="w-4 h-4 text-[#8a5a00]" />
           ) : (
             <Square className="w-4 h-4" />
           )}
@@ -261,11 +260,11 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
 
       {/* Student cards */}
       {filtered.length === 0 ? (
-        <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-          <h3 className="text-xl font-extrabold tracking-tight mb-2">
+        <div className="bg-[#fffefa] border border-[#ded8cb] rounded-2xl p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
             {students.length === 0 ? 'No students yet' : 'No students match'}
           </h3>
-          <p className="text-white/50 text-sm">
+          <p className="text-[#657069] text-sm">
             {students.length === 0
               ? 'Students appear here once they sign up and save a profile.'
               : 'Adjust the search or filters.'}
@@ -279,8 +278,8 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
             return (
               <li
                 key={s.id}
-                className={`bg-white/[0.04] border rounded-3xl p-4 transition-colors ${
-                  isSelected ? 'border-amber-400/50 bg-amber-400/[0.06]' : 'border-white/10'
+                className={`bg-[#fffefa] border rounded-2xl p-4 transition-colors ${
+                  isSelected ? 'border-[#d84f37]/40 bg-[#d84f37]/8' : 'border-[#ded8cb]'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -290,18 +289,18 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                     onClick={() => toggleSelect(s.id)}
                     aria-label={isSelected ? `Deselect ${s.full_name}` : `Select ${s.full_name}`}
                     aria-pressed={isSelected}
-                    className="mt-1 shrink-0 p-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                    className="mt-1 grid min-h-8 min-w-8 shrink-0 place-items-center rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                   >
                     {isSelected ? (
-                      <CheckSquare className="w-5 h-5 text-amber-400" />
+                      <CheckSquare className="w-5 h-5 text-[#8a5a00]" aria-hidden="true" />
                     ) : (
-                      <Square className="w-5 h-5 text-white/40" />
+                      <Square className="w-5 h-5 text-[#657069]" aria-hidden="true" />
                     )}
                   </button>
 
                   {/* Rank */}
                   <div className="shrink-0">
-                    <label htmlFor={`rank-${s.id}`} className="block text-[10px] uppercase tracking-wide text-white/40 mb-1 text-center">
+                    <label htmlFor={`rank-${s.id}`} className="block text-[10px] uppercase tracking-wide text-[#657069] mb-1 text-center">
                       Rank
                     </label>
                     <input
@@ -314,42 +313,42 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                       onBlur={() => saveRank(s.id)}
                       onKeyDown={(e) => e.key === 'Enter' && saveRank(s.id)}
                       placeholder="-"
-                      className="w-14 h-11 rounded-xl bg-white/5 border border-white/10 text-center text-white text-base focus:outline-none focus:ring-2 focus:ring-amber-400/40 [color-scheme:dark]"
+                      className="w-14 h-11 rounded-xl bg-[#f5f2ea] border border-[#ded8cb] text-center text-[#17352b] text-base focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 [color-scheme:light]"
                     />
                   </div>
 
                   {/* Identity */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-base font-extrabold tracking-tight truncate">
+                      <h3 className="truncate text-base font-semibold text-[#17352b]">
                         {s.full_name}
                       </h3>
                       {isVerified ? (
-                        <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" aria-label="Verified" />
+                        <SealCheck className="w-4 h-4 text-[#17352b] shrink-0" aria-hidden="true" aria-label="Verified" />
                       ) : (
-                        <BadgeX className="w-4 h-4 text-white/30 shrink-0" aria-label="Not verified" />
+                        <Bag className="w-4 h-4 text-[#17352b]/30 shrink-0" aria-hidden="true" aria-label="Not verified" />
                       )}
                     </div>
-                    <p className="text-xs text-white/40 truncate">
+                    <p className="text-xs text-[#657069] truncate">
                       {s.college}
                       {s.course ? ` - ${s.course}` : ''}
                       {s.year ? ` (${s.year})` : ''}
                     </p>
                     {(s.skills?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {s.skills!.slice(0, 4).map((k) => (
-                          <Badge key={k} variant="outline" className="text-white/60 text-[10px]">
+                        {(s.skills ?? []).slice(0, 4).map((k) => (
+                          <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[10px] text-[#4c5a52]">
                             {k}
                           </Badge>
                         ))}
-                        {s.skills!.length > 4 && (
-                          <Badge variant="outline" className="text-white/40 text-[10px]">
-                            +{s.skills!.length - 4}
+                        {(s.skills ?? []).length > 4 && (
+                          <Badge variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[10px] text-[#657069]">
+                            +{(s.skills ?? []).length - 4}
                           </Badge>
                         )}
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-white/40">
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-[#657069]">
                       {s.availability && <span>{AVAILABILITY_LABEL[s.availability] ?? s.availability}</span>}
                       <span>
                         {(s.applications ?? 0) > 0
@@ -358,7 +357,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                       </span>
                       {s.cv_path && (
                         <span className="inline-flex items-center gap-1">
-                          <FileText className="w-3 h-3" /> CV on file
+                          <FileText className="w-3 h-3" aria-hidden="true" /> CV on file
                         </span>
                       )}
                     </div>
@@ -370,19 +369,19 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                   <button
                     type="button"
                     onClick={() => toggleVerified(s.id)}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                    className={`inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                       isVerified
-                        ? 'bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20'
-                        : 'bg-white/5 border border-white/10 text-white/60 hover:bg-white/10'
+                        ? 'border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b] hover:bg-[#17352b]/12'
+                        : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
                     }`}
                   >
                     {isVerified ? (
                       <>
-                        <BadgeCheck className="w-3.5 h-3.5" /> Verified
+                        <SealCheck className="w-3.5 h-3.5" aria-hidden="true" /> Verified
                       </>
                     ) : (
                       <>
-                        <BadgeX className="w-3.5 h-3.5" /> Not verified
+                        <Bag className="w-3.5 h-3.5" aria-hidden="true" /> Not verified
                       </>
                     )}
                   </button>
@@ -395,30 +394,30 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
 
       {/* Shortlist generation result */}
       {shortlistText && (
-        <div className="bg-white/[0.04] border border-amber-400/30 rounded-3xl p-5 space-y-3">
-          <h3 className="text-sm font-bold text-amber-300">Generated shortlist</h3>
+        <div className="bg-[#fffefa] border border-[#d84f37]/25 rounded-2xl p-5 space-y-3">
+          <h3 className="text-sm font-bold text-[#8a5a00]">Generated shortlist</h3>
           <textarea
             readOnly
             value={shortlistText}
             rows={12}
-            className="w-full rounded-xl bg-black/30 border border-white/10 p-4 text-xs text-white/80 font-mono focus:outline-none"
+            className="w-full rounded-xl bg-[#f5f2ea] border border-[#ded8cb] p-4 text-xs text-[#17352b] font-mono focus:outline-none"
             aria-label="Generated shortlist text"
           />
           <div className="flex flex-col sm:flex-row gap-2">
             <Button
               type="button"
               onClick={copyShortlist}
-              className="flex-1 bg-amber-400 text-black font-bold hover:bg-amber-300 h-11"
+              className="flex-1 pressable bg-amber-300 text-[#17352b] font-bold hover:bg-amber-200 h-11"
             >
-              <Copy className="w-4 h-4 mr-1" /> {copied ? 'Copied!' : 'Copy'}
+              <Copy className="w-4 h-4 mr-1" aria-hidden="true" /> {copied ? 'Copied!' : 'Copy'}
             </Button>
             <Button
               type="button"
               onClick={downloadShortlist}
               variant="outline"
-              className="flex-1 border-white/20 bg-transparent text-white hover:bg-white/10 h-11"
+              className="flex-1 border-[#ded8cb] bg-transparent text-[#17352b] hover:bg-[#17352b]/10 h-11"
             >
-              <Download className="w-4 h-4 mr-1" /> Download .txt
+              <Download className="w-4 h-4 mr-1" aria-hidden="true" /> Download .txt
             </Button>
           </div>
         </div>
@@ -426,9 +425,9 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
 
       {/* Sticky action bar */}
       {selected.size > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#13111a]/95 backdrop-blur-md border-t border-white/10 px-4 py-3 lg:left-72">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#fffefa]/95 backdrop-blur-md border-t border-[#ded8cb] px-4 py-3">
           <div className="max-w-2xl mx-auto space-y-2">
-            <p className="text-xs text-white/50 text-center sm:text-left">
+            <p className="text-xs text-[#657069] text-center sm:text-left">
               {selected.size} {selected.size === 1 ? 'student' : 'students'} selected
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -439,7 +438,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                   setProjectId('');
                 }}
                 aria-label="Choose founder"
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 [&>option]:bg-[#13111a]"
+                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 [&>option]:bg-[#fffefa]"
               >
                 <option value="">Choose founder...</option>
                 {founders.map((f) => (
@@ -453,7 +452,7 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                 onChange={(e) => setProjectId(e.target.value)}
                 aria-label="Choose project"
                 disabled={!founderId}
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 disabled:opacity-40 [&>option]:bg-[#13111a]"
+                className="flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 disabled:opacity-40 [&>option]:bg-[#fffefa]"
               >
                 <option value="">No specific project</option>
                 {founderProjects.map((p) => (
@@ -466,9 +465,9 @@ export function AdminStudentsClient({ students, founders, projects }: Props) {
                 type="button"
                 onClick={handleGenerate}
                 disabled={generating || !founderId}
-                className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-11 shrink-0"
+                className="pressable bg-amber-300 text-[#17352b] font-bold hover:bg-amber-200 h-11 shrink-0"
               >
-                <Star className="w-4 h-4 mr-1" />
+                <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                 {generating ? 'Generating...' : 'Generate'}
               </Button>
             </div>

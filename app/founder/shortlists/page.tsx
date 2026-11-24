@@ -1,18 +1,16 @@
 ﻿/**
  * Founder Premium Shortlists — manual payment MVP.
- * Packages, payment instructions, screenshot upload, order status,
- * and the unlocked shortlist once the admin confirms payment.
+ * Packages, payment instructions, screenshot upload and order status
+ * are handled by the client component; this page owns data loading.
  */
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
+import { StatusTimeline, ORDER_STEPS } from '@/components/ui/status-timeline';
 import { ShortlistsClient, type OrderRow, type ShortlistStudent } from './shortlists-client';
 
 export const metadata = { title: 'Premium Shortlist | Bhutan Tech Connect' };
 
 export default async function FounderShortlistsPage() {
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -22,7 +20,7 @@ export default async function FounderShortlistsPage() {
   let projects: { id: string; title: string }[] = [];
 
   if (user) {
-    // Orders + projects are independent — one round-trip
+    // Orders and projects are independent — one round-trip.
     const [oRes, pRes] = await Promise.all([
       supabase
         .from('shortlist_orders')
@@ -39,15 +37,16 @@ export default async function FounderShortlistsPage() {
     orders = (oRes.data as unknown as OrderRow[]) ?? [];
     projects = (pRes.data as { id: string; title: string }[]) ?? [];
 
-    // Unlocked content: admin-generated shortlist rows for this founder.
-    // A general order (no project) unlocks everything; a project-specific
-    // order unlocks only that project's rows.
+    // A general order (no project) unlocks all rows; a project-specific
+    // order unlocks only that project's shortlist rows.
     const confirmedProjectIds = new Set(
       orders
         .filter((o) => o.status === 'confirmed' && o.project_id)
         .map((o) => o.project_id as string)
     );
-    const generalUnlocked = orders.some((o) => o.status === 'confirmed' && !o.project_id);
+    const generalUnlocked = orders.some(
+      (o) => o.status === 'confirmed' && !o.project_id
+    );
 
     if (generalUnlocked || confirmedProjectIds.size > 0) {
       const { data: sl } = await supabase
@@ -61,7 +60,7 @@ export default async function FounderShortlistsPage() {
           generalUnlocked ||
           (r.project_id != null && confirmedProjectIds.has(r.project_id as string))
       );
-      const ids = rows.map((r) => r.student_id as string);
+      const ids = [...new Set(rows.map((r) => r.student_id as string))];
 
       if (ids.length > 0) {
         const { data: sps } = await supabase
@@ -70,12 +69,12 @@ export default async function FounderShortlistsPage() {
           .in('id', ids);
 
         const byId = new Map((sps ?? []).map((s) => [s.id as string, s]));
-        const mapped: (ShortlistStudent | null)[] = rows.map((r) => {
+        students = rows.flatMap((r) => {
           const sp = byId.get(r.student_id as string) as
             | Record<string, unknown>
             | undefined;
-          if (!sp) return null;
-          const item: ShortlistStudent = {
+          if (!sp) return [];
+          return [{
             shortlistId: r.id as string,
             projectId: (r.project_id as string | null) ?? null,
             id: r.student_id as string,
@@ -87,24 +86,32 @@ export default async function FounderShortlistsPage() {
             availability: (sp.availability as string | null) ?? null,
             contact_email: (sp.contact_email as string | null) ?? null,
             cv_path: (sp.cv_path as string | null) ?? null,
-          };
-          return item;
+          }];
         });
-        students = mapped.filter((s): s is ShortlistStudent => s !== null);
       }
     }
   }
 
   return (
-    <>
-        <div className="hidden lg:block mb-8">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter">Premium Shortlist</h2>
-          <p className="text-white/50 mt-1">
-            Pay by bank transfer or mBoB, upload the receipt, and the admin confirms — usually within a day.
-          </p>
-        </div>
+    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <div className="mx-auto max-w-5xl">
+        <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
+          Premium Shortlist
+        </h2>
+
+        {orders.length > 0 && (
+          <div className="mt-6">
+            <StatusTimeline
+              steps={ORDER_STEPS}
+              status={orders[0].status}
+              label="Payment process for your latest order"
+              compact
+            />
+          </div>
+        )}
 
         <ShortlistsClient orders={orders} students={students} projects={projects} />
-      </>
+      </div>
+    </section>
   );
 }

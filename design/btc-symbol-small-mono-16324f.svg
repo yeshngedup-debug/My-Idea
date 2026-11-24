@@ -1,0 +1,13 @@
+<!-- ARCHIVED MASTER — NOT USED BY THE LIVE UI. Retired navy #16324f survives here as a historical source artifact only. Canonical palette: lib/design-tokens.ts. -->
+<svg fill="#16324f" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title"><title>Bhutan Tech Connect</title>
+  <title id="title">Bhutan Tech Connect — symbol small cut (favicon/app icon)</title>
+  <!-- Small-size cut: bolder, fills canvas, arch cap removed (disappears below ~32px). -->
+  <g id="symbol" fill="#16324f">
+    <!-- node: student (left) -->
+    <circle cx="72" cy="128" r="17" />
+    <!-- node: founder (right) -->
+    <circle cx="184" cy="128" r="17" />
+    <!-- bridge span: thicker connector -->
+    <rect x="89" y="120" width="78" height="16" rx="8" />
+  </g>
+</svg>

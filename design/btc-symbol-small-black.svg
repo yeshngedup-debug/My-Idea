@@ -1,0 +1,13 @@
+<!-- ARCHIVED MASTER — NOT USED BY THE LIVE UI. Historical source artifact only. The shipped mark is components/ui/logo.tsx and public/favicon.svg. -->
+<svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title"><title>Bhutan Tech Connect</title>
+  <title id="title">Bhutan Tech Connect — symbol small cut (favicon/app icon)</title>
+  <!-- Small-size cut: bolder, fills canvas, arch cap removed (disappears below ~32px). -->
+  <g id="symbol" fill="#000000">
+    <!-- node: student (left) -->
+    <circle cx="72" cy="128" r="17" />
+    <!-- node: founder (right) -->
+    <circle cx="184" cy="128" r="17" />
+    <!-- bridge span: thicker connector -->
+    <rect x="89" y="120" width="78" height="16" rx="8" />
+  </g>
+</svg>

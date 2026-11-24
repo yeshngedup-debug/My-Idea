@@ -1,0 +1,10 @@
+<!-- ARCHIVED MASTER — NOT USED BY THE LIVE UI. Retired navy #16324F survives here as a historical source artifact only. Canonical palette: lib/design-tokens.ts. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title">
+  <title id="title">Bhutan Tech Connect — symbol, full colour (navy bridge, amber arch accent)</title>
+  <g id="symbol">
+    <circle cx="68" cy="145" r="11" fill="#16324F" />
+    <circle cx="188" cy="145" r="11" fill="#16324F" />
+    <rect x="79" y="139" width="98" height="16" rx="8" fill="#16324F" />
+    <path d="M 79 139 A 52 52 0 0 1 177 139 L 177 147 A 52 52 0 0 0 79 147 Z" fill="#FBBF24" />
+  </g>
+</svg>

@@ -5,13 +5,12 @@
  */
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createProjectSchema } from '@/lib/validators';
 
 export interface ProjectResult {
   ok: boolean;
   message: string;
 }
-
-const DURATIONS = ['1 week', '2 weeks', '1 month', '2 months', '3 months'] as const;
 
 export async function createProject(formData: FormData): Promise<ProjectResult> {
   const supabase = await createClient();
@@ -31,49 +30,35 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
     return { ok: false, message: 'Only founders can post projects.' };
   }
 
-  const title = String(formData.get('title') ?? '').trim();
-  const description = String(formData.get('description') ?? '').trim().slice(0, 2000);
-  const durationRaw = String(formData.get('duration') ?? '');
-  const duration = (DURATIONS as readonly string[]).includes(durationRaw) ? durationRaw : null;
-  const workModeRaw = String(formData.get('work_mode') ?? 'remote');
-  const workMode = workModeRaw === 'onsite' ? 'onsite' : 'remote';
-  const deadlineRaw = String(formData.get('deadline') ?? '');
-  const skills = String(formData.get('skills') ?? '')
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .slice(0, 15);
+  // Centralised zod validation of all form inputs
+  const raw = {
+    title: String(formData.get('title') ?? '').trim(),
+    description: String(formData.get('description') ?? '').trim(),
+    duration: String(formData.get('duration') ?? ''),
+    workMode: String(formData.get('work_mode') ?? 'remote'),
+    deadline: String(formData.get('deadline') ?? ''),
+    skills: String(formData.get('skills') ?? ''),
+    budgetMin: String(formData.get('budget_min') ?? ''),
+    budgetMax: String(formData.get('budget_max') ?? ''),
+  };
 
-  const budgetMinRaw = Number(formData.get('budget_min'));
-  const budgetMaxRaw = Number(formData.get('budget_max'));
-  const budgetMin = Number.isFinite(budgetMinRaw) && budgetMinRaw > 0 ? budgetMinRaw : null;
-  const budgetMax = Number.isFinite(budgetMaxRaw) && budgetMaxRaw > 0 ? budgetMaxRaw : null;
-
-  if (!title || title.length < 5) {
-    return { ok: false, message: 'Title must be at least 5 characters.' };
-  }
-  if (!description || description.length < 20) {
-    return { ok: false, message: 'Description must be at least 20 characters.' };
-  }
-  if (!duration) {
-    return { ok: false, message: 'Choose a duration.' };
-  }
-  if (!budgetMin || !budgetMax) {
-    return { ok: false, message: 'Enter both budget minimum and maximum.' };
-  }
-  if (budgetMin > budgetMax) {
-    return { ok: false, message: 'Budget minimum cannot exceed maximum.' };
+  const parsed = createProjectSchema.safeParse(raw);
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Check the form and try again.' };
   }
 
-  let deadline: string | null = null;
-  if (deadlineRaw) {
-    const parsed = new Date(deadlineRaw);
+  const { title, description, duration, workMode, deadline, skills, budgetMin, budgetMax } =
+    parsed.data;
+
+  let deadlineValue: string | null = null;
+  if (deadline) {
+    const parsed = new Date(deadline);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (Number.isNaN(parsed.getTime()) || parsed < today) {
-      return { ok: false, message: 'Deadline must be today or later.' };
+      return { ok: false, message: 'Deadline cannot be in the past.' };
     }
-    deadline = deadlineRaw;
+    deadlineValue = deadline;
   }
 
   const { error } = await supabase.from('projects').insert({
@@ -85,16 +70,25 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
     budget_min: budgetMin,
     budget_max: budgetMax,
     work_mode: workMode,
-    deadline,
+    deadline: deadlineValue,
     status: 'open',
   });
 
-  if (error) return { ok: false, message: `Save failed: ${error.message}` };
+  if (error) return { ok: false, message: 'Could not post project. Try again.' };
 
   revalidatePath('/founder/projects');
   revalidatePath('/founder');
   revalidatePath('/student/projects');
   return { ok: true, message: 'Project posted.' };
+}
+
+/**
+ * Form-action wrapper for `<form action={...}>`.
+ * Next.js requires form actions to resolve to void; the result is
+ * discarded here (the client form uses `createProject` directly).
+ */
+export async function createProjectFormAction(formData: FormData): Promise<void> {
+  await createProject(formData);
 }
 
 /** Student applies to an open project (one application per project). */
@@ -112,7 +106,7 @@ export async function applyToProject(projectId: string): Promise<ProjectResult> 
     .eq('id', user.id)
     .single();
   if (profile?.role !== 'student') {
-    return { ok: false, message: 'Only students can apply to projects.' };
+    return { ok: false, message: 'Only students can apply.' };
   }
 
   const { data: project } = await supabase
@@ -135,7 +129,7 @@ export async function applyToProject(projectId: string): Promise<ProjectResult> 
     if (error.code === '23505') {
       return { ok: false, message: 'You already applied to this project.' };
     }
-    return { ok: false, message: `Failed: ${error.message}` };
+    return { ok: false, message: 'Could not send application. Try again.' };
   }
 
   revalidatePath('/student/projects');
@@ -181,7 +175,7 @@ export async function updateProjectStatus(
     .eq('id', projectId)
     .eq('founder_id', user.id);
 
-  if (error) return { ok: false, message: `Failed: ${error.message}` };
+  if (error) return { ok: false, message: 'Could not update project status. Try again.' };
 
   revalidatePath(`/founder/projects/${projectId}`);
   revalidatePath('/founder/projects');
@@ -229,7 +223,7 @@ export async function updateApplicationStatus(
     .update({ status })
     .eq('id', applicationId);
 
-  if (error) return { ok: false, message: `Failed: ${error.message}` };
+  if (error) return { ok: false, message: 'Could not update applicant status. Try again.' };
 
   revalidatePath(`/founder/projects/${project.id}`);
   revalidatePath('/student/applications');

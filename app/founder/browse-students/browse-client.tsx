@@ -1,12 +1,7 @@
 'use client';
 
-/**
- * Browse Students client — search (skills/college/name), availability filter,
- * clean mobile-first cards with View Full Profile + Request Shortlist.
- */
 import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { Search, GraduationCap, CheckCircle2, XCircle, Star } from 'lucide-react';
 import { requestShortlist } from '@/app/actions/shortlist';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -79,20 +74,17 @@ export function BrowseClient({
 
   return (
     <div className="space-y-4">
-      {/* Search */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
         <Input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search skills, college, or name..."
           aria-label="Search students by skills, college, or name"
-          className="pl-11"
+          className="w-full pl-10"
         />
       </div>
 
-      {/* Availability filter pills */}
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
         {AVAILABILITY_FILTERS.map((f) => (
           <button
@@ -100,10 +92,10 @@ export function BrowseClient({
             type="button"
             onClick={() => setAvailability(f.value)}
             aria-pressed={availability === f.value}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`min-h-9 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
               availability === f.value
-                ? 'bg-amber-400 text-black'
-                : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10'
+                ? 'bg-[#17352b] text-[#fffefa]'
+                : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
             }`}
           >
             {f.label}
@@ -111,33 +103,28 @@ export function BrowseClient({
         ))}
       </div>
 
-      <p className="text-xs text-white/40" role="status">
+      <p className="text-xs text-[#657069]" role="status">
         {filtered.length} {filtered.length === 1 ? 'student' : 'students'}
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
 
-      {/* Shortlist request result */}
       {status && (
-        <p
-          role="status"
-          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
-            status.ok
-              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
-              : 'bg-red-400/10 border-red-400/30 text-red-300'
-          }`}
-        >
-          {status.ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+        <p role="status" className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
+          status.ok
+            ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+            : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+        }`}>
+          {status.ok ? <span className="w-4 h-4 shrink-0" /> : <span className="w-4 h-4 shrink-0" />}
           {status.msg}
         </p>
       )}
 
-      {/* Cards */}
       {filtered.length === 0 ? (
-        <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-          <h3 className="text-xl font-extrabold tracking-tight mb-2">
+        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
             {students.length === 0 ? 'No students yet' : 'No students match'}
           </h3>
-          <p className="text-white/50 text-sm">
+          <p className="text-sm text-[#657069]">
             {students.length === 0
               ? 'Students are still signing up and completing their profiles. Check back soon.'
               : 'Try a different skill, college, or availability filter.'}
@@ -148,23 +135,19 @@ export function BrowseClient({
           {filtered.map((s) => {
             const isShortlisted = shortlisted.has(s.id);
             return (
-              <li
-                key={s.id}
-                className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 flex flex-col hover:bg-white/[0.06] transition-colors"
-              >
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h3 className="text-lg font-extrabold tracking-tight leading-snug">
+              <li key={s.id} className="group flex flex-col rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 transition-colors duration-150 hover:border-[#17352b]/25 hover:bg-[#f5f2ea]">
+                <div className="mb-1 flex items-start justify-between gap-3">
+                  <h3 className="text-base font-semibold leading-snug text-[#17352b]">
                     {s.full_name}
                   </h3>
                   {s.availability && (
-                    <Badge className="shrink-0 bg-amber-400/10 text-amber-300">
+                    <Badge className="shrink-0 border-amber-200 bg-amber-50 text-[#8a5a00]">
                       {AVAILABILITY_LABEL[s.availability] ?? s.availability}
                     </Badge>
                   )}
                 </div>
 
-                <p className="text-sm text-white/50 mb-3 inline-flex items-center gap-1.5">
-                  <GraduationCap className="w-4 h-4 shrink-0 text-white/30" />
+                <p className="mb-3 inline-flex items-center gap-1.5 text-sm text-[#4c5a52]">
                   {s.college}
                   {s.course ? ` - ${s.course}` : ''}
                   {s.year ? ` (${s.year} year)` : ''}
@@ -172,47 +155,41 @@ export function BrowseClient({
 
                 {(s.skills?.length ?? 0) > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-3">
-                    {s.skills!.slice(0, 4).map((k) => (
-                      <Badge key={k} variant="outline" className="text-white/60">
-                        {k}
-                      </Badge>
+                    {(s.skills ?? []).slice(0, 4).map((k) => (
+                      <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#4c5a52]">{k}</Badge>
                     ))}
-                    {s.skills!.length > 4 && (
-                      <Badge variant="outline" className="text-white/40">
-                        +{s.skills!.length - 4}
+                    {(s.skills ?? []).length > 4 && (
+                      <Badge variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#657069]">
+                        +{(s.skills ?? []).length - 4}
                       </Badge>
                     )}
                   </div>
                 )}
 
                 {s.bio && (
-                  <p className="text-sm text-white/50 line-clamp-2 mb-4">{s.bio}</p>
+                  <p className="mb-4 line-clamp-2 text-sm text-[#4c5a52]">{s.bio}</p>
                 )}
 
                 <div className="mt-auto flex flex-col sm:flex-row gap-2">
-                  <Link
-                    href={`/founder/students/${s.id}`}
-                    className="flex-1 inline-flex justify-center items-center rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-                  >
+                  <Link href={`/founder/students/${s.id}`} className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
                     View full profile
                   </Link>
                   <button
                     type="button"
                     disabled={isShortlisted || pendingId === s.id}
                     onClick={() => handleShortlist(s.id)}
-                    className={`flex-1 inline-flex justify-center items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                    className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                       isShortlisted
-                        ? 'bg-emerald-400/10 text-emerald-300 cursor-default'
-                        : 'bg-amber-400 text-black hover:bg-amber-300'
+                        ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+                        : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'
                     } disabled:opacity-80`}
                   >
                     {isShortlisted ? (
                       <>
-                        <CheckCircle2 className="w-4 h-4" /> Shortlisted
+                        Shortlisted
                       </>
                     ) : (
                       <>
-                        <Star className="w-4 h-4" />
                         {pendingId === s.id ? 'Sending...' : 'Request shortlist'}
                       </>
                     )}

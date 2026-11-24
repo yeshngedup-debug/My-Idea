@@ -11,10 +11,10 @@ export const PACKAGES = {
   basic: {
     id: 'basic',
     name: 'Basic',
-    priceRange: 'Nu 500 - 1,000',
+    priceRange: 'Nu 500–1,000',
     defaultAmount: 750,
     features: [
-      'Ranked shortlist of 3-5 students',
+      'Ranked shortlist of 3–5 students',
       'Name, skills, college, contact',
       'CV links included',
       'Delivered within 2 working days',
@@ -23,11 +23,11 @@ export const PACKAGES = {
   full: {
     id: 'full',
     name: 'Full Support',
-    priceRange: 'Nu 1,000 - 2,000',
+    priceRange: 'Nu 1,000–2,000',
     defaultAmount: 1500,
     features: [
       'Everything in Basic',
-      'Ranked shortlist of 5-10 students',
+      'Ranked shortlist of 5–10 students',
       'Availability pre-checked with students',
       'Admin-led intro to each student',
       'One replacement if a student drops out',
@@ -41,13 +41,22 @@ export const PAYMENT_DETAILS = {
   bank: {
     bankName: 'Bank of Bhutan',
     accountName: 'Bhutan Tech Connect',
-    accountNumber: '', // TODO: paste your real Bank of Bhutan account number here
+    accountNumber: process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER ?? '', // TODO: real account number in production
     branch: 'Thimphu',
   },
   mbob: {
     label: 'mBoB (mobile banking)',
-    number: '', // TODO: paste your real mBoB number here
+    number: process.env.NEXT_PUBLIC_PAYMENT_MBOB_NUMBER ?? '', // TODO: real mBoB number in production
     name: 'Bhutan Tech Connect',
   },
-  note: 'After paying, upload the payment screenshot below. The admin verifies it manually (usually within a day) and unlocks your shortlist.',
+  note: 'Upload your payment screenshot, then an admin confirms it.',
 };
+
+/**
+ * False until both real payment destinations are filled in above. The UI
+ * blocks new orders and shows an explicit notice instead of blank numbers,
+ * so founders cannot pay to nowhere.
+ */
+export const PAYMENT_CONFIGURED = Boolean(
+  PAYMENT_DETAILS.bank.accountNumber.trim() && PAYMENT_DETAILS.mbob.number.trim()
+);

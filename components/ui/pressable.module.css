@@ -1,0 +1,34 @@
+/* Shared press feedback for interactive controls in the scoped UI kit.
+
+   Unlayered on purpose: app/globals.css defines `.pressable` unlayered (so it
+   wins over layered Tailwind utilities). The explicit value below retargets
+   every in-scope control to 0.97 on pointer-down, with named properties and a
+   single easing token; `!important` is the only reliable way to override the
+   global unlayered 0.98 without editing out-of-scope files. */
+
+.press {
+  transition:
+    transform 150ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out),
+    color 150ms var(--ease-out),
+    opacity 150ms var(--ease-out);
+}
+
+.press:active {
+  transform: scale(0.97) !important;
+}
+
+/* Reduced motion keeps the colour/opacity feedback but drops the scale. */
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    transition:
+      background-color 150ms var(--ease-out),
+      border-color 150ms var(--ease-out),
+      color 150ms var(--ease-out),
+      opacity 150ms var(--ease-out);
+  }
+  .press:active {
+    transform: none !important;
+  }
+}

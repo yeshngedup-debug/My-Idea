@@ -1,32 +1,36 @@
 /**
- * Admin Dashboard — real platform stats: users by role, projects,
- * payment orders awaiting verification, recent orders.
+ * Admin Dashboard — platform overview stats and recent payment orders.
  */
-import Link from 'next/link';
-import { Users, GraduationCap, Briefcase, Wallet, ArrowRight } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
-import { StatCard } from '@/components/dashboard/stat-card';
-import { Badge } from '@/components/ui/badge';
+import Link from "next/link";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  CreditCard,
+  Users,
+  GraduationCap,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { WorkspaceHero } from "@/components/layout/workspace-hero";
+import { Badge } from "@/components/ui/badge";
+import {
+  HoverLift,
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/ui/motion";
 
-export const metadata = { title: 'Admin Dashboard | Bhutan Tech Connect' };
-
-const ORDER_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: 'Awaiting payment', cls: 'bg-amber-400/10 text-amber-300' },
-  submitted: { label: 'Verifying', cls: 'bg-blue-400/10 text-blue-300' },
-  confirmed: { label: 'Confirmed', cls: 'bg-emerald-400/10 text-emerald-300' },
-  rejected: { label: 'Rejected', cls: 'bg-red-400/10 text-red-300' },
-};
+export const metadata = { title: "Admin Dashboard | Bhutan Tech Connect" };
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
 
   const [profRes, projRes, ordRes] = await Promise.all([
-    supabase.from('profiles').select('role'),
-    supabase.from('projects').select('id, status'),
+    supabase.from("profiles").select("role"),
+    supabase.from("projects").select("id, status"),
     supabase
-      .from('shortlist_orders')
-      .select('id, package, amount, status, created_at')
-      .order('created_at', { ascending: false }),
+      .from("shortlist_orders")
+      .select("id, package, amount, status, created_at")
+      .order("created_at", { ascending: false }),
   ]);
 
   const profiles = (profRes.data ?? []) as { role: string }[];
@@ -40,117 +44,162 @@ export default async function AdminDashboard() {
   }[];
 
   const totalUsers = profiles.length;
-  const students = profiles.filter((p) => p.role === 'student').length;
-  const founders = profiles.filter((p) => p.role === 'founder').length;
-  const openProjects = projects.filter((p) => p.status === 'open').length;
-  const verifying = orders.filter((o) => o.status === 'submitted').length;
+  const students = profiles.filter((p) => p.role === "student").length;
+  const founders = profiles.filter((p) => p.role === "founder").length;
+  const openProjects = projects.filter((p) => p.status === "open").length;
+  const verifying = orders.filter((o) => o.status === "submitted").length;
+
+  const stats = [
+    {
+      label: "Total members",
+      value: totalUsers,
+      detail: `${founders} founders · ${students} students`,
+      icon: Users,
+    },
+    {
+      label: "Student accounts",
+      value: students,
+      detail: null,
+      icon: GraduationCap,
+    },
+    {
+      label: "Open projects",
+      value: openProjects,
+      detail: `${projects.length} projects total`,
+      icon: BriefcaseBusiness,
+    },
+    {
+      label: "Payments to review",
+      value: verifying,
+      detail: "Awaiting confirmation",
+      icon: CreditCard,
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter">Platform overview</h2>
-        <p className="text-white/50 mt-1 text-sm">
-          Live counts — verify payments and manage students from the menu.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Users} label="Total users" value={totalUsers} sub={`${founders} founders · ${students} students`} />
-        <StatCard icon={GraduationCap} label="Students" value={students} sub="Registered accounts" />
-        <StatCard icon={Briefcase} label="Open projects" value={openProjects} sub={`${projects.length} total`} />
-        <StatCard
-          icon={Wallet}
-          label="To verify"
-          value={verifying}
-          sub={verifying > 0 ? 'Payments awaiting review' : 'No payments pending'}
+    <div className="space-y-8">
+      <Reveal>
+        <WorkspaceHero
+          eyebrow="Platform operations"
+          title="Platform overview"
+          description="Members, projects and payments."
         />
-      </div>
+      </Reveal>
+
+      <StaggerGroup className="grid grid-flow-dense grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#17352b]/10 bg-[#17352b]/10 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map(({ label, value, detail, icon: Icon }) => (
+          <StaggerItem key={label} className="bg-[#fffefa]">
+            <div className="flex h-full items-start justify-between gap-3 p-5">
+              <div>
+                <p className="text-xs font-medium text-[#657069]">{label}</p>
+                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-[#17352b]">
+                  {value}
+                </p>
+                {detail && <p className="mt-2 text-xs text-[#657069]">{detail}</p>}
+              </div>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17352b]/6 text-[#17352b]">
+                <Icon aria-hidden="true" className="h-4.5 w-4.5" />
+              </span>
+            </div>
+          </StaggerItem>
+        ))}
+      </StaggerGroup>
 
       {verifying > 0 && (
-        <div className="rounded-xl bg-blue-400/10 border border-blue-400/30 px-4 py-3 text-sm text-blue-300 flex items-center justify-between gap-3">
-          <span>
-            {verifying} payment{verifying === 1 ? '' : 's'} waiting for verification.
-          </span>
-          <Link
-            href="/admin/payments"
-            className="text-xs font-bold underline underline-offset-2 hover:text-blue-200"
+        <Reveal>
+          <div
+            role="status"
+            className="flex items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 px-5 py-3.5 text-sm text-[#17352b]"
           >
-            Review now
-          </Link>
-        </div>
+            <span>
+              {verifying} payment{verifying === 1 ? "" : "s"} waiting for
+              verification.
+            </span>
+            <Link
+              href="/admin/payments"
+              className="group inline-flex shrink-0 items-center gap-1 text-sm font-bold text-[#b23c26] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+            >
+              Review payments
+              <ArrowRight
+                aria-hidden="true"
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
+              />
+            </Link>
+          </div>
+        </Reveal>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {/* Recent orders */}
-        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-semibold">Recent payment orders</h3>
-            <Link
-              href="/admin/payments"
-              className="text-xs font-semibold text-amber-400 hover:text-amber-300"
-            >
-              View all
-            </Link>
-          </div>
+      <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#17352b]">
+            Recent payment orders
+          </h3>
           {orders.length === 0 ? (
-            <p className="text-sm text-white/50 text-center py-8">
-              No orders yet. Founder payments appear here for verification.
+            <p className="rounded-xl border border-dashed border-[#ded8cb] bg-[#fffefa] px-6 py-8 text-sm text-[#657069]">
+              No orders yet. Founder payments will appear here for review.
             </p>
           ) : (
-            <ul className="divide-y divide-white/5">
-              {orders.slice(0, 4).map((o) => {
-                const badge = ORDER_BADGE[o.status] ?? ORDER_BADGE.pending;
-                return (
-                  <li
-                    key={o.id}
-                    className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
-                  >
+            <StaggerGroup className="space-y-2.5">
+              {orders.slice(0, 5).map((order) => (
+                <StaggerItem key={order.id}>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold">
-                        {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
-                        {o.amount != null ? ` — Nu ${o.amount.toLocaleString('en-IN')}` : ''}
+                      <p className="truncate text-sm font-semibold text-[#17352b]">
+                        {order.package === "full" ? "Full Support" : "Basic"} shortlist
+                        {order.amount != null
+                          ? ` · Nu ${order.amount.toLocaleString("en-IN")}`
+                          : ""}
                       </p>
-                      <p className="text-xs text-white/40">
-                        {new Date(o.created_at).toLocaleDateString('en-GB', {
-                          day: 'numeric',
-                          month: 'short',
-                        })}
+                      <p className="mt-1 text-xs text-[#657069]">
+                        {new Date(order.created_at).toLocaleDateString(
+                          "en-GB",
+                          { day: "numeric", month: "short" },
+                        )}
                       </p>
                     </div>
-                    <Badge className={`shrink-0 ${badge.cls}`}>{badge.label}</Badge>
-                  </li>
-                );
-              })}
-            </ul>
+                    <Badge className="shrink-0 capitalize border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                      {order.status}
+                    </Badge>
+                  </div>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
           )}
-        </section>
+        </div>
 
-        {/* Quick links */}
-        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5">
-          <h3 className="text-base font-semibold mb-1">Manage</h3>
-          <p className="text-xs text-white/40 mb-4">Day-to-day admin work.</p>
-          <div className="space-y-2">
-            <Link
-              href="/admin/students"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              Students — rank and verify <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-            <Link
-              href="/admin/payments"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              Payments — confirm or reject <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-            <Link
-              href="/admin/projects"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              All projects <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-          </div>
-        </section>
-      </div>
+        <div>
+          <h3 className="mb-4 text-lg font-semibold tracking-tight text-[#17352b]">
+            Quick links
+          </h3>
+          <StaggerGroup className="grid grid-flow-dense gap-px overflow-hidden rounded-xl border border-[#17352b]/10 bg-[#17352b]/10">
+            {[
+              { href: "/admin/students", title: "Students", description: "Rank and verify profiles" },
+              { href: "/admin/payments", title: "Payments", description: "Confirm or reject orders" },
+              { href: "/admin/projects", title: "Projects", description: "Review all listings" },
+            ].map((item) => (
+              <StaggerItem key={item.href} className="bg-[#fffefa]">
+                <HoverLift>
+                  <Link
+                    href={item.href}
+                    className="group flex items-center justify-between gap-3 px-4 py-4 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                  >
+                    <span>
+                      {item.title}
+                      <span className="mt-1 block text-xs font-normal text-[#657069]">
+                        {item.description}
+                      </span>
+                    </span>
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 text-[#b23c26] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
+                    />
+                  </Link>
+                </HoverLift>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
     </div>
   );
 }

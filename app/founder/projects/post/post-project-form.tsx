@@ -1,18 +1,17 @@
 'use client';
 
 /**
- * Post a Project form — dark design, skills chips, budget range,
- * duration select, remote/on-site pills, deadline picker.
+ * Post a Project form — light theme, simple layout.
  */
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, CheckCircle2, AlertCircle, Briefcase } from 'lucide-react';
 import { createProject } from '@/app/actions/projects';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { X } from '@phosphor-icons/react';
 
 const DURATIONS = ['1 week', '2 weeks', '1 month', '2 months', '3 months'];
 
@@ -61,12 +60,12 @@ export function PostProjectForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {status && !status.ok && (
-        <p role="alert" className="flex items-center gap-2 rounded-xl bg-red-400/10 border border-red-400/30 text-red-300 text-sm px-4 py-3">
-          <AlertCircle className="w-4 h-4 shrink-0" /> {status.msg}
+        <p role="alert" className="flex items-center gap-2 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-3 text-sm text-[#b23c26]">
+          {status.msg}
         </p>
       )}
 
-      <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 space-y-5">
+      <div className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
         <div>
           <Label htmlFor="title" className="mb-2">Project title *</Label>
           <Input
@@ -77,13 +76,14 @@ export function PostProjectForm() {
             required
             minLength={5}
             maxLength={120}
+            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-2">
             <Label htmlFor="description">Description *</Label>
-            <span className="text-xs text-white/30">{description.length}/2000</span>
+            <span className="text-xs text-[#657069]">{description.length}/2000</span>
           </div>
           <Textarea
             id="description"
@@ -93,7 +93,7 @@ export function PostProjectForm() {
             required
             minLength={20}
             maxLength={2000}
-            className="min-h-[140px]"
+            className="w-full min-h-[140px] rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
           />
         </div>
 
@@ -111,23 +111,24 @@ export function PostProjectForm() {
                 }
               }}
               placeholder="React, Figma, Python..."
+              className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
             />
-            <Button type="button" onClick={addSkill} variant="outline" className="shrink-0 border-white/20 bg-transparent text-white hover:bg-white/10 h-auto min-h-[48px] px-4">
+            <Button type="button" onClick={addSkill} variant="outline" className="h-auto min-h-[48px] shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b] hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
               Add
             </Button>
           </div>
           {skills.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
               {skills.map((s) => (
-                <Badge key={s} className="pr-1 gap-1">
+                <Badge key={s} className="gap-1 border-[#ded8cb] bg-[#f5f2ea] pr-1 text-[#17352b]">
                   {s}
                   <button
                     type="button"
                     aria-label={`Remove ${s}`}
                     onClick={() => setSkills(skills.filter((x) => x !== s))}
-                    className="rounded-full p-0.5 hover:bg-black/20 transition-colors"
+                    className="grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3" aria-hidden="true" />
                   </button>
                 </Badge>
               ))}
@@ -136,7 +137,7 @@ export function PostProjectForm() {
         </div>
       </div>
 
-      <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 space-y-5">
+      <div className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
         <div>
           <Label htmlFor="duration" className="mb-2">Duration *</Label>
           <select
@@ -144,7 +145,7 @@ export function PostProjectForm() {
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
             required
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-base text-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400/60 [&>option]:bg-[#13111a]"
+            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
           >
             <option value="">Select duration</option>
             {DURATIONS.map((d) => (
@@ -167,6 +168,7 @@ export function PostProjectForm() {
                 placeholder="Min"
                 required
                 aria-label="Budget minimum"
+                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
               />
             </div>
             <div>
@@ -180,6 +182,7 @@ export function PostProjectForm() {
                 placeholder="Max"
                 required
                 aria-label="Budget maximum"
+                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
               />
             </div>
           </div>
@@ -195,10 +198,10 @@ export function PostProjectForm() {
                 role="radio"
                 aria-checked={workMode === mode}
                 onClick={() => setWorkMode(mode)}
-                className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                className={`min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                   workMode === mode
-                    ? 'bg-amber-400 text-black'
-                    : 'bg-white/5 border border-white/10 text-white/70 hover:bg-white/10'
+                    ? 'bg-[#17352b] text-[#fffefa]'
+                    : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
                 }`}
               >
                 {mode === 'remote' ? 'Remote' : 'On-site'}
@@ -214,23 +217,19 @@ export function PostProjectForm() {
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
+            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#8d948e] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
           />
-          <p className="text-xs text-white/30 mt-1.5">Optional. Students see this on the project card.</p>
+          <p className="mt-1.5 text-xs text-[#657069]">Optional. Students see this on the project card.</p>
         </div>
       </div>
 
       <Button
         type="submit"
         disabled={saving}
-        className="w-full bg-amber-400 text-black font-bold hover:bg-amber-300 h-12 text-base"
+        className="pressable h-12 w-full bg-[#17352b] text-base font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
       >
         {saving ? 'Posting...' : 'Post project'}
       </Button>
-
-      <p className="flex items-center justify-center gap-2 text-xs text-white/30">
-        <Briefcase className="w-3.5 h-3.5" />
-        Your project goes live for students immediately.
-      </p>
     </form>
   );
 }

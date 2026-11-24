@@ -1,6 +1,5 @@
 /**
- * Founder Project Detail — applicants for one project.
- * Server: verifies ownership, loads project + applicants with profiles.
+ * Founder Project Detail — server: verify ownership, load project + applicants.
  */
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
@@ -19,13 +18,9 @@ export default async function ProjectDetailPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  let project: ProjectInfo | null = null;
-  let applicants: Applicant[] = [];
 
   const { data: p } = await supabase
     .from('projects')
@@ -33,10 +28,10 @@ export default async function ProjectDetailPage({
     .eq('id', id)
     .single();
 
-  // Not found, or not owned by this founder
+  // Not found, or not owned by this founder.
   if (!p || (user && p.founder_id !== user.id)) notFound();
 
-  project = {
+  const project: ProjectInfo = {
     id: p.id,
     title: p.title,
     status: p.status,
@@ -54,7 +49,13 @@ export default async function ProjectDetailPage({
     .eq('project_id', id)
     .order('created_at', { ascending: true });
 
-  applicants = (apps as unknown as Applicant[]) ?? [];
+  const applicants: Applicant[] = (apps as unknown as Applicant[]) ?? [];
 
-  return <ProjectDetailClient project={project} applicants={applicants} />;
+  return (
+    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <div className="mx-auto max-w-5xl">
+        <ProjectDetailClient project={project} applicants={applicants} />
+      </div>
+    </section>
+  );
 }

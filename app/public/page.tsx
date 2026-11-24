@@ -1,196 +1,343 @@
-import Link from 'next/link';
-import { ArrowRight, Mountain, Users, Briefcase, CheckCircle, Sparkles } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+import { PhotoCredit } from "@/components/ui/photo-credit";
+import { Reveal } from "@/components/ui/motion";
+import { LiveContext } from "@/components/data/live-context";
+import { LocalBridgeDifferences } from "@/components/brand/local-bridge-differences";
+import { getLiveContext } from "@/lib/data/world-bank";
+import { pageMetadata } from "@/lib/metadata";
+import { SiteHeader } from "@/components/marketing/site-header";
+import { SiteFooter } from "@/components/marketing/site-footer";
+import { CtaBand } from "@/components/marketing/cta-band";
+import { ShortlistPreviewCompact } from "@/components/marketing/product-preview/shortlist-preview";
+import { CTA_HREFS, CTA_LABELS, PHOTO_CREDITS } from "@/components/marketing/nav";
+import {
+  CONTEXT_FACTS,
+  LIVE_DATA_SOURCE,
+  WORLD_BANK_SOURCE,
+  YOUTH_UNEMPLOYMENT,
+} from "@/data/landing";
 
-export default function HomePage() {
+export const metadata = pageMetadata({
+  title: "Paid project work in Bhutan",
+  description:
+    "Bhutan Tech Connect connects Bhutanese students and startup founders through focused, paid project work.",
+  path: "/public",
+});
+
+const sourceLinkClass =
+  "font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]";
+
+export default async function HomePage() {
+  const liveContext = await getLiveContext();
+  const youth = liveContext.indicators.find(
+    (item) => item.code === "SL.UEM.1524.ZS",
+  );
+
   return (
-    <main className="overflow-x-hidden w-full max-w-full bg-[#0c0b10] text-white font-sans">
-      {/* Floating Glass Nav */}
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 md:top-6 z-50 bg-[#13111a]/80 backdrop-blur-2xl border border-white/15 rounded-full px-4 py-2.5 md:px-6 md:py-3 shadow-2xl shadow-black/40 flex items-center gap-2.5 md:gap-8 max-w-[calc(100vw-1.5rem)]">
-        <Link href="/" className="flex items-center gap-2 font-extrabold text-base md:text-lg tracking-tight whitespace-nowrap"><Mountain className="w-5 h-5 text-amber-400" /> Bhutan Tech</Link>
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/70">
-          <Link href="#work" className="hover:text-white transition-colors">Work</Link>
-          <Link href="#founders" className="hover:text-white transition-colors">Founders</Link>
-          <Link href="#students" className="hover:text-white transition-colors">Students</Link>
-        </div>
-        <div className="flex items-center gap-2 md:gap-3 ml-auto">
-          <Link href="/login" className="text-xs md:text-sm font-medium text-white/50 md:text-white/70 hover:text-white transition-colors whitespace-nowrap">Log in</Link>
-          <Link href="/signup" className="text-sm font-semibold bg-amber-400 text-black px-4 py-1.5 md:px-5 md:py-2 rounded-full hover:bg-amber-300 transition-colors whitespace-nowrap">Start now</Link>
-        </div>
-      </nav>
+    <main
+      id="main-content"
+      className="overflow-x-clip w-full max-w-full bg-[#f5f2ea] text-[#18251f]"
+    >
+      <SiteHeader />
 
-      {/* Attention — Cinematic Center Hero */}
-      <section className="relative isolate overflow-hidden min-h-[100dvh] flex items-center justify-center px-6 pt-32 pb-20">
-        <div className="absolute inset-0 -z-10">
-          <img src="https://picsum.photos/seed/bhutanhero/1920/1080" alt="" aria-hidden="true" className="w-full h-full object-cover object-center opacity-40 mix-blend-luminosity contrast-125 grayscale" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0c0b10]/60 via-transparent to-[#0c0b10]" />
-        </div>
-        <div className="relative z-10 text-center max-w-6xl mx-auto animate-in fade-in slide-in-from-bottom-3 duration-700">
-          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tighter leading-[0.92] mb-6">
-            Build your <span className="text-amber-400">portfolio</span>.<br />
-            Launch your <span className="text-amber-400">startup</span>.
-          </h1>
-          <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto leading-relaxed mb-10">Students meet founders. Real projects. Paid work.</p>
-          <div className="flex justify-center gap-4">
-            <Link href="/signup" className="inline-flex items-center gap-2 bg-amber-400 text-black px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-amber-400/30 hover:bg-amber-300 transition-all hover:-translate-y-1">Get started <ArrowRight className="w-5 h-5" /></Link>
-            <Link href="#work" className="inline-flex items-center gap-2 bg-white/10 text-white px-8 py-4 rounded-full font-bold text-lg border border-white/10 hover:bg-white/20 transition-all">See work</Link>
-          </div>
-        </div>
-      </section>
+      {/* ATTENTION — two-line headline, short lead, two high-contrast CTAs */}
+      <section
+        id="home"
+        aria-labelledby="home-heading"
+        className="relative isolate min-h-[88vh] overflow-hidden bg-[#0d1813] px-5 pb-20 pt-24 sm:px-8 sm:pb-24 sm:pt-28 lg:px-12"
+      >
+        <figure className="absolute inset-0 m-0">
+          <Image
+            src="/images/bhutanese-students.jpg"
+            alt="Young Bhutanese people in gho and kira working together at computers"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[50%_38%]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-b from-[#0d1813]/20 via-transparent to-[#0d1813]/55"
+          />
+        </figure>
 
-      {/* Interest — Gapless Bento Grid (dense, no voids) */}
-      <section id="work" className="py-32 px-6 bg-[#0c0b10]">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16">
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-4">How it works</h2>
-            <p className="text-xl text-white/50 max-w-xl">Founders post. Students apply. Work gets done.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 grid-flow-dense">
-            <div className="md:col-span-7 md:row-span-2 relative overflow-hidden rounded-3xl group">
-              <img src="https://picsum.photos/seed/founderpost/1200/800" alt="" className="w-full h-full min-h-[400px] object-cover transition-transform duration-700 ease-out group-hover:scale-105 grayscale contrast-125" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6">
-                <h3 className="text-3xl font-extrabold tracking-tight mb-2">Founders post</h3>
-                <p className="text-white/70">Define requirements, budget, and timeline. Get applications within days.</p>
-              </div>
-            </div>
-            <div className="md:col-span-5 relative overflow-hidden rounded-3xl bg-amber-400 text-black p-10 flex flex-col justify-between">
-              <Sparkles className="w-10 h-10 mb-4" />
-              <div>
-                <h3 className="text-3xl font-extrabold tracking-tight mb-2">Students apply</h3>
-                <p className="text-black/70 leading-relaxed">Browse projects by skill stack. Submit your portfolio and get shortlisted.</p>
-              </div>
-            </div>
-            <div className="md:col-span-5 relative overflow-hidden rounded-3xl bg-white text-black p-10 flex flex-col justify-between">
-              <Users className="w-10 h-10 mb-4" />
-              <div>
-                <h3 className="text-3xl font-extrabold tracking-tight mb-2">Build & get paid</h3>
-                <p className="text-black/60 leading-relaxed">Complete the project. Get paid. Build real experience for your resume.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+        <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center text-center">
+          {/* A soft forest veil behind the copy only. The gho/kira photograph
+              stays undimmed at the edges; the text sits on calm space. */}
+          <div className="rounded-2xl bg-[#0d1813]/75 px-5 py-8 sm:px-10 sm:py-10">
+            <h1
+              id="home-heading"
+              className="max-w-6xl text-balance text-[clamp(2.5rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-[#f5f2ea]"
+            >
+              Students find paid projects
+              <span className="mt-1 block font-medium text-[#f5f2ea]">
+                Founders post the brief
+              </span>
+            </h1>
 
-      {/* Desire — GSAP Scroll Reveal + Scrub Text */}
-      <section id="founders" className="py-32 px-6 bg-gradient-to-b from-[#13111a] to-[#0c0b10]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-6">For founders</h2>
-            <p className="text-xl text-white/50 leading-relaxed mb-8">Post a short paid project, browse student profiles, and hire within days. No long contracts, no overhead. Too busy to search? Buy a Premium Shortlist and we hand-pick and rank students for you.</p>
-            <div className="flex gap-3">
-              <Link href="/founder" className="bg-amber-400 text-black px-6 py-3 rounded-full font-bold hover:bg-amber-300 transition">Founder dashboard</Link>
-              <Link href="/signup" className="bg-white/10 text-white px-6 py-3 rounded-full font-bold border border-white/10 hover:bg-white/20 transition">Post a project</Link>
+            <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+              Local students and founders, connected through focused, paid
+              project work.
+            </p>
+
+            <div className="mt-9 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
+              <Link
+                href={CTA_HREFS.signup}
+                className="pressable inline-flex min-h-12 items-center justify-center rounded-full bg-[#fbbf24] px-7 py-3 text-sm font-medium text-[#17352b] shadow-lg shadow-[#0d1813]/30 hover:bg-[#fcd34d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
+              >
+                {CTA_LABELS.signup}
+              </Link>
+              <Link
+                href={CTA_HREFS.howItWorks}
+                className="pressable inline-flex min-h-12 items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
+              >
+                {CTA_LABELS.seeHow}
+              </Link>
             </div>
-          </div>
-          <div className="relative">
-            {/* Product screenshot placeholder — swap this block for a real <img> when ready */}
-            <div className="rounded-3xl border border-white/10 bg-[#13111a] shadow-2xl shadow-black/40 overflow-hidden">
-              {/* Window chrome */}
-              <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/5 bg-white/[0.03]">
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="w-2.5 h-2.5 rounded-full bg-white/15" />
-                <span className="ml-3 text-[10px] text-white/30 font-medium">bhutantech — browse students</span>
-              </div>
-              {/* Mock UI: mirrors the real Browse Students screen */}
-              <div className="p-5 space-y-3">
-                <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 text-xs text-white/30">
-                  Search skills, college, or name…
-                </div>
-                {[
-                  { initials: 'TD', name: 'Tashi Dorji', meta: 'Royal Thimphu College · BSc CS', skills: ['React', 'Figma', 'Python'], avail: 'Weekdays' },
-                  { initials: 'PC', name: 'Pema Choden', meta: 'RTC · BCom Analytics', skills: ['SQL', 'Vue', 'Excel'], avail: 'Weekends' },
-                ].map((s) => (
-                  <div key={s.name} className="rounded-2xl bg-white/[0.04] border border-white/10 p-4">
-                    <div className="flex items-center justify-between gap-3 mb-2">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-7 h-7 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-extrabold flex items-center justify-center shrink-0">
-                          {s.initials}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-white leading-none truncate">{s.name}</p>
-                          <p className="text-[10px] text-white/40 mt-1 truncate">{s.meta}</p>
-                        </div>
-                      </div>
-                      <span className="shrink-0 text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300">
-                        {s.avail}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {s.skills.map((k) => (
-                        <span key={k} className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white/10 text-white/50">
-                          {k}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <p className="text-center text-xs text-white/40 mt-3">
-              The founder dashboard — browse student profiles and open CVs.
+
+            <p className="mt-10 text-[10px] leading-4 text-white/70">
+              <PhotoCredit fileUrl={PHOTO_CREDITS.valley} />
             </p>
           </div>
         </div>
       </section>
 
-      <section id="students" className="py-32 px-6 bg-[#0c0b10]">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <div className="order-2 lg:order-1 relative rounded-3xl overflow-hidden">
-            <img src="https://picsum.photos/seed/studentwork/800/600" alt="" className="w-full h-auto object-cover grayscale mix-blend-luminosity contrast-125" />
-          </div>
-          <div className="order-1 lg:order-2">
-            <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-6">For students</h2>
-            <p className="text-xl text-white/50 leading-relaxed mb-8">Browse paid projects, apply with your portfolio, get shortlisted, and earn while learning. Build real experience for your resume.</p>
-            <Link href="/student" className="inline-flex items-center gap-2 bg-amber-400 text-black px-6 py-3 rounded-full font-bold hover:bg-amber-300 transition">Student dashboard <ArrowRight className="w-4 h-4" /></Link>
-          </div>
-        </div>
-      </section>
+      {/* INTEREST — gapless bento: one headline, one sentence, four cells */}
+      <section
+        id="how-it-works"
+        aria-labelledby="journey-heading"
+        className="px-5 py-28 sm:px-8 sm:py-36 lg:px-12 lg:py-48"
+      >
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal className="mb-12 max-w-3xl">
+            <h2
+              id="journey-heading"
+              className="text-4xl font-semibold leading-[0.98] tracking-[-0.055em] text-[#17352b] sm:text-6xl"
+            >
+              From a brief to work you can show
+            </h2>
+            <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+              Keep the first collaboration focused, useful, and clear for
+              everyone involved.
+            </p>
+          </Reveal>
 
-      {/* Horizontal Accordion (reactbits-style) */}
-      <section className="py-32 px-6 bg-[#13111a] border-y border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-[0.95] mb-16">What you get</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { title: "Reviewed profiles", desc: "Our team reviews profiles and marks verified students, so founders can hire with confidence.", img: "https://picsum.photos/seed/verify/600/400" },
-              { title: "Short-term contracts", desc: "Projects run from one week to a few months. Clear deliverables and fixed budgets.", img: "https://picsum.photos/seed/short/600/400" },
-              { title: "Portfolio growth", desc: "Every completed project builds real experience and a track record for your resume.", img: "https://picsum.photos/seed/portfolio/600/400" },
-            ].map((item, i) => (
-              <div key={i} className="group relative overflow-hidden rounded-3xl bg-white/[0.03] border border-white/10 p-8 hover:bg-white/[0.06] transition-colors">
-                <img src={item.img} alt="" className="w-full h-40 object-cover rounded-xl mb-6 grayscale contrast-125 group-hover:scale-[1.03] transition-transform duration-700" />
-                <h3 className="text-2xl font-extrabold tracking-tight mb-3">{item.title}</h3>
-                <p className="text-white/50 leading-relaxed">{item.desc}</p>
+          <div className="grid grid-flow-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:gap-4">
+            {/* Large photograph: 2 x 2 = 4 units */}
+            <figure className="relative isolate min-h-[300px] overflow-hidden rounded-[1.75rem] bg-[#17352b] sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-[540px]">
+              <Image
+                src="/images/bhutanese-community.jpg"
+                alt="Bhutanese boys in traditional gho sitting together"
+                fill
+                sizes="(max-width: 1024px) 100vw, 55vw"
+                className="object-cover object-[50%_45%]"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-[#101d17]/80 via-transparent to-transparent"
+              />
+              <figcaption className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
+                <PhotoCredit
+                  fileUrl={PHOTO_CREDITS.dzong}
+                  className="text-white/75"
+                />
+              </figcaption>
+            </figure>
+
+            {/* One sentence: 2 x 1 = 2 units */}
+            <article className="flex min-h-[240px] items-end rounded-[1.75rem] bg-[#fffefa] p-6 sm:col-span-2 lg:col-span-2 lg:p-8">
+              <p className="max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-[#17352b] sm:text-3xl">
+                Founders set a clear brief and budget, students apply with the
+                right skills, and both sides learn by doing.
+              </p>
+            </article>
+
+            {/* Verified figure: 1 x 1 = 1 unit */}
+            <article className="flex min-h-[240px] flex-col justify-between rounded-[1.75rem] bg-[#17352b] p-6 text-white lg:col-span-1 lg:p-7">
+              <p className="text-[clamp(3.5rem,6vw,5rem)] font-semibold leading-[0.82] tracking-[-0.08em] text-[#fbbf24]">
+                {YOUTH_UNEMPLOYMENT.value}
+              </p>
+              <div>
+                <h3 className="text-base font-semibold leading-snug">
+                  {YOUTH_UNEMPLOYMENT.label}
+                </h3>
+                <p className="mt-2 text-xs leading-5 text-white/70">
+                  World Bank, April 2026. A national indicator, not a platform
+                  result.
+                </p>
+                <a
+                  href={WORLD_BANK_SOURCE.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center text-xs font-semibold text-amber-300 underline decoration-white/35 underline-offset-4 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+                >
+                  World Bank update
+                </a>
               </div>
-            ))}
+            </article>
+
+            {/* One sentence + CTA: 1 x 1 = 1 unit. Light surface keeps amber
+                the only filled accent on this screen. */}
+            <article className="flex min-h-[240px] flex-col justify-between rounded-[1.75rem] border border-[#18251f]/10 bg-[#fffefa] p-6 text-[#17352b] lg:col-span-1 lg:p-7">
+              <p className="text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+                Students build a profile and apply; founders set the scope.
+              </p>
+              <div className="mt-6">
+                <p className="text-xs leading-5 text-[#5e554a]">
+                  Founder access is assigned by an admin.
+                </p>
+                <Link
+                  href={CTA_HREFS.signup}
+                  className="mt-4 inline-flex items-center rounded-sm text-sm font-medium text-[#17352b] underline decoration-[#18251f]/30 underline-offset-4 hover:decoration-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+                >
+                  {CTA_LABELS.signup}
+                </Link>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
-      {/* Action — Massive CTA */}
-      <section className="py-48 px-6 bg-gradient-to-b from-amber-400 to-amber-500 text-black">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-6xl md:text-9xl font-extrabold tracking-tighter leading-[0.9] mb-8">Start building.</h2>
-          <div className="flex justify-center gap-4">
-            <Link href="/signup" className="bg-black text-white px-10 py-5 rounded-full font-extrabold text-xl shadow-2xl hover:bg-zinc-900 transition-all hover:-translate-y-1">Sign up free</Link>
-          </div>
+      {/* INTEREST — verified figures, oversized and unadorned */}
+      <section
+        id="bhutan"
+        aria-labelledby="bhutan-heading"
+        className="bg-[#17352b] px-5 py-28 text-white sm:px-8 sm:py-36 lg:px-12 lg:py-44"
+      >
+        <div className="mx-auto max-w-[1440px]">
+          <Reveal>
+            <h2
+              id="bhutan-heading"
+              className="max-w-3xl text-4xl font-semibold leading-[0.98] tracking-[-0.055em] sm:text-6xl"
+            >
+              The national context for young people
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
+              The World Bank&apos;s April 2026 update projects continued growth
+              but warns that job creation is not keeping pace, particularly for
+              young people.
+            </p>
+          </Reveal>
+
+          <Reveal className="mt-16 border-t border-white/15 pt-10">
+            <dl className="max-w-4xl">
+              {CONTEXT_FACTS.map((fact) => (
+                <div
+                  key={fact.label}
+                  className="grid gap-2 border-b border-white/15 py-6 sm:grid-cols-[8rem_12rem_1fr] sm:items-baseline sm:gap-8"
+                >
+                  <dt className="text-2xl font-semibold text-[#e7b648] sm:text-3xl">
+                    {fact.value}
+                  </dt>
+                  <dd className="text-sm leading-6 text-white sm:text-base">
+                    {fact.label}
+                  </dd>
+                  <p className="text-xs leading-5 text-white/70">{fact.note}</p>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-12 text-xs leading-5 text-white/60">
+              Source:{" "}
+              <a
+                href={WORLD_BANK_SOURCE.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-amber-300 underline decoration-white/35 underline-offset-4 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+              >
+                {WORLD_BANK_SOURCE.label}
+              </a>
+              . National indicators, not platform results.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      {/* Clean Footer */}
-      <footer className="bg-[#0c0b10] border-t border-white/10 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2 font-extrabold text-xl"><Mountain className="w-6 h-6 text-amber-400" /> Bhutan Tech Connect</div>
-          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6">
-            <p className="text-sm text-white/30">Built for Bhutan. Connecting students with real opportunity.</p>
-            <nav aria-label="Legal" className="flex items-center gap-4 text-sm text-white/40">
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-              <a href="mailto:yeshngedup@gmail.com" className="hover:text-white transition-colors">Contact</a>
-            </nav>
-          </div>
+      {/* INTEREST — live statistics panel, the two-numbers note, source links */}
+      <details className="bg-[#fffefa] px-5 sm:px-8 lg:px-12">
+        <summary className="mx-auto max-w-[1440px] cursor-pointer py-5 text-sm font-semibold text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]">
+          Official statistics
+        </summary>
+        <LiveContext initial={liveContext} variant="compact" />
+      </details>
+      <section aria-labelledby="why-two-numbers" className="bg-[#fffefa] px-5 py-10 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-[1440px]">
+          <h2
+            id="why-two-numbers"
+            className="text-lg font-semibold tracking-normal text-[#17352b]"
+          >
+            Why two numbers?
+          </h2>
+          <p className="mt-2 max-w-4xl text-xs leading-5 text-[#18251f]/65">
+            {youth ? (
+              <>
+                The press release reports {YOUTH_UNEMPLOYMENT.value} while the
+                API series is a modeled ILO estimate of {youth.displayValue} for{" "}
+                {youth.year}
+                {youth.relatedObservation
+                  ? `, and ${youth.relatedObservation.displayValue} for ${youth.relatedObservation.year}`
+                  : ""}{". "}
+                These are different series, and the reason for the difference
+                is not established here.{" "}
+                <a
+                  href={WORLD_BANK_SOURCE.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={sourceLinkClass}
+                >
+                  Press release
+                </a>{" "}
+                ·{" "}
+                <a
+                  href={youth.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={sourceLinkClass}
+                >
+                  API series
+                </a>
+              </>
+            ) : (
+              <>
+                The press release reports {YOUTH_UNEMPLOYMENT.value}. The reason
+                for the difference from the API series is not established here.{" "}
+                <a
+                  href={WORLD_BANK_SOURCE.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={sourceLinkClass}
+                >
+                  Press release
+                </a>
+              </>
+            )}{" "}
+            ·{" "}
+            <a
+              href={LIVE_DATA_SOURCE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={sourceLinkClass}
+            >
+              {LIVE_DATA_SOURCE.label}
+            </a>
+          </p>
         </div>
-      </footer>
+      </section>
+
+      {/* BRAND — the quiet differentiator chapter, echoed from /about */}
+      <LocalBridgeDifferences compact />
+
+      {/* PRODUCT — one real shortlist row, labelled as a sample */}
+      <ShortlistPreviewCompact />
+
+      {/* ACTION — high-contrast closing CTA + clean footer */}
+      <CtaBand
+        eyebrow=""
+        title="Start with one paid project"
+        primaryCta={{ href: CTA_HREFS.signup, label: CTA_LABELS.signup }}
+      />
+
+      <SiteFooter />
     </main>
   );
 }

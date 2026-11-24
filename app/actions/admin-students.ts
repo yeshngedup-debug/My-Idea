@@ -5,7 +5,7 @@
  * and shortlist generation for a founder/project.
  */
 import { revalidatePath } from 'next/cache';
-import { headers } from 'next/headers';
+import { APP_URL } from '@/lib/env';
 import { createClient } from '@/lib/supabase/server';
 
 export interface AdminResult {
@@ -17,7 +17,7 @@ export interface ShortlistTextResult extends AdminResult {
   text?: string;
 }
 
-async function requireAdmin() {
+async function requireAdmin(): Promise<{ supabase: Awaited<ReturnType<typeof createClient>>; error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -49,7 +49,7 @@ export async function setStudentRank(
     .update({ rank: clean })
     .eq('id', studentId);
 
-  if (dbError) return { ok: false, message: `Failed: ${dbError.message}` };
+  if (dbError) return { ok: false, message: 'Could not save rank. Try again.' };
 
   revalidatePath('/admin/students');
   revalidatePath('/admin');
@@ -69,11 +69,11 @@ export async function setStudentVerified(
     .update({ verified })
     .eq('id', studentId);
 
-  if (dbError) return { ok: false, message: `Failed: ${dbError.message}` };
+  if (dbError) return { ok: false, message: 'Could not update verification. Try again.' };
 
   revalidatePath('/admin/students');
   revalidatePath('/founder/browse-students');
-  return { ok: true, message: verified ? 'Marked verified.' : 'Marked not verified.' };
+  return { ok: true, message: verified ? 'Student verified.' : 'Verification removed.' };
 }
 
 /**
@@ -108,11 +108,8 @@ export async function generateShortlist(
   );
 
   // CV links via the /api/cv/[id] proxy — never expire, unlike signed URLs.
-  const headerList = await headers();
-  const proto = headerList.get('x-forwarded-proto') ?? 'http';
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const origin = `${proto}://${host}`;
-  const cvLinkFor = (row: Row) => (row.cv_path ? `${origin}/api/cv/${row.id}` : '-');
+  // Use the configured APP_URL, never a spoofable Host header.
+  const cvLinkFor = (row: Row) => (row.cv_path ? `${APP_URL}/api/cv/${row.id}` : '-');
 
   // Context: founder name, project title
   const { data: founder } = await supabase
@@ -162,18 +159,23 @@ export async function generateShortlist(
 
   // Persist: replace this founder's entries for the SAME project only, so
   // regenerating one project never wipes another project's shortlist.
+  // Only admin-sourced rows are removed — founder-requested entries
+  // (source = 'founder') are never wiped by admin regeneration.
+  // Delete ALL admin-sourced rows for this founder/project, not only the
+  // students in the new list — otherwise a student removed from the
+  // regenerated shortlist keeps a stale row.
   let staleRows = supabase
     .from('shortlists')
     .delete()
     .eq('founder_id', founderId)
-    .in('student_id', ordered.map((s) => s.id));
+    .eq('source', 'admin');
   staleRows = projectId
     ? staleRows.eq('project_id', projectId)
     : staleRows.is('project_id', null);
 
   const { error: delError } = await staleRows;
 
-  if (delError) return { ok: false, message: `Failed to update shortlist: ${delError.message}` };
+  if (delError) return { ok: false, message: 'Could not update shortlist. Try again.' };
 
   const { error: insError } = await supabase.from('shortlists').insert(
     ordered.map((s) => ({
@@ -181,12 +183,13 @@ export async function generateShortlist(
       student_id: s.id,
       project_id: projectId,
       status: 'requested',
+      source: 'admin',
     }))
   );
 
-  if (insError) return { ok: false, message: `Failed to save shortlist: ${insError.message}` };
+  if (insError) return { ok: false, message: 'Could not save shortlist. Try again.' };
 
   revalidatePath('/founder/shortlists');
   revalidatePath('/admin/students');
-  return { ok: true, message: 'Shortlist generated.', text: lines.join('\n') };
+  return { ok: true, message: 'Shortlist ready.', text: lines.join('\n') };
 }

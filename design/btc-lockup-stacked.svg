@@ -1,0 +1,19 @@
+<!-- ARCHIVED MASTER — NOT USED BY THE LIVE UI. Retired navy #16324F survives here as a historical source artifact only. Canonical palette: lib/design-tokens.ts. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" width="520" height="520" role="img" aria-labelledby="title">
+  <title id="title">Bhutan Tech Connect — stacked lockup (navy)</title>
+  <!-- Lockup: symbol above wordmark "Bhutan Tech Connect". Symbol height ~260, wordmark below centered.
+       Wordmark set in Inter (project font via next/font); FLAGGED — convert to outlines for production. -->
+  <symbol id="btc-symbol" viewBox="0 0 256 256">
+    <circle cx="68" cy="145" r="11" fill="#16324F" />
+    <circle cx="188" cy="145" r="11" fill="#16324F" />
+    <rect x="79" y="139" width="98" height="16" rx="8" fill="#16324F" />
+    <path d="M 79 139 A 52 52 0 0 1 177 139 L 177 147 A 52 52 0 0 0 79 147 Z" fill="#FBBF24" />
+  </symbol>
+
+  <!-- symbol top-center, height 260 -->
+  <use href="#btc-symbol" x="130" y="40" width="260" height="260" />
+
+  <!-- wordmark below, centered -->
+  <text x="260" y="400" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="40"
+        fill="#16324F" letter-spacing="0.01em" text-anchor="middle">Bhutan Tech Connect</text>
+</svg>

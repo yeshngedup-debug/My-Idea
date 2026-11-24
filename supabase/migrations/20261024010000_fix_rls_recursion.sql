@@ -78,11 +78,7 @@ create policy "users_read_cvs"
   on storage.objects for select
   using (
     bucket_id = 'cvs'
-    and (
-      (storage.foldername(name))[1] = auth.uid()::text
-      or public.has_role('founder')
-      or public.has_role('admin')
-    )
+    and (storage.foldername(name))[1] = auth.uid()::text
   );
 
 drop policy if exists "screenshots_readable_by_owner_or_admin" on storage.objects;

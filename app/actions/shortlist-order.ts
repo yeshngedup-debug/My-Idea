@@ -7,6 +7,8 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { PACKAGES, type PackageId } from '@/config/payment';
+import { shortlistOrderSchema } from '@/lib/validators';
+import { rateLimit } from '@/lib/rate-limit';
 
 export interface OrderResult {
   ok: boolean;
@@ -16,7 +18,7 @@ export interface OrderResult {
 const ALLOWED_IMAGE = ['image/png', 'image/jpeg', 'image/webp'];
 
 export async function createShortlistOrder(
-  packageId: string,
+  packageId: PackageId,
   projectId: string | null,
   amount: number | null
 ): Promise<OrderResult & { orderId?: string }> {
@@ -36,13 +38,46 @@ export async function createShortlistOrder(
     return { ok: false, message: 'Only founders can order shortlists.' };
   }
 
+  const { ok: withinLimit } = rateLimit(`order:${user.id}`, {
+    limit: 10,
+    windowMs: 60 * 1000,
+  });
+  if (!withinLimit) {
+    return { ok: false, message: 'Too many orders. Wait a minute and try again.' };
+  }
+
   if (!(packageId in PACKAGES)) {
     return { ok: false, message: 'Choose a package.' };
   }
 
-  const pkg = PACKAGES[packageId as PackageId];
+  // Zod validation of the amount input
+  const parsed = shortlistOrderSchema.safeParse({ amount });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Enter a valid amount.' };
+  }
+  const { amount: validatedAmount } = parsed.data;
+
+  const pkg = PACKAGES[packageId];
+
+  // Validate the founder-declared amount against the package's advertised range.
+  const match = pkg.priceRange.match(/[\d,]+/g);
+  if (!match) {
+    return { ok: false, message: 'Invalid package price range.' };
+  }
+  const rangeNumbers = match.map((n) => parseInt(n.replace(/,/g, ''), 10));
+  const [rangeMin, rangeMax = rangeNumbers[0]] = rangeNumbers;
+
   const cleanAmount =
-    amount != null && Number.isFinite(amount) && amount > 0 ? amount : pkg.defaultAmount;
+    validatedAmount != null && Number.isFinite(validatedAmount) && validatedAmount > 0
+      ? validatedAmount
+      : pkg.defaultAmount;
+
+  if (cleanAmount < rangeMin || cleanAmount > rangeMax) {
+    return {
+      ok: false,
+      message: `Amount must be between Nu ${rangeMin} and Nu ${rangeMax} for the ${pkg.name} package.`,
+    };
+  }
 
   const { data, error } = await supabase
     .from('shortlist_orders')
@@ -56,11 +91,11 @@ export async function createShortlistOrder(
     .select('id')
     .single();
 
-  if (error) return { ok: false, message: `Order failed: ${error.message}` };
+  if (error) return { ok: false, message: 'Could not create order. Try again.' };
 
   revalidatePath('/founder/shortlists');
   revalidatePath('/admin/payments');
-  return { ok: true, message: 'Order created.', orderId: data.id };
+  return { ok: true, message: 'Order created. Upload your payment screenshot.', orderId: data.id };
 }
 
 export async function uploadPaymentScreenshot(
@@ -79,7 +114,7 @@ export async function uploadPaymentScreenshot(
     return { ok: false, message: 'Choose a screenshot first.' };
   }
   if (!ALLOWED_IMAGE.includes(file.type)) {
-    return { ok: false, message: 'Only PNG, JPG, or WEBP images are allowed.' };
+    return { ok: false, message: 'Use a PNG, JPG, or WEBP image.' };
   }
   if (file.size > 5 * 1024 * 1024) {
     return { ok: false, message: 'Image must be 5 MB or smaller.' };
@@ -106,21 +141,21 @@ export async function uploadPaymentScreenshot(
     .from('payment-screenshots')
     .upload(path, file, { upsert: true, contentType: file.type });
 
-  if (uploadError) return { ok: false, message: `Upload failed: ${uploadError.message}` };
+  if (uploadError) return { ok: false, message: 'Could not upload screenshot. Try again.' };
 
   const { error: dbError } = await supabase
     .from('shortlist_orders')
     .update({ screenshot_path: path, status: 'submitted' })
     .eq('id', orderId);
 
-  if (dbError) return { ok: false, message: `Upload saved but status failed: ${dbError.message}` };
+  if (dbError) return { ok: false, message: 'Screenshot uploaded. Could not update order status. Try again.' };
 
   revalidatePath('/founder/shortlists');
   revalidatePath('/admin/payments');
-  return { ok: true, message: 'Screenshot submitted. Admin will verify shortly.' };
+  return { ok: true, message: 'Screenshot submitted. An admin will check it.' };
 }
 
-async function requireAdmin() {
+async function requireAdmin(): Promise<{ supabase: Awaited<ReturnType<typeof createClient>>; error: string | null }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -152,7 +187,7 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
   if (!order.screenshot_path) {
     return {
       ok: false,
-      message: 'Cannot confirm yet: the founder has not uploaded a payment screenshot.',
+      message: 'No payment screenshot yet. Ask the founder to upload one.',
     };
   }
 
@@ -161,7 +196,7 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
     .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
     .eq('id', orderId);
 
-  if (dbError) return { ok: false, message: `Failed: ${dbError.message}` };
+  if (dbError) return { ok: false, message: 'Could not confirm payment. Try again.' };
 
   revalidatePath('/admin/payments');
   revalidatePath('/founder/shortlists');
@@ -177,7 +212,7 @@ export async function rejectOrder(orderId: string): Promise<OrderResult> {
     .update({ status: 'rejected' })
     .eq('id', orderId);
 
-  if (dbError) return { ok: false, message: `Failed: ${dbError.message}` };
+  if (dbError) return { ok: false, message: 'Could not reject order. Try again.' };
 
   revalidatePath('/admin/payments');
   revalidatePath('/founder/shortlists');

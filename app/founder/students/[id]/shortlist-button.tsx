@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { CheckCircle2, Star } from 'lucide-react';
 import { requestShortlist } from '@/app/actions/shortlist';
 
 export function ShortlistButton({
@@ -12,34 +11,46 @@ export function ShortlistButton({
   alreadyShortlisted: boolean;
 }) {
   const [shortlisted, setShortlisted] = useState(alreadyShortlisted);
+  const [feedback, setFeedback] = useState<{
+    ok: boolean;
+    message: string;
+  } | null>(null);
   const [pending, startTransition] = useTransition();
 
   return (
-    <button
-      type="button"
-      disabled={shortlisted || pending}
-      onClick={() =>
-        startTransition(async () => {
-          const res = await requestShortlist(studentId);
-          if (res.ok) setShortlisted(true);
-        })
-      }
-      className={`inline-flex justify-center items-center gap-1.5 rounded-xl px-5 py-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
-        shortlisted
-          ? 'bg-emerald-400/10 text-emerald-300 cursor-default'
-          : 'bg-amber-400 text-black hover:bg-amber-300'
-      } disabled:opacity-80`}
-    >
-      {shortlisted ? (
-        <>
-          <CheckCircle2 className="w-4 h-4" /> Shortlisted
-        </>
-      ) : (
-        <>
-          <Star className="w-4 h-4" />
-          {pending ? 'Sending...' : 'Request shortlist'}
-        </>
+    <div>
+      <button
+        type="button"
+        disabled={shortlisted || pending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await requestShortlist(studentId);
+            setFeedback({ ok: res.ok, message: res.message });
+            if (res.ok) setShortlisted(true);
+          })
+        }
+        className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-5 py-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-80 ${
+          shortlisted
+            ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+            : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'
+        }`}
+      >
+        {shortlisted ? (
+          <>Shortlisted</>
+        ) : (
+          <>{pending ? 'Sending...' : 'Request shortlist'}</>
+        )}
+      </button>
+      {feedback && (
+        <p
+          role={feedback.ok ? 'status' : 'alert'}
+          className={`mt-2 text-xs leading-5 ${
+            feedback.ok ? 'text-[#17352b]' : 'text-[#b23c26]'
+          }`}
+        >
+          {feedback.message}
+        </p>
       )}
-    </button>
+    </div>
   );
 }

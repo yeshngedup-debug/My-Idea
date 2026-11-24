@@ -1,0 +1,15 @@
+<!-- ARCHIVED MASTER — NOT USED BY THE LIVE UI. Historical source artifact only. The shipped mark is components/ui/logo.tsx and public/favicon.svg. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title">
+  <title id="title">Bhutan Tech Connect — symbol master (black)</title>
+  <!-- Grid unit = 8. Symbol vertically centred ~y=128. Two nodes + bridge + arch cap. -->
+  <g id="symbol" fill="#000000">
+    <!-- node: student (left) -->
+    <circle cx="68" cy="145" r="11" />
+    <!-- node: founder (right) -->
+    <circle cx="188" cy="145" r="11" />
+    <!-- bridge span: rounded connector between the two nodes -->
+    <rect x="79" y="139" width="98" height="16" rx="8" />
+    <!-- arch cap: warm-accent band rising above the bridge (full colour version uses amber here) -->
+    <path d="M 79 139 A 52 52 0 0 1 177 139 L 177 147 A 52 52 0 0 0 79 147 Z" />
+  </g>
+</svg>

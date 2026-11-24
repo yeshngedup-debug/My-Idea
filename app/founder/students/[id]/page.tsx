@@ -1,10 +1,8 @@
 ﻿/**
  * Student full profile — founder view.
- * Shows every completed-profile field plus a signed CV link.
  */
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, GraduationCap, Clock, FileText, CalendarDays } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { Badge } from '@/components/ui/badge';
 import { ShortlistButton } from './shortlist-button';
@@ -26,32 +24,23 @@ export default async function StudentProfileDetailPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: target } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', id)
-    .single();
+  const { data: target } = await supabase.from('profiles').select('role').eq('id', id).single();
 
   if (!target || target.role !== 'student') notFound();
 
   const { data: sp } = await supabase
     .from('student_profiles')
-    .select('full_name, college, course, year, skills, bio, availability, cv_path, cv_url, updated_at')
+    .select('full_name, college, course, year, skills, bio, availability, cv_path')
     .eq('id', id)
     .single();
 
   if (!sp || !sp.cv_path) notFound();
 
-  // Fresh 1-hour signed URL for the CV
-  const { data: signed } = await supabase.storage
-    .from('cvs')
-    .createSignedUrl(sp.cv_path, 60 * 60);
-
+  // Is this student already on this founder's shortlist?
   const { data: existing } = await supabase
     .from('shortlists')
     .select('id')
@@ -60,79 +49,51 @@ export default async function StudentProfileDetailPage({
     .maybeSingle();
 
   return (
-    <>
-        <div className="hidden lg:flex items-center gap-3 mb-8">
-          <Link
-            href="/founder/browse-students"
-            className="p-2 rounded-xl text-white/50 hover:text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-            aria-label="Back to browse students"
-          >
-            <ArrowLeft className="w-5 h-5" />
+    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <Link href="/founder/browse-students" className="inline-flex min-h-9 items-center text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+            <span aria-hidden="true">←</span> Browse students
           </Link>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter">
-            {sp.full_name}
-          </h2>
+          <h1 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{sp.full_name}</h1>
         </div>
 
-        <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 sm:p-6 space-y-5">
-          <div className="flex flex-wrap items-center gap-2 text-sm text-white/50">
-            <span className="inline-flex items-center gap-1.5">
-              <GraduationCap className="w-4 h-4 text-white/30" />
-              {sp.college}
-              {sp.course ? ` - ${sp.course}` : ''}
-            </span>
-            {sp.year && <Badge variant="outline">{sp.year} year</Badge>}
+        <div className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-6">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-[#4c5a52]">
+            <span>{sp.college}{sp.course ? ` - ${sp.course}` : ''}{sp.year ? ` (${sp.year} year)` : ''}</span>
             {sp.availability && (
-              <Badge className="bg-amber-400/10 text-amber-300 inline-flex items-center gap-1">
-                <Clock className="w-3 h-3" />
-                {AVAILABILITY_LABEL[sp.availability] ?? sp.availability}
-              </Badge>
+              <Badge variant="outline">{AVAILABILITY_LABEL[sp.availability] ?? sp.availability}</Badge>
             )}
           </div>
 
           {(sp.skills?.length ?? 0) > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold text-white/70 mb-2">Skills</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {sp.skills!.map((k: string) => (
-                  <Badge key={k}>{k}</Badge>
-                ))}
-              </div>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {(sp.skills ?? []).map((k: string) => (
+                <Badge key={k} variant="outline">{k}</Badge>
+              ))}
             </div>
           )}
 
           {sp.bio && (
-            <div>
-              <h3 className="text-sm font-semibold text-white/70 mb-1">Bio</h3>
-              <p className="text-sm text-white/60 leading-relaxed whitespace-pre-line">{sp.bio}</p>
+            <div className="mt-6 border-t border-[#ded8cb] pt-6">
+              <h3 className="mb-1 text-sm font-semibold text-[#17352b]">Bio</h3>
+              <p className="whitespace-pre-line text-sm leading-6 text-[#4c5a52]">{sp.bio}</p>
             </div>
           )}
 
-          <div>
-            <h3 className="text-sm font-semibold text-white/70 mb-2">CV</h3>
-            <a
-              href={signed?.signedUrl ?? '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-transparent px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-            >
-              <FileText className="w-4 h-4" /> Open CV (PDF)
+          <div className="mt-6 border-t border-[#ded8cb] pt-6">
+            <h3 className="mb-2 text-sm font-semibold text-[#17352b]">CV</h3>
+            <a href={`/api/cv/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#ded8cb] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+              View CV (PDF)
             </a>
           </div>
 
-          <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <p className="text-xs text-white/30 inline-flex items-center gap-1">
-              <CalendarDays className="w-3.5 h-3.5" />
-              Updated{' '}
-              {new Date(sp.updated_at ?? '').toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })}
-            </p>
+          <div className="mt-6 flex flex-col gap-3 border-t border-[#ded8cb] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs text-[#657069]">Interested in working with {sp.full_name}?</p>
             <ShortlistButton studentId={id} alreadyShortlisted={!!existing} />
           </div>
         </div>
-      </>
+      </div>
+    </section>
   );
 }

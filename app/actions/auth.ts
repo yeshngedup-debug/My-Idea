@@ -3,11 +3,29 @@
 /**
  * Auth server actions — login, signup, logout.
  * After login, redirects to the dashboard matching the user's role.
+ *
+ * Security: role is NEVER accepted from client FormData during signup.
+ * Every new user is created as 'student' by default; roles are assigned
+ * server-side by an admin (or via the Supabase SQL editor). The
+ * on_auth_user_created trigger reads role from raw_user_meta_data but
+ * ignores any client-supplied role — see lib/supabase/server.ts and the
+ * prevent_role_change trigger.
  */
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
 
 type Role = 'student' | 'founder' | 'admin';
+
+/** Include the client IP so spraying many email addresses cannot bypass the limit. */
+async function rateLimitKey(action: string, email: string): Promise<string> {
+  const h = await headers();
+  const ip = (h.get('x-forwarded-for') ?? h.get('x-real-ip') ?? 'unknown')
+    .split(',')[0]
+    .trim();
+  return `${action}:${ip}:${email.toLowerCase()}`;
+}
 
 export async function login(formData: FormData) {
   const email = String(formData.get('email') ?? '');
@@ -15,6 +33,12 @@ export async function login(formData: FormData) {
 
   if (!email || !password) {
     redirect('/login?error=missing');
+  }
+
+  // Rate limit login attempts per IP + email (brute-force protection).
+  const { ok } = rateLimit(await rateLimitKey('login', email), { limit: 5, windowMs: 60 * 1000 });
+  if (!ok) {
+    redirect('/login?error=rate-limited');
   }
 
   const supabase = await createClient();
@@ -32,21 +56,28 @@ export async function signup(formData: FormData) {
   const lastName = String(formData.get('lastName') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
-  const roleInput = String(formData.get('role') ?? 'student');
-  const role: Role = roleInput === 'founder' ? 'founder' : 'student';
 
   if (!email || !password || password.length < 6) {
     redirect('/signup?error=invalid');
   }
 
+  // Rate limit signup attempts per IP + email (abuse protection).
+  const { ok } = rateLimit(await rateLimitKey('signup', email), { limit: 3, windowMs: 60 * 1000 });
+  if (!ok) {
+    redirect('/signup?error=rate-limited');
+  }
+
   const supabase = await createClient();
 
+  // Role is assigned server-side as 'student' by default. The client
+  // may send a 'role' field, but it is intentionally ignored here to
+  // prevent self-service role escalation (C3).
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        role,
+        role: 'student',
         full_name: [firstName, lastName].filter(Boolean).join(' '),
       },
     },

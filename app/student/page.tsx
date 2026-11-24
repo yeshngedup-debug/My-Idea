@@ -1,22 +1,25 @@
 /**
- * Student Dashboard — real data: application stats, recent applications,
- * profile completion. AdminCN-style stat cards on the dark brand.
+ * Student Dashboard — welcome, browse projects, recent applications.
  */
-import Link from 'next/link';
-import { FileText, UserCheck, ClipboardList, Gauge, ArrowRight } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
-import { StatCard } from '@/components/dashboard/stat-card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Link from "next/link";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Clock3,
+  UserRound,
+} from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import { WorkspaceHero } from "@/components/layout/workspace-hero";
+import { Badge } from "@/components/ui/badge";
+import {
+  HoverLift,
+  Reveal,
+  StaggerGroup,
+  StaggerItem,
+} from "@/components/ui/motion";
 
-export const metadata = { title: 'Student Dashboard | Bhutan Tech Connect' };
-
-const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: 'Pending', cls: 'bg-amber-400/10 text-amber-300' },
-  shortlisted: { label: 'Shortlisted', cls: 'bg-blue-400/10 text-blue-300' },
-  accepted: { label: 'Accepted', cls: 'bg-emerald-400/10 text-emerald-300' },
-  rejected: { label: 'Rejected', cls: 'bg-red-400/10 text-red-300' },
-};
+export const metadata = { title: "Student Dashboard | Bhutan Tech Connect" };
 
 export default async function StudentDashboard() {
   const supabase = await createClient();
@@ -24,155 +27,158 @@ export default async function StudentDashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let name = 'Student';
+  let name = "Student";
   let applications: {
     id: string;
     status: string;
     created_at: string;
     project: { title: string } | null;
   }[] = [];
-  let completion = 0;
-  let cvReady = false;
 
   if (user) {
     const [appsRes, profRes] = await Promise.all([
       supabase
-        .from('applications')
-        .select('id, status, created_at, project:projects(title)')
-        .eq('student_id', user.id)
-        .order('created_at', { ascending: false }),
+        .from("applications")
+        .select("id, status, created_at, project:projects(title)")
+        .eq("student_id", user.id)
+        .order("created_at", { ascending: false }),
       supabase
-        .from('student_profiles')
-        .select('full_name, college, course, year, skills, bio, availability, cv_path')
-        .eq('id', user.id)
+        .from("student_profiles")
+        .select("full_name")
+        .eq("id", user.id)
         .single(),
     ]);
 
     applications = (appsRes.data as unknown as typeof applications) ?? [];
-
-    const sp = profRes.data as Record<string, unknown> | null;
-    if (sp) {
-      name = (sp.full_name as string) || name;
-      const checks = [
-        String(sp.full_name ?? '').trim().length > 1,
-        String(sp.college ?? '').trim().length > 1,
-        String(sp.course ?? '').trim().length > 1,
-        !!sp.year,
-        ((sp.skills as string[]) ?? []).length > 0,
-        String(sp.bio ?? '').length > 20,
-        !!sp.availability,
-        !!sp.cv_path,
-      ];
-      completion = Math.round((checks.filter(Boolean).length / checks.length) * 100);
-      cvReady = !!sp.cv_path;
-    } else if (user.user_metadata?.full_name) {
-      name = String(user.user_metadata.full_name);
-    }
+    name =
+      (profRes.data as { full_name: string | null } | null)?.full_name ??
+      user.user_metadata?.full_name ??
+      name;
   }
 
-  const shortlisted = applications.filter((a) => a.status === 'shortlisted').length;
-  const accepted = applications.filter((a) => a.status === 'accepted').length;
+  const awaitingResponse = applications.filter(
+    (application) => application.status === "pending",
+  ).length;
+  const acceptedApplications = applications.filter(
+    (application) => application.status === "accepted",
+  ).length;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter">
-          Welcome back, {name.split(' ')[0]}
-        </h2>
-        <p className="text-white/50 mt-1 text-sm">
-          Track your applications and keep your profile sharp for founders.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <Reveal>
+        <WorkspaceHero
+          eyebrow="Student workspace"
+          title={`Welcome back, ${name.split(" ")[0]}.`}
+          description="Find work that fits your skills."
+        >
+          <Link
+            href="/student/projects"
+            className="pressable inline-flex items-center gap-2 rounded-full bg-amber-300 px-5 py-3 text-sm font-bold text-[#17352b] transition-colors hover:bg-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+          >
+            Browse projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/student/profile"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/35 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+          >
+            <UserRound aria-hidden="true" className="h-4 w-4" /> Update profile
+          </Link>
+        </WorkspaceHero>
+      </Reveal>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={FileText} label="Applications" value={applications.length} sub="Total sent" />
-        <StatCard icon={UserCheck} label="Shortlisted" value={shortlisted} sub="Waiting on founders" />
-        <StatCard icon={ClipboardList} label="Accepted" value={accepted} sub="Offers won" />
-        <StatCard
-          icon={Gauge}
-          label="Profile"
-          value={`${completion}%`}
-          sub={cvReady ? 'CV uploaded' : 'CV missing'}
-        />
-      </div>
+      <StaggerGroup className="grid grid-flow-dense grid-cols-1 gap-px overflow-hidden rounded-2xl border border-[#17352b]/10 bg-[#17352b]/10 sm:grid-cols-3">
+        {[
+          { label: "Applications sent", value: applications.length, icon: BriefcaseBusiness },
+          { label: "Awaiting response", value: awaitingResponse, icon: Clock3 },
+          { label: "Accepted", value: acceptedApplications, icon: CheckCircle2 },
+        ].map(({ label, value, icon: Icon }) => (
+          <StaggerItem key={label} className="bg-[#fffefa]">
+            <div className="flex items-start justify-between gap-3 p-5">
+              <div>
+                <p className="text-xs font-medium text-[#657069]">{label}</p>
+                <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight text-[#17352b]">
+                  {value}
+                </p>
+              </div>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#17352b]/6 text-[#17352b]">
+                <Icon aria-hidden="true" className="h-4.5 w-4.5" />
+              </span>
+            </div>
+          </StaggerItem>
+        ))}
+      </StaggerGroup>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        {/* Recent applications */}
-        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5 lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-semibold">Recent applications</h3>
-            <Link
-              href="/student/applications"
-              className="text-xs font-semibold text-amber-400 hover:text-amber-300"
-            >
-              View all
-            </Link>
+      <section>
+        <Reveal>
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <h3 className="text-lg font-semibold tracking-tight text-[#17352b]">
+              Recent applications
+            </h3>
+            {applications.length > 0 && (
+              <Link
+                href="/student/applications"
+                className="group inline-flex items-center gap-1 text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              >
+                View all
+                <ArrowRight
+                  aria-hidden="true"
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
+                />
+              </Link>
+            )}
           </div>
-          {applications.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-white/50 mb-4">You haven't applied to any projects yet.</p>
-              <Link href="/student/projects">
-                <Button className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-10">
-                  Browse projects <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
+        </Reveal>
+        {applications.length === 0 ? (
+          <Reveal>
+            <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] px-6 py-10 text-center">
+              <BriefcaseBusiness
+                aria-hidden="true"
+                className="mx-auto h-8 w-8 text-[#8d948e]"
+              />
+              <h4 className="mt-3 font-semibold text-[#17352b]">
+                Your next opportunity is waiting
+              </h4>
+              <p className="mt-1 text-sm text-[#657069]">
+                Explore open projects and apply when one feels right.
+              </p>
+              <Link
+                href="/student/projects"
+                className="mt-5 inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+              >
+                Browse open projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </Link>
             </div>
-          ) : (
-            <ul className="divide-y divide-white/5">
-              {applications.slice(0, 4).map((a) => {
-                const badge = STATUS_BADGE[a.status] ?? STATUS_BADGE.pending;
-                return (
-                  <li
-                    key={a.id}
-                    className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
-                  >
+          </Reveal>
+        ) : (
+          <StaggerGroup className="space-y-2.5">
+            {applications.slice(0, 5).map((application) => (
+              <StaggerItem key={application.id}>
+                <HoverLift>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 transition-colors duration-150 hover:border-[#17352b]/25">
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold truncate">
-                        {a.project?.title ?? 'Project'}
+                      <p className="truncate text-sm font-semibold text-[#17352b]">
+                        {application.project?.title ?? "Project"}
                       </p>
-                      <p className="text-xs text-white/40">
-                        Applied{' '}
-                        {new Date(a.created_at).toLocaleDateString('en-GB', {
-                          day: 'numeric',
-                          month: 'short',
-                        })}
+                      <p className="mt-1 text-xs text-[#657069]">
+                        Applied{" "}
+                        {new Date(application.created_at).toLocaleDateString(
+                          "en-GB",
+                          { day: "numeric", month: "short" },
+                        )}
                       </p>
                     </div>
-                    <Badge className={`shrink-0 ${badge.cls}`}>{badge.label}</Badge>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
-
-        {/* Quick actions */}
-        <section className="bg-[#13111a] ring-1 ring-white/10 rounded-xl p-5">
-          <h3 className="text-base font-semibold mb-1">Quick actions</h3>
-          <p className="text-xs text-white/40 mb-4">Keep moving forward.</p>
-          <div className="space-y-2">
-            <Link
-              href="/student/projects"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              Browse open projects <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-            <Link
-              href="/student/profile"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              {completion < 100 ? `Complete profile (${completion}%)` : 'Update profile'}
-              <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-            <Link
-              href="/student/applications"
-              className="flex items-center justify-between rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 px-4 py-3 text-sm font-medium transition-colors"
-            >
-              Track applications <ArrowRight className="w-4 h-4 text-white/40" />
-            </Link>
-          </div>
-        </section>
-      </div>
+                    <Badge
+                      className={`shrink-0 capitalize ${application.status === "accepted" ? "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]" : application.status === "rejected" ? "border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]" : "border-amber-200 bg-amber-50 text-[#8a5a00]"}`}
+                    >
+                      {application.status}
+                    </Badge>
+                  </div>
+                </HoverLift>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        )}
+      </section>
     </div>
   );
 }

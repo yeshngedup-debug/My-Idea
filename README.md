@@ -10,6 +10,37 @@ Built with Next.js (App Router), Supabase (Auth + Postgres + Storage + Row Level
 
 ---
 
+## Local development with Docker (recommended)
+
+The hosted Supabase project in `.env.local` may be unavailable. A complete local stack — Postgres, Auth, REST, Storage and Studio — runs in Docker via the Supabase CLI, with the app on port 3000.
+
+```powershell
+# Requires Docker Desktop running
+powershell -ExecutionPolicy Bypass -File scripts/local-up.ps1
+```
+
+That script starts the containers, applies **all** migrations plus `supabase/seeds/local-dev.sql`, writes `.env.local` / `.env` with the generated local keys, and starts `npm run dev`. Seeded logins (local-only password `LocalTest123!`):
+
+| Role | Email |
+|---|---|
+| Student | `student.tashi@btc-e2e.test` |
+| Founder | `founder.dorji@btc-e2e.test` |
+| Admin | `admin@btc-e2e.test` |
+
+Useful URLs: app `http://127.0.0.1:3000`, Supabase Studio `http://127.0.0.1:54323`.
+
+To run the app itself in a container instead:
+
+```powershell
+docker compose up --build
+```
+
+The compose file builds `Dockerfile` and reaches the local Supabase stack through `host.docker.internal`. Stop everything with `powershell -File scripts/local-down.ps1`.
+
+> The seed file is for local development only. It uses fixed passwords and must never be loaded into a production database.
+
+---
+
 ## 1. Prerequisites
 
 - Node.js 18+ and npm
@@ -22,10 +53,12 @@ Create a `.env.local` file in the project root:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://<your-project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-key-here>
+NEXT_PUBLIC_APP_URL=https://<your-deployed-domain>
 ```
 
-- Get both values from **Supabase Dashboard → Project Settings → API** (or the **Connect** dialog).
+- Get both Supabase values from **Supabase Dashboard → Project Settings → API** (or the **Connect** dialog).
 - The code reads `NEXT_PUBLIC_SUPABASE_ANON_KEY`. New-format `sb_publishable_...` keys work fine — just set the value under the `ANON_KEY` name shown above.
+- Set `NEXT_PUBLIC_APP_URL` to the real public origin in production. Generated shortlist text uses it for CV links instead of an untrusted `Host` header.
 - `.env.local` is git-ignored. Never commit it.
 
 ## 3. Set up the database (SQL)
@@ -46,11 +79,13 @@ Migrations live in `supabase/migrations/`. Push them with the pooler connection 
 npx supabase db push --db-url "postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres"
 ```
 
+**Existing projects:** migrations are additive and must be applied in filename order. The newest one, `20261124000000_close_security_bypasses.sql`, is **required** — it stops founders from confirming their own payments and from reading CVs without a confirmed order. After applying it, check `shortlist_orders` for rows with `status = 'confirmed'` that were never approved by an admin, and review them manually.
+
 ## 4. Create an admin user
 
 There is no admin signup — promote yourself after signing up:
 
-1. Sign up normally at `/signup` (any role).
+1. Sign up normally at `/signup`; new accounts are students by default.
 2. Run this in the Supabase **SQL Editor** (the editor runs as `postgres`, which bypasses the role-change guard trigger):
 
 ```sql
@@ -87,7 +122,7 @@ Open http://localhost:3000 — you will be redirected to the public landing page
 
 ### Founder
 
-1. Sign up → lands on `/founder`
+1. Ask an admin to assign founder access, then log in at `/login`.
 2. Post a project at `/founder/projects/post` — required skills, budget range, duration, deadline.
 3. Browse students at `/founder/browse-students` (search + availability filters), open full profiles, view CVs, and request shortlists.
 4. Optional: **Premium Shortlist** at `/founder/shortlists` — pick a package, pay by bank transfer or mBoB, upload the payment screenshot, and wait for admin confirmation. Once confirmed, the ranked shortlist unlocks. A service agreement template is downloadable as a PDF.
@@ -100,9 +135,31 @@ Open http://localhost:3000 — you will be redirected to the public landing page
 
 ---
 
+## Design and imagery
+
+The public experience uses an editorial, photo-led layout with oversized type, clear hierarchy, and responsive motion. The photographs in `public/images/` show Bhutanese people in gho and kira, sourced from Wikimedia Commons under CC BY-SA licences; `components/ui/photo-credit.tsx` holds the per-image author and licence, and credit links appear with each image.
+
+---
+
+## End-to-end tests
+
+Playwright covers the student, founder, admin, and payment journeys. They require a **seeded Supabase project** — there are no self-registering founders or admins. The seed requirements and credential variable names are documented in `tests/e2e/demo-users.ts`.
+
+```bash
+export E2E_STUDENT_EMAIL=... E2E_STUDENT_PASSWORD=...
+export E2E_FOUNDER_EMAIL=... E2E_FOUNDER_PASSWORD=...
+export E2E_ADMIN_EMAIL=...   E2E_ADMIN_PASSWORD=...
+export E2E_PAYMENT_FOUNDER_EMAIL=... E2E_PAYMENT_FOUNDER_PASSWORD=...
+npm run test:e2e
+```
+
+If Supabase is unreachable the suite **skips** with an explicit reason, so a local run without credentials is not mistaken for a green build. In CI, set the `E2E_*` secrets and repository variable `E2E_ENABLED=true`; the `e2e` job sets `E2E_REQUIRE_DB=1` so a missing database fails the job.
+
+---
+
 ## Notes
 
-- ⚠️ **Seed demo users are for testing only** (`supabase/migrations/20261024020000_seed_test_users.sql` adds admin/students/founders with the public password `TestPass123!`). **Delete them before real users sign up:**
+- ⚠️ **Seed demo users are for testing only** (`supabase/migrations/20261024020000_seed_test_users.sql` creates demo accounts with randomly generated passwords). The security migration removes all accounts whose email ends in `@btc-test.com` before production use:
   ```sql
   delete from auth.users where email like '%btc-test.com';
   ```

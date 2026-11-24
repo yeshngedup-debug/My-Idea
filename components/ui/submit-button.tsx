@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 /**
  * Submit button with a pending state — shows a spinner label while the
  * server action is in flight so slow logins never look frozen.
  */
-import { useFormStatus } from 'react-dom';
-import { Button } from '@/components/ui/button';
+import { useFormStatus } from "react-dom";
+import { Button } from "@/components/ui/button";
 
 export function SubmitButton({
   children,
@@ -21,13 +21,13 @@ export function SubmitButton({
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className="w-full bg-amber-400 text-black font-bold py-3.5 rounded-xl hover:bg-amber-300 shadow-lg shadow-amber-400/20 h-auto"
+      className="h-auto min-h-11 w-full rounded-lg bg-[#17352b] py-3.5 font-medium text-[#fffefa] hover:bg-[#244b3e]"
     >
       {pending ? (
         <span className="inline-flex items-center gap-2">
           <span
             aria-hidden="true"
-            className="w-4 h-4 rounded-full border-2 border-black/30 border-t-black animate-spin"
+            className="h-4 w-4 rounded-full border-2 border-[#fffefa]/40 border-t-[#fffefa] animate-spin"
           />
           {pendingLabel}
         </span>

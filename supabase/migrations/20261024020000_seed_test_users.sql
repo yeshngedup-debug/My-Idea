@@ -1,7 +1,9 @@
 -- ============================================================
 -- Test users (fake demo accounts) — idempotent, safe to re-run.
 --
--- Password for ALL demo accounts: TestPass123!
+-- Password for ALL demo accounts: randomly generated at seed time
+-- (unique per account, not stored in this file). Use password reset
+-- or email confirmation to set a known password.
 --
 --   admin@btc-test.com        admin
 --   student.tashi@btc-test.com   student (verified, rank 1)
@@ -42,7 +44,7 @@ begin
         'authenticated',
         'authenticated',
         u->>'email',
-        extensions.crypt('TestPass123!', extensions.gen_salt('bf')),
+        extensions.crypt(gen_random_uuid()::text, extensions.gen_salt('bf')),
         now(),
         '{"provider":"email","providers":["email"]}',
         jsonb_build_object('role', u->>'role', 'full_name', u->>'full_name'),

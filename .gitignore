@@ -12,6 +12,14 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+
+# local browser/agent artifacts
+/.playwright-mcp/
+/.reticle/
+/audit-*.json
+/unslop-*.png
 
 # next.js
 /.next/

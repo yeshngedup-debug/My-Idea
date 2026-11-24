@@ -1,6 +1,8 @@
 -- ============================================================
 -- Bhutan Tech Connect — Auth Schema
--- Run this in Supabase Dashboard > SQL Editor
+-- ⚠️ DEPRECATED: this file is stale. The canonical, up-to-date schema
+-- is `supabase/run-all.sql` (which also includes all later migrations).
+-- Run `supabase/run-all.sql` in Supabase Dashboard > SQL Editor instead.
 -- ============================================================
 
 -- 1. Profiles table (role source of truth)

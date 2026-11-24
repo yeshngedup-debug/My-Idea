@@ -1,0 +1,15 @@
+<!-- ARCHIVED CONCEPT — rejected exploration, NOT the shipped mark and not used by the live UI. The shipped mark is two equal dots + one bridge + one amber arch cap (components/ui/logo.tsx). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title">
+  <title id="title">Bhutan Tech Connect — concept A symbol (bridge)</title>
+  <!-- Grid unit = 8. Content vertically centred ~y=128, spanning y≈88–172. -->
+  <g id="symbol" fill="#000000">
+    <!-- node: student (left) -->
+    <circle cx="68" cy="152" r="11" />
+    <!-- node: founder (right) -->
+    <circle cx="188" cy="152" r="11" />
+    <!-- bridge span: rounded bar connecting the two nodes -->
+    <rect x="79" y="144" width="98" height="16" rx="8" />
+    <!-- arch over the span (filled band): outer arc up-and-over, inner arc back under -->
+    <path d="M 79 144 A 60 60 0 0 1 177 144 L 177 160 A 60 60 0 0 0 79 160 Z" />
+  </g>
+</svg>

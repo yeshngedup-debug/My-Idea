@@ -5,7 +5,7 @@
  * Confirm (unlock) and Reject actions.
  */
 import { useState, useTransition } from 'react';
-import { CheckCircle2, XCircle, FileImage, Clock } from 'lucide-react';
+import { CheckCircle, X, FileImage, Clock } from '@phosphor-icons/react';
 import { confirmOrder, rejectOrder } from '@/app/actions/shortlist-order';
 import { Badge } from '@/components/ui/badge';
 
@@ -24,10 +24,10 @@ export interface AdminOrder {
 }
 
 const STATUS_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: 'Awaiting payment', cls: 'bg-amber-400/10 text-amber-300' },
-  submitted: { label: 'Verifying payment', cls: 'bg-blue-400/10 text-blue-300' },
-  confirmed: { label: 'Confirmed', cls: 'bg-emerald-400/10 text-emerald-300' },
-  rejected: { label: 'Rejected', cls: 'bg-red-400/10 text-red-300' },
+  pending: { label: 'Awaiting payment', cls: 'border-amber-200 bg-amber-50 text-[#8a5a00]' },
+  submitted: { label: 'Verifying payment', cls: 'border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]' },
+  confirmed: { label: 'Confirmed', cls: 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]' },
+  rejected: { label: 'Rejected', cls: 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]' },
 };
 
 export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
@@ -56,9 +56,9 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
 
   if (items.length === 0) {
     return (
-      <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-        <h3 className="text-xl font-extrabold tracking-tight mb-2">No orders yet</h3>
-        <p className="text-white/50 text-sm">
+      <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
+        <h3 className="mb-2 text-lg font-semibold text-[#17352b]">No orders yet</h3>
+        <p className="text-sm text-[#657069]">
           When a founder buys a Premium Shortlist, the payment shows up here for verification.
         </p>
       </div>
@@ -71,13 +71,13 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
       {status && (
         <p
           role="status"
-          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
+          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
             status.ok
-              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
-              : 'bg-red-400/10 border-red-400/30 text-red-300'
+              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+              : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
           }`}
         >
-          {status.ok ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <XCircle className="w-4 h-4 shrink-0" />}
+          {status.ok ? <CheckCircle className="w-4 h-4 shrink-0" /> : <X className="w-4 h-4 shrink-0" />}
           {status.msg}
         </p>
       )}
@@ -87,13 +87,13 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
         const badge = STATUS_BADGE[o.status] ?? STATUS_BADGE.pending;
         const actionable = o.status === 'submitted' || o.status === 'pending';
         return (
-          <li key={o.id} className="bg-white/[0.04] border border-white/10 rounded-3xl p-5">
-            <div className="flex items-start justify-between gap-3 mb-2">
+          <li key={o.id} className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
+            <div className="mb-2 flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="text-base font-extrabold tracking-tight truncate">
+                <h3 className="truncate text-base font-semibold text-[#17352b]">
                   {o.package === 'full' ? 'Full Support' : 'Basic'} shortlist
                 </h3>
-                <p className="text-xs text-white/40 truncate">
+                <p className="truncate text-xs text-[#657069]">
                   {o.founderName ?? 'Founder'} - Nu {o.amount?.toLocaleString('en-IN')}
                   {o.projectTitle ? ` - ${o.projectTitle}` : ''}
                   {' - '}
@@ -102,11 +102,11 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
               </div>
               <Badge className={`shrink-0 ${badge.cls}`}>
                 {o.status === 'confirmed' ? (
-                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                  <CheckCircle className="w-3 h-3 mr-1" aria-hidden="true" />
                 ) : o.status === 'rejected' ? (
-                  <XCircle className="w-3 h-3 mr-1" />
+                  <X className="w-3 h-3 mr-1" aria-hidden="true" />
                 ) : (
-                  <Clock className="w-3 h-3 mr-1" />
+                  <Clock className="w-3 h-3 mr-1" aria-hidden="true" />
                 )}
                 {badge.label}
               </Badge>
@@ -117,9 +117,9 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                 href={o.screenshotUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-amber-400 hover:text-amber-300 transition-colors mb-3"
+                className="mb-3 inline-flex min-h-9 items-center gap-1.5 text-sm font-semibold text-[#b23c26] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
               >
-                <FileImage className="w-4 h-4" /> View payment screenshot
+                <FileImage className="w-4 h-4" aria-hidden="true" /> View payment screenshot
               </a>
             )}
 
@@ -130,18 +130,18 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                   disabled={busyId === o.id || !o.screenshot_path}
                   title={o.screenshot_path ? undefined : 'No payment screenshot uploaded yet'}
                   onClick={() => update(o.id, 'confirm')}
-                  className="flex-1 inline-flex justify-center items-center gap-1.5 rounded-xl bg-emerald-400/10 border border-emerald-400/30 px-4 py-2.5 text-sm font-bold text-emerald-300 hover:bg-emerald-400/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-2.5 text-sm font-bold text-[#17352b] transition-colors hover:bg-[#17352b]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle className="w-4 h-4" aria-hidden="true" />
                   {busyId === o.id ? 'Working...' : 'Confirm payment'}
                 </button>
                 <button
                   type="button"
                   disabled={busyId === o.id}
                   onClick={() => update(o.id, 'reject')}
-                  className="flex-1 inline-flex justify-center items-center gap-1.5 rounded-xl bg-red-400/10 border border-red-400/30 px-4 py-2.5 text-sm font-bold text-red-300 hover:bg-red-400/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                  className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-2.5 text-sm font-bold text-[#b23c26] transition-colors hover:bg-[#b23c26]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                 >
-                  <XCircle className="w-4 h-4" /> Reject
+                  <X className="w-4 h-4" aria-hidden="true" /> Reject
                 </button>
               </div>
             )}

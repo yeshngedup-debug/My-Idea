@@ -1,11 +1,7 @@
 'use client';
 
-/**
- * Open Projects client — cards with skills/budget/duration badges
- * and one-tap Apply. Reuses the app's dark mobile-first card style.
- */
-import { useState, useTransition } from 'react';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { useState, startTransition } from 'react';
+import Link from 'next/link';
 import { applyToProject } from '@/app/actions/projects';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,12 +10,85 @@ export interface OpenProject {
   id: string;
   title: string;
   description: string | null;
+  required_skills: string[] | null;
   duration: string | null;
-  work_mode: string;
   budget_min: number | null;
   budget_max: number | null;
-  required_skills: string[] | null;
+  work_mode: string;
   deadline: string | null;
+  created_at: string;
+}
+
+export interface ApplyResult {
+  ok: boolean;
+  message: string;
+}
+
+export function ProjectCard({
+  project,
+  applied,
+  applying,
+  onApply,
+}: {
+  project: OpenProject;
+  applied: boolean;
+  applying: boolean;
+  onApply: (projectId: string) => Promise<ApplyResult>;
+}) {
+  const [status, setStatus] = useState<ApplyResult | null>(null);
+
+  function handleApply() {
+    startTransition(async () => {
+      const result = await onApply(project.id);
+      setStatus(result);
+    });
+  }
+
+  return (
+    <article className="flex h-full flex-col rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4 transition-colors duration-150 hover:border-[#17352b]/25">
+      <h3 className="text-base font-semibold text-[#17352b]">{project.title}</h3>
+      <p className="mt-1 text-sm leading-6 text-[#4c5a52]">{project.description}</p>
+      <p className="mt-3 text-xs text-[#657069]">
+        {project.budget_min != null && project.budget_max != null
+          ? `Nu ${project.budget_min.toLocaleString('en-IN')} - ${project.budget_max.toLocaleString('en-IN')}`
+          : 'Budget on request'}{' '}
+        · {project.duration}
+      </p>
+      <div className="my-3 flex flex-wrap gap-1.5">
+        {(project.required_skills ?? []).slice(0, 5).map((k) => (
+          <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#4c5a52]">
+            {k}
+          </Badge>
+        ))}
+      </div>
+      <Link
+        href={`/student/projects/${project.id}`}
+        className="mb-3 inline-flex min-h-9 w-fit items-center text-xs font-semibold text-[#17352b] underline-offset-4 hover:text-[#b23c26] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+      >
+        View details
+      </Link>
+      <Button
+        type="button"
+        disabled={applied || applying}
+        onClick={handleApply}
+        className={`pressable mt-auto w-full font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+          applied
+            ? 'cursor-not-allowed bg-[#f5f2ea] text-[#657069]'
+            : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'
+        }`}
+      >
+        {applied ? 'Applied' : applying ? 'Sending...' : 'Apply'}
+      </Button>
+      {status && (
+        <p
+          role={status.ok ? 'status' : 'alert'}
+          className={`mt-2 text-xs leading-5 ${status.ok ? 'text-[#17352b]' : 'text-[#b23c26]'}`}
+        >
+          {status.ok ? 'Applied successfully!' : status.message}
+        </p>
+      )}
+    </article>
+  );
 }
 
 export function ProjectsClient({
@@ -29,116 +98,43 @@ export function ProjectsClient({
   projects: OpenProject[];
   appliedIds: string[];
 }) {
-  const [applied, setApplied] = useState<Set<string>>(new Set(appliedIds));
-  const [pendingId, setPendingId] = useState<string | null>(null);
-  const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
-  const [, startTransition] = useTransition();
+  const [applied, setApplied] = useState<string[]>(appliedIds);
+  const [applying, setApplying] = useState<Set<string>>(new Set());
 
-  function handleApply(id: string) {
-    setPendingId(id);
-    startTransition(async () => {
-      const res = await applyToProject(id);
-      if (res.ok) {
-        setApplied((prev) => new Set(prev).add(id));
-      }
-      setStatus({ ok: res.ok, msg: res.message });
-      setPendingId(null);
+  async function apply(projectId: string): Promise<ApplyResult> {
+    setApplying((prev) => new Set(prev).add(projectId));
+    const result = (await applyToProject(projectId)) as ApplyResult;
+    setApplying((prev) => {
+      const next = new Set(prev);
+      next.delete(projectId);
+      return next;
     });
+    if (result?.ok) {
+      setApplied((prev) =>
+        prev.includes(projectId) ? prev : [...prev, projectId]
+      );
+    }
+    return result ?? { ok: false, message: 'Unexpected response. Try again.' };
   }
 
   return (
     <div className="space-y-4">
-      {/* Status banner */}
-      {status && (
-        <p
-          role="status"
-          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
-            status.ok
-              ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300'
-              : 'bg-red-400/10 border-red-400/30 text-red-300'
-          }`}
-        >
-          {status.ok ? (
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
-          ) : (
-            <XCircle className="w-4 h-4 shrink-0" />
-          )}
-          {status.msg}
-        </p>
-      )}
-
       {projects.length === 0 ? (
-        <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-          <h3 className="text-xl font-extrabold tracking-tight mb-2">No open projects right now</h3>
-          <p className="text-white/50 text-sm">
-            New projects appear here as soon as founders post them. Check back soon.
-          </p>
-        </div>
+        <p className="rounded-xl border border-dashed border-[#ded8cb] bg-[#fffefa] px-6 py-8 text-sm text-[#657069]">
+          No open projects right now. Check back soon.
+        </p>
       ) : (
-        <ul className="space-y-3">
-          {projects.map((p) => {
-            const isApplied = applied.has(p.id);
-            const budget =
-              p.budget_min != null
-                ? p.budget_max != null && p.budget_max !== p.budget_min
-                  ? `Nu ${p.budget_min.toLocaleString('en-IN')}-${p.budget_max.toLocaleString('en-IN')}`
-                  : `Nu ${p.budget_min.toLocaleString('en-IN')}`
-                : null;
-            return (
-              <li key={p.id} className="bg-white/[0.04] border border-white/10 rounded-3xl p-5">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h3 className="text-base font-extrabold tracking-tight">{p.title}</h3>
-                  {budget && <Badge className="shrink-0 bg-amber-400/10 text-amber-300">{budget}</Badge>}
-                </div>
-
-                {p.description && (
-                  <p className="text-sm text-white/50 line-clamp-2 mb-3">{p.description}</p>
-                )}
-
-                {(p.required_skills?.length ?? 0) > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {p.required_skills!.slice(0, 4).map((k) => (
-                      <Badge key={k} variant="outline" className="text-white/60">
-                        {k}
-                      </Badge>
-                    ))}
-                    {p.required_skills!.length > 4 && (
-                      <Badge variant="outline" className="text-white/40">
-                        +{p.required_skills!.length - 4}
-                      </Badge>
-                    )}
-                  </div>
-                )}
-
-                <p className="text-xs text-white/40 mb-4">
-                  {p.duration ?? 'Flexible duration'} ·{' '}
-                  {p.work_mode === 'onsite' ? 'Onsite' : 'Remote'}
-                  {p.deadline
-                    ? ` · Apply by ${new Date(p.deadline).toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                      })}`
-                    : ''}
-                </p>
-
-                {isApplied ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-400/10 text-emerald-300 px-4 py-2.5 text-sm font-bold">
-                    <CheckCircle2 className="w-4 h-4" /> Applied
-                  </span>
-                ) : (
-                  <Button
-                    type="button"
-                    disabled={pendingId === p.id}
-                    onClick={() => handleApply(p.id)}
-                    className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-11 px-6"
-                  >
-                    {pendingId === p.id ? 'Applying...' : 'Apply'}
-                  </Button>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((p) => (
+            <ProjectCard
+              key={p.id}
+              project={p}
+              applied={applied.includes(p.id)}
+              applying={applying.has(p.id)}
+              onApply={apply}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

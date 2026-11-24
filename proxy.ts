@@ -1,7 +1,9 @@
 /**
- * Proxy (formerly Middleware) — role-based route protection.
+ * Next.js 16 Proxy — role-based route protection.
  *
- * Next.js 16 convention: proxy.ts at project root, named export `proxy`.
+ * Convention: proxy.ts at project root, named export `proxy`
+ * (the `middleware.ts` convention is deprecated in Next.js 16; see
+ * node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md).
  *
  * Rules:
  *   /student/*  -> role "student" only
@@ -22,7 +24,46 @@ const ROLE_HOME: Record<string, string> = {
 const PROTECTED_PREFIXES = ['/student', '/founder', '/admin'];
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request: { headers: request.headers } });
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const isDev = process.env.NODE_ENV === 'development';
+  const contentSecurityPolicy = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''}`,
+    "style-src 'self' 'unsafe-inline'",
+    'img-src \'self\' data: https:',
+    `connect-src 'self' https://*.supabase.co${isDev ? ' http://127.0.0.1:54321 http://localhost:54321 http://host.docker.internal:54321 ws://localhost:* ws://127.0.0.1:*' : ''}`,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; ');
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  requestHeaders.set('Content-Security-Policy', contentSecurityPolicy);
+
+  const nextWithCsp = () => {
+    const nextResponse = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    nextResponse.headers.set('Content-Security-Policy', contentSecurityPolicy);
+    return nextResponse;
+  };
+
+  let response = nextWithCsp();
+
+  /**
+   * Redirects must carry the cookies refreshed by `getUser()`; returning a
+   * bare NextResponse.redirect() used to drop them and cause logout loops.
+   */
+  const redirectWithCsp = (url: URL) => {
+    const redirectResponse = NextResponse.redirect(url);
+    redirectResponse.headers.set('Content-Security-Policy', contentSecurityPolicy);
+    for (const cookie of response.cookies.getAll()) {
+      redirectResponse.cookies.set(cookie);
+    }
+    return redirectResponse;
+  };
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,9 +77,8 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          });
+          requestHeaders.set('cookie', request.cookies.toString());
+          response = nextWithCsp();
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -59,7 +99,7 @@ export async function proxy(request: NextRequest) {
 
   // Not logged in -> anything protected goes to login
   if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return redirectWithCsp(new URL('/login', request.url));
   }
 
   // Logged in on an auth page -> send to their dashboard
@@ -69,7 +109,7 @@ export async function proxy(request: NextRequest) {
       .select('role')
       .eq('id', user.id)
       .single();
-    return NextResponse.redirect(
+    return redirectWithCsp(
       new URL(ROLE_HOME[profile?.role ?? 'student'], request.url)
     );
   }
@@ -87,7 +127,7 @@ export async function proxy(request: NextRequest) {
 
     const ownsArea = pathname.startsWith(home);
     if (!ownsArea) {
-      return NextResponse.redirect(new URL(home, request.url));
+      return redirectWithCsp(new URL(home, request.url));
     }
   }
 
@@ -95,5 +135,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|public/.*).*)'],
+  // Skip static assets, images, favicons, robots.txt and sitemap.xml:
+  // none of them need a Supabase auth round-trip.
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|webmanifest|txt|xml)$|public/.*|images/.*).*)',
+  ],
 };

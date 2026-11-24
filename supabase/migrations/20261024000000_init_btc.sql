@@ -60,7 +60,7 @@ begin
   insert into public.profiles (id, role, full_name)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'role', 'student'),
+    'student',
     new.raw_user_meta_data->>'full_name'
   );
   return new;
@@ -201,9 +201,36 @@ create policy "students_insert_own"
   on public.student_profiles for insert
   with check (auth.uid() = id);
 
+-- RLS cannot reference NEW/OLD; the admin-only fields are protected by a
+-- BEFORE UPDATE trigger below instead.
 create policy "students_update_own"
   on public.student_profiles for update
-  using (auth.uid() = id);
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
+
+create or replace function public.protect_student_profile_admin_fields()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin') then
+    return new;
+  end if;
+  if new.rank is distinct from old.rank
+     or new.verified is distinct from old.verified
+     or new.contact_email is distinct from old.contact_email then
+    raise exception 'Only admins may change rank, verified or contact_email';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_student_profile_admin_fields on public.student_profiles;
+create trigger protect_student_profile_admin_fields
+  before update on public.student_profiles
+  for each row execute function public.protect_student_profile_admin_fields();
 
 -- Founders (and admins) can read student profiles for browsing/shortlisting
 create policy "founders_read_student_profiles"
@@ -243,13 +270,7 @@ create policy "users_read_cvs"
   on storage.objects for select
   using (
     bucket_id = 'cvs'
-    and (
-      (storage.foldername(name))[1] = auth.uid()::text
-      or exists (
-        select 1 from public.profiles p
-        where p.id = auth.uid() and p.role in ('founder', 'admin')
-      )
-    )
+    and (storage.foldername(name))[1] = auth.uid()::text
   );
 
 

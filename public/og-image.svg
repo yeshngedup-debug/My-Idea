@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f5f2ea" />
+  <circle cx="1020" cy="104" r="290" fill="#eae5d9" />
+  <path d="M0 500 220 355l160 90 220-220 255 220 150-120 195 140v165H0Z" fill="#17352b" />
+  <path d="M0 540 240 410l190 95 190-165 225 180 170-112 185 90v132H0Z" fill="#244b3e" />
+  <path d="M800 630V410h245v220" fill="#d84f37" opacity=".92" />
+  <path d="M856 460h32v38h-32zm68 0h32v38h-32zm68 0h32v38h-32zM856 530h32v38h-32zm68 0h32v38h-32zm68 0h32v38h-32z" fill="#f5f2ea" />
+  <g transform="translate(78 78)">
+    <circle cx="20" cy="22" r="10" fill="#17352b" />
+    <circle cx="70" cy="22" r="10" fill="#17352b" />
+    <rect x="30" y="17" width="30" height="10" rx="5" fill="#17352b" />
+    <path d="M31 17a19 19 0 0 1 28 0v5a19 19 0 0 0-28 0z" fill="#e0ad3c" />
+  </g>
+  <text x="78" y="272" fill="#17352b" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="700" letter-spacing="-5">BIG IDEAS,</text>
+  <text x="78" y="365" fill="#d84f37" font-family="Georgia, serif" font-size="72" font-style="italic" letter-spacing="-3">meet their people.</text>
+  <text x="82" y="425" fill="#59675f" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="2">LOCAL TALENT · REAL PROJECTS · BHUTAN</text>
+</svg>

@@ -1,167 +1,131 @@
 ﻿/**
  * My Projects — founder's posted projects list.
- * Server component: reads projects owned by the signed-in founder.
  */
 import Link from 'next/link';
-import { Plus, MapPin, CalendarDays, Users } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export const metadata = { title: 'My Projects | Bhutan Tech Connect' };
 
-type ProjectRow = {
-  id: string;
-  title: string;
-  description: string | null;
-  required_skills: string[] | null;
-  duration: string | null;
-  budget_min: number | null;
-  budget_max: number | null;
-  work_mode: string;
-  deadline: string | null;
-  status: string;
-  created_at: string;
-  applications: { count: number }[] | null;
-};
-
-const STATUS_STYLES: Record<string, string> = {
-  open: 'bg-emerald-400/10 text-emerald-300',
-  in_progress: 'bg-amber-400/10 text-amber-300',
-  review: 'bg-blue-400/10 text-blue-300',
-  completed: 'bg-white/10 text-white/60',
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Open',
-  in_progress: 'In progress',
-  review: 'In review',
-  completed: 'Completed',
-};
-
-const nu = (n: number) => `Nu. ${n.toLocaleString('en-IN')}`;
-
 export default async function MyProjectsPage() {
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let projects: ProjectRow[] = [];
+  let projects: { id: string; title: string; status: string; created_at: string }[] = [];
+
   if (user) {
     const { data } = await supabase
       .from('projects')
-      .select(
-        'id, title, description, required_skills, duration, budget_min, budget_max, work_mode, deadline, status, created_at, applications(count)'
-      )
+      .select('id, title, status, created_at')
       .eq('founder_id', user.id)
       .order('created_at', { ascending: false });
 
-    projects = (data as unknown as ProjectRow[]) ?? [];
+    projects = (data as typeof projects) ?? [];
   }
 
+  const date = (value: string) =>
+    new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
   return (
-    <>
-        <div className="hidden lg:flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tighter">My Projects</h2>
-            <p className="text-white/50 mt-1">{projects.length} posted</p>
-          </div>
-          <Button
-            asChild
-            className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-11 px-5"
-          >
-            <Link href="/founder/projects/post">
-              <Plus className="w-4 h-4 mr-1" /> Post a project
-            </Link>
-          </Button>
+    <div className="space-y-6 px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
+            My Projects
+          </h2>
+          <p className="mt-1 text-sm text-[#657069]">{projects.length} posted</p>
         </div>
+        <Link href="/founder/projects/post">
+          <Button className="pressable bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+            Post a project
+          </Button>
+        </Link>
+      </div>
 
-        {projects.length === 0 ? (
-          <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-10 text-center">
-            <h3 className="text-xl font-extrabold tracking-tight mb-2">No projects yet</h3>
-            <p className="text-white/50 text-sm mb-6">
-              Post your first short paid project and students can apply right away.
-            </p>
-            <Button asChild className="bg-amber-400 text-black font-bold hover:bg-amber-300 h-11 px-6">
-              <Link href="/founder/projects/post">Post your first project</Link>
+      {projects.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">No projects yet</h3>
+          <p className="mb-6 text-sm text-[#657069]">
+            Post your first short paid project and students can apply right away.
+          </p>
+          <Link href="/founder/projects/post">
+            <Button className="pressable w-full bg-[#17352b] font-bold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+              Post your first project
             </Button>
-          </div>
-        ) : (
-          <ul className="space-y-4">
-            {projects.map((p) => {
-              const applicants = p.applications?.[0]?.count ?? 0;
-              return (
-                <li
-                  key={p.id}
-                  className="bg-white/[0.04] border border-white/10 rounded-3xl p-5 hover:bg-white/[0.06] transition-colors"
+          </Link>
+        </div>
+      ) : (
+        <>
+          <ul className="space-y-2.5 sm:hidden">
+            {projects.map((p) => (
+              <li key={p.id} className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="min-w-0 truncate text-sm font-semibold text-[#17352b]">
+                    {p.title}
+                  </p>
+                  <Badge className="shrink-0 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
+                    {p.status.replace('_', ' ')}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-xs text-[#657069]">{date(p.created_at)}</p>
+                <Link
+                  href={`/founder/projects/${p.id}`}
+                  className="mt-3 inline-flex min-h-9 items-center gap-1 text-xs font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
                 >
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <h3 className="text-lg font-extrabold tracking-tight leading-snug">{p.title}</h3>
-                    <Badge className={`shrink-0 ${STATUS_STYLES[p.status] ?? 'bg-white/10 text-white/60'}`}>
-                      {STATUS_LABEL[p.status] ?? p.status}
-                    </Badge>
-                  </div>
-
-                  {p.description && (
-                    <p className="text-sm text-white/50 line-clamp-2 mb-3">{p.description}</p>
-                  )}
-
-                  {(p.required_skills?.length ?? 0) > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      {p.required_skills!.slice(0, 5).map((s) => (
-                        <Badge key={s} variant="outline" className="text-white/60">
-                          {s}
-                        </Badge>
-                      ))}
-                      {p.required_skills!.length > 5 && (
-                        <Badge variant="outline" className="text-white/40">
-                          +{p.required_skills!.length - 5}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-white/40">
-                    {p.budget_min != null && p.budget_max != null && (
-                      <span className="font-semibold text-amber-400 text-sm">
-                        {nu(p.budget_min)} - {nu(p.budget_max)}
-                      </span>
-                    )}
-                    {p.duration && <span>{p.duration}</span>}
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      {p.work_mode === 'remote' ? 'Remote' : 'On-site'}
-                    </span>
-                    {p.deadline && (
-                      <span className="inline-flex items-center gap-1">
-                        <CalendarDays className="w-3.5 h-3.5" />
-                        Apply by{' '}
-                        {new Date(p.deadline).toLocaleDateString('en-GB', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1">
-                      <Users className="w-3.5 h-3.5" />
-                      {applicants} {applicants === 1 ? 'applicant' : 'applicants'}
-                    </span>
-                  </div>
-
-                  <Link
-                    href={`/founder/projects/${p.id}`}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded"
-                  >
-                    View applicants →
-                  </Link>
-                </li>
-              );
-            })}
+                  View applicants <span aria-hidden="true">→</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-        )}
-      </>
+
+          <div className="hidden rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+            <table className="w-full text-left text-sm">
+              <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs uppercase tracking-wide text-[#657069]">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-semibold first:rounded-tl-xl">Project</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Status</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Posted</th>
+                  <th scope="col" className="px-4 py-3 font-semibold last:rounded-tr-xl">
+                    <span className="sr-only">Applicants</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#ded8cb]">
+                {projects.map((p) => (
+                  <tr key={p.id} className="transition-colors duration-150 hover:bg-[#f5f2ea]">
+                    <td className="max-w-xs truncate px-4 py-3.5 font-semibold text-[#17352b]">
+                      {p.title}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Badge className="border-[#ded8cb] bg-[#f5f2ea] text-[#17352b] capitalize">
+                        {p.status.replace('_', ' ')}
+                      </Badge>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3.5 text-[#657069]">{date(p.created_at)}</td>
+                    <td className="px-4 py-3.5 text-right">
+                      <Link
+                        href={`/founder/projects/${p.id}`}
+                        className="group inline-flex min-h-9 items-center gap-1 text-xs font-semibold text-[#17352b] hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+                      >
+                        View applicants
+                        <span
+                          aria-hidden="true"
+                          className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:scale-[1.01] motion-reduce:transform-none"
+                        >
+                          →
+                        </span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
   );
 }

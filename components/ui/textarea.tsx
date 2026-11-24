@@ -1,12 +1,32 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
-  ({ className, ...props }, ref) => (
+/**
+ * Additive a11y props with no-op defaults: existing callers render exactly the
+ * same markup as before.
+ */
+type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  /** Sets aria-invalid="true" when true; omitted otherwise. */
+  invalid?: boolean;
+  /** Id(s) merged into any existing aria-describedby value. */
+  describedBy?: string;
+};
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (
+    { className, invalid, describedBy, 'aria-describedby': ariaDescribedBy, ...props },
+    ref
+  ) => (
     <textarea
       ref={ref}
+      aria-invalid={invalid || undefined}
+      aria-describedby={
+        describedBy
+          ? [ariaDescribedBy, describedBy].filter(Boolean).join(' ')
+          : ariaDescribedBy
+      }
       className={cn(
-        'flex min-h-[96px] w-full rounded-xl border border-input bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/40 focus-visible:border-amber-400/60 disabled:cursor-not-allowed disabled:opacity-50 transition-all',
+        'flex min-h-[96px] w-full rounded-lg border border-input bg-background px-4 py-3 text-base sm:text-sm leading-normal text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] focus-visible:border-[#d84f37] disabled:cursor-not-allowed disabled:opacity-50 transition-[border-color,box-shadow,opacity] duration-150 ease-[var(--ease-out)]',
         className
       )}
       {...props}

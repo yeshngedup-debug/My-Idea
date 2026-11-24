@@ -1,0 +1,13 @@
+<!-- ARCHIVED CONCEPT — rejected exploration, NOT the shipped mark and not used by the live UI. Mountain silhouettes were rejected; the shipped mark is two equal dots + one bridge + one amber arch cap (components/ui/logo.tsx). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="title">
+  <title id="title">Bhutan Tech Connect — concept B symbol (peaks + bridge)</title>
+  <!-- Grid unit = 2. Clean 75° peak sides. Baseline y=184, apex y=72 (centred). -->
+  <g id="symbol" fill="#000000">
+    <!-- left peak: Bhutan Himalaya -->
+    <path d="M 74 184 L 104 72 L 134 184 Z" />
+    <!-- right peak -->
+    <path d="M 134 184 L 164 72 L 194 184 Z" />
+    <!-- bridge between peaks: filled bar between the inner slopes -->
+    <rect x="116" y="138" width="36" height="10" rx="5" />
+  </g>
+</svg>
