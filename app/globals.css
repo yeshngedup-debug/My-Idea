@@ -75,6 +75,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Anchors and keyboard focus must never land under the 64px sticky header. */
+  html {
+    scroll-padding-top: 4rem;
+  }
 }
 
 /* Marketing interaction classes. Left unlayered on purpose: Tailwind 4 emits
@@ -133,6 +138,13 @@
 @media (prefers-reduced-motion: reduce) {
   .pressable:active {
     transform: none;
+  }
+
+  /* Belt-and-braces: a scroll reveal must never leave content shifted or
+     dimmed when the visitor has asked for reduced motion. */
+  [data-scale-fade] {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 

@@ -45,19 +45,6 @@ export default function TermsPage() {
             href="/"
             className="inline-flex items-center gap-2 rounded-sm text-sm font-semibold text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className="h-4 w-4 shrink-0"
-            >
-              <path d="m15 18-6-6 6-6" />
-            </svg>
             Back to home
           </Link>
           <span className="text-sm font-bold tracking-tight text-[#17352b]">
@@ -68,7 +55,7 @@ export default function TermsPage() {
 
       <div className="px-5 pb-16 pt-16 sm:px-8 sm:pb-20 sm:pt-24 lg:px-12 lg:pb-24 lg:pt-28">
         <div className="mx-auto max-w-[1440px]">
-          <h1 className="legal-mount max-w-[14ch] text-[clamp(3rem,7vw,6rem)] font-semibold leading-[0.92] tracking-[-0.06em] text-[#17352b]">
+          <h1 className="legal-mount max-w-[14ch] text-[clamp(2.25rem,6vw,5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#17352b]">
             Terms of Use
           </h1>
           <p className="mt-7 text-sm font-semibold tracking-[0.02em] text-[#657069]">
@@ -102,7 +89,7 @@ export default function TermsPage() {
               <section
                 id="what-this-platform-is"
                 aria-labelledby="what-this-platform-is-heading"
-                className="scroll-mt-24 py-32 md:py-48"
+                className="scroll-mt-24 py-12 sm:py-16 lg:py-20"
               >
                 <h2
                   id="what-this-platform-is-heading"
@@ -131,7 +118,7 @@ export default function TermsPage() {
               <section
                 id="your-agreements-are-your-own"
                 aria-labelledby="your-agreements-are-your-own-heading"
-                className="scroll-mt-24 border-t border-[#18251f]/10 py-32 md:py-48"
+                className="scroll-mt-24 border-t border-[#18251f]/10 py-12 sm:py-16 lg:py-20"
               >
                 <h2
                   id="your-agreements-are-your-own-heading"
@@ -158,7 +145,7 @@ export default function TermsPage() {
               <section
                 id="premium-shortlists"
                 aria-labelledby="premium-shortlists-heading"
-                className="scroll-mt-24 border-t border-[#18251f]/10 py-32 md:py-48"
+                className="scroll-mt-24 border-t border-[#18251f]/10 py-12 sm:py-16 lg:py-20"
               >
                 <h2
                   id="premium-shortlists-heading"
@@ -185,7 +172,7 @@ export default function TermsPage() {
               <section
                 id="fair-use"
                 aria-labelledby="fair-use-heading"
-                className="scroll-mt-24 border-t border-[#18251f]/10 py-32 md:py-48"
+                className="scroll-mt-24 border-t border-[#18251f]/10 py-12 sm:py-16 lg:py-20"
               >
                 <h2
                   id="fair-use-heading"
@@ -206,7 +193,7 @@ export default function TermsPage() {
               <section
                 id="questions"
                 aria-labelledby="questions-heading"
-                className="scroll-mt-24 border-t border-[#18251f]/10 py-32 md:py-48"
+                className="scroll-mt-24 border-t border-[#18251f]/10 py-12 sm:py-16 lg:py-20"
               >
                 <h2
                   id="questions-heading"

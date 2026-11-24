@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PhotoCredit } from "@/components/ui/photo-credit";
+import { ScaleFadeImage } from "@/components/editorial/scale-fade-image";
 import { Reveal } from "@/components/ui/motion";
 import { LiveContext } from "@/components/data/live-context";
 import { LocalBridgeDifferences } from "@/components/brand/local-bridge-differences";
@@ -41,7 +42,8 @@ export default async function HomePage() {
     >
       <SiteHeader />
 
-      {/* ATTENTION — two-line headline, short lead, two high-contrast CTAs */}
+      {/* ATTENTION — cinematic center: full-bleed photograph, one neutral
+          radial wash for the copy, a two-line headline and two clear actions. */}
       <section
         id="home"
         aria-labelledby="home-heading"
@@ -58,48 +60,45 @@ export default async function HomePage() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-b from-[#0d1813]/20 via-transparent to-[#0d1813]/55"
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 72% 62% at 50% 42%, rgba(13,24,19,0.93) 0%, rgba(13,24,19,0.74) 48%, rgba(13,24,19,0) 100%)",
+            }}
           />
         </figure>
 
         <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center text-center">
-          {/* A soft forest veil behind the copy only. The gho/kira photograph
-              stays undimmed at the edges; the text sits on calm space. */}
-          <div className="rounded-2xl bg-[#0d1813]/75 px-5 py-8 sm:px-10 sm:py-10">
-            <h1
-              id="home-heading"
-              className="max-w-6xl text-balance text-[clamp(2.5rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-[#f5f2ea]"
+          <h1
+            id="home-heading"
+            className="max-w-6xl text-balance text-[clamp(1.75rem,7vw,2.75rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#f5f2ea] sm:text-[clamp(3rem,5vw,5.5rem)] sm:leading-[0.98] sm:tracking-[-0.045em]"
+          >
+            Students find paid projects. Founders post the brief.
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[#f5f2ea]/85 sm:mt-7 sm:text-lg sm:leading-8">
+            Local students and founders, connected through focused, paid
+            project work.
+          </p>
+
+          <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:items-center">
+            <Link
+              href={CTA_HREFS.signup}
+              className="pressable inline-flex min-h-12 items-center justify-center rounded-lg bg-[#fbbf24] px-7 py-3 text-sm font-medium text-[#17352b] hover:bg-[#fcd34d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
             >
-              Students find paid projects
-              <span className="mt-1 block font-medium text-[#f5f2ea]">
-                Founders post the brief
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
-              Local students and founders, connected through focused, paid
-              project work.
-            </p>
-
-            <div className="mt-9 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center">
-              <Link
-                href={CTA_HREFS.signup}
-                className="pressable inline-flex min-h-12 items-center justify-center rounded-full bg-[#fbbf24] px-7 py-3 text-sm font-medium text-[#17352b] shadow-lg shadow-[#0d1813]/30 hover:bg-[#fcd34d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
-              >
-                {CTA_LABELS.signup}
-              </Link>
-              <Link
-                href={CTA_HREFS.howItWorks}
-                className="pressable inline-flex min-h-12 items-center justify-center rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
-              >
-                {CTA_LABELS.seeHow}
-              </Link>
-            </div>
-
-            <p className="mt-10 text-[10px] leading-4 text-white/70">
-              <PhotoCredit fileUrl={PHOTO_CREDITS.valley} />
-            </p>
+              {CTA_LABELS.signup}
+            </Link>
+            <Link
+              href={CTA_HREFS.howItWorks}
+              className="pressable inline-flex min-h-12 items-center justify-center rounded-lg border border-[#f5f2ea]/70 px-6 py-3 text-sm font-semibold text-[#f5f2ea] hover:bg-[#f5f2ea] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1813]"
+            >
+              {CTA_LABELS.seeHow}
+            </Link>
           </div>
+
+          <p className="mt-8 text-[11px] leading-4 text-[#f5f2ea]/75">
+            <PhotoCredit fileUrl={PHOTO_CREDITS.valley} />
+          </p>
         </div>
       </section>
 
@@ -107,7 +106,7 @@ export default async function HomePage() {
       <section
         id="how-it-works"
         aria-labelledby="journey-heading"
-        className="px-5 py-28 sm:px-8 sm:py-36 lg:px-12 lg:py-48"
+        className="px-5 py-20 sm:px-8 md:py-24 lg:px-12"
       >
         <div className="mx-auto max-w-[1440px]">
           <Reveal className="mb-12 max-w-3xl">
@@ -125,25 +124,27 @@ export default async function HomePage() {
 
           <div className="grid grid-flow-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 lg:gap-4">
             {/* Large photograph: 2 x 2 = 4 units */}
-            <figure className="relative isolate min-h-[300px] overflow-hidden rounded-[1.75rem] bg-[#17352b] sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-[540px]">
-              <Image
-                src="/images/bhutanese-community.jpg"
-                alt="Bhutanese boys in traditional gho sitting together"
-                fill
-                sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-cover object-[50%_45%]"
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#101d17]/80 via-transparent to-transparent"
-              />
-              <figcaption className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
-                <PhotoCredit
-                  fileUrl={PHOTO_CREDITS.dzong}
-                  className="text-white/75"
+            <ScaleFadeImage className="min-h-[300px] sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-[540px]">
+              <figure className="relative isolate h-full min-h-[300px] overflow-hidden rounded-[1.75rem] bg-[#17352b] lg:min-h-[540px]">
+                <Image
+                  src="/images/bhutanese-community.jpg"
+                  alt="Bhutanese boys in traditional gho sitting together"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  className="object-cover object-[50%_45%]"
                 />
-              </figcaption>
-            </figure>
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-gradient-to-t from-[#101d17]/80 via-transparent to-transparent"
+                />
+                <figcaption className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
+                  <PhotoCredit
+                    fileUrl={PHOTO_CREDITS.dzong}
+                    className="text-white/75"
+                  />
+                </figcaption>
+              </figure>
+            </ScaleFadeImage>
 
             {/* One sentence: 2 x 1 = 2 units */}
             <article className="flex min-h-[240px] items-end rounded-[1.75rem] bg-[#fffefa] p-6 sm:col-span-2 lg:col-span-2 lg:p-8">
@@ -203,7 +204,7 @@ export default async function HomePage() {
       <section
         id="bhutan"
         aria-labelledby="bhutan-heading"
-        className="bg-[#17352b] px-5 py-28 text-white sm:px-8 sm:py-36 lg:px-12 lg:py-44"
+        className="bg-[#17352b] px-5 py-20 text-white sm:px-8 md:py-24 lg:px-12"
       >
         <div className="mx-auto max-w-[1440px]">
           <Reveal>

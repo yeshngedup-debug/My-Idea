@@ -287,15 +287,11 @@ export default function FaqPage() {
               </p>
             </Reveal>
 
-            <StaggerGroup
-              className={`mt-14 grid gap-x-16 lg:grid-cols-2 ${
-                cluster.id === "profiles-and-projects" ? "max-w-5xl" : ""
-              }`}
-            >
+            <StaggerGroup className="mt-14 grid gap-x-16">
               {cluster.questions.map((question) => (
                 <StaggerItem key={question.q}>
-                  <details className="group border-t border-[#17352b]/15 py-8 transition-colors hover:bg-[#fffefa]">
-                    <summary className="flex cursor-pointer list-none items-start justify-between gap-6 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f2ea] [&::-webkit-details-marker]:hidden">
+                  <details className="group grid gap-x-10 border-t border-[#17352b]/15 py-8 transition-colors hover:bg-[#fffefa] lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f5f2ea] [&::-webkit-details-marker]:hidden">
                       <span className="text-lg font-semibold leading-snug text-[#17352b] sm:text-xl">
                         {question.q}
                       </span>
@@ -306,7 +302,7 @@ export default function FaqPage() {
                         className="mt-1 h-5 w-5 shrink-0 text-[#b23c26] transition-transform duration-300 group-open:rotate-45"
                       />
                     </summary>
-                    <div className="mt-5 max-w-2xl pr-8 text-sm leading-7 text-[#18251f]/70 sm:text-base">
+                    <div className="mt-5 max-w-2xl pr-8 text-sm leading-7 text-[#18251f]/70 sm:text-base lg:mt-0 lg:pr-12">
                       {question.a}
                     </div>
                   </details>

@@ -37,7 +37,7 @@ export function GuideHero({
       <div className="mx-auto max-w-[1440px]">
         <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24">
           <HeroCopyEntrance className={cn(reverse && "lg:order-2")}>
-            <h1 className="max-w-6xl text-balance text-[clamp(2.5rem,5vw,5.5rem)] font-medium leading-[1.02] tracking-[-0.02em] text-[#17352b]">
+            <h1 className="max-w-6xl text-balance text-[clamp(1.75rem,7vw,2.75rem)] font-medium leading-[1.06] tracking-[-0.03em] text-[#17352b] sm:text-[clamp(3rem,5vw,5.5rem)] sm:leading-[1.02] sm:tracking-[-0.02em]">
               {title}
             </h1>
             <p className="mt-8 max-w-2xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">

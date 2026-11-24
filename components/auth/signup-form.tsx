@@ -123,7 +123,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={() => clearError("firstName")}
               autoComplete="given-name"
               placeholder="Tashi"
-              className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-sm text-[#18251f] placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
+              className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
             />
             {errors.firstName && (
               <p
@@ -154,7 +154,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={() => clearError("lastName")}
               autoComplete="family-name"
               placeholder="Dorji"
-              className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-sm text-[#18251f] placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
+              className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
             />
             {errors.lastName && (
               <p
@@ -186,7 +186,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("email")}
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-sm text-[#18251f] placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
+            className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
           />
           {errors.email && (
             <p
@@ -222,9 +222,9 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("password")}
             autoComplete="new-password"
             placeholder="At least 6 characters"
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
+            className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]/20"
           />
-          <p id={passwordHintId} className="mt-1.5 text-xs text-slate-500">
+          <p id={passwordHintId} className="mt-1.5 text-xs text-[#56645c]">
             Minimum 6 characters.
           </p>
           {errors.password && (

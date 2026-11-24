@@ -13,7 +13,10 @@ export type InlineImageTextProps = {
   creditFileUrl: string;
   /** Words after the embedded photograph. */
   after: string;
+  /** Override the composed accessible name when the pill sits mid-sentence. */
+  accessibleLabel?: string;
   as?: "h2" | "h3";
+  id?: string;
   className?: string;
 };
 
@@ -32,19 +35,24 @@ export function InlineImageText({
   imageAlt,
   creditFileUrl,
   after,
+  accessibleLabel,
   as = "h2",
+  id,
   className,
 }: InlineImageTextProps) {
   const Heading = as;
   const lead = before.trim();
   const tail = after.trim();
-  const accessibleText = `${lead} ${imageAlt.trim()} ${tail}`
+  const accessibleText = (
+    accessibleLabel ?? `${lead} ${imageAlt.trim()} ${tail}`
+  )
     .replace(/\s+/g, " ")
     .trim();
 
   return (
     <div className={cn("mx-auto max-w-5xl", className)}>
       <Heading
+        id={id}
         aria-label={accessibleText}
         className="text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#17352b]"
       >

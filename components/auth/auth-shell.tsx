@@ -1,7 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { focusRing } from "@/components/auth/styles";
@@ -12,7 +11,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main
       id="main-content"
-      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-hidden px-4 py-4 text-[#18251f] sm:px-7 sm:py-7`}
+      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-4 py-4 text-[#18251f] sm:px-7 sm:py-7`}
     >
       <header className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-5 sm:gap-4">
         <Link
@@ -26,10 +25,9 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </Link>
         <Link
           href="/public"
-          className={`pressable inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-2 py-2 text-[11px] font-semibold text-slate-600 hover:bg-white hover:text-[#17352b] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
+          className={`pressable inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 py-2 text-xs font-medium text-[#56645c] underline decoration-[#17352b]/25 underline-offset-4 hover:bg-white hover:text-[#17352b] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
         >
           About the platform
-          <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
         </Link>
       </header>
 

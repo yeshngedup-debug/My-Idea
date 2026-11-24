@@ -6,6 +6,8 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { SectionIntro } from "@/components/marketing/section-intro";
+import { InlineImageText } from "@/components/editorial/inline-image-text";
+import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
@@ -203,11 +205,21 @@ export default async function AboutPage() {
           className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28"
         >
           <div className="mx-auto max-w-[1440px]">
-            <SectionIntro
-              headingId="bridge-heading"
-              title="A practical local bridge"
-              lead="Students and founders meet around paid project work. Not an employer or agent."
-            />
+            <div className="mx-auto max-w-5xl">
+              <InlineImageText
+                id="bridge-heading"
+                before="A practical local"
+                imageSrc="/images/bhutanese-community.jpg"
+                imageAlt="Bhutanese students working together"
+                creditFileUrl={PHOTO_CREDITS.dzong}
+                accessibleLabel="A practical local bridge"
+                after="bridge"
+              />
+              <p className="mt-6 max-w-2xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
+                Students and founders meet around paid project work. Not an
+                employer or agent.
+              </p>
+            </div>
             <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
               <Reveal>
                 <div className="grid gap-6 text-sm leading-7 text-[#18251f]/70 sm:text-base sm:leading-8">

@@ -142,7 +142,7 @@ export function PageHero({
                 {eyebrow}
               </p>
             ) : null}
-            <h1 className="max-w-[15ch] text-balance text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[1.02] tracking-[-0.02em] text-[#17352b]">
+            <h1 className="max-w-6xl text-balance text-[clamp(1.75rem,7vw,2.75rem)] font-medium leading-[1.06] tracking-[-0.03em] text-[#17352b] sm:text-[clamp(3rem,5vw,4.75rem)] sm:leading-[1.02] sm:tracking-[-0.02em]">
               {title}
             </h1>
             <p className="mt-6 max-w-xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
