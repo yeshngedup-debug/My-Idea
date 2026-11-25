@@ -1,11 +1,10 @@
-# Keeps the free-tier Supabase project awake (it pauses after ~7 days
-# without API/DB activity) and keeps Vercel serverless functions warm.
-# Pings the app's /api/health, which runs a real DB round-trip.
+# Keeps the Neon compute (which can scale to zero) and Vercel serverless
+# functions warm. Pings the app's /api/health, which runs a real DB round-trip.
 name: Keep-alive ping
 
 on:
   schedule:
-    - cron: '0 */12 * * *' # every 12 hours (UTC) — well within the pause window
+    - cron: '0 */12 * * *' # every 12 hours (UTC)
   workflow_dispatch: # allow manual runs from the Actions tab
 
 jobs:

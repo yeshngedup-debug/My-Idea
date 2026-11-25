@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #f5f2ea;
+  --color-foreground: #18251f;
+  --color-card: #fffefa;
+  --color-card-foreground: #18251f;
+  --color-popover: #fffefa;
+  --color-popover-foreground: #18251f;
+  --color-primary: #17352b;
+  --color-primary-foreground: #fffefa;
+  --color-secondary: #eae5d9;
+  --color-secondary-foreground: #25352d;
+  --color-muted: #eeeae1;
+  --color-muted-foreground: #657069;
+  --color-accent: #d84f37;
+  --color-accent-foreground: #fffefa;
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: #fffefa;
+  --color-border: #ded8cb;
+  --color-input: #ded8cb;
+  --color-ring: #d84f37;
+  /* Semantic body copy roles. Replaces opacity-derived greys that fell below
+     4.5:1. Secondary is #56645c (5.57:1 on paper). */
+  --color-body: #18251f;
+  --color-body-secondary: #56645c;
+  --radius: 0.5rem;
+}
+
+:root {
+  --background: 42 32% 94%;
+  --foreground: 150 17% 12%;
+  --card: 48 100% 100%;
+  --card-foreground: 150 17% 12%;
+  --popover: 48 100% 100%;
+  --popover-foreground: 150 17% 12%;
+  --primary: 155 40% 15%;
+  --primary-foreground: 48 100% 100%;
+  --secondary: 42 25% 91%;
+  --secondary-foreground: 145 18% 18%;
+  --muted: 42 23% 92%;
+  --muted-foreground: 140 7% 42%;
+  --accent: 9 66% 53%;
+  --accent-foreground: 48 100% 100%;
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: 48 100% 100%;
+  --border: 40 22% 83%;
+  --input: 40 22% 83%;
+  --ring: 9 66% 53%;
+  --radius: 0.5rem;
+
+  /* One easing curve and three durations, mirrored in the motion constants. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-250: 250ms;
+}
+
+@layer base {
+  /* Tailwind's default ring-offset colour is white, which is nearly invisible
+     on our warm paper. Components that sit on forest set their own explicit
+     ring-offset colour and win in the utilities layer. */
+  :root {
+    --tw-ring-offset-color: #f5f2ea;
+    /* Font smoothing is set once on the root and inherited everywhere.
+       `app/layout.tsx` also puts `antialiased` on <body>; that duplicate is
+       outside this file. */
+    @apply antialiased;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Anchors and keyboard focus must never land under the 64px sticky header. */
+  html {
+    scroll-padding-top: 4rem;
+  }
+}
+
+/* Marketing interaction classes. Left unlayered on purpose: Tailwind 4 emits
+   utilities in a layer, so these component rules win at equal specificity and
+   their :active transform is not swallowed by a hover transform utility.
+
+   Chrome is a single quiet bar: one tinted surface, one 1px hairline, no
+   floating pill, no inner highlight, no colored shadow, no stacked glass. */
+
+/* Sticky chrome: a near-solid tinted surface with one bottom hairline. The
+   scrolled state only deepens the tint; it never adds a shadow. */
+.site-chrome {
+  position: relative;
+  background-color: rgb(245 242 234 / 0.94);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgb(24 37 31 / 0.08);
+  transition: background-color var(--duration-250) var(--ease-out);
+}
+.site-chrome[data-scrolled="true"] {
+  background-color: #f5f2ea;
+}
+
+/* Press feedback lives on pointer-down and retargets from the current value.
+   Transform is dropped under reduced motion; color feedback remains. */
+.pressable {
+  transition:
+    transform var(--duration-100) var(--ease-out),
+    background-color var(--duration-150) var(--ease-out),
+    color var(--duration-150) var(--ease-out);
+}
+.pressable:active {
+  transform: scale(0.98);
+}
+
+/* Photograph zoom was removed: the photograph is the one bright moment and
+   should stay still. The class is retained so existing call sites stay valid. */
+
+/* Gapless bento helpers. grid-auto-flow: dense is also set by the component's
+   grid-flow-dense utility; declaring it here keeps the contract in one place.
+   Cell hover shadows and image zoom were removed: no glows, no colored shadows,
+   no motion beyond a press. */
+.bento-grid {
+  grid-auto-flow: dense;
+}
+
+/* Quiet paper grid behind a workspace's secondary column. Derived from the
+   Synapse Folio reference's blueprint-paper motif, but drawn in the brand's
+   forest at very low opacity and never animated. Purely structural. */
+.workspace-paper {
+  background-image: linear-gradient(to right, rgba(23, 53, 43, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(23, 53, 43, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Scroll-stacked chapters: each card sticks at its own offset on desktop, so
+   the deck overlaps as the reader moves down the list. The cards stay in
+   normal flow and every link inside them remains tabbable. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  [data-stacked-card] {
+    position: sticky;
+    top: var(--stack-top);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable:active {
+    transform: none;
+  }
+
+  /* Belt-and-braces: a scroll reveal must never leave content shifted or
+     dimmed when the visitor has asked for reduced motion. */
+  [data-scale-fade] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-stacked-card] {
+    position: static;
+    top: auto;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .scrub-word {
+    opacity: 1 !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-chrome,
+  .site-chrome[data-scrolled="true"] {
+    background-color: #f5f2ea;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .site-chrome,
+  .site-chrome[data-scrolled="true"] {
+    background-color: #f5f2ea;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: #18251f;
+  }
+}

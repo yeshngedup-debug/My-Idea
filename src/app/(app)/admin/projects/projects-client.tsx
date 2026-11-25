@@ -1,0 +1,232 @@
+"use client";
+
+/**
+ * Admin project list with a status filter. The page itself was read-only; the
+ * filter narrows real stored rows and announces the visible count. Both the
+ * mobile list and the desktop table stay in the DOM, as before.
+ */
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { SegmentedControl } from "@/components/interactive/segmented-control";
+
+export interface ProjectRow {
+  id: string;
+  title: string;
+  status: string;
+  created_at: string;
+  founder_id: string;
+  founderName?: string | null;
+}
+
+const FILTERS = [
+  { value: "all", label: "All" },
+  { value: "open", label: "Open" },
+  { value: "in_progress", label: "In progress" },
+  { value: "review", label: "In review" },
+  { value: "completed", label: "Completed" },
+] as const;
+
+const STATUS_LABEL: Record<string, string> = {
+  open: "Open",
+  in_progress: "In progress",
+  review: "In review",
+  completed: "Completed",
+};
+
+const STATUS_BADGE: Record<string, string> = {
+  open: "border-[#ded8cb] bg-[#eae5d9] text-[#b23c26]",
+  in_progress: "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]",
+  review: "border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]",
+  completed: "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]",
+};
+
+const STATUS_DOT: Record<string, string> = {
+  open: "bg-[#e0ad3c]",
+  in_progress: "bg-[#17352b]",
+  review: "bg-[#b23c26]",
+  completed: "bg-[#657069]",
+};
+
+export function ProjectsClient({
+  rows,
+  loadError,
+}: {
+  rows: ProjectRow[];
+  loadError?: string | null;
+}) {
+  const router = useRouter();
+  const [filter, setFilter] = useState<string>("all");
+
+  const filtered = useMemo(
+    () => (filter === "all" ? rows : rows.filter((row) => row.status === filter)),
+    [rows, filter],
+  );
+
+  if (rows.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h2 className="sr-only">Project list</h2>
+        {loadError ? (
+          <div role="alert" className="rounded-2xl border border-[#b23c26]/25 bg-[#b23c26]/8 p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#b23c26]">
+              Projects unavailable
+            </h3>
+            <p className="mb-5 text-sm text-[#4c5a52]">{loadError}</p>
+            <button
+              type="button"
+              onClick={() => router.refresh()}
+              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+            >
+              Try again
+            </button>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+              No projects yet
+            </h3>
+            <p className="text-sm text-[#657069]">
+              Projects appear here as soon as founders post them.
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const date = (value: string) =>
+    new Date(value).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  const statusLabel = (status: string) =>
+    STATUS_LABEL[status] ?? status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ");
+
+  const countLabel =
+    filter === "all"
+      ? `Showing all ${rows.length} ${rows.length === 1 ? "project" : "projects"}`
+      : `Showing ${filtered.length} ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} ${filtered.length === 1 ? "project" : "projects"}`;
+
+  return (
+    <div className="space-y-4">
+      <h2 className="sr-only">Project list</h2>
+      <SegmentedControl
+        options={FILTERS.map((item) => ({ label: item.label, value: item.value }))}
+        value={filter}
+        onChange={setFilter}
+        ariaLabel="Filter projects by status"
+        selectOnArrow
+      />
+
+      <p role="status" aria-live="polite" className="text-xs text-[#657069]">
+        {countLabel}
+      </p>
+
+      {filtered.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+            No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} projects
+          </h3>
+          <p className="mb-6 text-sm text-[#657069]">
+            No stored project is at this stage right now.
+          </p>
+          <button
+            type="button"
+            onClick={() => setFilter("all")}
+            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#fffefa] px-6 py-3 text-sm font-semibold text-[#17352b] hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2"
+          >
+            Show all projects
+          </button>
+        </div>
+      ) : (
+        <>
+          <ul className="space-y-2.5 sm:hidden">
+            {filtered.map((row) => (
+              <li
+                key={row.id}
+                className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3
+                    title={row.title}
+                    className="min-w-0 break-words text-sm font-semibold text-[#17352b]"
+                  >
+                    {row.title}
+                  </h3>
+                  <Badge
+                    className={`shrink-0 gap-1.5 ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}
+                  >
+                    <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[row.status] ?? STATUS_DOT.open}`} />
+                    {statusLabel(row.status)}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-xs text-[#657069]">
+                  {row.founderName ?? "Unknown founder"} · Posted{" "}
+                  {date(row.created_at)}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+            <table className="w-full text-left text-sm" aria-label="All projects by status">
+              <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs font-medium text-[#657069]">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 font-semibold first:rounded-tl-xl"
+                  >
+                    Project
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Founder
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold">
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-4 py-3 font-semibold last:rounded-tr-xl"
+                  >
+                    Posted
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#ded8cb]">
+                {filtered.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="transition-colors duration-150 hover:bg-[#f5f2ea]"
+                  >
+                    <td
+                      title={row.title}
+                      className="max-w-xs break-words px-4 py-3.5 font-semibold text-[#17352b]"
+                    >
+                      {row.title}
+                    </td>
+                    <td className="px-4 py-3.5 text-[#4c5a52]">
+                      {row.founderName ?? "Unknown founder"}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Badge
+                        className={`gap-1.5 ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}
+                      >
+                        <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[row.status] ?? STATUS_DOT.open}`} />
+                        {statusLabel(row.status)}
+                      </Badge>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#657069]">
+                      {date(row.created_at)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

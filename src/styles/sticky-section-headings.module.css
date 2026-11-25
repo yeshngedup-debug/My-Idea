@@ -1,0 +1,14 @@
+/*
+ * In-page links inside StickySectionHeadings must clear the 64px site header
+ * plus both sticky rows. Targets are marked with `data-sticky-section` by the
+ * page using the component.
+ */
+.root :global([data-sticky-section]) {
+  scroll-margin-top: 10.5rem;
+}
+
+@media (max-width: 1023px) {
+  .root :global([data-sticky-section]) {
+    scroll-margin-top: 9.5rem;
+  }
+}

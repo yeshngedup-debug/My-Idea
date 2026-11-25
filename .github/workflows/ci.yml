@@ -17,11 +17,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      # Non-secret placeholder values so the build/typecheck/lint can run
-      # without a real Supabase project. E2E tests are skipped without real creds.
-      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: sb-publishable-placeholder
+      # Non-secret placeholder values so lint/typecheck/unit tests/build run
+      # without real Neon credentials. E2E tests are skipped without real creds.
       NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_NEON_REALTIME_URL: http://localhost:3000
+      NEON_AUTH_BASE_URL: https://placeholder.auth.neon.app
+      # Placeholder only, >= 32 characters so runtime validation would pass.
+      NEON_AUTH_COOKIE_SECRET: ci-placeholder-cookie-secret-0123456789abcdef
+      DATABASE_URL: postgresql://placeholder:placeholder@placeholder-pooler.neon.tech/db?sslmode=require
       VITE_CONFIG_NATIVE_IGNORE_WARNING: true
 
     steps:
@@ -49,23 +52,33 @@ jobs:
       - name: Production build (Next.js)
         run: npm run build
 
-  # Opt-in: enable E2E in repository variables once a seeded Supabase
-  # project and the E2E_* credentials are configured as secrets. With
-  # E2E_REQUIRE_DB=1 a missing database fails the job instead of skipping.
+  # Opt-in: enable E2E in repository variables once a seeded Neon branch and
+  # the E2E_* credentials are configured as secrets. With E2E_REQUIRE_DB=1 a
+  # missing database fails the job instead of skipping.
   e2e:
     if: ${{ vars.E2E_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     needs: test
     env:
       E2E_REQUIRE_DB: '1'
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_NEON_REALTIME_URL: ${{ secrets.E2E_NEON_REALTIME_URL }}
+      NEON_AUTH_BASE_URL: ${{ secrets.E2E_NEON_AUTH_BASE_URL }}
+      NEON_AUTH_COOKIE_SECRET: ${{ secrets.E2E_NEON_AUTH_COOKIE_SECRET }}
+      DATABASE_URL: ${{ secrets.E2E_DATABASE_URL }}
+      NEON_REALTIME_SECRET: ${{ secrets.E2E_NEON_REALTIME_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.E2E_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.E2E_AWS_SECRET_ACCESS_KEY }}
+      AWS_ENDPOINT_URL_S3: ${{ secrets.E2E_AWS_ENDPOINT_URL_S3 }}
+      AWS_REGION: ${{ secrets.E2E_AWS_REGION }}
       E2E_STUDENT_EMAIL: ${{ secrets.E2E_STUDENT_EMAIL }}
       E2E_STUDENT_PASSWORD: ${{ secrets.E2E_STUDENT_PASSWORD }}
       E2E_FOUNDER_EMAIL: ${{ secrets.E2E_FOUNDER_EMAIL }}
       E2E_FOUNDER_PASSWORD: ${{ secrets.E2E_FOUNDER_PASSWORD }}
       E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
       E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+      E2E_PAYMENT_FOUNDER_EMAIL: ${{ secrets.E2E_PAYMENT_FOUNDER_EMAIL }}
+      E2E_PAYMENT_FOUNDER_PASSWORD: ${{ secrets.E2E_PAYMENT_FOUNDER_PASSWORD }}
       VITE_CONFIG_NATIVE_IGNORE_WARNING: true
     steps:
       - name: Checkout repository

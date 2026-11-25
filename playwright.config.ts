@@ -4,7 +4,7 @@ import path from 'node:path';
 
 /**
  * Next.js loads .env.local for the app, but Playwright is a separate process.
- * Load it here so the E2E DB guard and login helpers see the same Supabase
+ * Load it here so the E2E DB guard and login helpers see the same Neon
  * project the dev server is using. Real environment variables win.
  */
 function loadEnvFile(file: string) {

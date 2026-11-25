@@ -44,8 +44,7 @@ test.describe('Admin flow', () => {
     });
 
     await test.step('Generate a shortlist for a founder', async () => {
-      // The select-all button has no aria-label, so this only hits student cards.
-      await page.locator('button[aria-label^="Select "]').first().click();
+      await page.getByRole('button', { name: 'Select all shown' }).click();
 
       const founderSelect = page.getByLabel('Choose founder');
       await expect(founderSelect).toBeVisible();

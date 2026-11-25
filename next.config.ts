@@ -3,11 +3,16 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {},
+  experimental: {
+    // CV and payment-proof uploads allow 5 MB files. The default Server Action
+    // body cap is 1 MB, so leave room for multipart metadata above the file.
+    serverActions: {
+      bodySizeLimit: '6mb',
+    },
+  },
   allowedDevOrigins: ['192.168.56.1', 'localhost'],
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '*.supabase.co' },
       { protocol: 'https', hostname: 'picsum.photos' },
     ],
   },
@@ -15,7 +20,7 @@ const nextConfig = {
   webpack: (config: Parameters<NonNullable<import('next').NextConfig['webpack']>>[0]) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@": path.resolve(__dirname, "."),
+      "@": path.resolve(__dirname, "src"),
     };
     return config;
   },

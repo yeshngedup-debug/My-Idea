@@ -1,8 +1,9 @@
 /**
- * Supabase reachability guard for the E2E suite.
+ * Neon Auth + Neon Postgres reachability guard for the E2E suite.
  *
- * These flows need a LIVE, SEEDED Supabase (auth + profiles + projects + CVs).
- * If Supabase cannot be reached we never let the run look green:
+ * These flows need a LIVE, SEEDED Neon branch (Neon Auth accounts, Neon
+ * Postgres rows, and objects in the private storage bucket). If the branch
+ * cannot be reached we never let the run look green:
  *
  *   - default: the test is explicitly SKIPPED with a reason. Playwright
  *     reports it as "skipped", never as passed.
@@ -20,23 +21,36 @@ interface ProbeResult {
 
 let cached: Promise<ProbeResult> | undefined;
 
-async function probeSupabase(): Promise<ProbeResult> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!url) {
-    return { reachable: false, detail: 'NEXT_PUBLIC_SUPABASE_URL is not set' };
+async function probeNeon(): Promise<ProbeResult> {
+  const authUrl = process.env.NEON_AUTH_BASE_URL;
+  if (!authUrl) {
+    return { reachable: false, detail: 'NEON_AUTH_BASE_URL is not set' };
+  }
+  if (!process.env.DATABASE_URL) {
+    return { reachable: false, detail: 'DATABASE_URL is not set' };
   }
 
   try {
-    // GoTrue's health endpoint answers without auth; any HTTP status proves
-    // the endpoint is up. DNS failure / connection refused / timeout do not.
-    const response = await fetch(`${url.replace(/\/+$/, '')}/auth/v1/health`, {
-      headers: key ? { apikey: key } : undefined,
+    // Better Auth's get-session endpoint answers without a session; any HTTP
+    // status proves Neon Auth is up. DNS failure / refusal / timeout do not.
+    const url = `${authUrl.replace(/\/+$/, '')}/get-session`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    await response.body?.cancel();
+
+    // The app's health route runs pingDatabase() against Neon Postgres.
+    const base = (process.env.E2E_BASE_URL ?? 'http://localhost:3000').replace(/\/+$/, '');
+    const health = await fetch(`${base}/api/health`, {
       signal: AbortSignal.timeout(5000),
     });
-    await response.body?.cancel();
-    return { reachable: true, detail: `HTTP ${response.status}` };
+    const payload = (await health.json().catch(() => null)) as { db?: string } | null;
+    if (!health.ok || payload?.db !== 'up') {
+      return {
+        reachable: false,
+        detail: `Neon Auth HTTP ${response.status}, but Neon Postgres is not up (health HTTP ${health.status})`,
+      };
+    }
+
+    return { reachable: true, detail: `Neon Auth HTTP ${response.status}, Neon Postgres up` };
   } catch (error) {
     const err = error as Error;
     return { reachable: false, detail: `${err.name}: ${err.message}` };
@@ -44,11 +58,11 @@ async function probeSupabase(): Promise<ProbeResult> {
 }
 
 export async function requireSeededDb(testInfo: TestInfo): Promise<void> {
-  const result = await (cached ??= probeSupabase());
+  const result = await (cached ??= probeNeon());
   if (result.reachable) return;
 
   const reason =
-    `Live seeded Supabase is unavailable (${result.detail}). ` +
+    `Live seeded Neon Auth / Neon Postgres is unavailable (${result.detail}). ` +
     'Seed the accounts and data described in tests/e2e/demo-users.ts.';
 
   const dbRequired = /^(1|true|yes)$/i.test(process.env.E2E_REQUIRE_DB ?? '');

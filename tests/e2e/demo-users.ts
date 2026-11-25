@@ -3,16 +3,16 @@
  *
  * WHY THESE ACCOUNTS
  * ------------------
- * Migration `20261122000000_security_hardening.sql` deletes every auth user
- * whose email ends in `@btc-test.com`, so the old demo accounts cannot exist
- * in a freshly migrated database. The emails below use the reserved `.test`
- * TLD and are never deleted by that migration.
+ * These are real Neon Auth identities, not the placeholder rows inserted by
+ * `scripts/neon-setup.mjs` (those have fixed IDs and cannot sign in). The
+ * emails use the reserved `.test` TLD so a cleanup sweep of old `@btc-test.com`
+ * demo accounts cannot delete them from a freshly migrated branch.
  *
  * E2E only SIGNS IN as these accounts. It never creates accounts through the
- * signup form and never tries to pick a role in the UI: the redesigned
- * /signup page has no role <select>, and `app/actions/auth.ts` intentionally
- * creates every new user as `student`. Founder/admin must be granted by an
- * admin or by SQL (out of band).
+ * signup form and never tries to pick a role in the UI: the /signup page has
+ * no role <select>, and `src/features/auth/actions.ts` intentionally creates
+ * every new user as `student`. Founder/admin must be granted out of band by
+ * updating the role in Neon Postgres.
  *
  * CREDENTIALS
  * -----------
@@ -20,24 +20,16 @@
  * set the matching E2E_*_PASSWORD variables in the shell that runs Playwright
  * (or in `.env.local`). No real secret is committed here.
  *
- * HOW TO SEED (disposable/local Supabase only — never production)
- * ----------------------------------------------------------------
- * 1. Apply all migrations, including `20261122000000_security_hardening.sql`.
- * 2. Create the three auth users below with passwords you control. Confirm
- *    their email and set `raw_user_meta_data->>'role'` to the role listed
- *    here. The existing `on_auth_user_created` trigger creates the matching
- *    `profiles` row. Sketch (psql variable interpolation, no literal secret):
- *
- *      psql "$DATABASE_URL" \
- *        -v student_email="$E2E_STUDENT_EMAIL" \
- *        -v founder_email="$E2E_FOUNDER_EMAIL" \
- *        -v admin_email="$E2E_ADMIN_EMAIL" \
- *        -v student_pw="$E2E_STUDENT_PASSWORD" \
- *        -v founder_pw="$E2E_FOUNDER_PASSWORD" \
- *        -v admin_pw="$E2E_ADMIN_PASSWORD" -f tests/e2e/seed-users.sql
- *
- *    The SQL is kept as a comment at the bottom of this file (it is
- *    documentation, not a new Supabase migration).
+ * HOW TO SEED (disposable/local Neon branch only — never production)
+ * ------------------------------------------------------------------
+ * 1. Apply `neon/schema.sql` and seed local-only rows with:
+ *      DATABASE_URL=<pooled-neon-url> node scripts/neon-setup.mjs
+ * 2. Register the accounts below as real Neon Auth users with passwords you
+ *    control (sign up through the app or use the Neon Auth admin/CLI). Neon
+ *    Auth owns identities and sessions; the matching `public.profiles` row in
+ *    Neon Postgres carries the application role. Promote the founder and
+ *    admin accounts to the roles listed here by updating that row. Never put
+ *    a literal password in this file — the E2E_*_PASSWORD variables supply it.
  * 3. Seed the data the flows assert on:
  *      - a completed `student_profiles` row + a PDF in the `cvs` bucket for
  *        the student (founder browse/detail pages require `cv_path`);
@@ -98,7 +90,7 @@ export const PAYMENT_FOUNDER: DemoUser = {
   role: 'founder',
 };
 
-/** Dashboard paths enforced by middleware.ts / app/actions/auth.ts. */
+/** Dashboard paths enforced by proxy.ts / src/features/auth/actions.ts. */
 export const ROLE_HOME: Record<DemoRole, string> = {
   student: '/student',
   founder: '/founder',
@@ -107,49 +99,13 @@ export const ROLE_HOME: Record<DemoRole, string> = {
 
 /*
  * ---------------------------------------------------------------------------
- * tests/e2e/seed-users.sql  (REFERENCE ONLY — do not add a Supabase migration)
+ * SEEDING REFERENCE (documentation only — do not add a migrations file)
  * ---------------------------------------------------------------------------
- * Run with the psql command in step 2 above. `:password` values come from the
- * operator's environment; nothing here is a real secret.
- *
- * do $$
- * declare
- *   u jsonb;
- *   new_id uuid;
- *   accounts jsonb := jsonb_build_array(
- *     jsonb_build_object('email', :'student_email', 'role', 'student', 'full_name', 'E2E Student', 'password', :'student_pw'),
- *     jsonb_build_object('email', :'founder_email', 'role', 'founder', 'full_name', 'E2E Founder', 'password', :'founder_pw'),
- *     jsonb_build_object('email', :'admin_email',   'role', 'admin',   'full_name', 'E2E Admin',   'password', :'admin_pw')
- *   );
- * begin
- *   for u in select * from jsonb_array_elements(accounts) loop
- *     continue when exists (select 1 from auth.users where email = u->>'email');
- *
- *     insert into auth.users (
- *       instance_id, id, aud, role, email, encrypted_password,
- *       email_confirmed_at, raw_app_meta_data, raw_user_meta_data,
- *       created_at, updated_at, confirmation_token, recovery_token,
- *       email_change, email_change_token_new
- *     ) values (
- *       '00000000-0000-0000-0000-000000000000', gen_random_uuid(),
- *       'authenticated', 'authenticated', u->>'email',
- *       extensions.crypt(u->>'password', extensions.gen_salt('bf')),
- *       now(),
- *       '{"provider":"email","providers":["email"]}'::jsonb,
- *       jsonb_build_object('role', u->>'role', 'full_name', u->>'full_name'),
- *       now(), now(), '', '', '', ''
- *     ) returning id into new_id;
- *
- *     insert into auth.identities (
- *       provider_id, provider, user_id, identity_data, created_at, updated_at
- *     ) values (
- *       u->>'email', 'email', new_id,
- *       jsonb_build_object('sub', new_id::text, 'email', u->>'email', 'email_verified', true),
- *       now(), now()
- *     );
- *   end loop;
- * end $$;
- *
- * Also pass -v student_email="$E2E_STUDENT_EMAIL" etc. to psql, or replace the
- * email expressions with the non-secret defaults above.
+ * 1. Create the accounts with the emails above as Neon Auth identities. Use
+ *    passwords from E2E_*_PASSWORD; never commit a literal password here.
+ * 2. Confirm that each identity maps to a `public.profiles` row in Neon
+ *    Postgres (Neon remains the source of truth for application roles), then
+ *    set founder/admin roles out of band.
+ * 3. The seeded placeholder profiles from `scripts/neon-setup.mjs` are NOT
+ *    auth identities — do not try to sign in as them.
  */

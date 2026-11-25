@@ -1,6 +1,6 @@
-# Local/production image for the Next.js app.
-# The DATABASE (Postgres + Auth + REST + Storage) runs in the Supabase Docker
-# stack started by `supabase start`; see scripts/local-up.ps1.
+# Production image for the Next.js app. Postgres, Auth, Object Storage and
+# Realtime are managed by Neon — there is no local backend stack to start.
+# See scripts/local-up.ps1 and `neon deploy` / `neon env pull`.
 FROM node:20-alpine
 
 WORKDIR /app
@@ -11,12 +11,14 @@ RUN npm ci
 COPY . .
 
 # NEXT_PUBLIC_* values are inlined at build time, so they must be build args.
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+# Server-only secrets (DATABASE_URL, NEON_AUTH_*, AWS_*, NEON_REALTIME_SECRET)
+# are injected at runtime by `neon deploy` / `neon env pull`.
 ARG NEXT_PUBLIC_APP_URL
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY \
-    NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
+ARG NEXT_PUBLIC_NEON_REALTIME_URL
+ARG NEXT_PUBLIC_MESURER_ENABLED
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
+    NEXT_PUBLIC_NEON_REALTIME_URL=$NEXT_PUBLIC_NEON_REALTIME_URL \
+    NEXT_PUBLIC_MESURER_ENABLED=$NEXT_PUBLIC_MESURER_ENABLED \
     NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build

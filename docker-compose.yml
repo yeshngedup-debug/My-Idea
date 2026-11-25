@@ -1,22 +1,30 @@
-# App container. The database stack (Postgres, Auth, REST, Storage, Studio)
-# is managed by the Supabase CLI: `supabase start` (see scripts/local-up.ps1).
-# On Linux replace host.docker.internal with the host gateway IP if needed.
+# App container only. All backend services (Postgres, Auth, Object Storage,
+# Realtime) are managed by Neon, so there is no local service stack.
+# Run `neon env pull` first, then `docker compose up --build`.
 services:
   app:
     build:
       context: .
       args:
-        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-http://host.docker.internal:54321}
-        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_NEON_REALTIME_URL: ${NEXT_PUBLIC_NEON_REALTIME_URL:-}
+        NEXT_PUBLIC_MESURER_ENABLED: ${NEXT_PUBLIC_MESURER_ENABLED:-0}
     ports:
       - "3000:3000"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-http://host.docker.internal:54321}
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_NEON_REALTIME_URL: ${NEXT_PUBLIC_NEON_REALTIME_URL:-}
+      NEXT_PUBLIC_MESURER_ENABLED: ${NEXT_PUBLIC_MESURER_ENABLED:-0}
+      NEON_AUTH_BASE_URL: ${NEON_AUTH_BASE_URL:-}
+      NEON_AUTH_COOKIE_SECRET: ${NEON_AUTH_COOKIE_SECRET:-}
+      DATABASE_URL: ${DATABASE_URL:-}
+      NEON_REALTIME_SECRET: ${NEON_REALTIME_SECRET:-}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_ENDPOINT_URL_S3: ${AWS_ENDPOINT_URL_S3:-}
+      AWS_REGION: ${AWS_REGION:-}
+      NEON_BRANCH_ID: ${NEON_BRANCH_ID:-}
+      NEON_FUNCTION_HOST_SUFFIX: ${NEON_FUNCTION_HOST_SUFFIX:-}
       CONTACT_EMAIL: ${CONTACT_EMAIL:-hello@bhutantech.bt}
     restart: unless-stopped

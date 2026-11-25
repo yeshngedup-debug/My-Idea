@@ -38,7 +38,20 @@ create table if not exists public.applications (
   project_id uuid not null references public.projects(id) on delete cascade,
   status text not null default 'pending' check (status in ('pending', 'shortlisted', 'accepted', 'rejected')),
   created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
   unique (student_id, project_id)
+);
+
+-- Existing databases created before the status audit need the new column.
+alter table public.applications add column if not exists updated_at timestamptz not null default now();
+
+create table if not exists public.application_status_history (
+  id uuid primary key default gen_random_uuid(),
+  application_id uuid not null references public.applications(id) on delete cascade,
+  from_status text,
+  to_status text not null,
+  changed_at timestamptz not null default now(),
+  changed_by_ref text
 );
 
 create table if not exists public.student_profiles (
@@ -85,11 +98,14 @@ create table if not exists public.shortlist_orders (
 );
 
 create index if not exists projects_founder_idx on public.projects (founder_id, created_at desc);
+create index if not exists projects_founder_status_idx on public.projects (founder_id, status);
 create index if not exists applications_student_idx on public.applications (student_id);
 create index if not exists applications_project_idx on public.applications (project_id);
+create index if not exists application_status_history_app_idx on public.application_status_history (application_id, changed_at desc);
 create index if not exists shortlists_founder_idx on public.shortlists (founder_id, created_at desc);
 create index if not exists shortlists_student_idx on public.shortlists (student_id);
 create index if not exists shortlist_orders_founder_idx on public.shortlist_orders (founder_id, created_at desc);
+create index if not exists shortlist_orders_founder_status_idx on public.shortlist_orders (founder_id, status);
 
 -- Shortlist uniqueness mirrors the Supabase constraints. A founder-student
 -- pair may have one general row per source and one row per project.

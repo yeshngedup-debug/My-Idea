@@ -6,6 +6,12 @@ export default defineConfig({
     realtime: true,
   },
   auth: true,
+  // Private bucket for CVs and payment proofs. Credentials are injected as
+  // standard AWS_* variables by `neon deploy` / `neon env pull`.
+  buckets: {
+    cvs: {},
+    'payment-screenshots': {},
+  },
   aiGateway: true,
   functions: {
     platform: {

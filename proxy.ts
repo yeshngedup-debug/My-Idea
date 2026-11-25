@@ -1,19 +1,13 @@
 /**
- * Next.js 16 Proxy — role-based route protection.
+ * Next.js 16 Proxy — CSP headers and role-based route protection.
  *
- * Convention: proxy.ts at project root, named export `proxy`
- * (the `middleware.ts` convention is deprecated in Next.js 16; see
- * node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md).
- *
- * Rules:
- *   /student/*  -> role "student" only
- *   /founder/*  -> role "founder" only
- *   /admin/*    -> role "admin" only
- *   /login, /signup -> logged-in users are bounced to their dashboard
+ * Identity comes from Neon Managed Better Auth; roles come from Neon Postgres.
+ * Both are checked before any protected data is read. A failed or unknown role
+ * lookup never grants access to another role's area.
  */
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
+import { auth } from '@/lib/auth/server';
 import { getProfileRole } from '@/lib/neon-data';
 
 const ROLE_HOME: Record<string, string> = {
@@ -24,14 +18,18 @@ const ROLE_HOME: Record<string, string> = {
 
 const PROTECTED_PREFIXES = ['/student', '/founder', '/admin'];
 
-/** Roles live in Neon; a lookup failure must never hard-fail navigation. */
-async function safeRole(userId: string): Promise<string | null> {
+type RoleLookup = { role: string | null; ok: boolean };
+
+async function lookupRole(userId: string): Promise<RoleLookup> {
   try {
-    return await getProfileRole(userId);
+    return { role: await getProfileRole(userId), ok: true };
   } catch {
-    return null;
+    return { role: null, ok: false };
   }
 }
+
+const ownsPath = (pathname: string, home: string) =>
+  pathname === home || pathname.startsWith(`${home}/`);
 
 export async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
@@ -40,8 +38,8 @@ export async function proxy(request: NextRequest) {
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ''}`,
     "style-src 'self' 'unsafe-inline'",
-    'img-src \'self\' data: https:',
-    `connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.neon.tech${isDev ? ' http://127.0.0.1:54321 http://localhost:54321 http://host.docker.internal:54321 ws://localhost:* ws://127.0.0.1:*' : ''}`,
+    "img-src 'self' data: https:",
+    `connect-src 'self' https://*.neon.tech wss://*.neon.tech${isDev ? ' http://localhost:3000 ws://localhost:*' : ''}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -53,19 +51,13 @@ export async function proxy(request: NextRequest) {
   requestHeaders.set('Content-Security-Policy', contentSecurityPolicy);
 
   const nextWithCsp = () => {
-    const nextResponse = NextResponse.next({
-      request: { headers: requestHeaders },
-    });
+    const nextResponse = NextResponse.next({ request: { headers: requestHeaders } });
     nextResponse.headers.set('Content-Security-Policy', contentSecurityPolicy);
     return nextResponse;
   };
 
-  let response = nextWithCsp();
+  const response = nextWithCsp();
 
-  /**
-   * Redirects must carry the cookies refreshed by `getUser()`; returning a
-   * bare NextResponse.redirect() used to drop them and cause logout loops.
-   */
   const redirectWithCsp = (url: URL) => {
     const redirectResponse = NextResponse.redirect(url);
     redirectResponse.headers.set('Content-Security-Policy', contentSecurityPolicy);
@@ -75,59 +67,31 @@ export async function proxy(request: NextRequest) {
     return redirectResponse;
   };
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          requestHeaders.set('cookie', request.cookies.toString());
-          response = nextWithCsp();
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // IMPORTANT: getUser() (not getSession()) — validates the JWT with Supabase.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Managed Auth validates the session and refreshes its own cookies.
+  const { data } = await auth.getSession();
+  const user = data?.user;
 
   const { pathname } = request.nextUrl;
   const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
-  const isAuthPage =
-    pathname.startsWith('/login') || pathname.startsWith('/signup');
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup');
 
-  // Not logged in -> anything protected goes to login
   if (isProtected && !user) {
     return redirectWithCsp(new URL('/login', request.url));
   }
 
-  // Logged in on an auth page -> send to their dashboard
   if (isAuthPage && user) {
-    const role = await safeRole(user.id);
-    return redirectWithCsp(
-      new URL(ROLE_HOME[role ?? 'student'], request.url)
-    );
+    const { role, ok } = await lookupRole(user.id);
+    if (!ok) return response;
+    const home = role ? ROLE_HOME[role] : undefined;
+    return redirectWithCsp(new URL(home ?? '/', request.url));
   }
 
-  // Logged in but in someone else's area -> bounce to their own dashboard
   if (isProtected && user) {
-    const role = await safeRole(user.id);
-    const home = ROLE_HOME[role ?? 'student'] ?? '/student';
-
-    const ownsArea = pathname.startsWith(home);
-    if (!ownsArea) {
-      return redirectWithCsp(new URL(home, request.url));
+    const { role, ok } = await lookupRole(user.id);
+    if (!ok || !role) return response;
+    const home = ROLE_HOME[role];
+    if (!home || !ownsPath(pathname, home)) {
+      return redirectWithCsp(new URL(home ?? '/', request.url));
     }
   }
 
@@ -135,8 +99,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip static assets, images, favicons, robots.txt and sitemap.xml:
-  // none of them need a Supabase auth round-trip.
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|webmanifest|txt|xml)$|public/.*|images/.*).*)',
   ],

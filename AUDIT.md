@@ -6,6 +6,8 @@
 
 Audit date: 2026-11-24. Source of truth: current working tree (branch `main`, base `a00a6c8`, 65 modified/untracked files, ~5,329 insertions / 3,710 deletions).
 
+> **Historical note (2026-11-25):** this audit was written when Supabase was the Auth and Storage provider. The app now runs entirely on Neon (Managed Better Auth, Postgres, Object Storage, Realtime, Functions); the Supabase references below record the state at audit time and are not current setup instructions. Password hashes could not migrate, so existing users re-registered and application user IDs changed.
+
 ---
 
 ## 0. Remediation applied (same day)
