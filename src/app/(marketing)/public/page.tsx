@@ -320,10 +320,9 @@ export default async function PublicHomePage() {
               A local bridge{" "}
               <span
                 aria-hidden="true"
-                className="inline-block h-[0.78em] w-[0.78em] rounded-[0.16em] bg-cover bg-center align-middle"
+                className="inline-block h-[0.78em] w-[1.5em] rounded-[0.16em] bg-cover bg-center align-middle grayscale contrast-125"
                 style={{
-                  backgroundImage:
-                    "url('https://picsum.photos/seed/bhutan-bridge/160/160')",
+                  backgroundImage: "url('/images/bhutan-valley.webp')",
                 }}
               />{" "}
               for young people
