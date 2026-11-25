@@ -1,13 +1,25 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
+/**
+ * One card radius and one stronger edge so groups read fast on cream.
+ * Elevation is the only importance signal: `base` is a soft hairline shadow,
+ * `raised` is reserved for the one or two cards that must stand out. The prop
+ * is additive, so every existing call site keeps its current API.
+ */
+export type CardElevation = "base" | "raised"
+
 const Card = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement> & { elevation?: CardElevation }
+>(({ className, elevation = "base", ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)}
+    className={cn(
+      "rounded-lg border border-border-strong bg-card text-card-foreground",
+      elevation === "raised" ? "shadow-card-raised" : "shadow-card",
+      className,
+    )}
     {...props}
   />
 ))
@@ -19,7 +31,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col gap-1.5 p-6", className)}
     {...props}
   />
 ))
@@ -31,7 +43,7 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-2xl font-semibold leading-none tracking-tight", className)}
+    className={cn("text-xl font-semibold leading-tight tracking-tight", className)}
     {...props}
   />
 ))
@@ -43,7 +55,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm leading-relaxed text-body-secondary", className)}
     {...props}
   />
 ))

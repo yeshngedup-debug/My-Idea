@@ -43,6 +43,15 @@ export const colors = {
   forestHover: "#244b3e",
   heroInk: "#101d17",
 
+  /* The single filled CTA role (mirrors --color-cta* in app/globals.css).
+     Shares the amber primitive value, but this is the action role, not a
+     highlight: one filled action per view, peers stay outline or quiet. */
+  cta: "#fbbf24",
+  ctaHover: "#e7b648",
+  onCta: "#17352b",
+  /** Stronger edge for grouped surfaces on cream; mirrors --color-border-strong. */
+  borderStrong: "#cfc6b6",
+
   /* Warm accent: vermilion. The deep tone is for small text and focus rings;
      CSS mirrors it as --color-accent-deep. */
   accent: "#d84f37",
@@ -90,6 +99,7 @@ export const palette = {
   smallTextAccent: colors.smallTextAccent,
   warmAccent: colors.accent,
   amberHighlight: colors.amber,
+  cta: colors.cta,
 } as const;
 
 export type PaletteRole = keyof typeof palette;
@@ -122,6 +132,18 @@ export const radii = {
 } as const;
 
 export type RadiusStep = keyof typeof radii;
+
+/**
+ * Two soft, offset elevation steps, mirrored as --shadow-card and
+ * --shadow-card-raised in app/globals.css. Use `card` for ordinary groups and
+ * `cardRaised` for the one or two cards that carry extra importance.
+ */
+export const elevation = {
+  card: "0 1px 2px rgb(24 37 31 / 0.06), 0 1px 3px rgb(24 37 31 / 0.04)",
+  cardRaised: "0 6px 18px rgb(24 37 31 / 0.09), 0 2px 6px rgb(24 37 31 / 0.05)",
+} as const;
+
+export type ElevationRole = keyof typeof elevation;
 
 /** WCAG 2.5.8 floor for interactive controls, plus the inline-link floor. */
 export const touchTarget = {
@@ -174,70 +196,77 @@ export const fontFamily = {
 export const tracking = {
   tightest: "-0.09em",
   tighter: "-0.06em",
-  tight: "-0.045em",
-  heading: "-0.03em",
+  tight: "-0.04em",
+  heading: "-0.02em",
   normal: "0",
+  /** Short labels only. Long uppercase spans should not use these steps. */
+  label: "0.08em",
   wide: "0.14em",
   wider: "0.2em",
 } as const;
 
 export type TrackingStep = keyof typeof tracking;
 
-/** Measured scale: unitless leading (display 1.1, headings 1.2, body 1.5-1.6),
- *  sizes descending by level, tracking in em and zero on body copy. */
+/**
+ * Measured scale: unitless leading (tight for short headings, 1.65 for long
+ * copy), sizes descending by level, tracking in em and zero on body copy.
+ * Headings take the weight; labels and supporting text stay regular so they
+ * no longer compete at the same mid weight.
+ */
 export const typeScale = {
   display: {
-    size: "clamp(4.5rem, 10vw, 8rem)",
-    lineHeight: "1.1",
-    tracking: tracking.tightest,
-    weight: 600,
-  },
-  pageTitle: {
-    size: "clamp(3rem, 7vw, 6rem)",
+    size: "clamp(4rem, 9vw, 6rem)",
     lineHeight: "1.1",
     tracking: tracking.tighter,
     weight: 600,
   },
-  h1: {
-    size: "clamp(2.25rem, 4.6vw, 4.25rem)",
-    lineHeight: "1.2",
+  pageTitle: {
+    size: "clamp(3.25rem, 7vw, 6rem)",
+    lineHeight: "1.05",
     tracking: tracking.tight,
-    weight: 500,
+    weight: 600,
+  },
+  h1: {
+    size: "clamp(2.5rem, 5vw, 4.5rem)",
+    lineHeight: "1.08",
+    tracking: tracking.tight,
+    weight: 600,
   },
   h2: {
     size: "clamp(1.75rem, 3.4vw, 3rem)",
-    lineHeight: "1.2",
-    tracking: tracking.tight,
-    weight: 500,
+    lineHeight: "1.18",
+    tracking: tracking.heading,
+    weight: 600,
   },
   h3: {
     size: "1.5rem",
-    lineHeight: "1.2",
+    lineHeight: "1.25",
     tracking: tracking.heading,
-    weight: 500,
+    weight: 600,
   },
   body: {
     size: "1rem",
-    lineHeight: "1.6",
+    lineHeight: "1.65",
     tracking: tracking.normal,
     weight: 400,
   },
   small: {
     size: "0.875rem",
-    lineHeight: "1.5",
+    lineHeight: "1.55",
     tracking: tracking.normal,
     weight: 400,
   },
+  /** Short, natural-case labels. Keep these rare; the heading does the work. */
   eyebrow: {
     size: "0.75rem",
-    lineHeight: "1.2",
-    tracking: tracking.wide,
+    lineHeight: "1.3",
+    tracking: tracking.label,
     weight: 500,
   },
   microLabel: {
-    size: "0.625rem",
-    lineHeight: "1.2",
-    tracking: tracking.wider,
+    size: "0.75rem",
+    lineHeight: "1.3",
+    tracking: tracking.wide,
     weight: 500,
   },
 } as const;

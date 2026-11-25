@@ -14,7 +14,9 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { PageHero } from "@/components/marketing/page-hero";
+import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
+import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
+import { PhotoCredit } from "@/components/ui/photo-credit";
 import { SectionIntro } from "@/components/marketing/section-intro";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
@@ -56,6 +58,34 @@ const dzong = {
 
 const textLink =
   "inline-flex items-center gap-1.5 font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]";
+
+const heroPrimary =
+  "pressable inline-flex min-h-12 items-center rounded-md bg-cta px-6 py-3 text-sm font-medium text-cta-foreground hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17352b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+const heroSecondary =
+  "inline-flex min-h-11 items-center text-sm font-medium text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+
+const outcomes = [
+  {
+    icon: FileText,
+    title: "Start with a scoped brief",
+    body: "List the skills, budget, duration and deadline so students know what the work involves.",
+  },
+  {
+    icon: MagnifyingGlass,
+    title: "Meet the people behind the CVs",
+    body: "Browse completed profiles by skill and availability; CV links open under defined access rules.",
+  },
+  {
+    icon: CheckCircle,
+    title: "Get a shortlist checked by a person",
+    body: "Optional and paid. An admin ranks and releases every shortlist; founders cannot confirm their own orders.",
+  },
+  {
+    icon: Receipt,
+    title: "Agree the terms directly",
+    body: "You and the student settle scope, budget and deadlines before work starts.",
+  },
+];
 
 const sections: StickySection[] = [
   { id: "brief-heading", label: "Brief" },
@@ -220,14 +250,99 @@ export default function ForFoundersPage() {
       <SiteHeader />
 
       <main id="main-content" className="overflow-x-clip">
-        <PageHero
-          title="Post a paid brief for Bhutanese students"
-          lead="Post a brief, meet students, build together."
-          primaryCta={{ href: "/contact", label: "Ask for founder access" }}
-          secondary={{ href: "/how-it-works", label: "See how it works" }}
-          image={valley}
-          imagePosition="object-[45%_55%]"
-        />
+        <section className="px-5 pb-20 pt-12 sm:px-8 sm:pb-24 sm:pt-16 lg:px-12 lg:pb-28 lg:pt-20">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+              <HeroCopyEntrance>
+                <h1 className="max-w-[22ch] text-balance text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-[#17352b] sm:text-[clamp(2.5rem,4.4vw,4rem)]">
+                  Post a paid brief for{" "}
+                  <span className="text-[#b23c26]">Bhutanese students</span>
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
+                  Describe the work, meet students, and agree terms directly,
+                  with an admin-curated shortlist when you need one.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+                  <Link href="/contact" className={heroPrimary}>
+                    Ask for founder access
+                  </Link>
+                  <Link href="/how-it-works" className={heroSecondary}>
+                    See how it works
+                  </Link>
+                </div>
+              </HeroCopyEntrance>
+
+              <HeroPhotoEntrance>
+                <figure className="relative isolate aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#fffefa]">
+                  <Image
+                    src={valley.src}
+                    alt={valley.alt}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className="object-cover object-[45%_55%]"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-[#101d17]/55 to-transparent"
+                  />
+                  <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
+                    <PhotoCredit
+                      fileUrl={valley.fileUrl}
+                      className="text-[#fffefa]/80"
+                    />
+                  </figcaption>
+                </figure>
+              </HeroPhotoEntrance>
+            </div>
+
+            <div className="mt-16 border-t border-[#18251f]/15 pt-10 sm:mt-20">
+              <p className="max-w-xl text-sm font-medium text-[#56645c]">
+                What the platform gives a founder
+              </p>
+              <ol className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+                {outcomes.map((outcome) => {
+                  const OutcomeIcon = outcome.icon;
+                  return (
+                    <li
+                      key={outcome.title}
+                      className="border-t border-[#18251f]/15 pt-5"
+                    >
+                      <OutcomeIcon
+                        aria-hidden="true"
+                        weight="light"
+                        size={24}
+                        strokeWidth={1.5}
+                        className="text-[#b23c26]"
+                      />
+                      <h2 className="mt-4 text-lg font-semibold tracking-tight text-[#17352b]">
+                        {outcome.title}
+                      </h2>
+                      <p className="mt-2 text-sm leading-6 text-[#56645c]">
+                        {outcome.body}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+
+            <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-t border-[#18251f]/15 pt-6 text-xs leading-5 text-[#56645c]">
+              <div className="flex gap-2">
+                <dt className="font-semibold text-[#17352b]">Access</dt>
+                <dd>Assigned by an admin</dd>
+              </div>
+              <div className="flex gap-2">
+                <dt className="font-semibold text-[#17352b]">Payment</dt>
+                <dd>Bank transfer or mBoB, confirmed by a person</dd>
+              </div>
+              <div className="flex gap-2">
+                <dt className="font-semibold text-[#17352b]">Photos</dt>
+                <dd>Community settings, not platform listings or members</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
 
         <section
           aria-labelledby="access-heading"

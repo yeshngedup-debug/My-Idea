@@ -70,7 +70,7 @@ function contextFactId(label: string): string {
 }
 
 const heroPrimary =
-  "pressable inline-flex min-h-12 items-center rounded-lg bg-[#17352b] px-6 py-3 text-sm font-medium text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+  "pressable inline-flex min-h-12 items-center rounded-md bg-cta px-6 py-3 text-sm font-medium text-cta-foreground hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17352b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
 const heroSecondary =
   "pressable inline-flex min-h-12 items-center rounded-lg border border-[#18251f]/15 px-5 py-3 text-sm font-medium text-[#17352b] hover:bg-[#fffefa] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
 
@@ -105,23 +105,24 @@ export default async function AboutPage() {
                 </div>
               </HeroCopyEntrance>
 
-              <figure className="relative isolate aspect-[4/5] overflow-hidden bg-[#28453a] lg:aspect-auto lg:min-h-[640px]">
-                <Image
-                  src={dzong.src}
-                  alt={dzong.alt}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover object-center"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#101d17]/45 to-transparent"
-                />
-                <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
+              <figure>
+                <div className="relative isolate aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#fffefa]">
+                  <Image
+                    src={dzong.src}
+                    alt={dzong.alt}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 58vw"
+                    className="object-cover object-center"
+                  />
+                </div>
+                <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <span className="text-sm font-medium text-[#17352b]">
+                    Bhutanese boys in gho, sitting together
+                  </span>
                   <PhotoCredit
                     fileUrl={dzong.fileUrl}
-                    className="text-[#fffefa]/80"
+                    className="text-[#56645c]"
                   />
                 </figcaption>
               </figure>

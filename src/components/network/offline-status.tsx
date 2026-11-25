@@ -57,8 +57,8 @@ export function OfflineStatus() {
 
   const message =
     status === "offline"
-      ? "You appear to be offline. If a submission fails, try again when you're back online."
-      : "You're back online.";
+      ? "You're offline. Submissions need a connection."
+      : "Back online.";
 
   return (
     <div

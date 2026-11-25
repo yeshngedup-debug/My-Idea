@@ -23,6 +23,15 @@ import {
 
 export const metadata = { title: "Premium Shortlist | Bhutan Tech Connect" };
 
+/** Server-rendered time only: this text is not hydrated on the client. */
+function formatLastUpdated(): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Thimphu",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date());
+}
+
 export default async function FounderShortlistsPage() {
   const user = await getUser();
 
@@ -142,13 +151,19 @@ export default async function FounderShortlistsPage() {
           split="lg:grid-cols-[0.2fr_0.8fr]"
         >
           {liveUnavailable && (
-            <p
-              role="status"
-              className="mb-6 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-4 py-3 text-sm text-[#657069]"
-            >
-              Live updates are unavailable. Refresh to check the latest payment
-              status.
-            </p>
+            <div className="mb-6 flex flex-wrap items-center gap-x-3 text-xs text-body-secondary">
+              {/* Kept as a status region so the degraded state is still announced. */}
+              <span role="status">
+                Last updated {formatLastUpdated()} · live status unavailable
+              </span>
+              {/* Full reload, matching the other retry controls in the workspace. */}
+              <a
+                href="/founder/shortlists"
+                className="inline-flex min-h-11 items-center rounded font-semibold text-accent-deep underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+              >
+                Refresh
+              </a>
+            </div>
           )}
 
           {live ? (

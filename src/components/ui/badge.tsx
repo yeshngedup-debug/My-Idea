@@ -1,21 +1,37 @@
+import * as React from "react"
+import { cn } from "@/lib/utils"
+
+/**
+ * Quiet status labels. Natural case, one weight, no uppercase tracking games:
+ * the surrounding heading carries the emphasis. `className` overrides win so
+ * call sites can still tint a badge for a specific status.
+ */
+export type BadgeVariant = "default" | "outline" | "secondary"
+
 export function Badge({
   children,
-  className = '',
-  variant = 'default',
+  className = "",
+  variant = "default",
 }: {
-  children: React.ReactNode;
-  className?: string;
-  variant?: 'default' | 'outline' | 'secondary';
+  children: React.ReactNode
+  className?: string
+  variant?: BadgeVariant
 }) {
-  const variantStyles = {
-    default: 'border-[#ded8cb] bg-[#eeeae1] text-[#17352b]',
-    outline: 'border-[#ded8cb] bg-[#fffefa] text-body-secondary',
-    secondary: 'border-[#17352b] bg-[#17352b] text-[#fffefa]',
-  };
+  const variantStyles: Record<BadgeVariant, string> = {
+    default: "border-border-strong bg-secondary text-primary",
+    outline: "border-border-strong bg-card text-body-secondary",
+    secondary: "border-primary bg-primary text-primary-foreground",
+  }
 
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${variantStyles[variant]} ${className}`}>
+    <span
+      className={cn(
+        "inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-normal leading-normal tracking-normal",
+        variantStyles[variant],
+        className,
+      )}
+    >
       {children}
     </span>
-  );
+  )
 }

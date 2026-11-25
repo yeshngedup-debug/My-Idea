@@ -12,13 +12,18 @@ export function WorkspaceLoading({
   listRows?: number;
 }) {
   return (
-    <div className="space-y-8" role="status" aria-label={`Loading ${label} workspace`}>
-      <div className="workspace-paper flex h-36 items-end rounded-2xl border border-primary/10 bg-primary p-5">
+    <div
+      className="space-y-6 sm:space-y-8"
+      role="status"
+      aria-busy="true"
+      aria-label={`Loading ${label} workspace`}
+    >
+      <div className="workspace-paper flex h-28 items-end rounded-2xl border border-primary/10 bg-primary p-5 sm:h-36">
         <span className="border border-dashed border-primary-foreground/25 px-2 py-1 font-mono text-[10px] text-primary-foreground/70">
           workspace.tsx
         </span>
       </div>
-      <div className="grid grid-cols-12 gap-6 border-y border-primary/10 py-6 sm:gap-10">
+      <div className="grid grid-cols-12 gap-6 border-y border-primary/10 py-5 sm:gap-10 sm:py-6">
         <div className="col-span-12 min-w-0 sm:col-span-5">
           <div className="h-3 w-24 rounded bg-secondary" />
           <div className="mt-3 h-12 w-20 rounded bg-secondary" />
@@ -30,16 +35,16 @@ export function WorkspaceLoading({
         </div>
       </div>
       <div>
-        <span className="mb-3 inline-block border border-dashed border-border px-2 py-1 font-mono text-[10px] text-muted-foreground">
+        <span className="mb-3 inline-block border border-dashed border-border px-2 py-1 font-mono text-[10px] text-body-secondary">
           queue.tsx
         </span>
         <div className="divide-y divide-border border-y border-border">
           {Array.from({ length: listRows }, (_, i) => (
-            <div key={i} className="h-16" />
+            <div key={i} className="h-14 sm:h-16" />
           ))}
         </div>
       </div>
-      <span className="text-xs text-muted-foreground">Loading</span>
+      <p className="text-sm text-body-secondary">Loading your workspace…</p>
     </div>
   );
 }

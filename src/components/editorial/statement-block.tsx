@@ -25,7 +25,7 @@ export function StatementBlock({
   return (
     <section
       className={cn(
-        "px-5 py-32 sm:px-8 md:py-48 lg:px-12",
+        "px-5 py-20 sm:px-8 sm:py-28 md:py-36 lg:px-12 lg:py-48",
         centered ? "text-center" : "text-left",
         className,
       )}
@@ -33,7 +33,7 @@ export function StatementBlock({
       <div className={cn("mx-auto", centered ? "max-w-5xl" : "max-w-6xl")}>
         <span
           aria-hidden="true"
-          className={cn("mb-8 block h-px w-10 bg-[#b23c26]", centered && "mx-auto")}
+          className={cn("mb-6 block h-px w-10 bg-[#b23c26] sm:mb-8", centered && "mx-auto")}
         />
         <h2 className="text-balance text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-[#17352b]">
           {statement}
@@ -41,7 +41,7 @@ export function StatementBlock({
         {support ? (
           <p
             className={cn(
-              "mt-8 max-w-2xl text-balance text-base leading-7 text-[#17352b]/70 sm:text-lg sm:leading-8",
+              "mt-5 max-w-2xl text-balance text-base leading-7 text-body-secondary sm:mt-8 sm:text-lg sm:leading-8",
               centered && "mx-auto",
             )}
           >

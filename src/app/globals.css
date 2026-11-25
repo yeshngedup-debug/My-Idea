@@ -29,6 +29,19 @@
   --color-body-secondary: #56645c;
   /* Quiet ink for metadata and inactive controls on paper. */
   --color-ink-soft: #4c5a52;
+  /* The single filled CTA. Role tokens: yellow on forest ink. Mirrors
+     colors.cta / ctaHover / onCta in lib/design-tokens.ts. Forest stays
+     --color-primary so the app's quiet dark actions keep their meaning. */
+  --color-cta: #fbbf24;
+  --color-cta-hover: #e7b648;
+  --color-cta-foreground: #17352b;
+  /* One stronger edge for grouped surfaces on cream. Mirrors
+     colors.borderStrong in lib/design-tokens.ts. */
+  --color-border-strong: #cfc6b6;
+  /* Two soft, offset elevation steps. Mirrors elevation.card/cardRaised in
+     lib/design-tokens.ts: base groups read fast, raised marks importance. */
+  --shadow-card: 0 1px 2px rgb(24 37 31 / 0.06), 0 1px 3px rgb(24 37 31 / 0.04);
+  --shadow-card-raised: 0 6px 18px rgb(24 37 31 / 0.09), 0 2px 6px rgb(24 37 31 / 0.05);
   --radius: 0.5rem;
 }
 
@@ -79,6 +92,42 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Long-form copy gets a little more air than the browser default. */
+    line-height: 1.65;
+  }
+
+  /* Heading defaults carry hierarchy through weight and leading, not colour.
+     Page utilities still win where a bespoke display size is intentional. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+    font-weight: 600;
+  }
+  h1 {
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+  h2 {
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+  h3 {
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  /* Browser surfaces belong to the palette too: a warm, legible selection
+     instead of the default blue on cream. */
+  ::selection {
+    background-color: var(--color-cta);
+    color: var(--color-cta-foreground);
   }
 
   /* One token-based focus indicator at the shared layer. Components that

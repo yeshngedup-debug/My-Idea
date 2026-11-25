@@ -97,12 +97,12 @@ function useLiveContext(initial: LiveContextResult): LiveState {
         setNotice("Updated just now");
       } else {
         setUnavailable(true);
-        setNotice("Update unavailable. Showing last values");
+        setNotice("Could not check for updates. Showing the last available figures.");
       }
     } catch {
-      // Keep the last good values on screen when a poll fails.
+      // Keep the last good figures on screen when a poll fails.
       setUnavailable(true);
-      setNotice("Update failed. Showing last values");
+      setNotice("Could not check for updates. Showing the last available figures.");
     } finally {
       inFlight.current = false;
       setRefreshing(false);
@@ -227,14 +227,35 @@ function SourceList({ sources }: { sources: LiveSource[] }) {
   );
 }
 
-function UnavailableNote() {
+/**
+ * Quiet fallback for a failed refresh. The last good figures stay on screen;
+ * the only action is a small inline refresh, so this never reads as an alarm.
+ */
+function UnavailableNote({
+  onRefresh,
+  refreshing,
+}: {
+  onRefresh: () => void;
+  refreshing: boolean;
+}) {
   return (
-    <p
+    <div
       role="status"
-      className="mt-6 rounded-lg border border-[#f0c4bd] bg-[#fcebea] px-4 py-3 text-sm leading-6 text-[#9d3328]"
+      aria-live="polite"
+      aria-atomic="true"
+      className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[#18251f]/10 bg-[#f5f2ea] px-4 py-2.5 text-xs leading-5 text-body-secondary"
     >
-      Auto-refresh temporarily unavailable. Showing the last available values.
-    </p>
+      <span>Could not check for updates. Showing the last available figures.</span>
+      <button
+        type="button"
+        onClick={onRefresh}
+        disabled={refreshing}
+        aria-busy={refreshing}
+        className="inline-flex min-h-6 items-center rounded-sm font-medium text-[#b23c26] underline underline-offset-2 transition-colors duration-150 ease-[var(--ease-out)] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60"
+      >
+        {refreshing ? "Refreshing…" : "Refresh"}
+      </button>
+    </div>
   );
 }
 
@@ -367,12 +388,12 @@ function FullPanel({
       id="auto-refreshing-statistics"
       aria-labelledby="auto-refreshing-heading"
       className={cn(
-        "border-t border-[#18251f]/15 bg-[#eae5d9] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24",
+        "border-t border-[#18251f]/15 bg-[#eae5d9] px-5 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20",
         className,
       )}
     >
       <div className="mx-auto max-w-[1440px]">
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <h2
             id="auto-refreshing-heading"
             className="text-3xl font-semibold tracking-tight text-[#17352b] sm:text-4xl"
@@ -398,7 +419,9 @@ function FullPanel({
           <SourceList sources={data.sources} />
         </div>
 
-        {unavailable ? <UnavailableNote /> : null}
+        {unavailable ? (
+          <UnavailableNote onRefresh={refresh} refreshing={refreshing} />
+        ) : null}
 
         {data.partial ? (
           <PartialDataNote missing={data.missing} errors={data.errors} />
@@ -444,12 +467,12 @@ function CompactPanel({
       id="auto-refreshing-statistics"
       aria-labelledby="auto-refreshing-compact-heading"
       className={cn(
-        "border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-10 sm:px-8 lg:px-12",
+        "border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-8 sm:px-8 sm:py-10 lg:px-12",
         className,
       )}
     >
       <div className="mx-auto max-w-[1440px]">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <h2
               id="auto-refreshing-compact-heading"
@@ -468,7 +491,9 @@ function CompactPanel({
           <CheckedLabel checkedAt={data.checkedAt} now={now} />
         </div>
 
-        {unavailable ? <UnavailableNote /> : null}
+        {unavailable ? (
+          <UnavailableNote onRefresh={refresh} refreshing={refreshing} />
+        ) : null}
 
         {data.partial ? (
           <PartialDataNote missing={data.missing} errors={data.errors} />

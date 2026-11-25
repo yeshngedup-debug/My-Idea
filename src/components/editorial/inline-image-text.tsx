@@ -71,7 +71,7 @@ export function InlineImageText({
         </span>{" "}
         <span aria-hidden="true">{tail}</span>
       </Heading>
-      <span className="mt-5 block text-xs leading-5 text-[#b23c26]">
+      <span className="mt-3 block text-xs leading-5 text-body-secondary sm:mt-4">
         <PhotoCredit fileUrl={creditFileUrl} />
       </span>
     </div>

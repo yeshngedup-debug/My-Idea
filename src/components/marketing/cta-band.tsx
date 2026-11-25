@@ -17,7 +17,8 @@ export type CtaBandProps = {
 
 /**
  * The closing chapter: a full-bleed forest band with one headline and a single
- * solid action. No ambient glow, no second intent.
+ * solid yellow action. 64–80px vertical rhythm, no ambient glow, no second
+ * intent competing with the CTA.
  */
 export function CtaBand({
   title,
@@ -32,26 +33,26 @@ export function CtaBand({
   return (
     <section
       id={id}
-      className="cta-band relative isolate overflow-hidden bg-[#17352b] px-5 py-24 text-[#fffefa] sm:px-8 sm:py-32 lg:px-12 lg:py-40"
+      className="cta-band relative isolate overflow-hidden bg-[#17352b] px-5 py-16 text-[#fffefa] sm:px-8 sm:py-20 lg:px-12 lg:py-20"
     >
       <Reveal className="relative mx-auto max-w-[1180px]">
         {eyebrow ? (
-          <p className="mb-4 text-sm font-medium text-[#fffefa]/70">
+          <p className="mb-4 text-xs font-medium text-[#fffefa]/80">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="max-w-4xl text-balance text-[clamp(2.75rem,6vw,5rem)] font-medium leading-[1.04] tracking-[-0.02em] text-[#fffefa]">
+        <h2 className="max-w-4xl text-balance text-[clamp(3rem,6.5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-[#fffefa]">
           {title}
         </h2>
         {lead ? (
-          <p className="mt-6 max-w-2xl text-balance text-base leading-7 text-[#fffefa]/75 sm:text-lg sm:leading-8">
+          <p className="mt-6 max-w-2xl text-pretty text-base leading-[1.65] text-[#fffefa]/85 sm:text-lg">
             {lead}
           </p>
         ) : null}
         {action ? (
           <Link
             href={action.href}
-            className="pressable mt-8 inline-flex min-h-12 items-center justify-center rounded-lg bg-[#fbbf24] px-6 py-3 text-sm font-medium text-[#17352b] hover:bg-[#e7b648] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffefa] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
+            className="pressable mt-8 inline-flex min-h-12 items-center justify-center rounded-md bg-cta px-6 py-3 text-sm font-medium text-cta-foreground hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffefa] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]"
           >
             {action.label}
           </Link>

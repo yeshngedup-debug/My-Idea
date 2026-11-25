@@ -66,7 +66,7 @@ export function EditorialImage({
           atmospheric without a flat black scrim. Both are decorative only. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-[#17352b]/90 via-[#17352b]/20 to-transparent"
+        className="absolute inset-0 bg-gradient-to-t from-[#17352b]/95 via-[#17352b]/25 to-transparent"
       />
       <div
         aria-hidden="true"
@@ -82,7 +82,7 @@ export function EditorialImage({
             {caption}
           </span>
         ) : null}
-        <PhotoCredit fileUrl={creditFileUrl} className="text-[#fffefa]/75" />
+        <PhotoCredit fileUrl={creditFileUrl} className="text-[#ded8cb]" />
       </figcaption>
     </figure>
   );

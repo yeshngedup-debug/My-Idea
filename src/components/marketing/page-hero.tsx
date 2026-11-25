@@ -29,12 +29,14 @@ export type PageHeroProps = {
 };
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
+/* One filled CTA, one quiet outline peer. They no longer read as two equal
+   dark buttons in the same row. */
 const primaryClass =
-  "pressable inline-flex min-h-12 items-center rounded-lg bg-[#17352b] px-6 py-3 text-sm font-medium text-[#fffefa] hover:bg-[#244b3e]";
+  "pressable inline-flex min-h-12 items-center justify-center rounded-md bg-cta px-6 py-3 text-sm font-medium text-cta-foreground hover:bg-cta-hover";
 const secondaryClass =
-  "pressable inline-flex min-h-12 items-center rounded-lg border border-[#18251f]/15 px-5 py-3 text-sm font-medium text-[#17352b] hover:bg-[#fffefa]";
+  "pressable inline-flex min-h-12 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-3 text-sm font-medium text-primary hover:bg-secondary";
 
 /** Asymmetric editorial hero: copy on the left, one of the three local photos on the right. */
 export function PageHero({
@@ -71,19 +73,19 @@ export function PageHero({
         : null);
 
     return (
-      <section className="relative isolate overflow-hidden bg-[#f5f2ea] pt-14 sm:pt-20 lg:pt-24">
+      <section className="relative isolate overflow-hidden bg-[#f5f2ea] pt-16 sm:pt-20 lg:pt-20">
         <div className="px-5 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-6xl text-center">
             <HeroCopyEntrance>
               {eyebrow ? (
-                <p className="mb-4 text-sm font-medium text-[#56645c]">
+                <p className="mb-4 text-xs font-medium text-ink-soft">
                   {eyebrow}
                 </p>
               ) : null}
-              <h1 className="mx-auto max-w-6xl text-balance text-[clamp(2.5rem,5vw,5.5rem)] font-medium leading-[1.04] tracking-[-0.02em] text-[#17352b]">
+              <h1 className="mx-auto max-w-6xl text-balance text-[clamp(3rem,6vw,6rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-[#17352b]">
                 {title}
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
+              <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-[1.65] text-body-secondary sm:text-lg">
                 {lead}
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -105,7 +107,7 @@ export function PageHero({
 
         {/* Full-bleed photograph. A short bottom scrim keeps the credit legible;
             no radial wash, no color grade. */}
-        <div className="relative mt-12 sm:mt-16 lg:mt-20">
+        <div className="relative mt-12 sm:mt-16">
           <HeroPhotoEntrance>
             <figure className="relative isolate h-[46vh] min-h-[340px] w-full overflow-hidden bg-[#17352b] sm:h-[58vh] sm:min-h-[460px]">
               <Image
@@ -131,22 +133,22 @@ export function PageHero({
   }
 
   return (
-    <section className="px-5 pb-16 pt-9 sm:px-8 sm:pb-20 sm:pt-12 lg:px-12 lg:pb-24">
+    <section className="px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-16 lg:px-12 lg:pb-24">
       <div className="mx-auto max-w-[1440px]">
-        <div className="mb-8 text-sm text-[#56645c]">
+        <div className="mb-6 text-xs text-ink-soft">
           <span>Thimphu · Bhutan</span>
         </div>
-        <div className="grid items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
           <HeroCopyEntrance className="py-2">
             {eyebrow ? (
-              <p className="mb-4 text-sm font-medium text-[#56645c]">
+              <p className="mb-4 text-xs font-medium text-ink-soft">
                 {eyebrow}
               </p>
             ) : null}
-            <h1 className="max-w-6xl text-balance text-[clamp(1.75rem,7vw,2.75rem)] font-medium leading-[1.06] tracking-[-0.03em] text-[#17352b] sm:text-[clamp(3rem,5vw,4.75rem)] sm:leading-[1.02] sm:tracking-[-0.02em]">
+            <h1 className="max-w-6xl text-balance text-[clamp(2rem,7vw,3rem)] font-semibold leading-[1.06] tracking-[-0.04em] text-[#17352b] sm:text-[clamp(3.25rem,5.5vw,5.25rem)] sm:leading-[1.02] sm:tracking-[-0.04em]">
               {title}
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
+            <p className="mt-6 max-w-xl text-pretty text-base leading-[1.65] text-body-secondary sm:text-lg">
               {lead}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">

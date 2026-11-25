@@ -16,17 +16,16 @@ export default function ProjectsError({
   }, [error]);
 
   return (
-    <div className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
       <div
         role="alert"
-        className="mx-auto max-w-xl rounded-2xl border border-[#b23c26]/25 bg-[#fffefa] p-8 text-center"
+        className="mx-auto max-w-xl rounded-2xl border border-[#b23c26]/25 bg-[#fffefa] p-6 text-center sm:p-8"
       >
         <h1 className="text-xl font-semibold text-[#17352b]">
-          We couldn&apos;t load your projects
+          Could not load your projects
         </h1>
-        <p className="mt-2 text-sm text-[#56645c]">
-          Something went wrong while reading your projects. Your data is safe;
-          try again.
+        <p className="mt-2 text-sm text-body-secondary">
+          Your data is safe. Check your connection and try again.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button

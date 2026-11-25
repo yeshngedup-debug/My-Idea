@@ -12,7 +12,7 @@ export type SectionRuleProps = {
  */
 export function SectionRule({ label, className }: SectionRuleProps) {
   return (
-    <div className={cn("flex items-center gap-4", className)}>
+    <div className={cn("flex items-center gap-3 sm:gap-4", className)}>
       <span aria-hidden="true" className="h-px min-w-0 flex-1 bg-[#17352b]/20" />
       {label ? (
         <>
