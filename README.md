@@ -119,6 +119,20 @@ database request — set the variables anyway.
 | `NEXT_PUBLIC_APP_URL` | Auth redirects, CV links | Yes (inlined; validated at runtime) |
 | `NEXT_PUBLIC_NEON_REALTIME_URL` | Live shortlist payment status | Yes |
 | `NEON_REALTIME_SECRET` | Seal Realtime queries | No (runtime) |
+
+### Register the deployed origin with Neon Auth
+
+Sign-in from a deployed URL fails with `403 Invalid origin` until that origin is
+on the Auth allow-list. Localhost is allowed by default, so this only shows up
+after deployment. Register every production and preview origin:
+
+```bash
+neon neon-auth domain add https://your-app.vercel.app
+neon neon-auth domain list
+```
+
+Without this step, credentials are valid but the login form reports
+"Check your email and password and try again."
 | `NEON_BRANCH_ID`, `NEON_FUNCTION_HOST_SUFFIX` | `/api/neon` status endpoint | No (runtime) |
 | `CONTACT_EMAIL`, `NEXT_PUBLIC_MESURER_ENABLED` | Contact link, dev inspector | `MESURER` yes; `CONTACT_EMAIL` no |
 
