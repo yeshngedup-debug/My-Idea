@@ -120,7 +120,7 @@ export function SiteHeader() {
               <Link
                 href={primaryHref}
                 className={cn(
-                  "pressable inline-flex min-h-11 items-center rounded-lg bg-[#17352b] px-5 py-2.5 text-sm font-medium text-[#fffefa] hover:bg-[#244b3e]",
+                  "pressable inline-flex min-h-11 items-center rounded-lg bg-[#E8A317] px-5 py-2.5 text-sm font-semibold text-[#0B1F1A] hover:bg-[#d9950f]",
                   pressStyles.press,
                   focusRing,
                 )}
@@ -203,7 +203,7 @@ export function SiteHeader() {
                     href={primaryHref}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#17352b] px-4 text-sm font-medium text-[#fffefa]",
+                      "pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#E8A317] px-4 text-sm font-semibold text-[#0B1F1A]",
                       pressStyles.press,
                       focusRing,
                     )}
