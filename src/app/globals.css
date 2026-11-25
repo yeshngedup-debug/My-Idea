@@ -15,6 +15,9 @@
   --color-muted-foreground: #657069;
   --color-accent: #d84f37;
   --color-accent-foreground: #fffefa;
+  /* Deep accent for small text and focus rings. Mirrors
+     colors.smallTextAccent in lib/design-tokens.ts. */
+  --color-accent-deep: #b23c26;
   --color-destructive: hsl(0 84.2% 60.2%);
   --color-destructive-foreground: #fffefa;
   --color-border: #ded8cb;
@@ -24,6 +27,8 @@
      4.5:1. Secondary is #56645c (5.57:1 on paper). */
   --color-body: #18251f;
   --color-body-secondary: #56645c;
+  /* Quiet ink for metadata and inactive controls on paper. */
+  --color-ink-soft: #4c5a52;
   --radius: 0.5rem;
 }
 
@@ -61,7 +66,7 @@
      on our warm paper. Components that sit on forest set their own explicit
      ring-offset colour and win in the utilities layer. */
   :root {
-    --tw-ring-offset-color: #f5f2ea;
+    --tw-ring-offset-color: var(--color-background);
     /* Font smoothing is set once on the root and inherited everywhere.
        `app/layout.tsx` also puts `antialiased` on <body>; that duplicate is
        outside this file. */
@@ -74,6 +79,14 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* One token-based focus indicator at the shared layer. Components that
+     paint their own ring opt out with `focus-visible:outline-none`; utilities
+     win over this base rule. */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
   }
 
   /* Anchors and keyboard focus must never land under the 64px sticky header. */
@@ -100,7 +113,7 @@
   transition: background-color var(--duration-250) var(--ease-out);
 }
 .site-chrome[data-scrolled="true"] {
-  background-color: #f5f2ea;
+  background-color: var(--color-background);
 }
 
 /* Press feedback lives on pointer-down and retargets from the current value.
@@ -126,13 +139,18 @@
   grid-auto-flow: dense;
 }
 
-/* Quiet paper grid behind a workspace's secondary column. Derived from the
-   Synapse Folio reference's blueprint-paper motif, but drawn in the brand's
-   forest at very low opacity and never animated. Purely structural. */
-.workspace-paper {
-  background-image: linear-gradient(to right, rgba(23, 53, 43, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(23, 53, 43, 0.05) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Workspace shortcut lists carry their own rules and dividers, so this surface
+   is a flat, token-derived paper wash rather than a drawn grid. Declared in the
+   components layer so a caller's background utility (e.g. the dark loading
+   panel) still wins. */
+@layer components {
+  .workspace-paper {
+    background-color: color-mix(
+      in srgb,
+      var(--color-secondary) 60%,
+      var(--color-background)
+    );
+  }
 }
 
 /* Scroll-stacked chapters: each card sticks at its own offset on desktop, so
@@ -146,6 +164,20 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Shared backstop: no smooth scrolling, no running or looping animation and
+     no lingering transition anywhere, even outside the opted-in components. */
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .pressable:active {
     transform: none;
   }
@@ -172,7 +204,7 @@
 @media (prefers-reduced-transparency: reduce) {
   .site-chrome,
   .site-chrome[data-scrolled="true"] {
-    background-color: #f5f2ea;
+    background-color: var(--color-background);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -181,9 +213,9 @@
 @media (prefers-contrast: more) {
   .site-chrome,
   .site-chrome[data-scrolled="true"] {
-    background-color: #f5f2ea;
+    background-color: var(--color-background);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border-bottom-color: #18251f;
+    border-bottom-color: var(--color-foreground);
   }
 }

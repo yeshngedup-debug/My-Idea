@@ -15,12 +15,12 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
   return (
     <section
       aria-label="Workspace figures"
-      className="border-y border-[#17352b]/10 py-6 sm:py-7"
+      className="border-y border-primary/10 py-6 sm:py-7"
     >
       <div className="grid grid-cols-12 gap-6 sm:gap-10">
         <div className="col-span-12 min-w-0 sm:col-span-5">
           <p className="text-sm text-body-secondary">{lead.label}</p>
-          <p className="mt-1 text-[clamp(2.5rem,6vw,3.5rem)] font-medium leading-none tabular-nums tracking-[-0.03em] text-[#17352b]">
+          <p className="mt-1 text-[clamp(2.5rem,6vw,3.5rem)] font-medium leading-none tabular-nums tracking-[-0.03em] text-primary">
             {lead.value}
           </p>
           {lead.detail ? (
@@ -31,7 +31,7 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
           {rest.map((stat) => (
             <div
               key={stat.label}
-              className="flex items-baseline justify-between gap-4 border-b border-[#17352b]/10 py-2.5 last:border-0"
+              className="flex items-baseline justify-between gap-4 border-b border-primary/10 py-2.5 last:border-0"
             >
               <dt className="min-w-0 text-sm text-body-secondary">
                 {stat.label}
@@ -42,7 +42,7 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
                   </span>
                 ) : null}
               </dt>
-              <dd className="shrink-0 tabular-nums text-lg font-medium tracking-tight text-[#17352b]">
+              <dd className="shrink-0 tabular-nums text-lg font-medium tracking-tight text-primary">
                 {stat.value}
               </dd>
             </div>

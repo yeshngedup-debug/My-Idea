@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PhotoCredit } from "@/components/ui/photo-credit";
-import { HeroCopyEntrance, HeroPhotoEntrance } from "./hero-motion";
+import { HeroCopyEntrance } from "./hero-motion";
+import { HeroPhotoEntrance } from "./hero-photo";
 import { cn } from "@/lib/utils";
 import { CTA_HREFS, CTA_LABELS, PHOTO_CREDITS, type Cta, type MarketingImage } from "./nav";
 

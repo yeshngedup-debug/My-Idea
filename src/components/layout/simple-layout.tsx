@@ -57,22 +57,22 @@ export default async function SimpleLayout({
     : null;
 
   return (
-    <div className="min-h-screen bg-[#f5f2ea] text-[#17352b]">
-      <header className="sticky top-0 z-30 border-b border-[#ded8cb] bg-[#f5f2ea]/92 backdrop-blur-xl">
+    <div className="min-h-screen bg-background text-primary">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/92 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex min-h-[72px] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <Link
                 href="/"
-                className={`flex shrink-0 items-center gap-2.5 rounded-lg ${pressStyles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]`}
+                className={`flex shrink-0 items-center gap-2.5 rounded-lg ${pressStyles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
               >
                 <Logo size="h-7 w-7" />
-                <span className="truncate text-sm font-semibold tracking-tight text-[#17352b] sm:text-base">
+                <span className="truncate text-sm font-semibold tracking-tight text-primary sm:text-base">
                   Bhutan Tech Connect
                 </span>
               </Link>
               {roleLabel && (
-                <span className="hidden shrink-0 rounded-full border border-[#b23c26]/25 bg-[#b23c26]/8 px-2.5 py-1 text-xs font-semibold text-[#b23c26] sm:inline-flex">
+                <span className="hidden shrink-0 rounded-full border border-accent-deep/25 bg-accent-deep/8 px-2.5 py-1 text-xs font-semibold text-accent-deep sm:inline-flex">
                   {roleLabel}
                 </span>
               )}
@@ -82,13 +82,13 @@ export default async function SimpleLayout({
 
             <div className="flex min-w-0 items-center gap-3">
               <WorkspaceClock />
-              <span className="hidden max-w-36 truncate text-sm text-[#4c5a52] sm:inline">
+              <span className="hidden max-w-36 truncate text-sm text-ink-soft sm:inline">
                 {profile?.full_name ?? "Signed in"}
               </span>
               <form action={logout} className="inline">
                 <button
                   type="submit"
-                  className={`inline-flex min-h-9 items-center rounded-full border border-[#17352b]/20 bg-[#fffefa] px-4 py-2 text-xs font-semibold text-[#17352b] ${pressStyles.press} hover:border-[#17352b] hover:bg-[#17352b] hover:text-[#fffefa] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] sm:text-sm`}
+                  className={`inline-flex min-h-9 items-center rounded-full border border-primary/20 bg-card px-4 py-2 text-xs font-semibold text-primary ${pressStyles.press} hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep sm:text-sm`}
                 >
                   Log out
                 </button>

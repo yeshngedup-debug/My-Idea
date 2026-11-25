@@ -74,9 +74,8 @@ export function HeroCopyEntrance({
 }
 
 /**
- * The photograph is the one bright moment and stays still. The export is kept
- * for call-site compatibility; it renders a plain wrapper with no entrance.
+ * Call-site compatibility only: the static photo wrapper now lives in its own
+ * server-compatible module so hero images do not pull this client motion module
+ * into their hydration path. Import it from `./hero-photo` directly.
  */
-export function HeroPhotoEntrance({ children }: { children: ReactNode }) {
-  return <div>{children}</div>;
-}
+export { HeroPhotoEntrance } from "./hero-photo";

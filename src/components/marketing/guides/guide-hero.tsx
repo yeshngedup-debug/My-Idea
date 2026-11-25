@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { HeroCopyEntrance, HeroPhotoEntrance } from "@/components/marketing/hero-motion";
+import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
+import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import type { Cta } from "@/components/marketing/nav";
 import { cn } from "@/lib/utils";

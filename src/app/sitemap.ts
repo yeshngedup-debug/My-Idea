@@ -1,79 +1,31 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
+import { APP_URL } from '@/config/app';
+
+/** Public routes only — dashboard and account pages must not be indexed. */
+const PUBLIC_ROUTES: { path: string; frequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
+  { path: '/', frequency: 'weekly', priority: 1 },
+  // /public is the landing page; / redirects to it.
+  { path: '/public', frequency: 'weekly', priority: 1 },
+  { path: '/how-it-works', frequency: 'monthly', priority: 0.9 },
+  { path: '/for-students', frequency: 'monthly', priority: 0.9 },
+  { path: '/for-founders', frequency: 'monthly', priority: 0.9 },
+  { path: '/about', frequency: 'monthly', priority: 0.7 },
+  { path: '/faq', frequency: 'monthly', priority: 0.8 },
+  { path: '/contact', frequency: 'monthly', priority: 0.8 },
+  { path: '/privacy', frequency: 'yearly', priority: 0.5 },
+  { path: '/terms', frequency: 'yearly', priority: 0.5 },
+  { path: '/login', frequency: 'yearly', priority: 0.3 },
+  { path: '/signup', frequency: 'yearly', priority: 0.3 },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: 'https://bhutantech.bt/',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    // /public is the landing page; / redirects to it.
-    {
-      url: 'https://bhutantech.bt/public',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: 'https://bhutantech.bt/how-it-works',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: 'https://bhutantech.bt/for-students',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: 'https://bhutantech.bt/for-founders',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: 'https://bhutantech.bt/about',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: 'https://bhutantech.bt/faq',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://bhutantech.bt/contact',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://bhutantech.bt/privacy',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: 'https://bhutantech.bt/terms',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: 'https://bhutantech.bt/login',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-    {
-      url: 'https://bhutantech.bt/signup',
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
-    },
-  ];
+  const lastModified = new Date();
+  const base = APP_URL.replace(/\/$/, '');
+
+  return PUBLIC_ROUTES.map(({ path, frequency, priority }) => ({
+    url: `${base}${path}`,
+    lastModified,
+    changeFrequency: frequency,
+    priority,
+  }));
 }

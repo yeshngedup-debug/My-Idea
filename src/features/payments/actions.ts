@@ -29,6 +29,8 @@ export interface OrderResult {
 
 const ALLOWED_IMAGE = ['image/png', 'image/jpeg', 'image/webp'];
 const REVIEWABLE_STATUSES = ['pending', 'submitted'];
+/** Internal callers use 60s; the admin page uses 3600s. Never mint longer links. */
+const MAX_PROOF_URL_TTL_SECONDS = 3600;
 
 /** Payment proofs live in their own private bucket, separate from CVs. */
 let proofFiles: Files | undefined;
@@ -41,17 +43,33 @@ function getProofFiles(): Files {
   return proofFiles;
 }
 
-/** Fresh short-lived link for an admin to inspect an uploaded payment proof. */
-export async function signPaymentProof(
-  path: string,
-  expiresIn: number
-): Promise<string | null> {
+/** Sign a proof URL without re-checking the caller. Internal callers only. */
+async function signProofUrl(path: string, expiresIn: number): Promise<string | null> {
+  const ttl = Number.isFinite(expiresIn)
+    ? Math.min(Math.max(Math.floor(expiresIn), 1), MAX_PROOF_URL_TTL_SECONDS)
+    : MAX_PROOF_URL_TTL_SECONDS;
   try {
-    return await getProofFiles().url(path, { expiresIn });
+    return await getProofFiles().url(path, { expiresIn: ttl });
   } catch (error) {
     console.error('[shortlist-order] Payment proof signed URL failed', error);
     return null;
   }
+}
+
+/**
+ * Fresh short-lived link for an admin to inspect an uploaded payment proof.
+ *
+ * Exported from a `'use server'` module, so a client can invoke this directly
+ * with an arbitrary object path. The session and admin role are re-checked
+ * here — the path alone must never authorize a signed URL in a private bucket.
+ */
+export async function signPaymentProof(
+  path: string,
+  expiresIn: number
+): Promise<string | null> {
+  const { error } = await requireAdmin();
+  if (error) return null;
+  return signProofUrl(path, expiresIn);
 }
 
 export async function createShortlistOrder(
@@ -117,7 +135,8 @@ export async function createShortlistOrder(
       amount: cleanAmount,
     });
     orderId = row.id;
-  } catch {
+  } catch (error) {
+    console.error('[shortlist-order] Could not create order', error);
     return { ok: false, message: 'Could not create order. Try again.' };
   }
 
@@ -162,13 +181,15 @@ export async function uploadPaymentScreenshot(
 
   try {
     await getProofFiles().upload(path, file, { contentType: file.type });
-  } catch {
+  } catch (error) {
+    console.error('[shortlist-order] Could not upload payment proof', error);
     return { ok: false, message: 'Could not upload screenshot. Try again.' };
   }
 
   try {
     await setOrderScreenshot(orderId, path);
-  } catch {
+  } catch (error) {
+    console.error('[shortlist-order] Could not record the payment proof path', error);
     return { ok: false, message: 'Screenshot uploaded. Could not update order status. Try again.' };
   }
 
@@ -220,7 +241,9 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
     };
   }
 
-  const proof = await signPaymentProof(order.screenshot_path, 60);
+  // This action already re-verified the admin role above; sign directly so
+  // the session is not looked up twice.
+  const proof = await signProofUrl(order.screenshot_path, 60);
   if (!proof) {
     return {
       ok: false,
@@ -230,7 +253,10 @@ export async function confirmOrder(orderId: string): Promise<OrderResult> {
 
   try {
     await setOrderStatus(orderId, 'confirmed', new Date().toISOString());
-  } catch {
+  } catch (error) {
+    // A failed state change must be visible in server logs, not just to the
+    // caller: it may indicate a stale review or a database problem.
+    console.error('[shortlist-order] Could not confirm payment', error);
     return { ok: false, message: 'Could not confirm payment. Try again.' };
   }
 
@@ -254,7 +280,8 @@ export async function rejectOrder(orderId: string): Promise<OrderResult> {
 
   try {
     await setOrderStatus(orderId, 'rejected');
-  } catch {
+  } catch (error) {
+    console.error('[shortlist-order] Could not reject order', error);
     return { ok: false, message: 'Could not reject order. Try again.' };
   }
 

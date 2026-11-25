@@ -73,7 +73,8 @@ export async function setStudentRank(
 
   try {
     await setRankRow(studentId, clean);
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not save student rank', error);
     return { ok: false, message: 'Could not save rank. Try again.' };
   }
 
@@ -92,7 +93,8 @@ export async function setStudentVerified(
 
   try {
     await setVerifiedRow(studentId, verified);
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not update student verification', error);
     return { ok: false, message: 'Could not update verification. Try again.' };
   }
 
@@ -127,14 +129,16 @@ export async function generateShortlist(
     if (projectId && (!project || project.founder_id !== founderId)) {
       return { ok: false, message: 'Choose one of this founder’s projects.' };
     }
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not verify the founder and project', error);
     return { ok: false, message: 'Could not verify the founder and project. Try again.' };
   }
 
   let packageId: PackageId | null;
   try {
     packageId = resolveOrderedPackage(await listFounderOrders(founderId), projectId);
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not verify the ordered package', error);
     return { ok: false, message: 'Could not verify the ordered package. Try again.' };
   }
   // No confirmed order with a known package (legacy/admin-only shortlist):
@@ -143,7 +147,8 @@ export async function generateShortlist(
   let rows;
   try {
     rows = await listStudentProfiles(studentIds);
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not load selected students', error);
     return { ok: false, message: 'Could not load selected students.' };
   }
   if (rows.length === 0) {
@@ -205,7 +210,8 @@ export async function generateShortlist(
   // project only. Founder-requested rows are never wiped by regeneration.
   try {
     await replaceAdminShortlist(founderId, projectId, ordered.map((s) => s.id));
-  } catch {
+  } catch (error) {
+    console.error('[admin] Could not save shortlist', error);
     return { ok: false, message: 'Could not save shortlist. Try again.' };
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Mesurer } from "mesurer";
+import { colors } from "@/lib/design-tokens";
 
 /**
  * Visual inspector for design work. Kept in its own client component so the
@@ -13,9 +14,9 @@ export function MesurerPanel() {
     <Mesurer
       persistKey="bhutan-tech-connect-mesurer"
       initialState={{ minimized: true, toolbarPosition: { x: 24, y: 24 } }}
-      highlightColor="#e7b648"
-      guideColor="#17352b"
-      arrowColor="#d84f37"
+      highlightColor={colors.amberDisplay}
+      guideColor={colors.forest}
+      arrowColor={colors.accent}
     />
   );
 }

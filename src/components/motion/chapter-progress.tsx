@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ScrollTrigger, useGSAP } from "./_shared";
+import { gsap, ScrollTrigger, useGSAP } from "./_shared";
 
 export type ChapterLink = { id: string; label: string };
 
@@ -43,23 +43,31 @@ export function ChapterProgress({
         ];
       });
 
-      const first = document.getElementById(sectionIds[0]);
-      const last = document.getElementById(sectionIds[sectionIds.length - 1]);
-      let progress: ScrollTrigger | undefined;
-      if (first && last && bar.current) {
-        progress = ScrollTrigger.create({
+      // The hairline is decorative and CSS-hidden under reduced motion
+      // (`motion-reduce:hidden`). Do not attach a scroll listener or write a
+      // style on every scroll frame for readers who asked for no motion.
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const first = document.getElementById(sectionIds[0]);
+        const last = document.getElementById(sectionIds[sectionIds.length - 1]);
+        const barEl = bar.current;
+        if (!first || !last || !barEl) return;
+
+        const progress = ScrollTrigger.create({
           trigger: first,
           endTrigger: last,
           start: "top 60%",
           end: "bottom 60%",
           onUpdate: (self) => {
-            bar.current!.style.transform = `scaleX(${self.progress.toFixed(3)})`;
+            barEl.style.transform = `scaleX(${self.progress.toFixed(3)})`;
           },
         });
-      }
+
+        return () => progress.kill();
+      });
 
       return () => {
-        progress?.kill();
+        mm.revert();
         triggers.forEach((trigger) => trigger.kill());
       };
     },

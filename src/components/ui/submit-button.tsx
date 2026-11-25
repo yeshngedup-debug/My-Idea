@@ -17,23 +17,30 @@ export function SubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <Button
-      type="submit"
-      disabled={pending}
-      aria-busy={pending}
-      className="h-auto min-h-11 w-full rounded-lg bg-[#17352b] py-3.5 font-medium text-[#fffefa] hover:bg-[#244b3e]"
-    >
-      {pending ? (
-        <span className="inline-flex items-center gap-2">
-          <span
-            aria-hidden="true"
-            className="h-4 w-4 rounded-full border-2 border-[#fffefa]/40 border-t-[#fffefa] animate-spin"
-          />
-          {pendingLabel}
-        </span>
-      ) : (
-        children
-      )}
-    </Button>
+    <>
+      <Button
+        type="submit"
+        disabled={pending}
+        aria-busy={pending}
+        className="h-auto min-h-11 w-full rounded-lg bg-[#17352b] py-3.5 font-medium text-[#fffefa] hover:bg-[#244b3e]"
+      >
+        {pending ? (
+          <span className="inline-flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 rounded-full border-2 border-[#fffefa]/40 border-t-[#fffefa] animate-spin motion-reduce:animate-none"
+            />
+            {pendingLabel}
+          </span>
+        ) : (
+          children
+        )}
+      </Button>
+      {/* Disabling the button during submit can drop focus, so its changed
+          label may never be announced. A stable live region fills that gap. */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {pending ? pendingLabel : ""}
+      </span>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { MotionProvider } from "@/components/ui/motion-provider";
 import { MesurerPanel } from "@/components/dev/mesurer-panel";
 import { OfflineStatus } from "@/components/network/offline-status";
+import { APP_URL } from "@/config/app";
 import "./globals.css";
 
 const geist = Geist({
@@ -14,7 +15,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bhutantech.bt"),
+  metadataBase: new URL(APP_URL),
   title: {
     default: "Bhutan Tech Connect | Paid project work in Bhutan",
     template: "%s | Bhutan Tech Connect",

@@ -59,7 +59,7 @@ export function LocalBridgeDifferences({
     <section
       aria-labelledby={`${id}-heading`}
       className={cn(
-        "px-5 text-[#18251f] sm:px-8 lg:px-12",
+        "px-5 text-foreground sm:px-8 lg:px-12",
         compact ? "py-12 sm:py-16" : "py-16 sm:py-20 lg:py-24",
         className,
       )}
@@ -68,13 +68,13 @@ export function LocalBridgeDifferences({
         <h2
           id={`${id}-heading`}
           className={cn(
-            "text-balance font-semibold leading-tight tracking-[-0.03em] text-[#17352b]",
+            "text-balance font-semibold leading-[1.25] tracking-[-0.03em] text-primary",
             compact ? "text-2xl sm:text-3xl" : "text-3xl sm:text-5xl",
           )}
         >
           {LOCAL_BRIDGE_HEADLINE}
         </h2>
-        <div aria-hidden="true" className="mt-6 h-0.5 w-10 bg-[#d84f37]" />
+        <div aria-hidden="true" className="mt-6 h-0.5 w-10 bg-accent" />
         <dl
           className={cn(
             "grid gap-x-12 sm:grid-cols-2",
@@ -83,12 +83,12 @@ export function LocalBridgeDifferences({
         >
           {LOCAL_BRIDGE_DIFFERENCES.map((item) => (
             <div key={item.label}>
-              <dt className="text-sm font-semibold text-[#17352b]">
+              <dt className="text-sm font-semibold text-primary">
                 {item.label}
               </dt>
               <dd
                 className={cn(
-                  "mt-1 leading-6 text-[#18251f]/70",
+                  "mt-1 leading-6 text-foreground/70",
                   compact ? "text-xs" : "text-sm",
                 )}
               >

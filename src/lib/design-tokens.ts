@@ -27,6 +27,8 @@ export const colors = {
 
   /* Ink */
   ink: "#18251f",
+  /** Quiet ink for metadata and inactive controls on paper; CSS: --color-ink-soft. */
+  inkSoft: "#4c5a52",
   textSecondary: "#56645c",
   /** Canonical body-copy roles. 5.57:1 on paper; use instead of opacity greys. */
   body: "#18251f",
@@ -41,7 +43,8 @@ export const colors = {
   forestHover: "#244b3e",
   heroInk: "#101d17",
 
-  /* Warm accent: vermilion. The deep tone is for small text. */
+  /* Warm accent: vermilion. The deep tone is for small text and focus rings;
+     CSS mirrors it as --color-accent-deep. */
   accent: "#d84f37",
   accentHover: "#b44532",
   smallTextAccent: "#b23c26",
@@ -139,7 +142,8 @@ export const focus = {
 
 export const motion = {
   easing: {
-    out: "cubic-bezier(0.23, 1, 0.32, 1)",
+    /** Matches --ease-out in app/globals.css. */
+    out: "cubic-bezier(0.22, 1, 0.36, 1)",
     inOut: "cubic-bezier(0.77, 0, 0.175, 1)",
   },
   duration: {

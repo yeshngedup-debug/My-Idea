@@ -27,6 +27,14 @@ export default function GlobalError({
           fontFamily: 'system-ui, sans-serif',
         }}
       >
+        {/* This fallback replaces the root layout, so globals.css (and its
+            focus styles) are unavailable. Scope a visible focus ring here. */}
+        <style>{`
+          .retry-button:focus-visible {
+            outline: 3px solid #b23c26;
+            outline-offset: 3px;
+          }
+        `}</style>
         <main style={{ maxWidth: '52ch' }}>
           <h1 style={{ fontSize: '2rem', lineHeight: 1.1, color: '#17352b' }}>
             Something went wrong
@@ -37,6 +45,7 @@ export default function GlobalError({
           <button
             type="button"
             onClick={retry}
+            className="retry-button"
             style={{
               minHeight: 48,
               padding: '12px 28px',

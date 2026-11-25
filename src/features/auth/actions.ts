@@ -167,8 +167,10 @@ export async function signup(formData: FormData) {
     // dashboards agree. A failed mirror can be retried on the next login.
     try {
       await ensureProfile(data.user.id, fullName || null);
-    } catch {
-      // The profile also gets mirrored on a later identity sync.
+    } catch (error) {
+      // The profile also gets mirrored on a later identity sync, and role
+      // lookups fail closed until then. Surface the failure in server logs.
+      console.error('[auth] Could not mirror the new profile into Neon', error);
     }
     redirect(await dashboardPathForCurrentUser());
   }
@@ -271,8 +273,10 @@ async function dashboardPathForCurrentUser(): Promise<string> {
   // resolve a stale role from Neon on the next request.
   try {
     await auth.signOut();
-  } catch {
-    // The login redirect still ends the signup flow.
+  } catch (error) {
+    // The login redirect still ends the signup flow, but a failed sign-out
+    // leaves a session behind and must be visible in server logs.
+    console.error('[auth] Could not sign out after a failed role lookup', error);
   }
   return '/login?error=profile-sync';
 }

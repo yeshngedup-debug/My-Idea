@@ -137,7 +137,8 @@ export async function uploadCv(formData: FormData): Promise<SaveResult> {
   let path: string;
   try {
     path = await uploadCvFile(user.id, file, uploadId);
-  } catch {
+  } catch (error) {
+    console.error('[student-profile] Could not upload CV', error);
     return { ok: false, message: 'Could not upload CV. Try again.' };
   }
 

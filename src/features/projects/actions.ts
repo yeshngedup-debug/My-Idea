@@ -121,7 +121,8 @@ export async function createProject(formData: FormData): Promise<ProjectResult> 
       workMode,
       deadline: deadlineValue,
     });
-  } catch {
+  } catch (error) {
+    console.error('[projects] Could not insert project', error);
     return { ok: false, message: 'Could not post project. Try again.' };
   }
 
@@ -162,6 +163,7 @@ export async function applyToProject(projectId: string): Promise<ProjectResult> 
     if (error instanceof NeonDataError && error.code === '23505') {
       return { ok: false, message: 'You already applied to this project.' };
     }
+    console.error('[projects] Could not insert application', error);
     return { ok: false, message: 'Could not send application. Try again.' };
   }
 
@@ -203,7 +205,8 @@ export async function updateProjectStatus(
   let updated = false;
   try {
     updated = await updateProjectStatusRow(projectId, user.id, status);
-  } catch {
+  } catch (error) {
+    console.error('[projects] Could not update project status', error);
     return { ok: false, message: 'Could not update project status. Try again.' };
   }
 
@@ -244,7 +247,8 @@ export async function updateApplicationStatus(
   try {
     const applicants = await listProjectApplicants(application.project_id);
     currentStatus = applicants.find((row) => row.id === applicationId)?.status;
-  } catch {
+  } catch (error) {
+    console.error('[projects] Could not load applicant status', error);
     return { ok: false, message: 'Could not load applicant status. Try again.' };
   }
   if (
@@ -257,7 +261,8 @@ export async function updateApplicationStatus(
   let updated = false;
   try {
     updated = await updateApplicationStatusRow(applicationId, status);
-  } catch {
+  } catch (error) {
+    console.error('[projects] Could not update applicant status', error);
     return { ok: false, message: 'Could not update applicant status. Try again.' };
   }
 

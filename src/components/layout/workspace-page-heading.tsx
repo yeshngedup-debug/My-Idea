@@ -14,11 +14,11 @@ export function WorkspacePageHeading({
 }) {
   return (
     <div className="min-w-0">
-      <h1 className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-tight tracking-[-0.02em] text-[#17352b] text-balance">
+      <h1 className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.25] tracking-[-0.02em] text-primary text-balance">
         {title}
       </h1>
       <p className="mt-2 max-w-xs text-sm leading-6 text-body-secondary sm:max-w-sm">
-        <span className="font-medium text-[#b23c26]">{eyebrow} ·</span>{" "}
+        <span className="font-medium text-accent-deep">{eyebrow} ·</span>{" "}
         {description}
       </p>
     </div>

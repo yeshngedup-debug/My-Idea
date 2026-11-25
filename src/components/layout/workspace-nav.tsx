@@ -20,7 +20,7 @@ function useActiveHref(links: WorkspaceNavLink[]) {
 }
 
 const focusRing =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
   const isActive = useActiveHref(links);
@@ -36,8 +36,8 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`rounded-full border px-3.5 py-2 text-sm font-medium ${styles.press} ${focusRing} ${
               active
-                ? 'border-[#17352b] bg-[#17352b] text-[#fffefa]'
-                : 'border-transparent text-[#4c5a52] hover:border-[#ded8cb] hover:bg-[#fffefa] hover:text-[#17352b]'
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-transparent text-ink-soft hover:border-border hover:bg-card hover:text-primary'
             }`}
           >
             {item.label}
@@ -65,8 +65,8 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold ${styles.press} ${focusRing} ${
               active
-                ? 'border-[#17352b] bg-[#17352b] text-[#fffefa]'
-                : 'border-[#ded8cb] bg-[#fffefa] text-[#4c5a52]'
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-border bg-card text-ink-soft'
             }`}
           >
             {item.label}

@@ -126,6 +126,7 @@ export function AnimatedDisclosureList({
                 <motion.div
                   id={panelId}
                   key="panel"
+                  role="region"
                   aria-labelledby={triggerId}
                   initial={reduce ? false : { height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}

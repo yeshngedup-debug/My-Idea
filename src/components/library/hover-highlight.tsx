@@ -1,9 +1,10 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
+ * Server-compatible: hover and focus-within are CSS states, so no client
+ * runtime, handler or hook is needed here.
+ *
  * A 1px hairline and one background step, shown only on hover or keyboard
  * focus within. The transparent base border reserves the 1px so the surface
  * never shifts. No glow, no gradient, no scale, and the focus ring is kept.

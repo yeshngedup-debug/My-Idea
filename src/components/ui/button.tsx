@@ -3,21 +3,23 @@
 import * as React from 'react';
 import styles from '@/styles/pressable.module.css';
 
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: 'default' | 'outline' | 'ghost' | 'destructive';
+};
+
+/**
+ * Thin native <button> wrapper. All standard button/ARIA attributes are
+ * forwarded to the DOM so callers can supply an accessible name (aria-label),
+ * state (aria-busy, aria-pressed) or relationships (aria-describedby). The old
+ * fixed prop list silently dropped these, e.g. SubmitButton's aria-busy.
+ */
 export function Button({
   children,
-  disabled,
-  onClick,
   className = '',
   variant = 'default',
   type = 'button',
-}: {
-  children: React.ReactNode;
-  disabled?: boolean;
-  onClick?: () => void;
-  className?: string;
-  variant?: 'default' | 'outline' | 'ghost' | 'destructive';
-  type?: 'button' | 'submit' | 'reset';
-}) {
+  ...props
+}: ButtonProps) {
   const baseStyles = `inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] disabled:opacity-50 whitespace-nowrap`;
   
   const variantStyles = {
@@ -29,9 +31,8 @@ export function Button({
 
   return (
     <button
+      {...props}
       type={type}
-      disabled={disabled}
-      onClick={onClick}
       className={`${baseStyles} ${variantStyles[variant]} ${className}`}
     >
       {children}

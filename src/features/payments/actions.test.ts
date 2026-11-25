@@ -20,6 +20,7 @@ import {
   confirmOrder,
   createShortlistOrder,
   rejectOrder,
+  signPaymentProof,
   uploadPaymentScreenshot,
 } from '@/features/payments/actions';
 import { auth, mockAuthSession, setMockUser } from '@tests/neon-auth.mock';
@@ -242,5 +243,47 @@ describe('payment review guards', () => {
     expect(result.ok).toBe(true);
     expect(result.message).toBe(ORDER_COPY.orderReviewRejected);
     expect(mockedSetOrderStatus).toHaveBeenCalledWith('order-id', 'rejected');
+  });
+});
+
+describe('signPaymentProof authorization', () => {
+  const path = 'founder-id/order-id.png';
+
+  beforeEach(() => {
+    mockAuthSession();
+    vi.clearAllMocks();
+    proofFiles.url.mockResolvedValue('https://example.test/payment-proof');
+  });
+
+  it('never signs a proof for a signed-out caller', async () => {
+    setMockUser(null);
+
+    await expect(signPaymentProof(path, 60)).resolves.toBeNull();
+    expect(proofFiles.url).not.toHaveBeenCalled();
+  });
+
+  it('never signs a proof for a non-admin caller', async () => {
+    setMockUser({ id: 'student-uuid', email: 'student@example.com' });
+    mockedGetProfileRole.mockResolvedValue('student');
+
+    await expect(signPaymentProof(path, 60)).resolves.toBeNull();
+    expect(proofFiles.url).not.toHaveBeenCalled();
+  });
+
+  it('signs a short-lived proof for an admin', async () => {
+    setMockUser({ id: 'admin-uuid', email: 'admin@example.com' });
+    mockedGetProfileRole.mockResolvedValue('admin');
+
+    await expect(signPaymentProof(path, 120)).resolves.toBe('https://example.test/payment-proof');
+    expect(proofFiles.url).toHaveBeenCalledWith(path, { expiresIn: 120 });
+  });
+
+  it('clamps an unbounded client-supplied TTL', async () => {
+    setMockUser({ id: 'admin-uuid', email: 'admin@example.com' });
+    mockedGetProfileRole.mockResolvedValue('admin');
+
+    await signPaymentProof(path, 60 * 60 * 24);
+
+    expect(proofFiles.url).toHaveBeenCalledWith(path, { expiresIn: 3600 });
   });
 });

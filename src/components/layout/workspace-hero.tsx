@@ -16,7 +16,7 @@ export function WorkspaceHero({
   return (
     <section
       aria-label={eyebrow}
-      className="relative isolate overflow-hidden rounded-2xl border border-[#17352b]/10 bg-[#17352b] px-6 py-8 text-[#fffefa] sm:px-9 sm:py-10"
+      className="relative isolate overflow-hidden rounded-2xl border border-primary/10 bg-primary px-6 py-8 text-card sm:px-9 sm:py-10"
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10">
         <Image
@@ -29,10 +29,10 @@ export function WorkspaceHero({
         <div className="absolute inset-0 bg-gradient-to-r from-[#10241c] via-[#10241c]/90 to-[#10241c]/70" />
       </div>
       <div className="relative z-10 min-w-0 max-w-3xl">
-        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-white text-balance">
+        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-primary-foreground text-balance">
           {title}
         </h1>
-        <p className="mt-3 max-w-lg text-sm leading-6 text-white/75 sm:text-base">
+        <p className="mt-3 max-w-lg text-sm leading-6 text-primary-foreground/75 sm:text-base">
           <span className="font-medium text-amber-200/90">{eyebrow} ·</span>{" "}
           {description}
         </p>
@@ -40,10 +40,10 @@ export function WorkspaceHero({
           <div className="mt-5 flex flex-wrap items-center gap-2.5">{children}</div>
         )}
       </div>
-      <div className="relative z-10 mt-8 border-t border-white/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
+      <div className="relative z-10 mt-8 border-t border-primary-foreground/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
         <PhotoCredit
           fileUrl="https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg"
-          className="text-white/70"
+          className="text-primary-foreground/70"
         />
       </div>
     </section>
