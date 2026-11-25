@@ -150,7 +150,7 @@ export default function HowItWorksPage() {
 
         {/* Three steps — horizontal accordion on a ruled frame. */}
         <Band id="journey" labelledBy="journey-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="02"
@@ -173,7 +173,7 @@ export default function HowItWorksPage() {
           id="brief"
           labelledBy="brief-heading"
           pinOffset={152}
-          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label">The brief</p>
@@ -211,7 +211,7 @@ export default function HowItWorksPage() {
 
         {/* The place. */}
         <Band id="place" labelledBy="place-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
               <MarketingReveal className="lg:col-span-7">
                 <Figure
@@ -254,7 +254,7 @@ export default function HowItWorksPage() {
           labelledBy="care-heading"
           className="border-y border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="05"
@@ -270,7 +270,7 @@ export default function HowItWorksPage() {
                 <MarketingReveal
                   key={rule.title}
                   delay={index * 0.06}
-                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
+                  className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
                   <li>
                     <div className="flex items-center gap-2">
@@ -297,7 +297,7 @@ export default function HowItWorksPage() {
 
         {/* After a shortlist — a numbered ledger. */}
         <Band id="shortlist" labelledBy="shortlist-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="06"
@@ -340,7 +340,7 @@ export default function HowItWorksPage() {
             className={cn(
               container,
               gutters,
-              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
             <MarketingReveal className="lg:col-span-8">

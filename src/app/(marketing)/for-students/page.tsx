@@ -118,7 +118,7 @@ export default function ForStudentsPage() {
 
         {/* Who it's for — three ruled columns, no cards. */}
         <Band id="who" labelledBy="who-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="02"
@@ -134,7 +134,7 @@ export default function ForStudentsPage() {
                 <MarketingReveal
                   key={fit.title}
                   delay={index * 0.06}
-                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
+                  className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
                   <li>
                     <div className="flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function ForStudentsPage() {
           labelledBy="profile-heading"
           className="border-y border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
               <MarketingReveal className="lg:col-span-5">
                 <p className="index-label">03 · Profile</p>
@@ -228,7 +228,7 @@ export default function ForStudentsPage() {
 
         {/* Close to home — inline typography image and one wide plate. */}
         <Band id="rooted" labelledBy="rooted-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <InlineImageText
                 as="h2"
@@ -274,7 +274,7 @@ export default function ForStudentsPage() {
           labelledBy="apply-heading"
           className="border-y border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="05"
@@ -301,7 +301,7 @@ export default function ForStudentsPage() {
 
         {/* Pay — the brief carries the budget. */}
         <Band id="pay" labelledBy="pay-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
               <MarketingReveal className="lg:col-span-5">
                 <p className="index-label">06 · Pay</p>
@@ -335,7 +335,7 @@ export default function ForStudentsPage() {
             className={cn(
               container,
               gutters,
-              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
             <MarketingReveal className="lg:col-span-8">

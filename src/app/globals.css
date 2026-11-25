@@ -185,9 +185,13 @@
     outline-offset: 2px;
   }
 
-  /* Anchors and keyboard focus must never land under the 64px sticky header. */
+  /* Anchors and keyboard focus must never land under the 64px sticky header.
+     A page that also renders the sticky ChapterProgress bar publishes that
+     bar's measured height as --chapter-bar-height, so an in-page link clears
+     the whole sticky stack instead of only the header. */
   html {
     scroll-padding-top: 4rem;
+    --chapter-bar-height: 0px;
   }
 }
 
@@ -218,6 +222,13 @@
    components layer so a caller's background utility (e.g. the dark loading
    panel) still wins. */
 @layer components {
+  /* Target of an in-page link: clears the sticky header (handled by
+     scroll-padding-top) and the sticky chapter bar above it, with one
+     16px gap so the target never sits flush against the bar. */
+  .scroll-mt-chapter {
+    scroll-margin-top: calc(1rem + var(--chapter-bar-height, 0px));
+  }
+
   .workspace-paper {
     background-color: color-mix(
       in srgb,

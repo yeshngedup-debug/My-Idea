@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { gsap, ScrollTrigger, useGSAP } from "./_shared";
 
@@ -22,6 +22,32 @@ export function ChapterProgress({
   const root = useRef<HTMLElement>(null);
   const bar = useRef<HTMLSpanElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  /* The bar wraps to two rows on a narrow screen, so its height is measured
+     rather than guessed. The measured height is published as a CSS variable
+     that every in-page link target reads, so a chapter jump always lands
+     below the bar however the links wrap. */
+  useEffect(() => {
+    const nav = root.current;
+    if (!nav) return;
+
+    const documentRoot = document.documentElement;
+    const publish = () => {
+      documentRoot.style.setProperty(
+        "--chapter-bar-height",
+        `${nav.offsetHeight}px`,
+      );
+    };
+
+    publish();
+    const observer = new ResizeObserver(publish);
+    observer.observe(nav);
+
+    return () => {
+      observer.disconnect();
+      documentRoot.style.removeProperty("--chapter-bar-height");
+    };
+  }, []);
 
   useGSAP(
     () => {

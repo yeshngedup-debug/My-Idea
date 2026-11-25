@@ -110,7 +110,11 @@ export function Band({
       id={id}
       aria-labelledby={labelledBy}
       aria-label={label}
-      className={cn("w-full max-w-full", bandTone[tone], className)}
+      className={cn(
+        "w-full max-w-full scroll-mt-chapter",
+        bandTone[tone],
+        className,
+      )}
     >
       {children}
     </section>
@@ -180,7 +184,7 @@ export function SectionHead({
 
 /**
  * A photograph on a teal mat. No caption strip: photos stand on their own,
- * and their attribution lives on the /about photography credits list.
+ * and their attribution lives in the site footer.
  */
 export function Figure({
   src,

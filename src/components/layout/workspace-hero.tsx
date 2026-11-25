@@ -93,8 +93,8 @@ export function WorkspaceHero({
           )}
         </div>
         <div className="relative z-10 mt-6 border-t border-[#b9dede]/80 pt-3">
-          {/* Dashboard hero carries no photo credit; the photography
-              attribution lives on /about#photography. */}
+          {/* Dashboard hero carries no photo credit; attribution lives in the
+              site footer. */}
         </div>
       </div>
     </section>

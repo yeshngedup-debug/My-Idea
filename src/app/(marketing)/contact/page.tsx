@@ -135,7 +135,7 @@ export default function ContactPage() {
           labelledBy="reach-heading"
           className="border-b border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="02"
@@ -202,7 +202,7 @@ export default function ContactPage() {
 
         {/* Founder access: the admin route, written plainly. */}
         <Band labelledBy="founders-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="03"
@@ -279,7 +279,7 @@ export default function ContactPage() {
           labelledBy="elsewhere-heading"
           className="border-y border-[#0b2e2e]/10 bg-[#eaf6f6]"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <InlineImageText
                 as="h2"
@@ -292,7 +292,7 @@ export default function ContactPage() {
               />
             </MarketingReveal>
 
-            <MarketingReveal className="mt-14">
+            <MarketingReveal className="mt-12">
               <GsapScaleFadeImage>
                 <figure>
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
@@ -316,7 +316,7 @@ export default function ContactPage() {
             className={cn(
               container,
               gutters,
-              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
             <MarketingReveal className="lg:col-span-8">

@@ -16,7 +16,6 @@ import { InlineImageText } from "@/components/editorial";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { LiveContext } from "@/components/data/live-context";
 import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
-import { PHOTO_CREDIT_LIST } from "@/lib/photo-credits";
 import {
   LOCAL_BRIDGE_DIFFERENCES,
   LOCAL_BRIDGE_HEADLINE,
@@ -86,7 +85,7 @@ export default async function AboutPage() {
           labelledBy="why-heading"
           className="border-b border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="02"
@@ -97,7 +96,7 @@ export default async function AboutPage() {
               />
             </MarketingReveal>
 
-            <MarketingReveal className="mt-14">
+            <MarketingReveal className="mt-12">
               <div className="grid grid-cols-1 items-baseline gap-x-10 gap-y-6 border-t border-[#0b2e2e]/15 pt-8 lg:grid-cols-12">
                 <p className="text-[clamp(4rem,9vw,7.5rem)] font-semibold leading-[0.82] tracking-[-0.06em] text-[#0b2e2e] lg:col-span-5">
                   {YOUTH_UNEMPLOYMENT.value}
@@ -116,7 +115,7 @@ export default async function AboutPage() {
 
         {/* The context behind the work: facts as disclosures, one quote, one plate. */}
         <Band labelledBy="context-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="03"
@@ -188,7 +187,7 @@ export default async function AboutPage() {
               </MarketingReveal>
             </div>
 
-            <MarketingReveal className="mt-14">
+            <MarketingReveal className="mt-12">
               <GsapScaleFadeImage>
                 <figure>
                   <div className="plate relative aspect-[16/9] overflow-hidden sm:aspect-[21/9]">
@@ -231,7 +230,7 @@ export default async function AboutPage() {
 
         {/* The bridge: inline typography image, one plate, a ruled list. */}
         <Band labelledBy="bridge-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <InlineImageText
                 as="h2"
@@ -266,7 +265,7 @@ export default async function AboutPage() {
               </MarketingReveal>
             </div>
 
-            <MarketingReveal className="mt-16">
+            <MarketingReveal className="mt-14">
               <div className="grid grid-cols-1 gap-6 border-t border-[#0b2e2e]/15 pt-6 lg:grid-cols-12">
                 <h3 className="display-lg max-w-[14ch] text-[#0b2e2e] lg:col-span-4">
                   {LOCAL_BRIDGE_HEADLINE}
@@ -305,7 +304,7 @@ export default async function AboutPage() {
           labelledBy="verify-heading"
           className="border-y border-[#0b2e2e]/10"
         >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="04"
@@ -326,7 +325,7 @@ export default async function AboutPage() {
                 <MarketingReveal
                   key={item.title}
                   delay={index * 0.06}
-                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
+                  className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
                   <li>
                     <div className="flex items-center gap-2">
@@ -364,7 +363,7 @@ export default async function AboutPage() {
 
         {/* Photographs of places, not members. */}
         <Band labelledBy="photos-heading">
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
+          <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
               <SectionHead
                 index="05"
@@ -390,28 +389,6 @@ export default async function AboutPage() {
                 />
               </GsapScaleFadeImage>
             </MarketingReveal>
-
-            <p className="mt-6 max-w-[62ch] text-xs leading-5 text-[#356464]">
-              The photographs on this page are Wikimedia Commons files, used
-              under the author&apos;s licence. Full credits:
-            </p>
-            <ul className="mt-4 grid gap-3 text-xs leading-5 text-[#356464] sm:max-w-[62ch]">
-              {PHOTO_CREDIT_LIST.map((credit) => (
-                <li key={credit.fileUrl} className="flex items-baseline gap-2">
-                  <a
-                    href={credit.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold underline underline-offset-2 hover:text-[#0b5c5c] transition-colors"
-                  >
-                    {credit.author} / Wikimedia Commons
-                  </a>
-                  <span className="text-[#356464]/70">
-                    · {credit.subject}, {credit.licence}
-                  </span>
-                </li>
-              ))}
-            </ul>
           </div>
         </Band>
 
@@ -421,7 +398,7 @@ export default async function AboutPage() {
             className={cn(
               container,
               gutters,
-              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
             <MarketingReveal className="lg:col-span-8">

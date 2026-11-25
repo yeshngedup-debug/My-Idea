@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Logo } from "@/components/ui/logo";
+import { PHOTO_CREDIT_LIST } from "@/lib/photo-credits";
 import { cn } from "@/lib/utils";
 import {
   LOGIN_LINK,
@@ -127,10 +128,30 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
 
         {!compact ? (
           <p className="mt-4 max-w-[92ch] pb-10 text-xs leading-5 text-[#356464]">
-            Photographs by Doctor 17, Keith Mason, Christopher J. Fynn, Bernard
-            Gagnon and Glacierfanclub via Wikimedia Commons, under CC BY-SA 4.0
-            and CC BY-SA 3.0. Images are resized for the web. See each photo
-            credit for the original file.
+            Photographs are Wikimedia Commons files, resized for the web.{" "}
+            {PHOTO_CREDIT_LIST.map((photo, index) => (
+              <span key={photo.fileUrl}>
+                {index > 0 ? " " : null}
+                <a
+                  href={photo.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 transition-colors hover:text-[#0b2e2e]"
+                >
+                  {photo.subject}
+                </a>{" "}
+                by {photo.author},{" "}
+                <a
+                  href={photo.licenceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 transition-colors hover:text-[#0b2e2e]"
+                >
+                  {photo.licence}
+                </a>
+                {index < PHOTO_CREDIT_LIST.length - 1 ? "," : "."}
+              </span>
+            ))}
           </p>
         ) : null}
       </div>

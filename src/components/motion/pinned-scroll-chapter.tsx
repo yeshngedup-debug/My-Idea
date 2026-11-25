@@ -20,7 +20,9 @@ import { gsap, ScrollTrigger, useGSAP } from "./_shared";
  * the parked title.
  *
  * The section carries a scroll margin so an in-page link to it lands below
- * the sticky header and any progress bar instead of under them.
+ * the sticky header and any progress bar instead of under them. The margin
+ * reads the progress bar's measured height, so it stays correct however the
+ * bar's links wrap.
  */
 export function PinnedScrollChapter({
   id,
@@ -55,7 +57,7 @@ export function PinnedScrollChapter({
           if (!titleEl || !contentEl) return;
 
           const trigger = ScrollTrigger.create({
-            id: "pinned-chapter-title",
+            id: `pinned-title-${id ?? "section"}`,
             trigger: titleEl,
             start: `top top+=${pinOffset}`,
             // Pin for exactly the extra height the scrolling column has over
@@ -93,7 +95,7 @@ export function PinnedScrollChapter({
       id={id}
       aria-labelledby={labelledBy}
       data-pinned-chapter=""
-      className={cn("scroll-mt-24", className)}
+      className={cn("scroll-mt-chapter", className)}
     >
       <div className="mx-auto max-w-[1440px]">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">

@@ -222,7 +222,8 @@ export default async function AdminDashboard() {
           </p>
         </div>
         <div className="relative z-10 mt-8 border-t border-primary-foreground/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
-          {/* Admin dashboard carries no photo credit; attribution lives on /about#photography. */}
+          {/* Admin dashboard carries no photo credit; attribution lives in the
+              site footer. */}
         </div>
       </section>
 

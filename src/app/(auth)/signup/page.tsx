@@ -42,7 +42,7 @@ export default async function SignupPage({
           className={cn(
             container,
             gutters,
-            "grid grid-cols-1 gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-12",
+            "grid grid-cols-1 gap-12 py-12 md:py-16 lg:grid-cols-12 lg:gap-12",
           )}
         >
           <div className="lg:col-span-6 lg:pr-8">
@@ -87,7 +87,7 @@ export default async function SignupPage({
           className={cn(
             container,
             gutters,
-            "grid grid-cols-1 gap-10 py-10 md:py-12 lg:grid-cols-12 lg:gap-12",
+            "grid grid-cols-1 gap-10 py-8 md:py-10 lg:grid-cols-12 lg:gap-12",
           )}
         >
           <div className="lg:col-span-7">

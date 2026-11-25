@@ -3,9 +3,8 @@
  *
  * All files are Wikimedia Commons images used under CC BY-SA 3.0 or
  * CC BY-SA 4.0, both of which require attribution of the author. The
- * per-image credit strips were removed from every page in Pass 5; the
- * attribution now lives here and is rendered once on /about#photography
- * plus one line in the site footer.
+ * per-image credit strips were removed from every page; the attribution now
+ * lives here and is rendered once in the site footer.
  */
 
 export type PhotoAttribution = {
@@ -21,7 +20,7 @@ export type PhotoAttribution = {
 
 export const PHOTO_ATTRIBUTIONS = {
   valley: {
-    subject: "Bhutanese youth working together at a training day in Thimphu",
+    subject: "Bhutanese youth at work in Thimphu",
     fileUrl: "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg",
     author: "Doctor 17",
     licence: "CC BY-SA 4.0",

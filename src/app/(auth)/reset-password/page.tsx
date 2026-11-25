@@ -49,7 +49,7 @@ export default async function ResetPasswordPage({
           className={cn(
             container,
             gutters,
-            "grid grid-cols-1 gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-12",
+            "grid grid-cols-1 gap-12 py-12 md:py-16 lg:grid-cols-12 lg:gap-12",
           )}
         >
           <div className="lg:col-span-6 lg:pr-8">

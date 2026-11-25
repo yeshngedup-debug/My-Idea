@@ -65,24 +65,9 @@ export const CTA_HREFS = {
   contact: "/contact",
 } as const;
 
-/** Wikimedia Commons file URLs for every photograph used in marketing. The
- *  author and licence for each live in `lib/photo-credits.ts`. */
-import { PHOTO_ATTRIBUTIONS } from "@/lib/photo-credits";
-
-export const PHOTO_CREDITS = {
-  valley: PHOTO_ATTRIBUTIONS.valley.fileUrl,
-  dzong: PHOTO_ATTRIBUTIONS.dzong.fileUrl,
-  market: PHOTO_ATTRIBUTIONS.market.fileUrl,
-  thimphu: PHOTO_ATTRIBUTIONS.thimphu.fileUrl,
-  flags: PHOTO_ATTRIBUTIONS.flags.fileUrl,
-  archery: PHOTO_ATTRIBUTIONS.archery.fileUrl,
-  textile: PHOTO_ATTRIBUTIONS.textile.fileUrl,
-} as const;
-
 export type MarketingImage = {
   src: string;
   alt: string;
-  fileUrl?: string;
 };
 
 export type Cta = {

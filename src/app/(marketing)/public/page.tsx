@@ -335,7 +335,7 @@ export default async function PublicHomePage() {
           id="audience"
           labelledBy="audience-heading"
           pinOffset={152}
-          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label">Who it is for</p>
@@ -386,7 +386,7 @@ export default async function PublicHomePage() {
           id="steps"
           labelledBy="steps-heading"
           pinOffset={152}
-          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label">From brief to paid</p>
@@ -406,7 +406,7 @@ export default async function PublicHomePage() {
             {steps.map((step) => (
               <li
                 key={step.number}
-                className="grid grid-cols-1 gap-3 border-b border-[#0b2e2e]/15 py-7 sm:grid-cols-12 sm:gap-6 sm:py-8"
+                className="grid grid-cols-1 gap-3 border-b border-[#0b2e2e]/15 py-6 sm:grid-cols-12 sm:gap-6 sm:py-7"
               >
                 <p className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b] sm:col-span-1">
                   {step.number}
@@ -430,7 +430,7 @@ export default async function PublicHomePage() {
           id="context"
           labelledBy="context-heading"
           pinOffset={152}
-          className="bg-[#0b2e2e] px-5 py-20 text-[#eaf6f6] sm:px-8 md:py-28 lg:px-12"
+          className="bg-[#0b2e2e] px-5 py-16 text-[#eaf6f6] sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label text-[#66bfbf]">Local context</p>
@@ -511,7 +511,7 @@ export default async function PublicHomePage() {
           id="place"
           labelledBy="place-heading"
           pinOffset={152}
-          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label">The place</p>
@@ -551,7 +551,7 @@ export default async function PublicHomePage() {
           id="trust"
           labelledBy="trust-heading"
           pinOffset={152}
-          className="border-t border-[#0b2e2e]/12 bg-[#eaf6f6] px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          className="border-t border-[#0b2e2e]/12 bg-[#eaf6f6] px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
               <p className="index-label">Checked by people</p>
@@ -572,7 +572,7 @@ export default async function PublicHomePage() {
             {trust.map((item) => (
               <li
                 key={item.number}
-                className="border-b border-[#0b2e2e]/15 py-7 sm:py-8"
+                className="border-b border-[#0b2e2e]/15 py-6 sm:py-7"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
@@ -597,7 +597,7 @@ export default async function PublicHomePage() {
             className={cn(
               container,
               sectionPad,
-              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
             <MarketingReveal className="lg:col-span-8">
