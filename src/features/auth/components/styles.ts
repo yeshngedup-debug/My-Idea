@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 /**
  * Shared focus treatment for auth-page text links. Mirrors the `focusRing`
  * constant used by the marketing header, so keyboard focus is visible without
@@ -5,6 +7,15 @@
  */
 export const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+
+/**
+ * Display face for auth headings. Read from the inherited `--font-outfit`
+ * variable when the root supplies it, with the inherited body face as the
+ * graceful fallback. No font package is bundled here.
+ */
+export const displayFont: CSSProperties = {
+  fontFamily: "var(--font-outfit, var(--font-geist))",
+};
 
 /**
  * Motion for the auth screens, kept here so no new CSS file is needed. The
@@ -42,12 +53,24 @@ export const authMotionStyles = `
     animation: auth-message-in 180ms var(--ease-out) both;
   }
 
-  /* Press feedback is retargeted here so the shared, accessible SubmitButton
-     keeps its API and pending/live-region behaviour untouched. */
+  /* The single saffron primary action. Colour and press feedback are
+     retargeted here so the shared, accessible SubmitButton keeps its API and
+     pending/live-region behaviour untouched. */
   [data-auth-card] button[type="submit"] {
+    background-color: #e8a317 !important;
+    color: #0b1f1a !important;
     transition:
       transform 160ms var(--ease-out),
       background-color 150ms var(--ease-out) !important;
+  }
+
+  [data-auth-card] button[type="submit"]:hover:not(:disabled) {
+    background-color: #d9950f !important;
+  }
+
+  /* Forest reads against saffron; the default vermilion ring does not. */
+  [data-auth-card] button[type="submit"]:focus-visible {
+    outline-color: #17352b !important;
   }
 
   [data-auth-card] button[type="submit"]:active {
@@ -61,6 +84,9 @@ export const authMotionStyles = `
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
+    }
+    [data-auth-card] button[type="submit"] {
+      transition: none !important;
     }
     [data-auth-card] button[type="submit"]:active {
       transform: none !important;

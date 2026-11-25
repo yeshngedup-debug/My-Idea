@@ -20,7 +20,7 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
             key={stat.label}
             className="min-w-0 rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-4 py-4 shadow-[0_1px_2px_rgba(24,37,31,.05)]"
           >
-            <dt className="text-xs font-medium uppercase tracking-[0.08em] text-[#56645c]">
+            <dt className="text-xs font-medium text-[#56645c]">
               {stat.label}
             </dt>
             <dd className="mt-2 text-2xl font-semibold leading-none tabular-nums tracking-tight text-[#17352b]">

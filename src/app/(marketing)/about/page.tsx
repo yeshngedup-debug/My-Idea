@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { GlobeHemisphereWest } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { InlineImageText } from "@/components/editorial/inline-image-text";
+import { ScaleFadeImage } from "@/components/editorial/scale-fade-image";
 import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { PhotoFeature } from "@/components/marketing/photo-feature";
 import { Reveal } from "@/components/ui/motion";
@@ -31,17 +31,20 @@ export const metadata: Metadata = pageMetadata({
   path: "/about",
 });
 
-/** BTC palette, applied as a restrained Paywave-style card system. */
+/** BTC palette, applied as a restrained editorial card system. */
 const card =
   "rounded-3xl border border-[#1B4D3E]/12 bg-white shadow-[0_2px_10px_rgba(11,31,26,0.04)]";
 const cardBody = "p-6 sm:p-10 lg:p-14";
-const band = "px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-9";
-const pill =
-  "inline-flex min-h-8 items-center justify-center rounded-full border border-[#1B4D3E]/15 bg-[#F7F4EE] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const band = "px-4 py-16 sm:px-6 md:py-24 lg:px-8";
+const wideBand = "px-4 py-32 sm:px-6 md:py-48 lg:px-8";
 const sectionHeading =
-  "text-balance text-center text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-5xl";
+  "text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-5xl";
 const accent = "text-[#E8A317]";
 const muted = "text-[#5A6A61]";
+
+/** Interactive surfaces share one hover/press treatment and a 44px target. */
+const lift =
+  "min-h-11 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(11,31,26,0.10)] motion-reduce:transform-none motion-reduce:transition-none";
 
 const dzong = {
   src: "/images/bhutanese-community.jpg",
@@ -91,20 +94,28 @@ export default async function AboutPage() {
     <div className="min-h-screen bg-[#F7F4EE] text-[#0B1F1A]">
       <SiteHeader />
 
-      <main id="main-content">
-        <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
-            <div className={`${card} overflow-hidden`}>
-              <HeroCopyEntrance className="mx-auto max-w-3xl px-6 pb-8 pt-12 text-center sm:px-10 sm:pt-14">
-                <span className={pill}>Thimphu · Bhutan</span>
-                <h1 className="mt-6 text-balance text-[clamp(2.5rem,5.2vw,4.75rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#0B1F1A]">
-                  Paid projects for{" "}
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
+        {/* Editorial split: one large heading on the left, one credited
+            photograph on the right, with deliberate space between them. */}
+        <section aria-labelledby="about-heading" className={wideBand}>
+          <div className="mx-auto w-full max-w-[1440px]">
+            <div className="grid grid-cols-12 grid-flow-dense gap-4">
+              <HeroCopyEntrance className="col-span-12 flex flex-col justify-center px-2 py-6 md:col-span-7 md:px-8 lg:pr-16">
+                <h1
+                  id="about-heading"
+                  className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.05em] text-[#0B1F1A]"
+                >
+                  <ScrubbedTextReveal
+                    as="span"
+                    text="Paid projects for"
+                    className="[&_span]:!text-[#0B1F1A]"
+                  />{" "}
                   <span className={accent}>Bhutanese students</span>
                 </h1>
-                <p className={`mx-auto mt-6 max-w-xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
+                <p className={`mt-10 max-w-xl text-lg leading-8 sm:text-xl ${muted}`}>
                   A local bridge between students and founders.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-12 flex flex-wrap items-center gap-3">
                   <Link href="/public" className={heroPrimary}>
                     Explore the platform
                   </Link>
@@ -114,17 +125,25 @@ export default async function AboutPage() {
                 </div>
               </HeroCopyEntrance>
 
-              <figure className="px-6 pb-10 sm:px-10 sm:pb-14">
-                <div className="relative isolate aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#E8E4DB]">
+              <figure className="col-span-12 md:col-span-5">
+                <ScaleFadeImage className="relative isolate aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
                   <Image
                     src={dzong.src}
                     alt={dzong.alt}
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 58vw"
-                    className="object-cover object-center"
+                    sizes="(max-width: 768px) 100vw, 38vw"
+                    className="object-cover object-center grayscale contrast-[1.15] opacity-85"
                   />
-                </div>
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 45% 35%, rgba(11,31,26,0.05) 0%, rgba(11,31,26,0.78) 100%)",
+                    }}
+                  />
+                </ScaleFadeImage>
                 <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                   <span className="text-sm font-medium text-[#0B1F1A]">
                     Bhutanese boys in gho, sitting together
@@ -140,22 +159,19 @@ export default async function AboutPage() {
         </section>
 
         <section aria-labelledby="why-heading" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
-              <span className={pill}>A practical first step</span>
-              <div className="mt-5">
-                <h2 id="why-heading" className={sectionHeading}>
-                  <ScrubbedTextReveal
-                    as="span"
-                    text="Young people need work close to home"
-                    className="[&_span]:!text-[#0B1F1A]"
-                  />
-                </h2>
-                <p className={`mt-4 text-center text-sm leading-6 sm:text-base ${muted}`}>
-                  A practical first step for students and founders.
-                </p>
-              </div>
-              <Reveal className="mx-auto mt-10 max-w-xl border-t border-[#1B4D3E]/12 pt-8 text-center">
+              <h2 id="why-heading" className={sectionHeading}>
+                <ScrubbedTextReveal
+                  as="span"
+                  text="Young people need work close to home"
+                  className="[&_span]:!text-[#0B1F1A]"
+                />
+              </h2>
+              <p className={`mx-auto mt-6 max-w-2xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
+                A practical first step for students and founders.
+              </p>
+              <Reveal className="mx-auto mt-16 max-w-xl border-t border-[#1B4D3E]/12 pt-10 text-center">
                 <p className="text-[clamp(4.5rem,10vw,8rem)] font-semibold leading-[0.8] tracking-[-0.09em] text-[#0B1F1A]">
                   {YOUTH_UNEMPLOYMENT.value}
                 </p>
@@ -168,25 +184,18 @@ export default async function AboutPage() {
         </section>
 
         <section aria-labelledby="context-heading" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
               <PinnedHeadingSection
                 split="lg:grid-cols-[0.3fr_0.7fr]"
                 heading={
-                  <div className="text-center lg:text-left">
-                    <GlobeHemisphereWest
-                      aria-hidden="true"
-                      weight="light"
-                      size={16}
-                      strokeWidth={1.5}
-                      className="mx-auto text-[#E8A317] lg:mx-0"
-                    />
-                    <span className={pill}>National context</span>
-                    <h2 id="context-heading" className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-left">
-                      The context{" "}
-                      <span className={accent}>behind the work</span>
-                    </h2>
-                  </div>
+                  <h2
+                    id="context-heading"
+                    className="text-balance text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-left"
+                  >
+                    The context{" "}
+                    <span className={accent}>behind the work</span>
+                  </h2>
                 }
               >
                 <AnimatedDisclosureList
@@ -215,8 +224,8 @@ export default async function AboutPage() {
                   }))}
                 />
 
-                <figure className="mt-10">
-                  <div className="relative isolate aspect-[4/1] overflow-hidden rounded-[1.25rem] border border-[#1B4D3E]/12 bg-[#E8E4DB]">
+                <figure className="mt-12">
+                  <ScaleFadeImage className="relative isolate aspect-[4/1] overflow-hidden rounded-[1.25rem] border border-[#1B4D3E]/12 bg-[#E8E4DB]">
                     <Image
                       src="/images/thimphu-market.webp"
                       alt="Open sacks of spices and grain at a market stall in Thimphu"
@@ -224,13 +233,13 @@ export default async function AboutPage() {
                       sizes="(max-width: 1024px) 100vw, 65vw"
                       className="object-cover object-center"
                     />
-                  </div>
+                  </ScaleFadeImage>
                   <figcaption className={`mt-2 text-xs leading-5 ${muted}`}>
                     A market stall in Thimphu.
                   </figcaption>
                 </figure>
 
-                <Reveal className="mt-12 grid gap-8 border-t border-[#1B4D3E]/12 pt-9 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+                <Reveal className="mt-16 grid gap-8 border-t border-[#1B4D3E]/12 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
                   <blockquote className="border-l-2 border-[#E8A317] pl-6 text-xl leading-relaxed text-[#0B1F1A] sm:text-2xl">
                     &ldquo;{CONTEXT_QUOTE.text}&rdquo;
                   </blockquote>
@@ -239,7 +248,7 @@ export default async function AboutPage() {
                   </p>
                 </Reveal>
 
-                <Reveal className="mt-10 border-t border-[#1B4D3E]/12 pt-6">
+                <Reveal className="mt-12 border-t border-[#1B4D3E]/12 pt-6">
                   <p className={`text-xs leading-5 ${muted}`}>
                     Source:{" "}
                     <a
@@ -259,10 +268,10 @@ export default async function AboutPage() {
         </section>
 
         <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
               <details>
-                <summary className="mx-auto max-w-[1440px] cursor-pointer rounded-full py-2 text-center text-sm font-semibold text-[#1B4D3E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white">
+                <summary className="mx-auto max-w-[1440px] min-h-11 cursor-pointer rounded-full py-2 text-center text-sm font-semibold text-[#1B4D3E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white">
                   Official statistics
                 </summary>
                 <LiveContext initial={liveContext} variant="full" />
@@ -272,57 +281,51 @@ export default async function AboutPage() {
         </section>
 
         <section aria-labelledby="bridge-heading" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
-              <div className="mx-auto max-w-5xl">
-                <div className="text-center">
-                  <span className={pill}>A practical local bridge</span>
-                </div>
-                <InlineImageText
-                  id="bridge-heading"
-                  before="A practical local"
-                  imageSrc="/images/bhutanese-community.jpg"
-                  imageAlt="Bhutanese students working together"
-                  creditFileUrl={PHOTO_CREDITS.dzong}
-                  accessibleLabel="A practical local bridge: Bhutanese students working together"
-                  after="bridge"
-                  className="mt-5"
-                />
-                <p className={`mx-auto mt-6 max-w-2xl text-center text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
-                  Students and founders meet around paid project work. Not an
-                  employer or agent.
-                </p>
-              </div>
-              <div className="mt-10 grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-                <Reveal>
-                  <div className="grid gap-6 text-sm leading-7 text-[#0B1F1A]/75 sm:text-base sm:leading-8">
-                    <p className="max-w-xl">
-                      Students apply to projects; founders post briefs and agree
-                      terms directly.
-                    </p>
-                    <div className="flex flex-wrap gap-x-8 gap-y-3 border-t border-[#1B4D3E]/12 pt-6">
-                      <Link href="/how-it-works" className={textLink}>
-                        See how it works
-                      </Link>
-                      <Link href="/faq" className={textLink}>
-                        Read the FAQ
-                      </Link>
-                    </div>
+              {/* Gapless 12-column mosaic: 7 + 5. */}
+              <div className="grid grid-cols-12 grid-flow-dense gap-4">
+                <div className="col-span-12 md:col-span-7">
+                  <InlineImageText
+                    id="bridge-heading"
+                    before="A practical local"
+                    imageSrc="/images/bhutanese-community.jpg"
+                    imageAlt="Bhutanese students working together"
+                    creditFileUrl={PHOTO_CREDITS.dzong}
+                    accessibleLabel="A practical local bridge: Bhutanese students working together"
+                    after="bridge"
+                  />
+                  <p className={`mt-8 max-w-2xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
+                    Students and founders meet around paid project work. Not an
+                    employer or agent.
+                  </p>
+                  <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-[#1B4D3E]/12 pt-8">
+                    <Link href="/how-it-works" className={textLink}>
+                      See how it works
+                    </Link>
+                    <Link href="/faq" className={textLink}>
+                      Read the FAQ
+                    </Link>
                   </div>
-                </Reveal>
-                <PhotoFeature
-                  image={valley}
-                  caption="Built around real work"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                  className="sm:aspect-[16/10]"
-                />
+                </div>
+                <div className="col-span-12 md:col-span-5">
+                  <ScaleFadeImage>
+                    <PhotoFeature
+                      image={valley}
+                      caption="Built around real work"
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                      className={`sm:aspect-[16/10] ${lift}`}
+                      reveal={false}
+                    />
+                  </ScaleFadeImage>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
               <LocalBridgeDifferences className="!px-0 !py-0" />
             </div>
@@ -330,18 +333,18 @@ export default async function AboutPage() {
         </section>
 
         <section aria-labelledby="verify-heading" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
-              <span className={pill}>A manual check</span>
-              <h2 id="verify-heading" className={`mt-5 ${sectionHeading}`}>
+              <h2 id="verify-heading" className={`${sectionHeading} text-left`}>
                 How we <span className={accent}>verify students</span>
               </h2>
-              <p className={`mt-4 text-center text-sm leading-6 sm:text-base ${muted}`}>
+              <p className={`mt-6 max-w-2xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
                 A manual check, never an algorithm.
               </p>
-              <div className="mt-10 grid gap-8 border-t border-[#1B4D3E]/12 pt-8 sm:grid-cols-3 sm:gap-10">
-                <Reveal delay={0}>
-                  <div className="h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6">
+              {/* Gapless 12-column mosaic: 6 + 3 + 3. */}
+              <div className="mt-12 grid grid-cols-12 grid-flow-dense gap-4 border-t border-[#1B4D3E]/12 pt-10">
+                <Reveal delay={0} className="col-span-12 sm:col-span-6">
+                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
                     <h3 className="text-base font-semibold text-[#0B1F1A]">
                       Identity and institution details
                     </h3>
@@ -351,8 +354,8 @@ export default async function AboutPage() {
                     </p>
                   </div>
                 </Reveal>
-                <Reveal delay={0.05}>
-                  <div className="h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6">
+                <Reveal delay={0.05} className="col-span-12 sm:col-span-3">
+                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
                     <h3 className="text-base font-semibold text-[#0B1F1A]">
                       CV review
                     </h3>
@@ -361,8 +364,8 @@ export default async function AboutPage() {
                     </p>
                   </div>
                 </Reveal>
-                <Reveal delay={0.1}>
-                  <div className="h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6">
+                <Reveal delay={0.1} className="col-span-12 sm:col-span-3">
+                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
                     <h3 className="text-base font-semibold text-[#0B1F1A]">
                       Rank and verified badge
                     </h3>
@@ -373,7 +376,7 @@ export default async function AboutPage() {
                   </div>
                 </Reveal>
               </div>
-              <Reveal className="mt-8">
+              <Reveal className="mt-10">
                 <p className={`text-center text-xs leading-5 ${muted}`}>
                   Questions?{" "}
                   <Link href="/contact" className={textLink}>
@@ -387,22 +390,24 @@ export default async function AboutPage() {
         </section>
 
         <section aria-labelledby="photos-heading" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
-              <span className={pill}>Places, not members</span>
-              <h2 id="photos-heading" className={`mt-5 ${sectionHeading}`}>
+              <h2 id="photos-heading" className={`${sectionHeading} text-left`}>
                 Photographs of{" "}
                 <span className={accent}>places, not members</span>
               </h2>
-              <div className="mt-10">
-                <PhotoFeature
-                  image={market}
-                  caption="Bhutanese students in kira"
-                  sizes="(max-width: 768px) 100vw, 90vw"
-                  className="sm:aspect-[2]"
-                />
+              <div className="mt-12">
+                <ScaleFadeImage>
+                  <PhotoFeature
+                    image={market}
+                    caption="Bhutanese students in kira"
+                    sizes="(max-width: 768px) 100vw, 90vw"
+                    className={`sm:aspect-[2] ${lift}`}
+                    reveal={false}
+                  />
+                </ScaleFadeImage>
               </div>
-              <Reveal className="mt-6">
+              <Reveal className="mt-8">
                 <p className={`mx-auto max-w-2xl text-center text-xs leading-5 ${muted}`}>
                   The credited Wikimedia Commons photographs are by Doctor 17,
                   Keith Mason and Christopher J. Fynn, under CC BY-SA 4.0 and
@@ -413,13 +418,13 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
-            <div className="rounded-3xl border border-[#1B4D3E]/12 bg-[#1B4D3E] px-6 py-14 text-center sm:px-10 sm:py-20">
-              <h2 className="text-balance text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-white">
+        <section className={wideBand}>
+          <div className="mx-auto w-full max-w-[1440px]">
+            <div className="rounded-3xl border border-[#1B4D3E]/12 bg-[#1B4D3E] px-6 py-20 text-center sm:px-10 sm:py-28">
+              <h2 className="text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-white">
                 See how it all <span className={accent}>fits together</span>
               </h2>
-              <div className="mt-8 flex justify-center">
+              <div className="mt-10 flex justify-center">
                 <Link href="/public" className={heroPrimary}>
                   Explore the public platform
                 </Link>

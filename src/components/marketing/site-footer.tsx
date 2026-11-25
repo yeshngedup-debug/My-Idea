@@ -16,10 +16,10 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
     <footer
       className={cn(
         "border-t border-[#1B4D3E]/10 px-5 sm:px-8 lg:px-12",
-        compact ? "py-6" : "py-8",
+        compact ? "py-8" : "py-14 md:py-20",
       )}
     >
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 sm:flex-row sm:items-end sm:justify-between sm:gap-16">
         <div>
           <Link
             href={SITE.homeHref}

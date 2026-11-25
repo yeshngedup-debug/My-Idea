@@ -25,7 +25,7 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
   const isActive = useActiveHref(links);
 
   return (
-    <nav aria-label="Workspace navigation" className="hidden items-center gap-1 lg:flex">
+    <nav aria-label="Workspace navigation" className="hidden items-center gap-2 lg:flex">
       {links.map((item) => {
         const active = isActive(item.href);
         return (
@@ -33,7 +33,7 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
             key={item.href}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`rounded-full border px-3 py-2 text-sm font-medium ${focusRing} ${
+            className={`inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 text-sm font-medium ${focusRing} ${
               active
                 ? 'border-[#ded8cb] bg-[#fffefa] font-semibold text-[#18251f]'
                 : 'border-transparent text-[#56645c] hover:text-[#18251f]'

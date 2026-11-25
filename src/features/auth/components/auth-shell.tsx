@@ -13,6 +13,7 @@ import { Logo } from "@/components/ui/logo";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import {
   authMotionStyles,
+  displayFont,
   focusRing,
 } from "@/features/auth/components/styles";
 import styles from "@/styles/auth-shell.module.css";
@@ -51,11 +52,11 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main
       id="main-content"
-      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-4 py-4 text-[#18251f] sm:px-7 sm:py-7`}
+      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-5 py-5 text-[#18251f] sm:px-10 sm:py-9 lg:px-14`}
     >
       <style>{authMotionStyles}</style>
 
-      <header className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-5 sm:gap-4">
+      <header className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-8 sm:gap-4 sm:pb-12">
         <Link
           href="/"
           className={`pressable inline-flex min-h-11 items-center gap-2.5 rounded-full ${pressStyles.press} ${focusRing}`}
@@ -73,8 +74,8 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </Link>
       </header>
 
-      <div className="mx-auto grid max-w-[1440px] gap-4 lg:min-h-[calc(100vh-7rem)] lg:grid-cols-[1.05fr_0.95fr]">
-        <section className="relative isolate flex min-h-[210px] flex-col justify-end overflow-hidden rounded-[1.5rem] bg-[#17352b] p-5 text-white sm:min-h-[300px] sm:rounded-[2rem] sm:p-9 lg:min-h-0 lg:p-12">
+      <div className="mx-auto grid max-w-[1440px] gap-5 lg:min-h-[calc(100vh-9rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        <section className="relative isolate flex min-h-[210px] flex-col justify-end overflow-hidden rounded-[1.5rem] bg-[#17352b] p-7 text-white sm:min-h-[300px] sm:rounded-[2rem] sm:p-12 lg:min-h-0 lg:p-16">
           <div aria-hidden="true" className="absolute inset-0 -z-10">
             <Image
               src="/images/bhutanese-students.jpg"
@@ -87,18 +88,21 @@ export function AuthShell({ children }: { children: ReactNode }) {
             <div className={`absolute inset-0 ${styles.imageWash}`} />
           </div>
 
-          <div>
-            <Headline className="max-w-[16ch] text-[clamp(1.75rem,7vw,4.25rem)] font-semibold leading-[1] tracking-[-0.055em]">
+          <div className="w-full max-w-6xl">
+            <Headline
+              style={displayFont}
+              className="w-full text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-balance"
+            >
               Paid project work in Bhutan
             </Headline>
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
+            <p className="mt-5 max-w-lg text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
               Paid project work for students and founders in Bhutan.
             </p>
           </div>
 
           <PhotoCredit
             fileUrl="https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg"
-            className="mt-5 text-white/70 lg:mt-8"
+            className="mt-7 text-white/70 lg:mt-10"
           />
         </section>
 
@@ -107,7 +111,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
             ref={cardRef}
             data-auth-card
             data-auth-enter
-            className={`${styles.formCard} w-full max-w-md rounded-[1.5rem] px-6 py-8 sm:max-w-lg sm:rounded-[2rem] sm:px-10 sm:py-10 lg:px-12`}
+            className={`${styles.formCard} w-full max-w-md rounded-[1.5rem] px-6 py-9 sm:max-w-lg sm:rounded-[2rem] sm:px-10 sm:py-12 lg:px-14`}
           >
             {children}
           </div>

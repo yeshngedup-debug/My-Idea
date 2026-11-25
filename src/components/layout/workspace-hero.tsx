@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 
 /**
- * Data-first workspace hero: a quiet paper card with pill label, one heading,
- * a short purpose line and its actions. Caller-supplied action links are
- * restyled here so the first stays the single saffron primary on a light card.
+ * Data-first workspace hero: a quiet paper card with one real heading, a short
+ * purpose line and its actions. Caller-supplied action links are restyled here
+ * so the first stays the single saffron primary on a light card.
  */
 export function WorkspaceHero({
   eyebrow,
@@ -20,13 +20,10 @@ export function WorkspaceHero({
   return (
     <section
       aria-label={eyebrow}
-      className="relative isolate overflow-hidden rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-6 py-8 text-[#18251f] shadow-[0_1px_2px_rgba(24,37,31,.05)] sm:px-9 sm:py-10"
+      className="relative isolate overflow-hidden rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-6 py-9 text-[#18251f] shadow-[0_1px_2px_rgba(24,37,31,.05)] sm:px-10 sm:py-12"
     >
-      <div className="relative z-10 min-w-0 max-w-3xl">
-        <span className="inline-flex items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#7a4b00]">
-          {eyebrow}
-        </span>
-        <h1 className="mt-4 text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#17352b] text-balance">
+      <div className="relative z-10 w-full min-w-0 max-w-3xl">
+        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#17352b] text-balance">
           {title}
         </h1>
         <p className="mt-2 max-w-lg text-sm leading-6 text-[#56645c] sm:text-base">

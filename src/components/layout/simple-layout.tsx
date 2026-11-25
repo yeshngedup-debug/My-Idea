@@ -63,7 +63,7 @@ export default async function SimpleLayout({
             <div className="flex min-w-0 items-center gap-3">
               <Link
                 href="/"
-                className="flex shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a4b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+                className="pressable flex min-h-11 shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a4b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
               >
                 <Logo size="h-7 w-7" />
                 <span className="truncate text-sm font-semibold tracking-tight text-[#18251f] sm:text-base">
@@ -71,7 +71,7 @@ export default async function SimpleLayout({
                 </span>
               </Link>
               {roleLabel && (
-                <span className="hidden shrink-0 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#56645c] sm:inline-flex">
+                <span className="hidden shrink-0 items-center rounded-full border border-[#ded8cb] bg-[#fffefa] px-3 py-1 text-xs font-medium text-[#56645c] sm:inline-flex">
                   {roleLabel}
                 </span>
               )}

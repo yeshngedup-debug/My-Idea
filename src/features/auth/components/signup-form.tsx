@@ -36,7 +36,7 @@ const EMPTY_VALUES: FieldValues = {
 const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
 
 const inputClassName =
-  "w-full min-w-0 rounded-xl border border-border bg-background px-4 py-3.5 text-base text-body placeholder:text-muted-foreground transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20";
+  "w-full min-w-0 rounded-xl border border-border bg-card px-4 py-3.5 text-base text-body placeholder:text-muted-foreground transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20";
 
 const labelClassName = "mb-2 block text-sm font-semibold text-primary";
 

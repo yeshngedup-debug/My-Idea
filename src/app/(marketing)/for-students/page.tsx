@@ -18,6 +18,9 @@ import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { Reveal } from "@/components/ui/motion";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
+import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
+import { InlineImageText } from "@/components/editorial";
+import { ScrubbedTextReveal } from "@/components/motion";
 import {
   StickySectionHeadings,
   type StickySection,
@@ -61,20 +64,16 @@ const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
 const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
 const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
-const pillClass =
-  "inline-flex items-center rounded-full border border-[#1B4D3E]/15 bg-[#E8E4DB]/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const bandClass =
+  "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
 const headingClass =
-  "text-balance text-center text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]";
-const bodyClass = "text-center text-sm leading-7 text-[#0B1F1A]/75 sm:text-base";
-
-/** Saffron marker behind a phrase, with ink text kept readable. */
-function Highlight({ children }: { children: ReactNode }) {
-  return (
-    <span className="box-decoration-clone rounded-[4px] bg-[#E8A317] px-1 text-[#0B1F1A]">
-      {children}
-    </span>
-  );
-}
+  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]";
+const bodyClass =
+  "max-w-2xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8";
+const bentoClass =
+  "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
+const imageZoom =
+  "object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
 
 function SectionCard({
   id,
@@ -91,11 +90,9 @@ function SectionCard({
     <section
       id={id}
       aria-labelledby={labelledBy}
-      className={cn("px-5 py-10 sm:px-8 lg:px-12", className)}
+      className={cn(bandClass, className)}
     >
-      <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
-        {children}
-      </div>
+      <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
   );
 }
@@ -162,21 +159,23 @@ export default function ForStudentsPage() {
   return (
     <>
       <SiteHeader />
-      <main id="main-content" className="overflow-x-clip bg-[#F7F4EE] text-[#0B1F1A]">
-        {/* Hero */}
-        <section className="px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
-          <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
-            <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <main
+        id="main-content"
+        className="w-full max-w-full overflow-x-hidden bg-[#F7F4EE] text-[#0B1F1A]"
+      >
+        {/* Editorial split hero: copy left, one credited photograph right. */}
+        <section className="w-full max-w-full overflow-x-hidden px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
               <HeroCopyEntrance>
-                <p className={pillClass}>Student guide</p>
-                <h1 className="mt-3 max-w-[18ch] text-balance text-[clamp(2.25rem,6vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
-                  Turn your skills into <Highlight>paid work.</Highlight>
+                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0B1F1A]">
+                  Turn your skills into paid work.
                 </h1>
-                <p className="mt-6 max-w-[52ch] text-base leading-7 text-[#0B1F1A]/75">
+                <p className="mt-8 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8">
                   Build a profile, find a focused project, and get paid for the
                   work you do.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
                   <Link href="/signup" className={primaryCta}>
                     Create student account
                   </Link>
@@ -187,64 +186,73 @@ export default function ForStudentsPage() {
               </HeroCopyEntrance>
 
               <HeroPhotoEntrance>
-                <div className="relative">
+                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-[#0B1F1A]">
+                  <Image
+                    src="/images/bhutanese-students.jpg"
+                    alt="Young Bhutanese people working in groups at a training day in Thimphu"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 45vw"
+                    className={cn(
+                      "grayscale contrast-[1.15] opacity-90",
+                      imageZoom,
+                    )}
+                  />
                   <div
                     aria-hidden="true"
-                    className="absolute -inset-5 rounded-[36px] bg-gradient-to-br from-[#E8A317]/25 via-[#E8E4DB]/70 to-[#1B4D3E]/15 blur-2xl"
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(120% 90% at 50% 10%, transparent 25%, rgb(11 31 26 / 0.78) 100%)",
+                    }}
                   />
-                  <figure className="relative isolate aspect-[4/5] overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-white">
-                    <Image
-                      src="/images/bhutanese-students.jpg"
-                      alt="Young Bhutanese people working in groups at a training day in Thimphu"
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 100vw, 45vw"
-                      className="object-cover"
+                  <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
+                    <PhotoCredit
+                      fileUrl={YOUTH_CREDIT}
+                      className="text-[#F7F4EE]/90"
                     />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/55 to-transparent"
-                    />
-                    <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
-                      <PhotoCredit
-                        fileUrl={YOUTH_CREDIT}
-                        className="text-[#F7F4EE]/80"
-                      />
-                    </figcaption>
-                  </figure>
-                </div>
+                  </figcaption>
+                </figure>
               </HeroPhotoEntrance>
             </div>
+          </div>
+        </section>
+
+        {/* One scrubbed statement, away from the hero. */}
+        <section className={bandClass}>
+          <div className="mx-auto w-full max-w-6xl">
+            <ScrubbedTextReveal
+              as="p"
+              text="Everything you need to browse and apply lives in your student workspace."
+              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#1B4D3E]"
+            />
           </div>
         </section>
 
         <div style={stickyVars}>
           <StickySectionHeadings
             title="For students"
-            eyebrow="Student guide"
             sections={sections}
             navLabel="Student guide sections"
           >
             <SectionCard labelledBy="who-heading">
-              <Reveal className="mx-auto max-w-3xl text-center">
-                <p className={pillClass}>Who it&apos;s for</p>
-                <h2
-                  id="who-heading"
-                  data-sticky-section
-                  className={headingClass}
-                >
-                  Built for students ready to <Highlight>begin</Highlight>
+              <Reveal className="mx-auto max-w-5xl">
+                <h2 id="who-heading" data-sticky-section className={headingClass}>
+                  Built for students ready to begin
                 </h2>
-                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
+                <p className={cn(bodyClass, "mt-6")}>
                   You do not need a long work history. Clear skills and time for
                   focused work are enough to begin.
                 </p>
               </Reveal>
-              <Reveal className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {fits.map((fit, index) => {
+              <div className={cn(bentoClass, "mt-14")}>
+                {fits.map((fit) => {
                   const FitIcon = fit.Icon;
-                  const inner = (
-                    <div className="flex h-full flex-col">
+                  return (
+                    <article
+                      key={fit.title}
+                      className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
+                    >
                       <FitIcon
                         aria-hidden="true"
                         weight="light"
@@ -252,58 +260,42 @@ export default function ForStudentsPage() {
                         strokeWidth={1.5}
                         className="text-[#1B4D3E]"
                       />
-                      <h3 className="mt-5 text-lg font-semibold text-[#0B1F1A]">
+                      <h3 className="mt-6 text-lg font-semibold text-[#0B1F1A]">
                         {fit.title}
                       </h3>
                       <p className="mt-2 text-sm leading-6 text-[#0B1F1A]/70">
                         {fit.body}
                       </p>
-                    </div>
-                  );
-                  return index === 0 ? (
-                    <div
-                      key={fit.title}
-                      className="rounded-[24px] bg-gradient-to-br from-[#E8A317] via-[#E8E4DB] to-[#1B4D3E] p-px"
-                    >
-                      <div className="h-full rounded-[23px] bg-white p-6">
-                        {inner}
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      key={fit.title}
-                      className="h-full rounded-[24px] border border-[#E8E4DB] bg-white p-6"
-                    >
-                      {inner}
-                    </div>
+                    </article>
                   );
                 })}
-              </Reveal>
+              </div>
             </SectionCard>
 
             <SectionCard labelledBy="profile-heading">
-              <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-                <div className="self-start">
-                  <Reveal>
-                    <p className={pillClass}>Profile</p>
-                    <h2
-                      id="profile-heading"
-                      data-sticky-section
-                      className={headingClass}
-                    >
-                      Make your profile <Highlight>complete</Highlight>
-                    </h2>
-                    <p className="mt-6 max-w-sm text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
-                      A complete profile and CV help founders decide.
-                    </p>
-                    <Link href="/signup" className={cn(primaryCta, "mt-8")}>
-                      Start your profile
-                    </Link>
-                  </Reveal>
-                </div>
+              <div className="grid w-full max-w-full grid-cols-12 gap-4">
+                <Reveal className="col-span-12 lg:col-span-5">
+                  <h2
+                    id="profile-heading"
+                    data-sticky-section
+                    className={headingClass}
+                  >
+                    Make your profile complete
+                  </h2>
+                  <p className={cn(bodyClass, "mt-6")}>
+                    A complete profile and CV help founders decide.
+                  </p>
+                  <Link href="/signup" className={cn(primaryCta, "mt-8")}>
+                    Start your profile
+                  </Link>
+                </Reveal>
 
-                <Reveal direction="right" delay={0.08}>
-                  <div className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6 sm:p-8">
+                <Reveal
+                  direction="right"
+                  delay={0.08}
+                  className="col-span-12 lg:col-span-7"
+                >
+                  <div className="rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 sm:p-8">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#1B4D3E]/15 pb-5">
                       <p className="text-base font-semibold text-[#0B1F1A]">
                         Student profile
@@ -355,100 +347,102 @@ export default function ForStudentsPage() {
             </SectionCard>
 
             <SectionCard labelledBy="rooted-heading">
-              <Reveal className="mx-auto max-w-3xl text-center">
-                <p className={pillClass}>Close to home</p>
-                <h2
-                  id="rooted-heading"
-                  data-sticky-section
-                  className={headingClass}
-                >
-                  Start close to <Highlight>home</Highlight>
-                </h2>
-                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
+              <div id="rooted-heading" data-sticky-section>
+                <InlineImageText
+                  as="h2"
+                  before="Start close to"
+                  imageSrc="/images/bhutanese-community.jpg"
+                  imageAlt="Bhutanese boys in traditional gho sitting together"
+                  creditFileUrl={DZONG_CREDIT}
+                  after="home"
+                  accessibleLabel="Start close to home"
+                />
+              </div>
+              <Reveal className="mx-auto mt-10 max-w-2xl">
+                <p className={bodyClass}>
                   Built around Bhutanese students and founders; these photographs
                   show Bhutanese people in community settings, not platform
                   listings or members.
                 </p>
               </Reveal>
-              <Reveal className="mt-12">
-                <figure>
-                  <div className="relative isolate aspect-[16/10] w-full overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-[#F7F4EE] sm:aspect-[2/1]">
+              <Reveal className="mt-14">
+                <GsapScaleFadeImage>
+                  <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A] sm:aspect-[2/1]">
                     <Image
                       src="/images/bhutanese-community.jpg"
                       alt="Bhutanese boys in traditional gho sitting together"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
-                      className="object-cover"
+                      className={imageZoom}
                     />
-                  </div>
-                  <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                    <span className="text-sm font-medium text-[#0B1F1A]">
-                      Work grounded in the local community
-                    </span>
-                    <PhotoCredit fileUrl={DZONG_CREDIT} className="text-[#0B1F1A]/70" />
-                  </figcaption>
-                </figure>
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
+                    />
+                    <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
+                      <span className="text-sm font-medium text-[#F7F4EE]">
+                        Work grounded in the local community
+                      </span>
+                      <PhotoCredit
+                        fileUrl={DZONG_CREDIT}
+                        className="text-[#F7F4EE]/90"
+                      />
+                    </figcaption>
+                  </figure>
+                </GsapScaleFadeImage>
               </Reveal>
             </SectionCard>
 
             <SectionCard labelledBy="apply-heading">
-              <Reveal className="mx-auto max-w-3xl text-center">
-                <p className={pillClass}>Apply</p>
+              <Reveal className="mx-auto max-w-5xl">
                 <h2
                   id="apply-heading"
                   data-sticky-section
                   className={headingClass}
                 >
-                  Browse, apply, and <Highlight>track</Highlight>
+                  Browse, apply, and track
                 </h2>
-                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
+                <p className={cn(bodyClass, "mt-6")}>
                   Everything you need to browse and apply lives in your student
                   workspace.
                 </p>
               </Reveal>
-              <Reveal className="mt-12">
-                <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {applicationSteps.map((step, index) => {
-                    const StepIcon = step.Icon;
-                    return (
-                      <li
-                        key={step.title}
-                        className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6"
-                      >
-                        <span className="inline-flex rounded-full bg-[#E8A317]/20 px-2.5 py-1 text-sm font-semibold tabular-nums text-[#0B1F1A]">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="mt-5 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0B1F1A]">
-                          <StepIcon
-                            aria-hidden="true"
-                            weight="light"
-                            size={22}
-                            strokeWidth={1.5}
-                            className="shrink-0 text-[#1B4D3E]"
-                          />
-                          {step.title}
-                        </h3>
-                        <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/70">
-                          {step.body}
-                        </p>
-                      </li>
-                    );
-                  })}
-                </ol>
-              </Reveal>
+              <div className={cn(bentoClass, "mt-14")}>
+                {applicationSteps.map((step, index) => {
+                  const StepIcon = step.Icon;
+                  return (
+                    <article
+                      key={step.title}
+                      className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
+                    >
+                      <span className="text-sm font-semibold tabular-nums text-[#1B4D3E]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-6 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0B1F1A]">
+                        <StepIcon
+                          aria-hidden="true"
+                          weight="light"
+                          size={22}
+                          strokeWidth={1.5}
+                          className="shrink-0 text-[#1B4D3E]"
+                        />
+                        {step.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/70">
+                        {step.body}
+                      </p>
+                    </article>
+                  );
+                })}
+              </div>
             </SectionCard>
 
-            <SectionCard labelledBy="pay-heading" className="pb-16">
-              <Reveal className="mx-auto max-w-3xl text-center">
-                <p className={pillClass}>Pay</p>
-                <h2
-                  id="pay-heading"
-                  data-sticky-section
-                  className={headingClass}
-                >
-                  Projects list a budget <Highlight>up front</Highlight>
+            <SectionCard labelledBy="pay-heading">
+              <Reveal className="mx-auto max-w-5xl">
+                <h2 id="pay-heading" data-sticky-section className={headingClass}>
+                  Projects list a budget up front
                 </h2>
-                <p className={cn(bodyClass, "mx-auto mt-6 max-w-2xl")}>
+                <p className={cn(bodyClass, "mt-6")}>
                   Every paid project lists its budget range and scope before you
                   apply, and founders update project and applicant status as work
                   progresses.
@@ -457,41 +451,44 @@ export default function ForStudentsPage() {
                   Read the FAQ about pay
                 </Link>
               </Reveal>
-              <Reveal className="mt-12">
-                <figure>
-                  <div className="relative isolate aspect-[16/9] w-full overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-[#F7F4EE]">
+              <Reveal className="mt-14">
+                <GsapScaleFadeImage>
+                  <figure className="group relative isolate aspect-[16/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
                     <Image
                       src="/images/bhutanese-team.jpg"
                       alt="Bhutanese students in kira performing in national dress"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
-                      className="object-cover"
+                      className={imageZoom}
                     />
-                  </div>
-                  <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                    <span className="text-sm font-medium text-[#0B1F1A]">
-                      Work grounded in the local community
-                    </span>
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.market}
-                      className="text-[#0B1F1A]/70"
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
                     />
-                  </figcaption>
-                </figure>
+                    <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
+                      <span className="text-sm font-medium text-[#F7F4EE]">
+                        Work grounded in the local community
+                      </span>
+                      <PhotoCredit
+                        fileUrl={PHOTO_CREDITS.market}
+                        className="text-[#F7F4EE]/90"
+                      />
+                    </figcaption>
+                  </figure>
+                </GsapScaleFadeImage>
               </Reveal>
             </SectionCard>
           </StickySectionHeadings>
         </div>
 
-        {/* Final CTA */}
-        <section className="px-5 pb-16 sm:px-8 lg:px-12">
-          <Reveal className="mx-auto max-w-[1120px]">
-            <div className="relative isolate overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-gradient-to-br from-[#E8E4DB] via-white to-[#E8A317]/25 px-6 py-14 text-center sm:px-12">
-              <p className={pillClass}>Next step</p>
-              <h2 className="mt-4 text-balance text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]">
-                Your profile is the <Highlight>first step</Highlight>
+        {/* Closing band: one saffron action. */}
+        <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
+          <Reveal className="mx-auto w-full max-w-6xl">
+            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-white px-6 py-24 text-left sm:px-12">
+              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
+                Your profile is the first step
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+              <p className="mt-6 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg">
                 Complete it once, then apply to projects that fit.
               </p>
               <Link href="/signup" className={cn(primaryCta, "mt-8")}>

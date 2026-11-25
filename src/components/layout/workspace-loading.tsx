@@ -19,9 +19,7 @@ export function WorkspaceLoading({
       aria-label={`Loading ${label} workspace`}
     >
       <div className="workspace-paper flex h-28 items-end rounded-[24px] border border-[#ded8cb] p-5 sm:h-36">
-        <span className="border border-dashed border-[#cfc6b6] px-2 py-1 font-mono text-[10px] text-[#56645c]">
-          workspace.tsx
-        </span>
+        <div className="h-3 w-28 rounded bg-[#eae5d9]" />
       </div>
       <div className="grid grid-cols-12 gap-6 border-y border-[#ded8cb] py-5 sm:gap-10 sm:py-6">
         <div className="col-span-12 min-w-0 sm:col-span-5">
@@ -35,9 +33,7 @@ export function WorkspaceLoading({
         </div>
       </div>
       <div>
-        <span className="mb-3 inline-block border border-dashed border-[#ded8cb] px-2 py-1 font-mono text-[10px] text-[#56645c]">
-          queue.tsx
-        </span>
+        <div className="mb-3 h-3 w-24 rounded bg-[#eae5d9]" />
         <div className="divide-y divide-[#ded8cb] border-y border-[#ded8cb]">
           {Array.from({ length: listRows }, (_, i) => (
             <div key={i} className="h-14 sm:h-16" />

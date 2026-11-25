@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { SignupForm } from "@/features/auth/components/signup-form";
-import { focusRing } from "@/features/auth/components/styles";
+import { displayFont, focusRing } from "@/features/auth/components/styles";
 import { colors } from "@/lib/design-tokens";
 
 export const metadata = {
@@ -38,7 +38,10 @@ export default async function SignupPage({
 
   return (
     <AuthShell>
-      <h2 className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-primary">
+      <h2
+        style={displayFont}
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-primary"
+      >
         Create your account
       </h2>
 

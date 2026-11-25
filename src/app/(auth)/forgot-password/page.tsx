@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
+import { displayFont } from "@/features/auth/components/styles";
 
 export const metadata: Metadata = {
   title: "Reset password — Bhutan Tech Connect",
@@ -29,7 +30,10 @@ export default async function ForgotPasswordPage({
 
   return (
     <AuthShell>
-      <h1 className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-[#17352b]">
+      <h1
+        style={displayFont}
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#17352b]"
+      >
         Reset your password
       </h1>
       <p className="mt-3 text-sm leading-6 text-slate-600">

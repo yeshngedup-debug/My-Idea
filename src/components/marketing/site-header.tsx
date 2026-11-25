@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { List, X } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, List, X } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
+import { PhotoCredit } from "@/components/ui/photo-credit";
 import { cn } from "@/lib/utils";
 import pressStyles from "@/styles/pressable.module.css";
 import {
@@ -60,10 +62,10 @@ export function SiteHeader() {
       <div
         data-scrolled={scrolled}
         className={cn(
-          "mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-3 rounded-full border border-[#1B4D3E]/10 bg-white px-3 backdrop-blur-md transition-shadow duration-200 sm:px-4",
+          "mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-3 rounded-full border border-white/70 bg-white/75 px-3 shadow-[0_2px_14px_-10px_rgba(11,31,26,0.25)] backdrop-blur-xl ring-1 ring-[#1B4D3E]/5 transition-[background-color,box-shadow] duration-200 sm:px-4 motion-reduce:transition-none",
           scrolled
-            ? "shadow-[0_10px_30px_-18px_rgba(11,31,26,0.35)]"
-            : "shadow-[0_2px_14px_-10px_rgba(11,31,26,0.25)]",
+            ? "bg-white/90 shadow-[0_14px_36px_-20px_rgba(11,31,26,0.45)]"
+            : "bg-white/75",
         )}
       >
         <nav
@@ -85,7 +87,7 @@ export function SiteHeader() {
           </Link>
 
           <LayoutGroup id="site-nav">
-            <div className="hidden items-center gap-5 lg:flex xl:gap-7">
+            <div className="hidden items-center gap-4 lg:flex xl:gap-5">
               {NAV_LINKS.map((link) => {
                 const active = isActivePath(pathname, link.href);
                 return (
@@ -179,7 +181,7 @@ export function SiteHeader() {
           >
             <nav
               aria-label="Mobile navigation"
-              className="mx-auto flex max-w-[1200px] flex-col rounded-[20px] border border-[#1B4D3E]/10 bg-white p-4 shadow-[0_18px_40px_-22px_rgba(11,31,26,0.35)]"
+              className="mx-auto flex max-w-[1200px] flex-col rounded-[20px] border border-white/70 bg-white/90 p-4 shadow-[0_18px_40px_-22px_rgba(11,31,26,0.35)] backdrop-blur-xl"
             >
               {NAV_LINKS.map((link) => {
                 const active = isActivePath(pathname, link.href);
@@ -231,5 +233,164 @@ export function SiteHeader() {
         ) : null}
       </AnimatePresence>
     </header>
+  );
+}
+
+export type FactPortrait = {
+  src: string;
+  alt: string;
+  creditFileUrl: string;
+};
+
+export type FactSlide = {
+  title: string;
+  body: string;
+  portraits: readonly FactPortrait[];
+};
+
+/**
+ * Small client island for the marketing home. It lives in this client module so
+ * `public/page.tsx` can stay a Server Component: that page needs the live World
+ * Bank context fetched on the server, and a `"use client"` directive there
+ * would break both the fetch and its metadata export.
+ *
+ * Only verified platform facts are passed in; there are no names or quotes.
+ * Every portrait keeps its Wikimedia Commons attribution.
+ */
+export function FactCarousel({
+  slides,
+  label = "Verified platform facts",
+}: {
+  slides: readonly FactSlide[];
+  label?: string;
+}) {
+  const [index, setIndex] = useState(0);
+  const reduce = useReducedMotion();
+  const count = slides.length;
+
+  const go = useCallback(
+    (delta: number) => {
+      setIndex((current) => (current + delta + count) % count);
+    },
+    [count],
+  );
+
+  if (count === 0) return null;
+  const slide = slides[index] ?? slides[0];
+
+  const arrowClass = cn(
+    "pressable inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#1B4D3E]/20 text-[#1B4D3E] transition-colors duration-150 hover:bg-[#E8E4DB]/70 motion-reduce:transition-none",
+    pressStyles.press,
+    focusRing,
+  );
+
+  return (
+    <div
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={label}
+      className="mx-auto max-w-[1200px]"
+    >
+      {/* One stable live region: it is not keyed, so every slide change is
+          announced instead of removing the region with the outgoing slide. */}
+      <span aria-live="polite" className="sr-only">
+        Fact {index + 1} of {count}: {slide.title}. {slide.body}
+      </span>
+      <AnimatePresence initial={false} mode="wait">
+        <motion.div
+          key={index}
+          initial={reduce ? { opacity: 0 } : { opacity: 0, x: 12 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, x: -12 }}
+          transition={{ duration: reduce ? 0 : 0.2, ease: EASE_OUT }}
+        >
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-20">
+            <div className="relative mx-auto h-64 w-full max-w-[340px]">
+              {slide.portraits.map((portrait, portraitIndex) => (
+                <div
+                  key={`${slide.title}-${portrait.src}`}
+                  className={cn(
+                    "group absolute overflow-hidden rounded-full border-4 border-[#F7F4EE] bg-[#17352b] shadow-[0_18px_40px_-24px_rgba(11,31,26,0.45)]",
+                    portraitIndex === 0
+                      ? "left-0 top-0 h-40 w-40 sm:h-44 sm:w-44"
+                      : "bottom-0 right-0 h-44 w-44 sm:h-52 sm:w-52",
+                  )}
+                >
+                  <Image
+                    src={portrait.src}
+                    alt={portrait.alt}
+                    fill
+                    sizes="208px"
+                    className="object-cover grayscale contrast-125 opacity-90 transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <h3 className="text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl">
+                {slide.title}
+              </h3>
+              <p className="mt-5 max-w-[48ch] text-lg leading-8 text-[#1B4D3E]">
+                {slide.body}
+              </p>
+              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-1">
+                {slide.portraits.map((portrait) => (
+                  <PhotoCredit
+                    key={`${slide.title}-credit-${portrait.src}`}
+                    fileUrl={portrait.creditFileUrl}
+                    className="text-[#0B1F1A]/60"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="mt-10 flex items-center justify-between gap-4 border-t border-[#1B4D3E]/10 pt-6">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label="Previous fact"
+            className={arrowClass}
+          >
+            <CaretLeft aria-hidden="true" size={18} strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label="Next fact"
+            className={arrowClass}
+          >
+            <CaretRight aria-hidden="true" size={18} strokeWidth={1.5} />
+          </button>
+        </div>
+        <div className="flex items-center gap-1">
+          {slides.map((item, dotIndex) => (
+            <button
+              key={item.title}
+              type="button"
+              onClick={() => setIndex(dotIndex)}
+              aria-label={`Show fact ${dotIndex + 1}: ${item.title}`}
+              aria-current={dotIndex === index ? "true" : undefined}
+              className={cn(
+                "inline-flex h-11 w-11 items-center justify-center rounded-full",
+                pressStyles.press,
+                focusRing,
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full transition-colors duration-150 motion-reduce:transition-none",
+                  dotIndex === index ? "bg-[#1B4D3E]" : "bg-[#1B4D3E]/25",
+                )}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

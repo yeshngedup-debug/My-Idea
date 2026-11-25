@@ -125,7 +125,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("password")}
             autoComplete="new-password"
             placeholder="Enter a new password"
-            className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
@@ -152,7 +152,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("confirmPassword")}
             autoComplete="new-password"
             placeholder="Enter the new password again"
-            className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.confirmPassword && (
             <FieldError id={confirmErrorId}>{errors.confirmPassword}</FieldError>

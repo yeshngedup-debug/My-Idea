@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
+import { displayFont } from "@/features/auth/components/styles";
 import { RESET_TOKEN_COOKIE } from '@/app/auth/callback/route';
 
 export const metadata: Metadata = {
@@ -33,7 +34,10 @@ export default async function ResetPasswordPage({
 
   return (
     <AuthShell>
-      <h1 className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-[#17352b]">
+      <h1
+        style={displayFont}
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#17352b]"
+      >
         Choose a new password
       </h1>
       <p className="mt-3 text-sm leading-6 text-slate-600">

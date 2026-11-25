@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { LoginForm } from "@/features/auth/components/login-form";
-import { focusRing } from "@/features/auth/components/styles";
+import { displayFont, focusRing } from "@/features/auth/components/styles";
 import { APP_CONTACT } from "@/config/app";
 
 export const metadata = {
@@ -43,7 +43,10 @@ export default async function LoginPage({
 
   return (
     <AuthShell>
-      <h1 className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-[#17352b]">
+      <h1
+        style={displayFont}
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#17352b]"
+      >
         Log in
       </h1>
 

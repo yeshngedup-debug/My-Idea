@@ -3,17 +3,13 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { isValidElement, type ReactNode } from "react";
-import {
-  IdentificationCard,
-  ListChecks,
-  Plus,
-  UsersThree,
-} from "@phosphor-icons/react/dist/ssr";
+import { Plus } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/ui/motion";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
+import { ScrubbedTextReveal } from "@/components/motion";
 import {
   StickySectionHeadings,
   type StickySection,
@@ -27,15 +23,14 @@ export const metadata: Metadata = pageMetadata({
   path: "/faq",
 });
 
-/** Restrained Paywave-style card system in the BTC palette. */
+/** Restrained editorial card system in the BTC palette. */
 const card =
   "rounded-3xl border border-[#1B4D3E]/12 bg-white shadow-[0_2px_10px_rgba(11,31,26,0.04)]";
 const cardBody = "p-6 sm:p-10 lg:p-14";
-const band = "px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-9";
-const pill =
-  "inline-flex min-h-8 items-center justify-center rounded-full border border-[#1B4D3E]/15 bg-[#F7F4EE] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const band = "px-4 py-16 sm:px-6 md:py-24 lg:px-8";
+const wideBand = "px-4 py-32 sm:px-6 md:py-48 lg:px-8";
 const sectionHeading =
-  "text-balance text-center text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-5xl";
+  "text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-5xl";
 const accent = "text-[#E8A317]";
 const muted = "text-[#5A6A61]";
 const primaryCta =
@@ -47,7 +42,6 @@ type Cluster = {
   id: string;
   title: string;
   lead: string;
-  Icon: typeof UsersThree;
   questions: Question[];
 };
 
@@ -62,7 +56,6 @@ const clusters: Cluster[] = [
     id: "getting-started",
     title: "The basics",
     lead: "Who the platform serves, and how each side gets in.",
-    Icon: UsersThree,
     questions: [
       {
         q: "Who is this for?",
@@ -118,7 +111,6 @@ const clusters: Cluster[] = [
     id: "profiles-and-projects",
     title: "Profiles and projects",
     lead: "How profiles become findable, and how work begins.",
-    Icon: IdentificationCard,
     questions: [
       {
         q: "What makes a profile visible to founders?",
@@ -183,7 +175,6 @@ const clusters: Cluster[] = [
     id: "shortlists-and-payments",
     title: "Shortlists, payments and launch",
     lead: "What happens after a founder decides to go further.",
-    Icon: ListChecks,
     questions: [
       {
         q: "How does the Premium Shortlist payment work?",
@@ -290,21 +281,31 @@ export default async function FaqPage() {
       />
       <SiteHeader />
 
-      <main id="main-content" className="overflow-x-clip">
-        <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
-            <div className={`${card} ${cardBody}`}>
-              <HeroCopyEntrance className="mx-auto max-w-3xl text-center">
-                <span className={pill}>Answers by topic</span>
-                <h1 className="mt-6 text-balance text-[clamp(2.5rem,5.5vw,4.75rem)] font-semibold leading-[1.04] tracking-[-0.035em] text-[#0B1F1A]">
-                  Frequently asked{" "}
+      <main
+        id="main-content"
+        className="w-full max-w-full overflow-x-clip"
+      >
+        {/* Editorial split heading with one credited local photograph. */}
+        <section aria-labelledby="faq-heading" className={wideBand}>
+          <div className="mx-auto w-full max-w-[1440px]">
+            <div className="grid grid-cols-12 grid-flow-dense gap-4">
+              <HeroCopyEntrance className="col-span-12 flex flex-col justify-center px-2 py-6 md:col-span-7 md:px-8 lg:pr-16">
+                <h1
+                  id="faq-heading"
+                  className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.05em] text-[#0B1F1A]"
+                >
+                  <ScrubbedTextReveal
+                    as="span"
+                    text="Frequently asked"
+                    className="[&_span]:!text-[#0B1F1A]"
+                  />{" "}
                   <span className={accent}>questions</span>
                 </h1>
-                <p className={`mx-auto mt-6 max-w-xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
+                <p className={`mt-10 max-w-xl text-lg leading-8 sm:text-xl ${muted}`}>
                   Bhutanese students and startup founders, covered across
                   accounts, projects, applications and paid shortlists.
                 </p>
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+                <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
                   <Link href="/how-it-works" className={primaryCta}>
                     See how it works
                   </Link>
@@ -316,6 +317,33 @@ export default async function FaqPage() {
                   </Link>
                 </div>
               </HeroCopyEntrance>
+
+              <figure className="col-span-12 md:col-span-5">
+                <div className="relative isolate aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
+                  <Image
+                    src="/images/bhutanese-team.jpg"
+                    alt="Bhutanese students in kira performing in national dress"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 38vw"
+                    className="object-cover object-center grayscale contrast-[1.15] opacity-85"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 55% 40%, rgba(11,31,26,0.04) 0%, rgba(11,31,26,0.8) 100%)",
+                    }}
+                  />
+                </div>
+                <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <span className="text-sm font-medium text-[#0B1F1A]">
+                    Built for the people and places here
+                  </span>
+                  <PhotoCredit fileUrl={MARKET_CREDIT} className="text-[#5A6A61]" />
+                </figcaption>
+              </figure>
             </div>
           </div>
         </section>
@@ -326,64 +354,65 @@ export default async function FaqPage() {
           sections={stickySections}
           navLabel="FAQ topics"
         >
-          {clusters.map((cluster) => {
-            const ClusterIcon = cluster.Icon;
-            return (
-              <section key={cluster.id} aria-labelledby={`${cluster.id}-heading`} className={band}>
-                <div className="mx-auto max-w-[1440px]">
-                  <div className={`${card} ${cardBody}`}>
-                    <div id={cluster.id} data-sticky-section>
-                      <div className="text-center">
-                        <ClusterIcon
-                          aria-hidden="true"
-                          weight="light"
-                          size={16}
-                          strokeWidth={1.5}
-                          className="mx-auto text-[#E8A317]"
-                        />
-                        <span className={`mt-4 ${pill}`}>Answers by topic</span>
-                        <h2
-                          id={`${cluster.id}-heading`}
-                          className={`mt-4 ${sectionHeading}`}
-                        >
-                          <AccentTitle title={cluster.title} />
-                        </h2>
-                        <p className={`mx-auto mt-4 max-w-xl text-sm leading-7 sm:text-base ${muted}`}>
-                          {cluster.lead}
-                        </p>
-                      </div>
-                      <StaggerGroup className="mx-auto mt-10 grid max-w-4xl gap-x-16">
-                        {cluster.questions.map((question) => (
-                          <StaggerItem key={question.q}>
-                            <details className="group grid gap-x-10 rounded-[1.25rem] border border-[#1B4D3E]/10 bg-white py-6 transition-colors hover:bg-[#F7F4EE]/70 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] motion-reduce:transition-none">
-                              <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 rounded-sm px-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-4 focus-visible:ring-offset-white [&::-webkit-details-marker]:hidden sm:px-6">
-                                <span className="text-lg font-semibold leading-snug text-[#0B1F1A] sm:text-xl">
-                                  {question.q}
-                                </span>
-                                <Plus
-                                  aria-hidden="true"
-                                  weight="light"
-                                  strokeWidth={1.5}
-                                  className="mt-1 h-5 w-5 shrink-0 text-[#E8A317] transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
-                                />
-                              </summary>
-                              <div className="mt-5 max-w-2xl px-5 pr-8 text-sm leading-7 text-[#0B1F1A]/75 sm:px-6 sm:text-base lg:mt-0 lg:pr-12">
-                                {question.a}
-                              </div>
-                            </details>
-                          </StaggerItem>
-                        ))}
-                      </StaggerGroup>
-                    </div>
+          {clusters.map((cluster) => (
+            <section
+              key={cluster.id}
+              aria-labelledby={`${cluster.id}-heading`}
+              className={band}
+            >
+              <div className="mx-auto w-full max-w-[1440px]">
+                <div className={`${card} ${cardBody}`}>
+                  <div id={cluster.id} data-sticky-section>
+                    <h2
+                      id={`${cluster.id}-heading`}
+                      className={`${sectionHeading} text-left`}
+                    >
+                      <AccentTitle title={cluster.title} />
+                    </h2>
+                    <p className={`mt-6 max-w-2xl text-base leading-7 sm:text-lg ${muted}`}>
+                      <ScrubbedTextReveal
+                        as="span"
+                        text={cluster.lead}
+                        className="[&_span]:!text-[#5A6A61]"
+                      />
+                    </p>
+                    {/*
+                     * The native <details> state stays the single source of
+                     * truth. Each row is a 12-column slice; the question holds
+                     * five columns and the answer opens into the remaining
+                     * seven on desktop. Hover and focus only mark the row.
+                     */}
+                    <StaggerGroup className="mx-auto mt-12 grid max-w-5xl gap-3">
+                      {cluster.questions.map((question) => (
+                        <StaggerItem key={question.q}>
+                          <details className="group grid grid-cols-12 gap-x-4 rounded-[1.25rem] border border-[#1B4D3E]/10 border-l-2 border-l-transparent bg-white py-6 transition-[background-color,border-color] hover:bg-[#F7F4EE]/70 focus-within:bg-[#F7F4EE]/70 group-hover:border-l-[#E8A317] group-focus-within:border-l-[#E8A317] motion-reduce:transition-none md:gap-x-8">
+                            <summary className="col-span-12 flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 rounded-sm px-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-4 focus-visible:ring-offset-white [&::-webkit-details-marker]:hidden sm:px-6 md:col-span-5">
+                              <span className="text-lg font-semibold leading-snug text-[#0B1F1A] sm:text-xl">
+                                {question.q}
+                              </span>
+                              <Plus
+                                aria-hidden="true"
+                                weight="light"
+                                strokeWidth={1.5}
+                                className="mt-1 h-5 w-5 shrink-0 text-[#E8A317] transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
+                              />
+                            </summary>
+                            <div className="col-span-12 mt-5 max-w-2xl px-5 pr-8 text-sm leading-7 text-[#0B1F1A]/75 sm:px-6 sm:text-base md:col-span-7 md:mt-0 md:border-l md:border-[#1B4D3E]/12 md:pl-8 md:pr-4">
+                              {question.a}
+                            </div>
+                          </details>
+                        </StaggerItem>
+                      ))}
+                    </StaggerGroup>
                   </div>
                 </div>
-              </section>
-            );
-          })}
+              </div>
+            </section>
+          ))}
         </StickySectionHeadings>
 
         <section aria-label="Photograph" className={band}>
-          <div className="mx-auto max-w-[1440px]">
+          <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} overflow-hidden`}>
               <Reveal>
                 <figure className="relative isolate aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#E8E4DB] sm:aspect-[21/9]">
@@ -410,17 +439,17 @@ export default async function FaqPage() {
           </div>
         </section>
 
-        <section className={band}>
-          <div className="mx-auto max-w-[1440px]">
+        <section className={wideBand}>
+          <div className="mx-auto w-full max-w-[1440px]">
             <Reveal>
-              <div className="rounded-3xl border border-[#1B4D3E]/12 bg-[#1B4D3E] px-6 py-14 text-center sm:px-10 sm:py-20">
-                <h2 className="text-balance text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.035em] text-white">
+              <div className="rounded-3xl border border-[#1B4D3E]/12 bg-[#1B4D3E] px-6 py-20 text-center sm:px-10 sm:py-28">
+                <h2 className="text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-white">
                   Still have a <span className={accent}>question?</span>
                 </h2>
-                <p className="mx-auto mt-5 max-w-2xl text-balance text-base leading-[1.65] text-[#E8E4DB] sm:text-lg">
+                <p className="mx-auto mt-6 max-w-2xl text-balance text-base leading-[1.65] text-[#E8E4DB] sm:text-lg">
                   Write to us and we will point you in the right direction.
                 </p>
-                <div className="mt-8 flex justify-center">
+                <div className="mt-10 flex justify-center">
                   <Link href="/contact" className={primaryCta}>
                     Contact the team
                   </Link>

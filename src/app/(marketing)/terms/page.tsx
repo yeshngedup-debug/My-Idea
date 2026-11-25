@@ -29,16 +29,16 @@ const mountFade = `
 /** Restrained Paywave-style card system in the BTC palette. */
 const card =
   "rounded-3xl border border-[#1B4D3E]/12 bg-white shadow-[0_2px_10px_rgba(11,31,26,0.04)]";
-const band = "px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-9";
-const pill =
-  "inline-flex min-h-8 items-center justify-center rounded-full border border-[#1B4D3E]/15 bg-[#F7F4EE] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const band = "px-4 py-12 sm:px-6 md:py-20 lg:px-8";
+const metaLabel =
+  "text-xs font-semibold uppercase tracking-[0.18em] text-[#5A6A61]";
 const accent = "text-[#E8A317]";
 const bodyCopy = "text-[#0B1F1A]/75";
 const quiet = "text-[#5A6A61]";
 const mailLink =
   "inline-flex min-h-6 items-center rounded-sm font-semibold text-[#1B4D3E] underline decoration-[#E8A317] decoration-2 underline-offset-4 transition-colors hover:text-[#0B1F1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
 const tocLink =
-  "inline-block min-h-11 rounded-sm py-2.5 text-sm font-medium text-[#0B1F1A]/70 transition-colors hover:text-[#0B1F1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
+  "inline-block min-h-11 rounded-sm py-2.5 text-sm font-medium text-[#0B1F1A]/70 transition-[color,transform] hover:translate-x-1 hover:text-[#0B1F1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transform-none motion-reduce:transition-none";
 
 const chapters = [
   { id: "what-this-platform-is", label: "What this platform is" },
@@ -50,7 +50,10 @@ const chapters = [
 
 export default function TermsPage() {
   return (
-    <main id="main-content" className="min-w-0 bg-[#F7F4EE] text-[#0B1F1A]">
+    <main
+      id="main-content"
+      className="w-full max-w-full min-w-0 overflow-x-clip bg-[#F7F4EE] text-[#0B1F1A]"
+    >
       <style>{mountFade}</style>
 
       <header className="border-b border-[#1B4D3E]/12 px-4 sm:px-6 lg:px-8">
@@ -69,9 +72,9 @@ export default function TermsPage() {
 
       <section className={band}>
         <div className="mx-auto max-w-[1440px]">
-          <div className={`${card} px-6 py-12 text-center sm:px-10 sm:py-16`}>
-            <span className={pill}>Last updated: November 2026</span>
-            <h1 className="legal-mount mt-6 text-balance text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#0B1F1A]">
+          <div className={`${card} px-6 py-20 text-center sm:px-12 sm:py-24`}>
+            <span className={metaLabel}>Last updated: November 2026</span>
+            <h1 className="legal-mount mx-auto mt-6 w-full max-w-6xl text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#0B1F1A]">
               Terms of <span className={accent}>Use</span>
             </h1>
           </div>
@@ -79,7 +82,7 @@ export default function TermsPage() {
       </section>
 
       <div className={band}>
-        <div className="mx-auto grid max-w-[1440px] gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8">
+        <div className="mx-auto grid w-full max-w-[1440px] gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
           <nav
             aria-label="On this page"
             className="min-w-0 lg:sticky lg:top-12 lg:self-start"
@@ -97,20 +100,20 @@ export default function TermsPage() {
             </div>
           </nav>
 
-          <div className={`${card} min-w-0 px-6 py-2 sm:px-10 sm:py-4 lg:px-14`}>
-            <div className="max-w-[65ch]">
+          <div className={`${card} min-w-0 px-6 py-4 sm:px-12 sm:py-6 lg:px-16`}>
+            <div className="max-w-[68ch]">
               <section
                 id="what-this-platform-is"
                 aria-labelledby="what-this-platform-is-heading"
-                className="scroll-mt-24 py-12 sm:py-16 lg:py-20"
+                className="scroll-mt-24 py-16 sm:py-20 lg:py-24"
               >
                 <h2
                   id="what-this-platform-is-heading"
-                  className="legal-mount text-2xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl"
+                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0B1F1A]"
                 >
                   What this platform is
                 </h2>
-                <p className={`mt-7 border-t border-[#1B4D3E]/12 pt-7 text-base leading-7 sm:text-lg sm:leading-8 ${bodyCopy}`}>
+                <p className={`mt-8 border-t border-[#1B4D3E]/12 pt-8 text-base leading-7 sm:text-lg sm:leading-8 ${bodyCopy}`}>
                   Bhutan Tech Connect is a{" "}
                   <strong className="font-semibold text-[#0B1F1A]">
                     matching service
@@ -131,15 +134,15 @@ export default function TermsPage() {
               <section
                 id="your-agreements-are-your-own"
                 aria-labelledby="your-agreements-are-your-own-heading"
-                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-12 sm:py-16 lg:py-20"
+                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-16 sm:py-20 lg:py-24"
               >
                 <h2
                   id="your-agreements-are-your-own-heading"
-                  className="legal-mount text-2xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl"
+                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0B1F1A]"
                 >
                   Your agreements are your own
                 </h2>
-                <ul className={`mt-7 list-disc space-y-3 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
+                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
                   <li>
                     Students and founders arrange scope, timeline, and payment
                     directly with each other.
@@ -158,15 +161,15 @@ export default function TermsPage() {
               <section
                 id="premium-shortlists"
                 aria-labelledby="premium-shortlists-heading"
-                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-12 sm:py-16 lg:py-20"
+                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-16 sm:py-20 lg:py-24"
               >
                 <h2
                   id="premium-shortlists-heading"
-                  className="legal-mount text-2xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl"
+                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0B1F1A]"
                 >
                   Premium Shortlists
                 </h2>
-                <ul className={`mt-7 list-disc space-y-3 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
+                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
                   <li>
                     The fee covers research, curation, and ranking. It is not a
                     hiring fee.
@@ -185,15 +188,15 @@ export default function TermsPage() {
               <section
                 id="fair-use"
                 aria-labelledby="fair-use-heading"
-                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-12 sm:py-16 lg:py-20"
+                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-16 sm:py-20 lg:py-24"
               >
                 <h2
                   id="fair-use-heading"
-                  className="legal-mount text-2xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl"
+                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0B1F1A]"
                 >
                   Fair use
                 </h2>
-                <ul className={`mt-7 list-disc space-y-3 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
+                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#E8A317] sm:text-lg sm:leading-8 ${bodyCopy}`}>
                   <li>Be truthful in your profile, CV, and project postings.</li>
                   <li>
                     Do not misuse other users&apos; contact details (no spam, no
@@ -206,15 +209,15 @@ export default function TermsPage() {
               <section
                 id="questions"
                 aria-labelledby="questions-heading"
-                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-12 sm:py-16 lg:py-20"
+                className="scroll-mt-24 border-t border-[#1B4D3E]/12 py-16 sm:py-20 lg:py-24"
               >
                 <h2
                   id="questions-heading"
-                  className="legal-mount text-2xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl"
+                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0B1F1A]"
                 >
                   Questions
                 </h2>
-                <p className={`mt-7 border-t border-[#1B4D3E]/12 pt-7 text-base leading-7 sm:text-lg sm:leading-8 ${quiet}`}>
+                <p className={`mt-8 border-t border-[#1B4D3E]/12 pt-8 text-base leading-7 sm:text-lg sm:leading-8 ${quiet}`}>
                   Questions about these terms:{' '}
                   <a
                     href={`mailto:${APP_CONTACT.email}`}
