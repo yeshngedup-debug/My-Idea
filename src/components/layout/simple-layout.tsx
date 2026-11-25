@@ -56,8 +56,10 @@ export default async function SimpleLayout({
     : null;
 
   return (
-    <div className="min-h-screen bg-[#eaf6f6] text-[#0b2e2e]">
-      <header className="sticky top-0 z-30 border-b border-[#b9dede] bg-[#ffffff]">
+    <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
+      {/* Persistent work chrome only: a quiet glass bar with one hairline.
+          No scroll-driven motion and no blur on the content below. */}
+      <header className="sticky top-0 z-30 border-b border-[#b9dede]/80 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex min-h-[60px] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
@@ -71,7 +73,7 @@ export default async function SimpleLayout({
                 </span>
               </Link>
               {roleLabel && (
-                <span className="hidden shrink-0 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-3 py-1 text-xs font-medium text-[#356464] sm:inline-flex">
+                <span className="hidden shrink-0 items-center rounded-full border border-[#b9dede]/90 bg-[#eaf6f6]/80 px-3 py-1 text-xs font-medium tracking-tight text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:inline-flex">
                   {roleLabel}
                 </span>
               )}
@@ -87,7 +89,7 @@ export default async function SimpleLayout({
               <form action={logout} className="inline">
                 <button
                   type="submit"
-                  className="inline-flex min-h-11 items-center rounded-full border border-[#66bfbf] bg-transparent px-4 py-2 text-sm font-medium text-[#0b5c5c] hover:bg-[#66bfbf] hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff] motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 motion-safe:ease-[var(--ease-out)] motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
+                  className="inline-flex min-h-11 items-center rounded-full border border-[#66bfbf] bg-white/70 px-4 py-2 text-sm font-medium text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] hover:bg-[#eaf6f6] hover:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff] motion-safe:transition-[background-color,border-color,color,transform] motion-safe:duration-200 motion-safe:ease-[var(--ease-out)] motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
                 >
                   Log out
                 </button>

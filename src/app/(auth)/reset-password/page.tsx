@@ -36,7 +36,7 @@ export default async function ResetPasswordPage({
     <AuthShell>
       <h1
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
+        className="text-[clamp(1.875rem,2.6vw,2.375rem)] font-semibold leading-[1.08] tracking-[-0.045em] text-[#0b5c5c] text-balance"
       >
         Choose a new password
       </h1>

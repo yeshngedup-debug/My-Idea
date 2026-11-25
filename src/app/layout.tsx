@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
-import { Geist, Outfit } from "next/font/google";
+import { Geist, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import { MotionProvider } from "@/components/ui/motion-provider";
 import { MesurerPanel } from "@/components/dev/mesurer-panel";
@@ -8,8 +8,15 @@ import { OfflineStatus } from "@/components/network/offline-status";
 import { APP_URL } from "@/config/app";
 import "./globals.css";
 
-/* Outfit is the primary display/UI face. Geist stays loaded as a fallback
-   variable because design tokens and existing components still reference it. */
+/* Geist is the editorial display and body face for the public site: tight
+   tracking at display sizes, open counters at reading sizes. Plus Jakarta Sans
+   and Outfit stay loaded as fallbacks for product screens that still use them. */
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
@@ -79,7 +86,7 @@ export default async function RootLayout({
     <html
       lang="en"
       dir="ltr"
-      className={`${outfit.variable} ${geist.variable} font-sans`}
+      className={`${plusJakarta.variable} ${outfit.variable} ${geist.variable} font-sans`}
       suppressHydrationWarning
     >
       <head>
@@ -142,9 +149,10 @@ export default async function RootLayout({
         className="font-sans"
         style={{
           fontFamily:
-            "var(--font-outfit), var(--font-geist), ui-sans-serif, system-ui, sans-serif",
+            "var(--font-geist), var(--font-display), var(--font-outfit), ui-sans-serif, system-ui, sans-serif",
         }}
       >
+        <div className="grain-overlay" aria-hidden="true" />
         {/* Skip to main content link */}
         <a
           href="#main-content"

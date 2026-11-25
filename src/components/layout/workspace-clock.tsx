@@ -35,13 +35,13 @@ export function WorkspaceClock() {
 
   return (
     <span className="hidden shrink-0 flex-col items-end leading-tight xl:flex">
-      <span className="text-[11px] text-[#356464]">
+      <span className="text-[11px] tracking-tight text-[#356464]">
         Local time
       </span>
       <time
         dateTime={time}
         aria-label="Local time in Thimphu"
-        className="text-xs tabular-nums text-[#0b2e2e]"
+        className="text-xs font-medium tabular-nums tracking-tight text-[#0b5c5c]"
       >
         Thimphu {time}
       </time>

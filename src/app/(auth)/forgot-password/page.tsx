@@ -32,7 +32,7 @@ export default async function ForgotPasswordPage({
     <AuthShell>
       <h1
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
+        className="text-[clamp(1.875rem,2.6vw,2.375rem)] font-semibold leading-[1.08] tracking-[-0.045em] text-[#0b5c5c] text-balance"
       >
         Reset your password
       </h1>
@@ -49,7 +49,7 @@ export default async function ForgotPasswordPage({
         Remembered your password?{" "}
         <Link
           href="/login"
-          className="pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] underline-offset-4 hover:text-[#c2004b]"
+          className="pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c]"
         >
           Back to sign in
         </Link>

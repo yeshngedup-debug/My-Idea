@@ -25,7 +25,7 @@ const GENERIC_ERROR = "We couldn't create your account. Please try again.";
 
 /** Named token exposed as a CSS variable so hover utilities still win. */
 const smallAccentStyle = {
-  "--link-accent": "#c2004b",
+  "--link-accent": "#0b5c5c",
 } as CSSProperties;
 
 export default async function SignupPage({
@@ -39,7 +39,7 @@ export default async function SignupPage({
     <AuthShell>
       <h2
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
+        className="text-[clamp(1.875rem,2.6vw,2.375rem)] font-semibold leading-[1.08] tracking-[-0.045em] text-[#0b5c5c] text-balance"
       >
         Create your account
       </h2>
@@ -52,7 +52,7 @@ export default async function SignupPage({
         <Link
           href="/contact"
           style={smallAccentStyle}
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[var(--link-accent)] underline decoration-[#ff0063]/40 underline-offset-4 hover:text-[#ff0063] ${focusRing}`}
+          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[var(--link-accent)] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
         >
           Ask for founder access
         </Link>
@@ -63,7 +63,7 @@ export default async function SignupPage({
         <Link
           href="/login"
           style={smallAccentStyle}
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] underline-offset-4 hover:text-[#c2004b] ${focusRing}`}
+          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
         >
           Log in
         </Link>

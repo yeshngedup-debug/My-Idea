@@ -198,20 +198,6 @@
    Chrome is a single quiet bar: one tinted surface, one 1px hairline, no
    floating pill, no inner highlight, no colored shadow, no stacked glass. */
 
-/* Sticky chrome: a near-solid tinted surface with one bottom hairline. The
-   scrolled state only deepens the tint; it never adds a shadow. */
-.site-chrome {
-  position: relative;
-  background-color: rgb(234 246 246 / 0.94);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgb(11 46 46 / 0.08);
-  transition: background-color var(--duration-250) var(--ease-out);
-}
-.site-chrome[data-scrolled="true"] {
-  background-color: var(--color-background);
-}
-
 /* Press feedback lives on pointer-down and retargets from the current value.
    Transform is dropped under reduced motion; color feedback remains. */
 .pressable {
@@ -226,14 +212,6 @@
 
 /* Photograph zoom was removed: the photograph is the one bright moment and
    should stay still. The class is retained so existing call sites stay valid. */
-
-/* Gapless bento helpers. grid-auto-flow: dense is also set by the component's
-   grid-flow-dense utility; declaring it here keeps the contract in one place.
-   Cell hover shadows and image zoom were removed: no glows, no colored shadows,
-   no motion beyond a press. */
-.bento-grid {
-  grid-auto-flow: dense;
-}
 
 /* Workspace shortcut lists carry their own rules and dividers, so this surface
    is a flat, token-derived paper wash rather than a drawn grid. Declared in the
@@ -297,21 +275,90 @@
   }
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  .site-chrome,
-  .site-chrome[data-scrolled="true"] {
-    background-color: var(--color-background);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+/* Grain: one fixed film over the whole app. Decorative only. */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   Editorial layer
+   --------------------------------------------------------------------------
+   The public marketing site is built as a printed ledger: a paper-white
+   canvas, hairline rules instead of boxes, oversized Geist display type set
+   tight, and magenta used as a marker (a rule, an index numeral, one action).
+
+   Everything below is additive. The softer rounded surfaces defined earlier
+   in this file stay in place so screens outside marketing keep working.
+   ========================================================================== */
+
+/* Section index: a small, wide-tracked label that opens a band.
+   Natural case, one weight, no pill and no background. Declared in the
+   components layer so a caller's text colour utility still wins on dark
+   bands. */
+@layer components {
+  .index-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .index-label::before {
+    content: "";
+    display: inline-block;
+    width: 1.5rem;
+    height: 1px;
+    background: var(--color-cta);
+    transform: translateY(-0.25em);
+  }
+
+  /* The display scale used by heroes and band headings. */
+  .display-xl {
+    font-size: clamp(2.9rem, 7.4vw, 6.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.055em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .display-lg {
+    font-size: clamp(2.25rem, 4.6vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
+    font-weight: 600;
+    text-wrap: balance;
   }
 }
 
-@media (prefers-contrast: more) {
-  .site-chrome,
-  .site-chrome[data-scrolled="true"] {
-    background-color: var(--color-background);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    border-bottom-color: var(--color-foreground);
+/* Teal marquee. Two identical tracks translate as one; the second copy makes
+   the loop seamless. Motion stops entirely when the visitor asks for less. */
+@keyframes btc-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.btc-marquee {
+  animation: btc-marquee 44s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btc-marquee {
+    animation: none !important;
+    transform: none !important;
   }
+}
+
+/* Photograph plates sit on a teal mat so a slow connection shows brand colour
+   instead of a grey box. */
+.plate {
+  background: var(--color-brand);
 }

@@ -1,44 +1,31 @@
 /**
  * Privacy Policy — short, plain English, MVP scope.
+ *
+ * Editorial layout: paper ground, a sticky ruled contents column, and one
+ * measure of body copy. No cards, no shadows.
  */
 import Link from "next/link";
 import { APP_CONTACT } from "@/config/app";
+import { SiteHeader } from "@/components/marketing/site-header";
+import { SiteFooter } from "@/components/marketing/site-footer";
+import {
+  Band,
+  RuleLink,
+  container,
+  focusRing,
+  gutters,
+  hairline,
+} from "@/components/marketing/editorial";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
-  title: 'Privacy Policy',
+  title: "Privacy Policy",
   description:
-    'Bhutan Tech Connect privacy policy: what we collect, how we use your data, and how to request deletion.',
+    "Bhutan Tech Connect privacy policy: what we collect, how we use your data, and how to request deletion.",
   alternates: {
-    canonical: 'https://bhutantech.bt/privacy',
+    canonical: "https://bhutantech.bt/privacy",
   },
 };
-
-const mountFade = `
-  .legal-mount {
-    animation: legal-mount-in 240ms cubic-bezier(0.23, 1, 0.32, 1) both;
-  }
-  @keyframes legal-mount-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .legal-mount { animation: none; }
-  }
-`;
-
-/** Restrained Paywave-style card system in the BTC palette. */
-const card =
-  "rounded-3xl border border-[#b9dede]/12 bg-white shadow-[0_2px_10px_rgba(11,46,46,0.04)]";
-const band = "px-4 py-12 sm:px-6 md:py-20 lg:px-8";
-const metaLabel =
-  "text-xs font-semibold uppercase tracking-[0.18em] text-[#356464]";
-const accent = "text-[#c2004b]";
-const bodyCopy = "text-[#0b2e2e]/75";
-const quiet = "text-[#356464]";
-const mailLink =
-  "inline-flex min-h-6 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-2 underline-offset-4 transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
-const tocLink =
-  "inline-block min-h-11 rounded-sm py-2.5 text-sm font-medium text-[#0b2e2e]/70 transition-[color,transform] hover:translate-x-1 hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transform-none motion-reduce:transition-none";
 
 const chapters = [
   { id: "what-we-collect", label: "What we collect" },
@@ -48,163 +35,231 @@ const chapters = [
   { id: "deleting-your-data", label: "Deleting your data" },
 ] as const;
 
+const tocLink = `inline-flex min-h-11 items-baseline gap-2 py-2 text-sm font-medium text-[#356464] transition-colors hover:text-[#0b2e2e] ${focusRing}`;
+
+const bodyCopy =
+  "text-[#356464] [&_strong]:font-semibold [&_strong]:text-[#0b2e2e]";
+
+const listCopy = `mt-7 list-disc space-y-3 border-t pl-5 pt-7 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${hairline} ${bodyCopy}`;
+
+const chapterHeading =
+  "text-[clamp(1.6rem,2.6vw,2.15rem)] font-semibold leading-[1.12] tracking-[-0.035em] text-[#0b2e2e]";
+
+const mailLink = `inline-flex min-h-6 items-center font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-1 underline-offset-4 transition-colors hover:text-[#0b2e2e] ${focusRing}`;
+
+const chapter = cn("scroll-mt-24 border-t py-12 sm:py-14", hairline);
+
 export default function PrivacyPage() {
   return (
-    <main
-      id="main-content"
-      className="w-full max-w-full min-w-0 overflow-x-clip bg-[#eaf6f6] text-[#0b2e2e]"
-    >
-      <style>{mountFade}</style>
+    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
+      <SiteHeader />
 
-      <header className="border-b border-[#b9dede]/12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 py-6">
-          <Link
-            href="/"
-            className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-[#0b5c5c] transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] motion-reduce:transition-none"
-          >
-            Back to home
-          </Link>
-          <span className="text-sm font-bold tracking-tight text-[#0b2e2e]">
-            Bhutan Tech Connect
-          </span>
-        </div>
-      </header>
-
-      <section className={band}>
-        <div className="mx-auto max-w-[1440px]">
-          <div className={`${card} px-6 py-20 text-center sm:px-12 sm:py-24`}>
-            <span className={metaLabel}>Last updated: November 2026</span>
-            <h1 className="legal-mount mx-auto mt-6 w-full max-w-6xl text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#0b2e2e]">
-              Privacy <span className={accent}>Policy</span>
-            </h1>
+      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+        <Band className="border-b border-[#0b2e2e]/10">
+          <div className={cn(container, gutters, "py-12 md:py-16")}>
+            <p className="index-label">Legal · Privacy</p>
+            <h1 className="display-xl mt-6 max-w-[14ch]">Privacy Policy</h1>
+            <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2 border-t border-[#0b2e2e]/12 pt-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#356464]">
+                Last updated · November 2026
+              </p>
+              <p className="max-w-[52ch] text-[15px] leading-7 text-[#356464]">
+                What we collect, who can see it, and how to have it deleted.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </Band>
 
-      <div className={band}>
-        <div className="mx-auto grid w-full max-w-[1440px] gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
-          <nav
-            aria-label="On this page"
-            className="min-w-0 lg:sticky lg:top-12 lg:self-start"
-          >
-            <div className={`${card} p-6 sm:p-8`}>
-              <ol className="flex flex-wrap gap-x-5 gap-y-1 lg:flex-col lg:gap-0">
-                {chapters.map((chapter) => (
-                  <li key={chapter.id}>
-                    <a href={`#${chapter.id}`} className={tocLink}>
-                      {chapter.label}
+        <div className={cn(container, gutters, "pb-20 md:pb-28")}>
+          <div className="grid w-full gap-10 lg:grid-cols-12 lg:gap-12">
+            <nav
+              aria-label="On this page"
+              className="min-w-0 lg:col-span-3 lg:sticky lg:top-24 lg:self-start"
+            >
+              <p className="border-b border-[#0b2e2e]/15 pb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]">
+                Contents
+              </p>
+              <ol className="mt-3 flex flex-wrap gap-x-5 lg:flex-col lg:gap-0">
+                {chapters.map((item, index) => (
+                  <li key={item.id} className="lg:border-b lg:border-[#0b2e2e]/10">
+                    <a href={`#${item.id}`} className={tocLink}>
+                      <span className="text-[10px] font-semibold tabular-nums tracking-[0.16em] text-[#c2004b]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {item.label}
                     </a>
                   </li>
                 ))}
               </ol>
-            </div>
-          </nav>
+            </nav>
 
-          <div className={`${card} min-w-0 px-6 py-4 sm:px-12 sm:py-6 lg:px-16`}>
-            <div className="max-w-[68ch]">
-              <section
-                id="what-we-collect"
-                aria-labelledby="what-we-collect-heading"
-                className="scroll-mt-24 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="what-we-collect-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
+            <article className="min-w-0 lg:col-span-8 lg:col-start-5">
+              <div className="max-w-[68ch]">
+                <section
+                  id="what-we-collect"
+                  aria-labelledby="what-we-collect-heading"
+                  className={cn("scroll-mt-24 pb-12 pt-2 sm:pb-14")}
                 >
-                  What we collect
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 border-t border-[#b9dede]/12 pl-5 pt-8 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>Your name, email address, and role (student or founder).</li>
-                  <li>Students: profile details (college, course, year, skills, bio, availability) and your CV (PDF).</li>
-                  <li>Founders: project postings (title, description, budget, skills).</li>
-                  <li>If you buy a Premium Shortlist: your payment screenshot and order details.</li>
-                </ul>
-              </section>
-
-              <section
-                id="how-we-use-it"
-                aria-labelledby="how-we-use-it-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="how-we-use-it-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  How we use it
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>To match students with projects and founders with students.</li>
-                  <li>To prepare and deliver paid shortlists.</li>
-                  <li>To verify profiles and payments.</li>
-                </ul>
-              </section>
-
-              <section
-                id="who-can-see-your-data"
-                aria-labelledby="who-can-see-your-data-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="who-can-see-your-data-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Who can see your data
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>Founders can browse completed student profiles. CV access requires an application to one of their projects or a confirmed paid shortlist. Contact email is shown for project applicants and paid shortlists.</li>
-                  <li>Admins can see all profiles for verification and shortlisting.</li>
-                  <li>Payment screenshots are visible only to you and our admins.</li>
-                </ul>
-              </section>
-
-              <section
-                id="what-we-never-do"
-                aria-labelledby="what-we-never-do-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="what-we-never-do-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  What we never do
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>We never sell your data.</li>
-                  <li>We never share shortlist contents publicly. The paying founder sees the delivered shortlist; admins can access profile data to verify and prepare it.</li>
-                </ul>
-              </section>
-
-              <section
-                id="deleting-your-data"
-                aria-labelledby="deleting-your-data-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="deleting-your-data-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Deleting your data
-                </h2>
-                <p className={`mt-8 border-t border-[#b9dede]/12 pt-8 text-base leading-7 sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  Want your profile, CV, or account removed? Email us from the address on your account and tell us what you want deleted. We use that address to confirm the request is yours, and we may ask for one more piece of account information before acting. These are operational targets, not a legal guarantee: we aim to acknowledge your request within 5 working days and, where deletion is required, to complete it within 30 days.
-                </p>
-                <p className={`mt-6 text-base leading-7 sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  We remove the data you ask us to delete from our live services where we can: your profile details, CV, account record, applications, and any project postings you ask us to take down, plus related data held by our service providers. If we cannot remove something, we will tell you what we kept and why. We may keep order and payment records needed to complete a transaction, handle refunds or disputes, and meet accounting or legal obligations. Those records are not used for matching.
-                </p>
-                <p className={`mt-6 text-base leading-7 sm:text-lg sm:leading-8 ${quiet}`}>
-                  Questions or data requests:{' '}
-                  <a
-                    href={`mailto:${APP_CONTACT.email}`}
-                    className={mailLink}
+                  <h2
+                    id="what-we-collect-heading"
+                    className={chapterHeading}
                   >
-                    {APP_CONTACT.email}
-                  </a>
-                </p>
-              </section>
-            </div>
+                    What we collect
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      Your name, email address, and role (student or founder).
+                    </li>
+                    <li>
+                      Students: profile details (college, course, year, skills,
+                      bio, availability) and your CV (PDF).
+                    </li>
+                    <li>
+                      Founders: project postings (title, description, budget,
+                      skills).
+                    </li>
+                    <li>
+                      If you buy a Premium Shortlist: your payment screenshot and
+                      order details.
+                    </li>
+                  </ul>
+                </section>
+
+                <section
+                  id="how-we-use-it"
+                  aria-labelledby="how-we-use-it-heading"
+                  className={chapter}
+                >
+                  <h2 id="how-we-use-it-heading" className={chapterHeading}>
+                    How we use it
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      To match students with projects and founders with students.
+                    </li>
+                    <li>To prepare and deliver paid shortlists.</li>
+                    <li>To verify profiles and payments.</li>
+                  </ul>
+                </section>
+
+                <section
+                  id="who-can-see-your-data"
+                  aria-labelledby="who-can-see-your-data-heading"
+                  className={chapter}
+                >
+                  <h2
+                    id="who-can-see-your-data-heading"
+                    className={chapterHeading}
+                  >
+                    Who can see your data
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      Founders can browse completed student profiles. CV access
+                      requires an application to one of their projects or a
+                      confirmed paid shortlist. Contact email is shown for project
+                      applicants and paid shortlists.
+                    </li>
+                    <li>
+                      Admins can see all profiles for verification and
+                      shortlisting.
+                    </li>
+                    <li>
+                      Payment screenshots are visible only to you and our admins.
+                    </li>
+                  </ul>
+                </section>
+
+                <section
+                  id="what-we-never-do"
+                  aria-labelledby="what-we-never-do-heading"
+                  className={chapter}
+                >
+                  <h2
+                    id="what-we-never-do-heading"
+                    className={chapterHeading}
+                  >
+                    What we never do
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>We never sell your data.</li>
+                    <li>
+                      We never share shortlist contents publicly. The paying
+                      founder sees the delivered shortlist; admins can access
+                      profile data to verify and prepare it.
+                    </li>
+                  </ul>
+                </section>
+
+                <section
+                  id="deleting-your-data"
+                  aria-labelledby="deleting-your-data-heading"
+                  className={chapter}
+                >
+                  <h2
+                    id="deleting-your-data-heading"
+                    className={chapterHeading}
+                  >
+                    Deleting your data
+                  </h2>
+                  <p
+                    className={cn(
+                      "mt-7 border-t pt-7 text-base leading-7 sm:text-lg sm:leading-8",
+                      hairline,
+                      bodyCopy,
+                    )}
+                  >
+                    Want your profile, CV, or account removed? Email us from the
+                    address on your account and tell us what you want deleted. We
+                    use that address to confirm the request is yours, and we may
+                    ask for one more piece of account information before acting.
+                    These are operational targets, not a legal guarantee: we aim
+                    to acknowledge your request within 5 working days and, where
+                    deletion is required, to complete it within 30 days.
+                  </p>
+                  <p
+                    className={cn(
+                      "mt-5 text-base leading-7 sm:text-lg sm:leading-8",
+                      bodyCopy,
+                    )}
+                  >
+                    We remove the data you ask us to delete from our live
+                    services where we can: your profile details, CV, account
+                    record, applications, and any project postings you ask us to
+                    take down, plus related data held by our service providers.
+                    If we cannot remove something, we will tell you what we kept
+                    and why. We may keep order and payment records needed to
+                    complete a transaction, handle refunds or disputes, and meet
+                    accounting or legal obligations. Those records are not used
+                    for matching.
+                  </p>
+                  <p className="mt-8 border-t border-[#0b2e2e]/12 pt-6 text-[15px] leading-7 text-[#356464]">
+                    Questions or data requests:{" "}
+                    <a href={`mailto:${APP_CONTACT.email}`} className={mailLink}>
+                      {APP_CONTACT.email}
+                    </a>
+                  </p>
+                  <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+                    <RuleLink href="/terms">Read the terms of use</RuleLink>
+                    <RuleLink href="/contact">Contact the team</RuleLink>
+                    <Link
+                      href="/public"
+                      className={cn(
+                        "inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-[#356464] transition-colors hover:text-[#0b2e2e]",
+                        focusRing,
+                      )}
+                    >
+                      Back to the homepage
+                    </Link>
+                  </div>
+                </section>
+              </div>
+            </article>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 }

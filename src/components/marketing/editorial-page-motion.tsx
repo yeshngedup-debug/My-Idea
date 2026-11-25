@@ -56,8 +56,8 @@ export function HorizontalAccordion({
             }}
             onFocus={() => setActiveId(item.id)}
             className={cn(
-              "group relative isolate flex min-h-11 flex-[1_1_0%] flex-col justify-end overflow-hidden rounded-[1.25rem] border border-[#b9dede]/15 bg-white transition-[flex-grow,flex-basis] duration-700 ease-out motion-reduce:transition-none",
-              "data-[open=true]:flex-[3_1_0%] sm:data-[open=true]:flex-[5_1_0%]",
+              "group relative isolate flex min-h-11 flex-[1_1_0%] flex-col justify-end overflow-hidden rounded-[2px] border border-[#0b2e2e]/15 bg-white transition-[flex-grow,flex-basis,background-color] duration-700 ease-out motion-reduce:transition-none",
+              "data-[open=true]:flex-[3_1_0%] data-[open=true]:bg-[#eaf6f6] sm:data-[open=true]:flex-[5_1_0%]",
             )}
           >
             <button
@@ -66,12 +66,12 @@ export function HorizontalAccordion({
               aria-expanded={open}
               aria-controls={panelId}
               onClick={() => setActiveId(open ? null : item.id)}
-              className="relative z-10 flex min-h-11 w-full flex-col items-start justify-end gap-2 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#4d8c8c] sm:p-6"
+              className="relative z-10 flex min-h-11 w-full flex-col items-start justify-end gap-2 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#0b5c5c] sm:p-6"
             >
-              <span className="text-xs font-semibold tabular-nums text-[#0b5c5c]">
+              <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                 {item.number}
               </span>
-              <span className="text-balance text-lg font-semibold leading-snug tracking-tight text-[#0b2e2e] sm:text-xl">
+              <span className="text-balance text-lg font-semibold leading-snug tracking-[-0.02em] text-[#0b2e2e] sm:text-xl">
                 {item.title}
               </span>
             </button>
@@ -82,7 +82,7 @@ export function HorizontalAccordion({
                 aria-labelledby={triggerId}
                 className="relative z-0 px-5 pb-6 sm:px-6"
               >
-                <p className="max-w-xl text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
+                <p className="max-w-xl border-t border-[#0b2e2e]/10 pt-4 text-[15px] leading-7 text-[#356464]">
                   {item.body}
                 </p>
               </div>

@@ -18,10 +18,12 @@ export function WorkspaceLoading({
       aria-busy="true"
       aria-label={`Loading ${label} workspace`}
     >
-      <div className="workspace-paper flex h-28 items-end rounded-[24px] border border-[#b9dede] p-5 sm:h-36">
-        <div className="h-3 w-28 rounded bg-[#eaf6f6]" />
+      <div className="rounded-[1.5rem] border border-[#b9dede]/80 bg-[#dff0f0]/55 p-1.5 shadow-[0_14px_34px_-32px_rgba(11,92,92,0.5)]">
+        <div className="workspace-paper flex h-24 items-end rounded-[calc(1.5rem_-_0.375rem)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] sm:h-32">
+          <div className="h-3 w-28 rounded bg-white/80" />
+        </div>
       </div>
-      <div className="grid grid-cols-12 gap-6 border-y border-[#b9dede] py-5 sm:gap-10 sm:py-6">
+      <div className="grid grid-cols-12 gap-6 border-y border-[#b9dede]/80 py-5 sm:gap-10 sm:py-6">
         <div className="col-span-12 min-w-0 sm:col-span-5">
           <div className="h-3 w-24 rounded bg-[#eaf6f6]" />
           <div className="mt-3 h-10 w-20 rounded bg-[#b9dede]" />
@@ -34,7 +36,7 @@ export function WorkspaceLoading({
       </div>
       <div>
         <div className="mb-3 h-3 w-24 rounded bg-[#eaf6f6]" />
-        <div className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
+        <div className="divide-y divide-[#b9dede]/80 border-y border-[#b9dede]/80">
           {Array.from({ length: listRows }, (_, i) => (
             <div key={i} className="h-14 sm:h-16" />
           ))}

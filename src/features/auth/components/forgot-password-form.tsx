@@ -10,6 +10,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { requestPasswordReset } from "@/features/auth/actions";
+import { authInputClassName } from "@/features/auth/components/styles";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -82,10 +83,10 @@ export function ForgotPasswordForm({
           role={serverError ? "alert" : "status"}
           tabIndex={-1}
           data-auth-message
-          className={`mb-5 rounded-xl border px-4 py-3 text-sm ${
+          className={`mb-5 rounded-2xl border px-4 py-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
             serverError
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]"
+              ? "border-red-200/80 bg-red-50/80 text-red-700"
+              : "border-[#b9dede]/80 bg-[#eaf6f6]/80 text-[#0b5c5c]"
           }`}
         >
           {status}
@@ -117,7 +118,7 @@ export function ForgotPasswordForm({
             onChange={() => setEmailError(undefined)}
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+            className={authInputClassName}
           />
           {emailError && (
             <FieldError id={emailErrorId}>{emailError}</FieldError>

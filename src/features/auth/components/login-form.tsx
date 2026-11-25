@@ -14,7 +14,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent, RefObject } from "react";
 import Link from "next/link";
 import { login } from "@/features/auth/actions";
-import { focusRing } from "@/features/auth/components/styles";
+import { authInputClassName, focusRing } from "@/features/auth/components/styles";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 type FieldName = "email" | "password";
@@ -112,7 +112,7 @@ export function LoginForm({
           role="alert"
           tabIndex={-1}
           data-auth-message
-          className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mb-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
         >
           {serverError}
         </div>
@@ -121,7 +121,7 @@ export function LoginForm({
         <p
           role="status"
           data-auth-message
-          className="mb-5 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-4 py-3 text-sm text-[#0b5c5c]"
+          className="mb-5 rounded-2xl border border-[#b9dede]/80 bg-[#eaf6f6]/80 px-4 py-3 text-sm text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
         >
           {serverMessage}
         </p>
@@ -152,7 +152,7 @@ export function LoginForm({
             onChange={() => clearError("email")}
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+            className={authInputClassName}
           />
           {errors.email && (
             <FieldError id={emailErrorId}>{errors.email}</FieldError>
@@ -168,7 +168,7 @@ export function LoginForm({
             </label>
             <Link
               href="/forgot-password"
-              className={`pressable inline-flex min-h-6 items-center rounded-sm text-xs font-medium text-[#c2004b] underline decoration-[#ff0063] underline-offset-4 hover:text-[#0b5c5c] ${focusRing}`}
+              className={`pressable inline-flex min-h-6 items-center rounded-sm text-xs font-medium text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
             >
               Forgot password?
             </Link>
@@ -184,7 +184,7 @@ export function LoginForm({
             onChange={() => clearError("password")}
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+            className={authInputClassName}
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
@@ -193,7 +193,7 @@ export function LoginForm({
             Didn&apos;t get a reset email?{" "}
             <a
               href={passwordHelpContactHref}
-              className={`pressable inline-flex min-h-6 items-center rounded-sm font-medium text-[#c2004b] underline decoration-[#ff0063] underline-offset-4 hover:text-[#0b5c5c] ${focusRing}`}
+              className={`pressable inline-flex min-h-6 items-center rounded-sm font-medium text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
             >
               Contact us
             </a>

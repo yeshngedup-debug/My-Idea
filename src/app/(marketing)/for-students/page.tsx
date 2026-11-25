@@ -1,34 +1,24 @@
-import type { CSSProperties, ReactNode } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import {
-  Briefcase,
-  CheckCircle,
-  Clock,
-  Files,
-  GraduationCap,
-  ListChecks,
-  MagnifyingGlass,
-  NotePencil,
-} from "@phosphor-icons/react/dist/ssr";
-import { SiteHeader } from "@/components/marketing/site-header";
+import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { PhotoCredit } from "@/components/ui/photo-credit";
+import { EditorialHero } from "@/components/marketing/editorial-hero";
+import {
+  Action,
+  Band,
+  Figure,
+  LedgerRow,
+  RuleLink,
+  SectionHead,
+  container,
+  gutters,
+  quietClass,
+} from "@/components/marketing/editorial";
 import { PHOTO_CREDITS } from "@/components/marketing/nav";
-import { Reveal } from "@/components/ui/motion";
-import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
-import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { InlineImageText } from "@/components/editorial";
 import { ScrubbedTextReveal } from "@/components/motion";
-import {
-  StickySectionHeadings,
-  type StickySection,
-} from "@/components/layout/sticky-section-headings";
+import { ChapterProgress, type ChapterLink } from "@/components/motion";
 import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
-
-type Icon = typeof NotePencil;
 
 export const metadata = pageMetadata({
   title: "For students",
@@ -37,89 +27,28 @@ export const metadata = pageMetadata({
   path: "/for-students",
 });
 
-const DZONG_CREDIT =
-  "https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg";
-const YOUTH_CREDIT =
-  "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg";
-
-const sections: StickySection[] = [
-  { id: "who-heading", label: "Who it's for" },
-  { id: "profile-heading", label: "Profile" },
-  { id: "rooted-heading", label: "Close to home" },
-  { id: "apply-heading", label: "Apply" },
-  { id: "pay-heading", label: "Pay" },
+const chapters: ChapterLink[] = [
+  { id: "who", label: "Who it's for" },
+  { id: "profile", label: "Profile" },
+  { id: "rooted", label: "Close to home" },
+  { id: "apply", label: "Apply" },
+  { id: "pay", label: "Pay" },
 ];
 
-/** The sticky rail uses theme variables; scope them to this page's palette. */
-const stickyVars = {
-  "--color-background": "#eaf6f6",
-  "--color-foreground": "#0b2e2e",
-  "--color-card": "#FFFFFF",
-  "--color-border": "#b9dede",
-  "--color-body-secondary": "#0b2e2e",
-  "--color-accent": "#ff0063",
-} as CSSProperties;
-
-const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
-const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054]/85 motion-reduce:transition-none ${focusRing}`;
-const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#0b5c5c] underline decoration-[#0b5c5c]/30 underline-offset-4 transition-colors hover:text-[#0b2e2e] motion-reduce:transition-none ${focusRing}`;
-const bandClass =
-  "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
-const headingClass =
-  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]";
-const bodyClass =
-  "max-w-2xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8";
-const bentoClass =
-  "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
-const imageZoom =
-  "object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
-
-function SectionCard({
-  id,
-  labelledBy,
-  className,
-  children,
-}: {
-  id?: string;
-  labelledBy?: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section
-      id={id}
-      aria-labelledby={labelledBy}
-      className={cn(bandClass, className)}
-    >
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
-    </section>
-  );
-}
-
-type Fit = {
-  Icon: Icon;
-  title: string;
-  body: string;
-};
-
-const fits: Fit[] = [
+const fits = [
   {
-    Icon: GraduationCap,
     title: "College students in Bhutan",
     body: "Study, build a profile, and apply around your term.",
   },
   {
-    Icon: Briefcase,
     title: "Graduates building a portfolio",
     body: "Use paid projects to show what you can do.",
   },
   {
-    Icon: Clock,
     title: "Students with flexible time",
     body: "Set your availability so founders know when you can work.",
   },
-];
+] as const;
 
 const profileFields = [
   { label: "Full name", detail: "The name founders see on your profile" },
@@ -129,376 +58,320 @@ const profileFields = [
   { label: "Your skills", detail: "The skills you can do the work with" },
   { label: "A short bio", detail: "A few lines about you" },
   { label: "A PDF CV", detail: "PDF only, up to 5 MB, stored privately" },
-];
+] as const;
 
-type ApplicationStep = {
-  Icon: Icon;
-  title: string;
-  body: string;
-};
-
-const applicationSteps: ApplicationStep[] = [
+const applicationSteps = [
   {
-    Icon: MagnifyingGlass,
     title: "Browse open projects",
     body: "Read the scope, skills, budget range, and deadline before you decide.",
   },
   {
-    Icon: NotePencil,
     title: "Apply to the ones that fit",
     body: "You can send one application per project. A complete profile and CV help founders decide.",
   },
   {
-    Icon: ListChecks,
     title: "Track every application",
     body: "Watch statuses move from pending to shortlisted, accepted, or rejected.",
   },
-];
+] as const;
 
 export default function ForStudentsPage() {
   return (
-    <>
+    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
-      <main
-        id="main-content"
-        className="w-full max-w-full overflow-x-hidden bg-[#eaf6f6] text-[#0b2e2e]"
-      >
-        {/* Editorial split hero: copy left, one credited photograph right. */}
-        <section className="w-full max-w-full overflow-x-hidden px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
-          <div className="mx-auto w-full max-w-6xl">
-            <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
-              <HeroCopyEntrance>
-                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
-                  Turn your skills into paid work.
-                </h1>
-                <p className="mt-8 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8">
-                  Build a profile, find a focused project, and get paid for the
-                  work you do.
-                </p>
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  <Link href="/signup" className={primaryCta}>
-                    Create student account
-                  </Link>
-                  <Link href="/how-it-works" className={quietLink}>
-                    See how it works
-                  </Link>
-                </div>
-              </HeroCopyEntrance>
 
-              <HeroPhotoEntrance>
-                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-[#0b2e2e]">
-                  <Image
-                    src="/images/bhutanese-students.jpg"
-                    alt="Young Bhutanese people working in groups at a training day in Thimphu"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className={cn(
-                      "grayscale contrast-[1.15] opacity-90",
-                      imageZoom,
-                    )}
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(120% 90% at 50% 10%, transparent 25%, rgb(11 31 26 / 0.78) 100%)",
-                    }}
-                  />
-                  <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
-                    <PhotoCredit
-                      fileUrl={YOUTH_CREDIT}
-                      className="text-[#eaf6f6]/90"
-                    />
-                  </figcaption>
-                </figure>
-              </HeroPhotoEntrance>
-            </div>
-          </div>
-        </section>
+      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+        <EditorialHero
+          index="01"
+          eyebrow="For students"
+          title={
+            <>
+              Turn your skills into{" "}
+              <span className="text-[#0b5c5c]">paid work.</span>
+            </>
+          }
+          lead="Build a profile, find a focused project, and get paid for the work you do."
+          primaryCta={{ href: "/signup", label: "Create student account" }}
+          secondary={{ href: "/how-it-works", label: "See how it works" }}
+          image={{
+            src: "/images/bhutanese-students.jpg",
+            alt: "Young Bhutanese people working in groups at a training day in Thimphu",
+            fileUrl: PHOTO_CREDITS.valley,
+          }}
+          caption="Students at work"
+          imagePosition="object-center"
+        />
 
-        {/* One scrubbed statement, away from the hero. */}
-        <section className={bandClass}>
-          <div className="mx-auto w-full max-w-6xl">
+        {/* One statement, scrubbed in. The workspace holds every step. */}
+        <Band tone="mist" className="border-b border-[#0b2e2e]/10">
+          <div className={cn(container, gutters, "py-14 md:py-20")}>
+            <p className="index-label">The student workspace</p>
             <ScrubbedTextReveal
               as="p"
               text="Everything you need to browse and apply lives in your student workspace."
-              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#0b5c5c]"
+              className="mt-6 max-w-[24ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[28ch]"
             />
           </div>
-        </section>
+        </Band>
 
-        <div style={stickyVars}>
-          <StickySectionHeadings
-            title="For students"
-            sections={sections}
-            navLabel="Student guide sections"
-          >
-            <SectionCard labelledBy="who-heading">
-              <Reveal className="mx-auto max-w-5xl">
-                <h2 id="who-heading" data-sticky-section className={headingClass}>
-                  Built for students ready to begin
-                </h2>
-                <p className={cn(bodyClass, "mt-6")}>
-                  You do not need a long work history. Clear skills and time for
-                  focused work are enough to begin.
-                </p>
-              </Reveal>
-              <div className={cn(bentoClass, "mt-14")}>
-                {fits.map((fit) => {
-                  const FitIcon = fit.Icon;
-                  return (
-                    <article
-                      key={fit.title}
-                      className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
-                    >
-                      <FitIcon
-                        aria-hidden="true"
-                        weight="light"
-                        size={24}
-                        strokeWidth={1.5}
-                        className="text-[#0b5c5c]"
-                      />
-                      <h3 className="mt-6 text-lg font-semibold text-[#0b2e2e]">
-                        {fit.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-[#0b2e2e]/70">
-                        {fit.body}
-                      </p>
-                    </article>
-                  );
-                })}
-              </div>
-            </SectionCard>
+        <ChapterProgress
+          chapters={chapters}
+          className="sticky top-16 z-30 border-[#0b2e2e]/12 bg-white [&_a]:text-[#0b2e2e] [&_a:hover]:text-[#0b5c5c] [&_a]:focus-visible:ring-[#0b5c5c] [&_a]:focus-visible:ring-offset-white [&_a[aria-current]]:text-[#0b5c5c] [&_a[aria-current]]:decoration-[#ff0063] [&_a[aria-current]]:decoration-1 [&_a[aria-current]]:underline-offset-[10px] [&_[data-chapter-bar]]:bg-[#ff0063]"
+        />
 
-            <SectionCard labelledBy="profile-heading">
-              <div className="grid w-full max-w-full grid-cols-12 gap-4">
-                <Reveal className="col-span-12 lg:col-span-5">
-                  <h2
-                    id="profile-heading"
-                    data-sticky-section
-                    className={headingClass}
-                  >
-                    Make your profile complete
-                  </h2>
-                  <p className={cn(bodyClass, "mt-6")}>
-                    A complete profile and CV help founders decide.
-                  </p>
-                  <Link href="/signup" className={cn(primaryCta, "mt-8")}>
-                    Start your profile
-                  </Link>
-                </Reveal>
+        {/* Who it's for — three ruled columns, no cards. */}
+        <Band id="who" labelledBy="who-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="02"
+                eyebrow="Who it's for"
+                id="who-heading"
+                title="Built for students ready to begin"
+                lead="You do not need a long work history. Clear skills and time for focused work are enough to begin."
+              />
+            </MarketingReveal>
 
-                <Reveal
-                  direction="right"
-                  delay={0.08}
-                  className="col-span-12 lg:col-span-7"
+            <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
+              {fits.map((fit, index) => (
+                <MarketingReveal
+                  key={fit.title}
+                  delay={index * 0.06}
+                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
                 >
-                  <div className="rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:p-8">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#b9dede]/15 pb-5">
-                      <p className="text-base font-semibold text-[#0b2e2e]">
-                        Student profile
-                      </p>
-                      <p className="text-sm font-semibold text-[#0b5c5c]">
-                        Helps founders decide
-                      </p>
-                    </div>
-                    <dl className="divide-y divide-[#0b5c5c]/15">
-                      {profileFields.map((field) => (
-                        <div
-                          key={field.label}
-                          className="grid gap-1 py-4 sm:grid-cols-[11rem_1fr] sm:gap-6"
-                        >
-                          <dt className="flex items-start gap-2 text-sm font-medium text-[#0b2e2e]">
-                            <CheckCircle
-                              aria-hidden="true"
-                              weight="light"
-                              size={18}
-                              strokeWidth={1.5}
-                              className="mt-0.5 shrink-0 text-[#0b5c5c]"
-                            />
-                            {field.label}
-                          </dt>
-                          <dd className="text-sm leading-6 text-[#0b2e2e]/70">
-                            {field.detail}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p className="mt-4 flex items-start gap-3 border-t border-[#b9dede]/15 pt-5 text-sm leading-6 text-[#0b2e2e]/70">
-                      <Files
-                        aria-hidden="true"
-                        weight="light"
-                        size={18}
-                        strokeWidth={1.5}
-                        className="mt-0.5 shrink-0 text-[#0b5c5c]"
-                      />
-                      <span>
-                        <span className="font-semibold text-[#0b2e2e]">
-                          Your CV:
-                        </span>{" "}
-                        PDF only, up to 5 MB, stored privately.
-                      </span>
-                    </p>
-                  </div>
-                </Reveal>
-              </div>
-            </SectionCard>
-
-            <SectionCard labelledBy="rooted-heading">
-              <div id="rooted-heading" data-sticky-section>
-                <InlineImageText
-                  as="h2"
-                  before="Start close to"
-                  imageSrc="/images/bhutanese-community.jpg"
-                  imageAlt="Bhutanese boys in traditional gho sitting together"
-                  creditFileUrl={DZONG_CREDIT}
-                  after="home"
-                  accessibleLabel="Start close to home"
-                />
-              </div>
-              <Reveal className="mx-auto mt-10 max-w-2xl">
-                <p className={bodyClass}>
-                  Built around Bhutanese students and founders; these photographs
-                  show Bhutanese people in community settings, not platform
-                  listings or members.
-                </p>
-              </Reveal>
-              <Reveal className="mt-14">
-                <GsapScaleFadeImage>
-                  <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e] sm:aspect-[2/1]">
-                    <Image
-                      src="/images/bhutanese-community.jpg"
-                      alt="Bhutanese boys in traditional gho sitting together"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 90vw"
-                      className={imageZoom}
-                    />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
-                    />
-                    <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                      <span className="text-sm font-medium text-[#eaf6f6]">
-                        Work grounded in the local community
-                      </span>
-                      <PhotoCredit
-                        fileUrl={DZONG_CREDIT}
-                        className="text-[#eaf6f6]/90"
-                      />
-                    </figcaption>
-                  </figure>
-                </GsapScaleFadeImage>
-              </Reveal>
-            </SectionCard>
-
-            <SectionCard labelledBy="apply-heading">
-              <Reveal className="mx-auto max-w-5xl">
-                <h2
-                  id="apply-heading"
-                  data-sticky-section
-                  className={headingClass}
-                >
-                  Browse, apply, and track
-                </h2>
-                <p className={cn(bodyClass, "mt-6")}>
-                  Everything you need to browse and apply lives in your student
-                  workspace.
-                </p>
-              </Reveal>
-              <div className={cn(bentoClass, "mt-14")}>
-                {applicationSteps.map((step, index) => {
-                  const StepIcon = step.Icon;
-                  return (
-                    <article
-                      key={step.title}
-                      className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
-                    >
-                      <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
+                  <li>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="mt-6 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0b2e2e]">
-                        <StepIcon
-                          aria-hidden="true"
-                          weight="light"
-                          size={22}
-                          strokeWidth={1.5}
-                          className="shrink-0 text-[#0b5c5c]"
-                        />
-                        {step.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/70">
-                        {step.body}
-                      </p>
-                    </article>
-                  );
-                })}
-              </div>
-            </SectionCard>
+                      <span
+                        aria-hidden="true"
+                        className="h-px flex-1 bg-[#0b2e2e]/15"
+                      />
+                    </div>
+                    <h3 className="mt-4 text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
+                      {fit.title}
+                    </h3>
+                    <p className="mt-2 max-w-[30ch] text-sm leading-6 text-[#356464]">
+                      {fit.body}
+                    </p>
+                  </li>
+                </MarketingReveal>
+              ))}
+            </ul>
+          </div>
+        </Band>
 
-            <SectionCard labelledBy="pay-heading">
-              <Reveal className="mx-auto max-w-5xl">
-                <h2 id="pay-heading" data-sticky-section className={headingClass}>
+        {/* Profile — copy on the left, a ruled record on the right. */}
+        <Band
+          id="profile"
+          tone="mist"
+          labelledBy="profile-heading"
+          className="border-y border-[#0b2e2e]/10"
+        >
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+              <MarketingReveal className="lg:col-span-5">
+                <p className="index-label">03 · Profile</p>
+                <h2 id="profile-heading" className="display-lg mt-6 max-w-[13ch]">
+                  Make your profile complete
+                </h2>
+                <p className="mt-6 max-w-[36ch] text-[15px] leading-7 text-[#356464]">
+                  A complete profile and CV help founders decide. Fill in what
+                  you can, and leave the rest until you are ready.
+                </p>
+                <div className="mt-9">
+                  <Action href="/signup">Start your profile</Action>
+                </div>
+              </MarketingReveal>
+
+              <MarketingReveal delay={0.08} className="lg:col-span-7">
+                <div className="border-t border-[#0b2e2e]/20">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#0b2e2e]/12 py-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b2e2e]">
+                      Student profile
+                    </p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#c2004b]">
+                      Helps founders decide
+                    </p>
+                  </div>
+                  <dl>
+                    {profileFields.map((field, index) => (
+                      <div
+                        key={field.label}
+                        className="grid gap-1 border-b border-[#0b2e2e]/12 py-4 sm:grid-cols-[2rem_11rem_1fr] sm:items-baseline sm:gap-6"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="text-[11px] font-semibold tabular-nums tracking-[0.16em] text-[#c2004b]"
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <dt className="text-sm font-semibold text-[#0b2e2e]">
+                          {field.label}
+                        </dt>
+                        <dd className="text-sm leading-6 text-[#356464]">
+                          {field.detail}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="pt-5 text-sm leading-6 text-[#356464]">
+                    <span className="font-semibold text-[#0b2e2e]">
+                      Your CV:
+                    </span>{" "}
+                    PDF only, up to 5 MB, stored privately and shared only
+                    through short-lived signed links.
+                  </p>
+                </div>
+              </MarketingReveal>
+            </div>
+          </div>
+        </Band>
+
+        {/* Close to home — inline typography image and one wide plate. */}
+        <Band id="rooted" labelledBy="rooted-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <InlineImageText
+                as="h2"
+                id="rooted-heading"
+                before="Start close to"
+                imageSrc="/images/bhutanese-community.jpg"
+                imageAlt="Bhutanese boys in traditional gho sitting together"
+                creditFileUrl={PHOTO_CREDITS.dzong}
+                after="home"
+                accessibleLabel="Start close to home"
+              />
+            </MarketingReveal>
+
+            <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-end">
+              <MarketingReveal className="lg:col-span-5">
+                <p className="max-w-[38ch] text-[15px] leading-7 text-[#356464]">
+                  Built around Bhutanese students and founders. These
+                  photographs show Bhutanese people in community settings, not
+                  platform listings or members.
+                </p>
+              </MarketingReveal>
+              <MarketingReveal delay={0.08} className="lg:col-span-7">
+                <RuleLink href="/about">More about the platform</RuleLink>
+              </MarketingReveal>
+            </div>
+
+            <MarketingReveal className="mt-12">
+              <GsapScaleFadeImage>
+                <Figure
+                  src="/images/bhutanese-community.jpg"
+                  alt="Bhutanese boys in traditional gho sitting together"
+                  credit={PHOTO_CREDITS.dzong}
+                  caption="Work grounded in the local community"
+                  ratio="aspect-[16/10] sm:aspect-[21/9]"
+                  sizes="(max-width: 1024px) 100vw, 90vw"
+                />
+              </GsapScaleFadeImage>
+            </MarketingReveal>
+          </div>
+        </Band>
+
+        {/* Apply — a numbered ledger. */}
+        <Band
+          id="apply"
+          tone="mist"
+          labelledBy="apply-heading"
+          className="border-y border-[#0b2e2e]/10"
+        >
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="05"
+                eyebrow="Apply"
+                id="apply-heading"
+                title="Browse, apply, and track"
+                lead="Everything you need to browse and apply lives in your student workspace."
+              />
+            </MarketingReveal>
+
+            <ol className="mt-12 border-t border-[#0b2e2e]/15">
+              {applicationSteps.map((step, index) => (
+                <LedgerRow
+                  key={step.title}
+                  index={String(index + 1).padStart(2, "0")}
+                  title={step.title}
+                >
+                  {step.body}
+                </LedgerRow>
+              ))}
+            </ol>
+          </div>
+        </Band>
+
+        {/* Pay — the brief carries the budget. */}
+        <Band id="pay" labelledBy="pay-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+              <MarketingReveal className="lg:col-span-5">
+                <p className="index-label">06 · Pay</p>
+                <h2 id="pay-heading" className="display-lg mt-6 max-w-[12ch]">
                   Projects list a budget up front
                 </h2>
-                <p className={cn(bodyClass, "mt-6")}>
+                <p className="mt-6 max-w-[36ch] text-[15px] leading-7 text-[#356464]">
                   Every paid project lists its budget range and scope before you
                   apply, and founders update project and applicant status as work
                   progresses.
                 </p>
-                <Link href="/faq" className={cn(quietLink, "mt-4")}>
-                  Read the FAQ about pay
-                </Link>
-              </Reveal>
-              <Reveal className="mt-14">
-                <GsapScaleFadeImage>
-                  <figure className="group relative isolate aspect-[16/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e]">
-                    <Image
-                      src="/images/bhutanese-team.jpg"
-                      alt="Bhutanese students in kira performing in national dress"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 90vw"
-                      className={imageZoom}
-                    />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
-                    />
-                    <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                      <span className="text-sm font-medium text-[#eaf6f6]">
-                        Work grounded in the local community
-                      </span>
-                      <PhotoCredit
-                        fileUrl={PHOTO_CREDITS.market}
-                        className="text-[#eaf6f6]/90"
-                      />
-                    </figcaption>
-                  </figure>
-                </GsapScaleFadeImage>
-              </Reveal>
-            </SectionCard>
-          </StickySectionHeadings>
-        </div>
+                <div className="mt-9 border-t border-[#0b2e2e]/12 pt-6">
+                  <RuleLink href="/faq">Read the FAQ about pay</RuleLink>
+                </div>
+              </MarketingReveal>
+              <MarketingReveal delay={0.08} className="lg:col-span-7">
+                <Figure
+                  src="/images/bhutanese-team.jpg"
+                  alt="Bhutanese students in kira performing in national dress"
+                  credit={PHOTO_CREDITS.market}
+                  caption="Work grounded in the local community"
+                  ratio="aspect-[16/10]"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                />
+              </MarketingReveal>
+            </div>
+          </div>
+        </Band>
 
-        {/* Closing band: one saffron action. */}
-        <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
-          <Reveal className="mx-auto w-full max-w-6xl">
-            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-white px-6 py-24 text-left sm:px-12">
-              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]">
-                Your profile is the first step
+        {/* Closing band. */}
+        <Band tone="teal">
+          <div
+            className={cn(
+              container,
+              gutters,
+              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+            )}
+          >
+            <MarketingReveal className="lg:col-span-8">
+              <p className="index-label text-[#0b2e2e]">Next step</p>
+              <h2 className="display-xl mt-6 max-w-[14ch]">
+                Your profile is the first step.
               </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg">
+              <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#0b2e2e]">
                 Complete it once, then apply to projects that fit.
               </p>
-              <Link href="/signup" className={cn(primaryCta, "mt-8")}>
-                Create student account
-              </Link>
-            </div>
-          </Reveal>
-        </section>
+            </MarketingReveal>
+            <MarketingReveal
+              delay={0.08}
+              className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
+            >
+              <Action href="/signup">Create student account</Action>
+              <RuleLink
+                href="/for-founders"
+                className={cn(quietClass, "decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]")}
+              >
+                See the founder path
+              </RuleLink>
+            </MarketingReveal>
+          </div>
+        </Band>
       </main>
+
       <SiteFooter />
-    </>
+    </div>
   );
 }

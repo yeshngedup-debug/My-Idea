@@ -20,6 +20,26 @@ const CREDITS: Record<string, { author: string; licence: string; licenceUrl: str
     licence: "CC BY-SA 3.0",
     licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0/",
   },
+  "https://commons.wikimedia.org/wiki/File:View_of_central_Thimphu_2019-07-21.jpg": {
+    author: "Christopher J. Fynn",
+    licence: "CC BY-SA 4.0",
+    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
+  "https://commons.wikimedia.org/wiki/File:Prayer_flags,_Sopsokha,_Bhutan.jpg": {
+    author: "Bernard Gagnon",
+    licence: "CC BY-SA 4.0",
+    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
+  "https://commons.wikimedia.org/wiki/File:Students_practice_archery_in_Bhutan.jpg": {
+    author: "Glacierfanclub",
+    licence: "CC BY-SA 4.0",
+    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
+  "https://commons.wikimedia.org/wiki/File:Bhutanese_woollen_textile_01.jpg": {
+    author: "Christopher J. Fynn",
+    licence: "CC BY-SA 4.0",
+    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
 };
 
 export function PhotoCredit({

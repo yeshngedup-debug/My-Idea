@@ -50,16 +50,16 @@ export function InlineImageText({
     .trim();
 
   return (
-    <div className={cn("mx-auto max-w-5xl", className)}>
+    <div className={cn("max-w-5xl", className)}>
       <Heading
         id={id}
         aria-label={accessibleText}
-        className="text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b5c5c]"
+        className="text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e]"
       >
         <span aria-hidden="true">{lead}</span>{" "}
         <span
           aria-hidden="true"
-          className="mx-[0.08em] inline-block h-[0.62em] w-[1.85em] overflow-hidden rounded-full bg-[#0b5c5c] align-middle"
+          className="mx-[0.08em] inline-block h-[0.62em] w-[1.85em] overflow-hidden rounded-[2px] bg-[#0b5c5c] align-middle"
         >
           <Image
             src={imageSrc}
@@ -71,7 +71,7 @@ export function InlineImageText({
         </span>{" "}
         <span aria-hidden="true">{tail}</span>
       </Heading>
-      <span className="mt-3 block text-xs leading-5 text-body-secondary sm:mt-4">
+      <span className="mt-3 block text-[11px] leading-5 text-[#356464] sm:mt-4">
         <PhotoCredit fileUrl={creditFileUrl} />
       </span>
     </div>

@@ -55,13 +55,13 @@ export function AuthShell({ children }: { children: ReactNode }) {
       style={{
         backgroundColor: "#eaf6f6",
         backgroundImage:
-          "radial-gradient(62% 48% at 88% 4%, rgba(102, 191, 191, 0.16), transparent 72%)",
+          "radial-gradient(72% 52% at 86% 0%, rgba(102, 191, 191, 0.22), transparent 72%)",
       }}
-      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-5 py-5 text-[#0b2e2e] sm:px-10 sm:py-9 lg:px-14`}
+      className={`${styles.canvas} min-h-[100dvh] w-full max-w-full overflow-x-clip px-4 py-8 text-[#0b2e2e] sm:px-8 sm:py-10 lg:px-14`}
     >
       <style>{authMotionStyles}</style>
 
-      <header className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-8 sm:gap-4 sm:pb-12">
+      <header className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-3 pb-8 sm:gap-4 sm:pb-10">
         <Link
           href="/"
           className={`pressable inline-flex min-h-11 items-center gap-2.5 rounded-full ${pressStyles.press} ${focusRing}`}
@@ -73,14 +73,14 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </Link>
         <Link
           href="/public"
-          className={`pressable inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 py-2 text-xs font-medium text-[#356464] underline decoration-[#0b5c5c]/25 underline-offset-4 hover:bg-white hover:text-[#0b5c5c] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
+          className={`pressable inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 py-2 text-xs font-medium text-[#356464] underline decoration-[#b9dede] underline-offset-4 hover:bg-white hover:text-[#0b5c5c] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
         >
           About the platform
         </Link>
       </header>
 
-      <div className="mx-auto grid max-w-[1440px] gap-5 lg:min-h-[calc(100vh-9rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-        <section className="relative isolate flex min-h-[210px] flex-col justify-between overflow-hidden rounded-[1.5rem] bg-[#0b5c5c] p-7 text-white sm:min-h-[300px] sm:rounded-[2rem] sm:p-12 lg:min-h-0 lg:p-16">
+      <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-5 lg:min-h-[calc(100dvh-11rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        <section className="relative isolate flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[2rem] bg-[#0b5c5c] p-7 text-white sm:min-h-[300px] sm:p-10 lg:min-h-0 lg:p-14">
           <div aria-hidden="true" className="absolute right-0 bottom-0 -z-10 h-4/5 w-4/5">
             <Image
               src="/images/bhutanese-students.jpg"
@@ -112,19 +112,17 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </section>
 
         <section className="flex items-center justify-center px-1 py-1 sm:px-2 lg:px-3">
-          <div
-            ref={cardRef}
-            data-auth-card
-            data-auth-enter
-            style={{
-              backgroundColor: "#ffffff",
-              borderColor: "#b9dede",
-              boxShadow:
-                "inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px -3px rgba(11, 92, 92, 0.12), 0 26px 56px -30px rgba(11, 92, 92, 0.26)",
-            }}
-            className={`${styles.formCard} w-full max-w-md rounded-[1.5rem] px-6 py-9 sm:max-w-lg sm:rounded-[2rem] sm:px-10 sm:py-12 lg:px-14`}
-          >
-            {children}
+          {/* Outer teal-tinted shell with a hairline edge; the white core below
+              carries its own inset highlight and a very soft diffused lift. */}
+          <div className="w-full max-w-md rounded-[2rem] border border-[#b9dede]/90 bg-[#dff0f0]/60 p-1.5 shadow-[0_18px_48px_-38px_rgba(11,92,92,0.45)] sm:max-w-lg sm:p-2">
+            <div
+              ref={cardRef}
+              data-auth-card
+              data-auth-enter
+              className="rounded-[calc(2rem_-_0.375rem)] bg-white px-6 py-9 shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_12px_34px_-28px_rgba(11,92,92,0.4)] sm:rounded-[calc(2rem_-_0.5rem)] sm:px-10 sm:py-12 lg:px-12"
+            >
+              {children}
+            </div>
           </div>
         </section>
       </div>

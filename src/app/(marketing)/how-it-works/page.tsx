@@ -1,34 +1,24 @@
-import type { ReactNode } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import {
-  ListChecks,
-  NotePencil,
-  UserCircle,
-} from "@phosphor-icons/react/dist/ssr";
-import { SiteHeader } from "@/components/marketing/site-header";
+import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { PhotoCredit } from "@/components/ui/photo-credit";
+import { EditorialHero } from "@/components/marketing/editorial-hero";
+import {
+  Action,
+  Band,
+  Figure,
+  LedgerRow,
+  RuleLink,
+  SectionHead,
+  container,
+  gutters,
+  quietClass,
+} from "@/components/marketing/editorial";
 import { PHOTO_CREDITS } from "@/components/marketing/nav";
-import { Reveal } from "@/components/ui/motion";
-import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
-import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
-import {
-  GsapScaleFadeImage,
-  HorizontalAccordion,
-  type HorizontalAccordionItem,
-} from "@/components/marketing/editorial-page-motion";
-import { InlineImageText } from "@/components/editorial";
+import { HorizontalAccordion } from "@/components/marketing/editorial-page-motion";
 import { ScrubbedTextReveal } from "@/components/motion";
-import {
-  ChapterProgress,
-  PinnedScrollChapter,
-  type ChapterLink,
-} from "@/components/motion";
+import { ChapterProgress, type ChapterLink } from "@/components/motion";
 import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
-
-type Icon = typeof NotePencil;
 
 export const metadata = pageMetadata({
   title: "How it works",
@@ -37,81 +27,26 @@ export const metadata = pageMetadata({
   path: "/how-it-works",
 });
 
-const MARKET_CREDIT =
-  "https://commons.wikimedia.org/wiki/File:Bhutanese_Girls_in_National_Dress.jpg";
-const YOUTH_CREDIT =
-  "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg";
-
-const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
-const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054]/85 motion-reduce:transition-none ${focusRing}`;
-const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#0b5c5c] underline decoration-[#0b5c5c]/30 underline-offset-4 transition-colors hover:text-[#0b2e2e] motion-reduce:transition-none ${focusRing}`;
-const bandClass =
-  "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
-const headingClass =
-  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]";
-const bodyClass =
-  "max-w-2xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8";
-const bentoClass = "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
-const imageZoom =
-  "object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
-
-function SectionCard({
-  id,
-  labelledBy,
-  className,
-  children,
-}: {
-  id?: string;
-  labelledBy?: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <section
-      id={id}
-      aria-labelledby={labelledBy}
-      className={cn(bandClass, className)}
-    >
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
-    </section>
-  );
-}
-
-type Step = {
-  number: string;
-  Icon: Icon;
-  title: string;
-  body: string;
-};
-
-const steps: Step[] = [
+const steps = [
   {
+    id: "step-01",
     number: "01",
-    Icon: NotePencil,
     title: "A founder posts a scoped project",
     body: "The founder sets the scope, a budget range, and a duration. They can also list the skills they need and set a deadline. The brief gives both sides a clear place to start.",
   },
   {
+    id: "step-02",
     number: "02",
-    Icon: UserCircle,
     title: "A student builds a profile and applies",
     body: "The student can add skills, a short bio, availability, and a PDF CV. A complete profile and CV help founders decide. Then they apply to the projects that fit their strengths.",
   },
   {
+    id: "step-03",
     number: "03",
-    Icon: ListChecks,
     title: "Both sides work from the brief",
     body: "The brief stays the reference point. Founders can update project and applicant status as the work moves forward.",
   },
-];
-
-const journeyItems: HorizontalAccordionItem[] = steps.map((step) => ({
-  id: `step-${step.number}`,
-  number: step.number,
-  title: step.title,
-  body: step.body,
-}));
+] as const;
 
 const briefColumns = [
   {
@@ -173,328 +108,286 @@ const afterShortlist = [
 
 export default function HowItWorksPage() {
   return (
-    <>
+    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
-      <main
-        id="main-content"
-        className="w-full max-w-full overflow-x-hidden bg-[#eaf6f6] text-[#0b2e2e]"
-      >
-        {/* Editorial split hero: copy left, one credited photograph right. */}
-        <section className="w-full max-w-full overflow-x-hidden px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
-          <div className="mx-auto w-full max-w-6xl">
-            <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
-              <HeroCopyEntrance>
-                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
-                  Founders post the brief. Students do the work.
-                </h1>
-                <p className="mt-8 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8">
-                  Three steps connect a founder&apos;s scoped project with a
-                  student ready to build.
-                </p>
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  <Link href="/signup" className={primaryCta}>
-                    Create student account
-                  </Link>
-                  <Link href="/for-students" className={quietLink}>
-                    Explore the student guide
-                  </Link>
-                </div>
-              </HeroCopyEntrance>
 
-              <HeroPhotoEntrance>
-                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-[#0b2e2e]">
-                  <Image
-                    src="/images/bhutanese-students.jpg"
-                    alt="Young Bhutanese people in gho and kira working together at computers"
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className={cn(
-                      "grayscale contrast-[1.15] opacity-90",
-                      imageZoom,
-                    )}
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(120% 90% at 50% 10%, transparent 25%, rgb(11 31 26 / 0.78) 100%)",
-                    }}
-                  />
-                  <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
-                    <PhotoCredit
-                      fileUrl={YOUTH_CREDIT}
-                      className="text-[#eaf6f6]/90"
-                    />
-                  </figcaption>
-                </figure>
-              </HeroPhotoEntrance>
-            </div>
-          </div>
-        </section>
-
-        <section className={bandClass}>
-          <div className="mx-auto w-full max-w-6xl">
-            <ScrubbedTextReveal
-              as="p"
-              text="The brief stays the reference point."
-              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#0b5c5c]"
-            />
-          </div>
-        </section>
-
-        {/* Chapter wayfinding — palette scoped to BTC tokens. */}
-        <ChapterProgress
-          chapters={guideChapters}
-          className="border-[#b9dede]/15 bg-white [&_a]:text-[#000000] [&_a]:focus-visible:ring-[#4d8c8c] [&_a]:focus-visible:ring-offset-[#eaf6f6] [&_a[aria-current]]:decoration-[#ff0063] [&_[data-chapter-bar]]:bg-[#ff0063]"
+      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+        <EditorialHero
+          index="01"
+          eyebrow="How it works"
+          title={
+            <>
+              Founders post the brief.{" "}
+              <span className="text-[#0b5c5c]">Students do the work.</span>
+            </>
+          }
+          lead="Three steps connect a founder's scoped project with a student ready to build. No bidding war, no unverified profiles."
+          primaryCta={{ href: "/signup", label: "Create student account" }}
+          secondary={{ href: "/for-students", label: "Explore the student guide" }}
+          image={{
+            src: "/images/bhutanese-students.jpg",
+            alt: "Young Bhutanese people in gho and kira working together at computers",
+            fileUrl: PHOTO_CREDITS.valley,
+          }}
+          caption="Students at work"
+          imagePosition="object-center"
         />
 
-        <PinnedScrollChapter
-          id="journey"
-          labelledBy="journey-heading"
-          className="w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12 [&_[data-pinned-title]]:border-[#b9dede]/15"
-          title={
-            <Reveal>
-              <div className="rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:p-8">
-                <h2 id="journey-heading" className={headingClass}>
-                  Three steps, one clear brief
-                </h2>
-                <p className="mt-6 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
-                  Each step keeps the work focused and the expectations visible
-                  to everyone involved.
-                </p>
-              </div>
-            </Reveal>
-          }
-        >
-          <HorizontalAccordion
-            items={journeyItems}
-            label="The three steps"
-            className="w-full"
-          />
-        </PinnedScrollChapter>
-
-        <SectionCard id="brief" labelledBy="brief-heading">
-          <div id="brief-heading">
-            <InlineImageText
-              as="h2"
-              before="Founders set the brief."
-              imageSrc="/images/bhutanese-community.jpg"
-              imageAlt="Bhutanese boys in traditional gho sitting together"
-              creditFileUrl={PHOTO_CREDITS.dzong}
-              after="Students apply to the projects."
-              accessibleLabel="Founders set the brief. Students apply to the projects."
+        {/* One statement, scrubbed in. The brief is the spine of the product. */}
+        <Band tone="mist" className="border-b border-[#0b2e2e]/10">
+          <div className={cn(container, gutters, "py-14 md:py-20")}>
+            <p className="index-label">The principle</p>
+            <ScrubbedTextReveal
+              as="p"
+              text="The brief stays the reference point. Scope, budget and deadline are written down before anyone starts."
+              className="mt-6 max-w-[26ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[30ch]"
             />
           </div>
-          <Reveal className="mx-auto mt-10 max-w-2xl">
-            <p className={bodyClass}>
-              Founders write the scope and budget before work begins. Skills and
-              a deadline can be added.
-            </p>
-          </Reveal>
+        </Band>
 
-          <div className={cn(bentoClass, "mt-14")}>
-            {briefColumns.map((column, index) => (
-              <Reveal
-                key={column.heading}
-                delay={index * 0.08}
-                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 sm:p-8"
-              >
-                <h3 className="text-sm font-semibold text-[#0b5c5c]">
-                  {column.heading}
-                </h3>
-                <ul className="mt-7 space-y-5">
-                  {column.items.map((item) => (
-                    <li
-                      key={item}
-                      className="border-b border-[#b9dede]/15 pb-4 text-lg font-medium leading-7 text-[#0b2e2e] sm:text-xl"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            ))}
+        <ChapterProgress
+          chapters={guideChapters}
+          className="sticky top-16 z-30 border-[#0b2e2e]/12 bg-white [&_a]:text-[#0b2e2e] [&_a:hover]:text-[#0b5c5c] [&_a]:focus-visible:ring-[#0b5c5c] [&_a]:focus-visible:ring-offset-white [&_a[aria-current]]:text-[#0b5c5c] [&_a[aria-current]]:decoration-[#ff0063] [&_a[aria-current]]:decoration-1 [&_a[aria-current]]:underline-offset-[10px] [&_[data-chapter-bar]]:bg-[#ff0063]"
+        />
+
+        {/* Three steps — horizontal accordion on a ruled frame. */}
+        <Band id="journey" labelledBy="journey-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="02"
+                eyebrow="Three steps"
+                id="journey-heading"
+                title="Three steps, one clear brief"
+                lead="Each step keeps the work focused and the expectations visible to everyone involved."
+              />
+            </MarketingReveal>
+
+            <MarketingReveal className="mt-12">
+              <HorizontalAccordion items={steps} label="The three steps" />
+            </MarketingReveal>
           </div>
+        </Band>
 
-          <Reveal className="mt-14">
-            <GsapScaleFadeImage>
-              <figure className="group relative isolate aspect-[21/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e]">
-                <Image
-                  src="/images/bhutanese-community.jpg"
-                  alt="Bhutanese boys in traditional gho sitting together"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 90vw"
-                  className={imageZoom}
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
-                />
-                <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                  <span className="text-sm font-medium text-[#eaf6f6]">
-                    The people the work is built around
-                  </span>
-                  <PhotoCredit
-                    fileUrl={PHOTO_CREDITS.dzong}
-                    className="text-[#eaf6f6]/90"
-                  />
-                </figcaption>
-              </figure>
-            </GsapScaleFadeImage>
-          </Reveal>
-        </SectionCard>
-
-        <SectionCard id="place" labelledBy="place-heading">
-          <Reveal>
-            <GsapScaleFadeImage>
-              <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e] sm:aspect-[21/9]">
-                <Image
-                  src="/images/bhutanese-team.jpg"
-                  alt="Bhutanese students in kira performing in national dress"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 90vw"
-                  className={imageZoom}
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
-                />
-                <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
-                  <PhotoCredit
-                    fileUrl={MARKET_CREDIT}
-                    className="text-[#eaf6f6]/90"
-                  />
-                </figcaption>
-              </figure>
-            </GsapScaleFadeImage>
-          </Reveal>
-          <div className="mt-10 grid w-full grid-cols-12 gap-4 lg:items-end lg:gap-12">
-            <div className="col-span-12 lg:col-span-8">
-              <h2 id="place-heading" className={headingClass}>
-                Built for work here
-              </h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
-                The platform connects Bhutanese students with startup founders;
-                these photographs show Bhutanese places, not platform listings or
-                members.
-              </p>
-            </div>
-            <div className="col-span-12 flex flex-col items-start gap-3 lg:col-span-4">
-              <Link href="/for-students" className={quietLink}>
-                See the student path
-              </Link>
-              <PhotoCredit fileUrl={MARKET_CREDIT} className="text-[#0b2e2e]/70" />
-            </div>
-          </div>
-        </SectionCard>
-
-        <SectionCard id="care" labelledBy="care-heading">
-          <Reveal className="mx-auto max-w-5xl">
-            <h2 id="care-heading" className={headingClass}>
-              The details that protect both sides
-            </h2>
-            <p className={cn(bodyClass, "mx-auto mt-6")}>
-              A few clear rules keep the process fair and the documents private.
-            </p>
-          </Reveal>
-
-          <div className={cn(bentoClass, "mt-14")}>
-            {protections.map((rule, index) => (
-              <Reveal
-                key={rule.title}
-                delay={index * 0.08}
-                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-4 sm:p-8"
-              >
-                <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-6 text-balance text-xl font-semibold leading-snug text-[#0b2e2e]">
-                  {rule.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/75">
-                  {rule.body}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard id="shortlist" labelledBy="shortlist-heading">
-          <div className="grid w-full max-w-full grid-cols-12 gap-4 lg:gap-16">
-            <div className="col-span-12 lg:col-span-4 lg:self-start">
-              <Reveal>
-                <h2 id="shortlist-heading" className={headingClass}>
-                  What happens after a shortlist
-                </h2>
-                <p className="mt-6 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
-                  The handoff stays explicit so founders and students know where
-                  they stand.
-                </p>
-              </Reveal>
-            </div>
-            <Reveal
-              direction="right"
-              delay={0.08}
-              className="col-span-12 lg:col-span-8"
-            >
-              <div className="grid w-full grid-cols-12 gap-4">
-                {afterShortlist.map((item) => (
-                  <div
-                    key={item.title}
-                    className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-4 sm:p-8"
-                  >
-                    <h3 className="text-balance text-lg font-semibold leading-snug text-[#0b2e2e] sm:text-xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/75">
-                      {item.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </SectionCard>
-
-        <section
-          aria-label="Keep reading"
-          className="w-full max-w-full overflow-x-hidden px-5 pb-10 sm:px-8 lg:px-12"
+        {/* The brief — two ruled columns and a wide plate. */}
+        <Band
+          id="brief"
+          tone="mist"
+          labelledBy="brief-heading"
+          className="border-y border-[#0b2e2e]/10"
         >
-          <Reveal className="mx-auto flex w-full max-w-6xl flex-col gap-6 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-            <p className="text-base font-semibold text-[#0b2e2e]">
-              Still have questions?
-            </p>
-            <div className="flex flex-wrap gap-x-10 gap-y-3">
-              <Link href="/faq" className={quietLink}>
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="03"
+                eyebrow="The brief"
+                id="brief-heading"
+                title="Founders set the brief. Students apply to the projects."
+                lead="Scope and budget are written before work begins. Skills and a deadline can be added."
+              />
+            </MarketingReveal>
+
+            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
+              {briefColumns.map((column, index) => (
+                <MarketingReveal key={column.heading} delay={index * 0.08}>
+                  <h3 className="flex items-baseline gap-3 border-b border-[#0b2e2e]/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b5c5c]">
+                    <span
+                      aria-hidden="true"
+                      className="tabular-nums text-[#c2004b]"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {column.heading}
+                  </h3>
+                  <ul className="mt-2">
+                    {column.items.map((item) => (
+                      <li
+                        key={item}
+                        className="border-b border-[#0b2e2e]/10 py-4 text-[1.05rem] font-medium leading-7 tracking-[-0.015em] text-[#0b2e2e] sm:text-[1.15rem]"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </MarketingReveal>
+              ))}
+            </div>
+
+            <MarketingReveal className="mt-14">
+              <Figure
+                src="/images/bhutanese-community.jpg"
+                alt="Bhutanese boys in traditional gho sitting together"
+                credit={PHOTO_CREDITS.dzong}
+                caption="The people the work is built around"
+                ratio="aspect-[16/10] sm:aspect-[21/9]"
+                sizes="(max-width: 1024px) 100vw, 90vw"
+              />
+            </MarketingReveal>
+          </div>
+        </Band>
+
+        {/* The place. */}
+        <Band id="place" labelledBy="place-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
+              <MarketingReveal className="lg:col-span-7">
+                <Figure
+                  src="/images/thimphu-city.jpg"
+                  alt="View across central Thimphu, the capital of Bhutan"
+                  credit={PHOTO_CREDITS.thimphu}
+                  caption="Thimphu, the capital"
+                  ratio="aspect-[16/10]"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                />
+              </MarketingReveal>
+              <MarketingReveal
+                delay={0.08}
+                className="flex flex-col justify-between lg:col-span-5 lg:pl-4"
+              >
+                <div>
+                  <p className="index-label">04 · The place</p>
+                  <h2
+                    id="place-heading"
+                    className="display-lg mt-6 max-w-[12ch]"
+                  >
+                    Built for work here
+                  </h2>
+                  <p className="mt-6 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
+                    The platform connects Bhutanese students with startup
+                    founders. These photographs show Bhutanese places, not
+                    platform listings or members.
+                  </p>
+                </div>
+                <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
+                  <RuleLink href="/for-students">See the student path</RuleLink>
+                </div>
+              </MarketingReveal>
+            </div>
+          </div>
+        </Band>
+
+        {/* Protections — three ruled columns. */}
+        <Band
+          id="care"
+          tone="mist"
+          labelledBy="care-heading"
+          className="border-y border-[#0b2e2e]/10"
+        >
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="05"
+                eyebrow="Both sides protected"
+                id="care-heading"
+                title="The details that protect both sides"
+                lead="A few clear rules keep the process fair and the documents private."
+              />
+            </MarketingReveal>
+
+            <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
+              {protections.map((rule, index) => (
+                <MarketingReveal
+                  key={rule.title}
+                  delay={index * 0.06}
+                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
+                >
+                  <li>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="h-px flex-1 bg-[#0b2e2e]/15"
+                      />
+                    </div>
+                    <h3 className="mt-4 text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
+                      {rule.title}
+                    </h3>
+                    <p className="mt-2 max-w-[34ch] text-sm leading-6 text-[#356464]">
+                      {rule.body}
+                    </p>
+                  </li>
+                </MarketingReveal>
+              ))}
+            </ul>
+          </div>
+        </Band>
+
+        {/* After a shortlist — a numbered ledger. */}
+        <Band id="shortlist" labelledBy="shortlist-heading">
+          <div className={cn(container, gutters, "py-20 md:py-28")}>
+            <MarketingReveal>
+              <SectionHead
+                index="06"
+                eyebrow="After a shortlist"
+                id="shortlist-heading"
+                title="What happens after a shortlist"
+                lead="The handoff stays explicit so founders and students know where they stand."
+              />
+            </MarketingReveal>
+
+            <ol className="mt-12 border-t border-[#0b2e2e]/15">
+              {afterShortlist.map((item, index) => (
+                <LedgerRow
+                  key={item.title}
+                  index={String(index + 1).padStart(2, "0")}
+                  title={item.title}
+                >
+                  {item.body}
+                </LedgerRow>
+              ))}
+            </ol>
+
+            <div className="mt-12 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t border-[#0b2e2e]/12 pt-6">
+              <Link href="/faq" className={quietClass}>
                 Read the FAQ
               </Link>
-              <Link href="/for-founders" className={quietLink}>
+              <Link href="/for-founders" className={quietClass}>
                 For founders
               </Link>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* Closing band: one saffron action. */}
-        <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
-          <Reveal className="mx-auto w-full max-w-6xl">
-            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-white px-6 py-24 text-left sm:px-12">
-              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]">
-                Start with one clear project
-              </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg">
-                Bring a focused brief and meet students ready to build.
-              </p>
-              <Link href="/contact" className={cn(primaryCta, "mt-8")}>
-                Ask for founder access
+              <Link href="/for-students" className={quietClass}>
+                For students
               </Link>
             </div>
-          </Reveal>
-        </section>
+          </div>
+        </Band>
+
+        {/* Closing band. */}
+        <Band tone="teal">
+          <div
+            className={cn(
+              container,
+              gutters,
+              "grid grid-cols-1 items-end gap-10 py-20 md:py-28 lg:grid-cols-12",
+            )}
+          >
+            <MarketingReveal className="lg:col-span-8">
+              <p className="index-label text-[#0b2e2e]">Make your next move</p>
+              <h2 className="display-xl mt-6 max-w-[15ch]">
+                Start with one paid project.
+              </h2>
+              <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#0b2e2e]">
+                Create a student account, or ask about founder access.
+              </p>
+            </MarketingReveal>
+            <MarketingReveal
+              delay={0.08}
+              className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
+            >
+              <Action href="/signup">Create student account</Action>
+              <RuleLink
+                href="/contact"
+                className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
+              >
+                Ask for founder access
+              </RuleLink>
+            </MarketingReveal>
+          </div>
+        </Band>
       </main>
+
       <SiteFooter />
-    </>
+    </div>
   );
 }

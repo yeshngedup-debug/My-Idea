@@ -33,10 +33,10 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
             key={item.href}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 text-sm font-medium ${focusRing} ${
+            className={`inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 text-sm font-medium transition-[background-color,border-color,color,transform] duration-200 ease-[var(--ease-out)] active:scale-[0.98] motion-reduce:active:scale-100 ${focusRing} ${
               active
-                ? 'border-[#b9dede] bg-[#ffffff] font-semibold text-[#0b2e2e]'
-                : 'border-transparent text-[#356464] hover:text-[#0b2e2e]'
+                ? 'border-[#b9dede]/90 bg-white font-semibold text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]'
+                : 'border-transparent text-[#356464] hover:bg-white/70 hover:text-[#0b5c5c]'
             }`}
           >
             {item.label}
@@ -62,10 +62,10 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
             key={item.href}
             href={item.href}
             aria-current={active ? 'page' : undefined}
-            className={`min-h-11 shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold ${focusRing} ${
+            className={`min-h-11 shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold transition-[background-color,border-color,color,transform] duration-200 ease-[var(--ease-out)] active:scale-[0.98] motion-reduce:active:scale-100 ${focusRing} ${
               active
-                ? 'border-[#66bfbf] bg-[#66bfbf] text-[#0b2e2e]'
-                : 'border-[#b9dede] bg-[#ffffff] text-[#356464]'
+                ? 'border-[#66bfbf] bg-[#66bfbf] text-[#0b2e2e] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]'
+                : 'border-[#b9dede]/90 bg-white/90 text-[#356464]'
             }`}
           >
             {item.label}

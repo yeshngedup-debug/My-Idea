@@ -111,14 +111,14 @@ export function StackedCards({
             { "--stack-top": `${96 + index * 12}px` } as CSSProperties
           }
         >
-          <article className="rounded-[1.25rem] border border-[#0b2e2e]/15 bg-[#ffffff] p-6 sm:p-8">
-            <p className="text-sm font-semibold tabular-nums text-[#c2004b]">
+          <article className="rounded-[2px] border border-[#0b2e2e]/15 bg-white p-6 sm:p-8">
+            <p className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
               {item.number}
             </p>
-            <h3 className="mt-4 text-balance text-xl font-semibold leading-snug tracking-tight text-[#0b5c5c] sm:text-2xl">
+            <h3 className="mt-4 text-balance text-[1.5rem] font-semibold leading-tight tracking-[-0.03em] text-[#0b2e2e] sm:text-[1.75rem]">
               {item.title}
             </h3>
-            <p className="mt-3 max-w-xl text-sm leading-7 text-body-secondary sm:text-base">
+            <p className="mt-3 max-w-xl text-[15px] leading-7 text-[#356464]">
               {item.body}
             </p>
             {item.action ? (

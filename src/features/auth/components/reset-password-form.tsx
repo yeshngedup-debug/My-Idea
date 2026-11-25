@@ -10,6 +10,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent, RefObject } from "react";
 import { resetPassword } from "@/features/auth/actions";
+import { authInputClassName } from "@/features/auth/components/styles";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 type FieldName = "password" | "confirmPassword";
@@ -92,7 +93,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
           role="alert"
           tabIndex={-1}
           data-auth-message
-          className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mb-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
         >
           {serverError}
         </div>
@@ -125,7 +126,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("password")}
             autoComplete="new-password"
             placeholder="Enter a new password"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+            className={authInputClassName}
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
@@ -152,7 +153,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("confirmPassword")}
             autoComplete="new-password"
             placeholder="Enter the new password again"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+            className={authInputClassName}
           />
           {errors.confirmPassword && (
             <FieldError id={confirmErrorId}>{errors.confirmPassword}</FieldError>

@@ -1,44 +1,31 @@
 /**
  * Terms of Use — short, plain English, MVP scope.
+ *
+ * Same editorial document layout as the privacy page: ruled contents column,
+ * one measure of copy, hairlines between chapters.
  */
 import Link from "next/link";
 import { APP_CONTACT } from "@/config/app";
+import { SiteHeader } from "@/components/marketing/site-header";
+import { SiteFooter } from "@/components/marketing/site-footer";
+import {
+  Band,
+  RuleLink,
+  container,
+  focusRing,
+  gutters,
+  hairline,
+} from "@/components/marketing/editorial";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
-  title: 'Terms of Use',
+  title: "Terms of Use",
   description:
-    'Bhutan Tech Connect terms of use: matching service terms, Premium Shortlist policy, fair use, and contact.',
+    "Bhutan Tech Connect terms of use: matching service terms, Premium Shortlist policy, fair use, and contact.",
   alternates: {
-    canonical: 'https://bhutantech.bt/terms',
+    canonical: "https://bhutantech.bt/terms",
   },
 };
-
-const mountFade = `
-  .legal-mount {
-    animation: legal-mount-in 240ms cubic-bezier(0.23, 1, 0.32, 1) both;
-  }
-  @keyframes legal-mount-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .legal-mount { animation: none; }
-  }
-`;
-
-/** Restrained Paywave-style card system in the BTC palette. */
-const card =
-  "rounded-3xl border border-[#b9dede]/12 bg-white shadow-[0_2px_10px_rgba(11,46,46,0.04)]";
-const band = "px-4 py-12 sm:px-6 md:py-20 lg:px-8";
-const metaLabel =
-  "text-xs font-semibold uppercase tracking-[0.18em] text-[#356464]";
-const accent = "text-[#c2004b]";
-const bodyCopy = "text-[#0b2e2e]/75";
-const quiet = "text-[#356464]";
-const mailLink =
-  "inline-flex min-h-6 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-2 underline-offset-4 transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
-const tocLink =
-  "inline-block min-h-11 rounded-sm py-2.5 text-sm font-medium text-[#0b2e2e]/70 transition-[color,transform] hover:translate-x-1 hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transform-none motion-reduce:transition-none";
 
 const chapters = [
   { id: "what-this-platform-is", label: "What this platform is" },
@@ -48,189 +35,216 @@ const chapters = [
   { id: "questions", label: "Questions" },
 ] as const;
 
+const tocLink = `inline-flex min-h-11 items-baseline gap-2 py-2 text-sm font-medium text-[#356464] transition-colors hover:text-[#0b2e2e] ${focusRing}`;
+
+const bodyCopy =
+  "text-[#356464] [&_strong]:font-semibold [&_strong]:text-[#0b2e2e]";
+
+const listCopy = `mt-7 list-disc space-y-3 border-t pl-5 pt-7 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${hairline} ${bodyCopy}`;
+
+const chapterHeading =
+  "text-[clamp(1.6rem,2.6vw,2.15rem)] font-semibold leading-[1.12] tracking-[-0.035em] text-[#0b2e2e]";
+
+const mailLink = `inline-flex min-h-6 items-center font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-1 underline-offset-4 transition-colors hover:text-[#0b2e2e] ${focusRing}`;
+
+const chapter = cn("scroll-mt-24 border-t py-12 sm:py-14", hairline);
+
 export default function TermsPage() {
   return (
-    <main
-      id="main-content"
-      className="w-full max-w-full min-w-0 overflow-x-clip bg-[#eaf6f6] text-[#0b2e2e]"
-    >
-      <style>{mountFade}</style>
+    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
+      <SiteHeader />
 
-      <header className="border-b border-[#b9dede]/12 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 py-6">
-          <Link
-            href="/"
-            className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-semibold text-[#0b5c5c] transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] motion-reduce:transition-none"
-          >
-            Back to home
-          </Link>
-          <span className="text-sm font-bold tracking-tight text-[#0b2e2e]">
-            Bhutan Tech Connect
-          </span>
-        </div>
-      </header>
-
-      <section className={band}>
-        <div className="mx-auto max-w-[1440px]">
-          <div className={`${card} px-6 py-20 text-center sm:px-12 sm:py-24`}>
-            <span className={metaLabel}>Last updated: November 2026</span>
-            <h1 className="legal-mount mx-auto mt-6 w-full max-w-6xl text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-[#0b2e2e]">
-              Terms of <span className={accent}>Use</span>
-            </h1>
+      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+        <Band className="border-b border-[#0b2e2e]/10">
+          <div className={cn(container, gutters, "py-12 md:py-16")}>
+            <p className="index-label">Legal · Terms</p>
+            <h1 className="display-xl mt-6 max-w-[14ch]">Terms of Use</h1>
+            <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2 border-t border-[#0b2e2e]/12 pt-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#356464]">
+                Last updated · November 2026
+              </p>
+              <p className="max-w-[52ch] text-[15px] leading-7 text-[#356464]">
+                A matching service, not an employer. Your agreements stay yours.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </Band>
 
-      <div className={band}>
-        <div className="mx-auto grid w-full max-w-[1440px] gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-12">
-          <nav
-            aria-label="On this page"
-            className="min-w-0 lg:sticky lg:top-12 lg:self-start"
-          >
-            <div className={`${card} p-6 sm:p-8`}>
-              <ol className="flex flex-wrap gap-x-5 gap-y-1 lg:flex-col lg:gap-0">
-                {chapters.map((chapter) => (
-                  <li key={chapter.id}>
-                    <a href={`#${chapter.id}`} className={tocLink}>
-                      {chapter.label}
+        <div className={cn(container, gutters, "pb-20 md:pb-28")}>
+          <div className="grid w-full gap-10 lg:grid-cols-12 lg:gap-12">
+            <nav
+              aria-label="On this page"
+              className="min-w-0 lg:col-span-3 lg:sticky lg:top-24 lg:self-start"
+            >
+              <p className="border-b border-[#0b2e2e]/15 pb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]">
+                Contents
+              </p>
+              <ol className="mt-3 flex flex-wrap gap-x-5 lg:flex-col lg:gap-0">
+                {chapters.map((item, index) => (
+                  <li key={item.id} className="lg:border-b lg:border-[#0b2e2e]/10">
+                    <a href={`#${item.id}`} className={tocLink}>
+                      <span className="text-[10px] font-semibold tabular-nums tracking-[0.16em] text-[#c2004b]">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {item.label}
                     </a>
                   </li>
                 ))}
               </ol>
-            </div>
-          </nav>
+            </nav>
 
-          <div className={`${card} min-w-0 px-6 py-4 sm:px-12 sm:py-6 lg:px-16`}>
-            <div className="max-w-[68ch]">
-              <section
-                id="what-this-platform-is"
-                aria-labelledby="what-this-platform-is-heading"
-                className="scroll-mt-24 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="what-this-platform-is-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
+            <article className="min-w-0 lg:col-span-8 lg:col-start-5">
+              <div className="max-w-[68ch]">
+                <section
+                  id="what-this-platform-is"
+                  aria-labelledby="what-this-platform-is-heading"
+                  className="scroll-mt-24 pb-12 pt-2 sm:pb-14"
                 >
-                  What this platform is
-                </h2>
-                <p className={`mt-8 border-t border-[#b9dede]/12 pt-8 text-base leading-7 sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  Bhutan Tech Connect is a{" "}
-                  <strong className="font-semibold text-[#0b2e2e]">
-                    matching service
-                  </strong>
-                  . We connect college students with startup founders and,
-                  optionally, provide paid, manually curated shortlists. We are{" "}
-                  <strong className="font-semibold text-[#0b2e2e]">
-                    not an employer
-                  </strong>
-                  ,{" "}
-                  <strong className="font-semibold text-[#0b2e2e]">
-                    not an agent
-                  </strong>
-                  , and not a party to any work you do.
-                </p>
-              </section>
-
-              <section
-                id="your-agreements-are-your-own"
-                aria-labelledby="your-agreements-are-your-own-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="your-agreements-are-your-own-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Your agreements are your own
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>
-                    Students and founders arrange scope, timeline, and payment
-                    directly with each other.
-                  </li>
-                  <li>
-                    We recommend a simple written agreement before work starts
-                    (a template is provided in the founder dashboard).
-                  </li>
-                  <li>
-                    We are not responsible for payment disputes, work quality,
-                    or either party&apos;s conduct.
-                  </li>
-                </ul>
-              </section>
-
-              <section
-                id="premium-shortlists"
-                aria-labelledby="premium-shortlists-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="premium-shortlists-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Premium Shortlists
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>
-                    The fee covers research, curation, and ranking. It is not a
-                    hiring fee.
-                  </li>
-                  <li>
-                    Shortlists are delivered after payment is confirmed and are
-                    non-refundable once delivered.
-                  </li>
-                  <li>
-                    Shortlist contents are for hiring evaluation only and must
-                    not be redistributed or published.
-                  </li>
-                </ul>
-              </section>
-
-              <section
-                id="fair-use"
-                aria-labelledby="fair-use-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="fair-use-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Fair use
-                </h2>
-                <ul className={`mt-8 list-disc space-y-4 pl-5 text-base leading-7 marker:text-[#c2004b] sm:text-lg sm:leading-8 ${bodyCopy}`}>
-                  <li>Be truthful in your profile, CV, and project postings.</li>
-                  <li>
-                    Do not misuse other users&apos; contact details (no spam, no
-                    resale).
-                  </li>
-                  <li>Report abuse using the contact address below.</li>
-                </ul>
-              </section>
-
-              <section
-                id="questions"
-                aria-labelledby="questions-heading"
-                className="scroll-mt-24 border-t border-[#b9dede]/12 py-16 sm:py-20 lg:py-24"
-              >
-                <h2
-                  id="questions-heading"
-                  className="legal-mount text-[clamp(1.75rem,3vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.04em] text-[#0b2e2e]"
-                >
-                  Questions
-                </h2>
-                <p className={`mt-8 border-t border-[#b9dede]/12 pt-8 text-base leading-7 sm:text-lg sm:leading-8 ${quiet}`}>
-                  Questions about these terms:{' '}
-                  <a
-                    href={`mailto:${APP_CONTACT.email}`}
-                    className={mailLink}
+                  <h2
+                    id="what-this-platform-is-heading"
+                    className={chapterHeading}
                   >
-                    {APP_CONTACT.email}
-                  </a>
-                </p>
-              </section>
-            </div>
+                    What this platform is
+                  </h2>
+                  <p
+                    className={cn(
+                      "mt-7 border-t pt-7 text-base leading-7 sm:text-lg sm:leading-8",
+                      hairline,
+                      bodyCopy,
+                    )}
+                  >
+                    Bhutan Tech Connect is a{" "}
+                    <strong className="font-semibold text-[#0b2e2e]">
+                      matching service
+                    </strong>
+                    . We connect college students with startup founders and,
+                    optionally, provide paid, manually curated shortlists. We are{" "}
+                    <strong className="font-semibold text-[#0b2e2e]">
+                      not an employer
+                    </strong>
+                    ,{" "}
+                    <strong className="font-semibold text-[#0b2e2e]">
+                      not an agent
+                    </strong>
+                    , and not a party to any work you do.
+                  </p>
+                </section>
+
+                <section
+                  id="your-agreements-are-your-own"
+                  aria-labelledby="your-agreements-are-your-own-heading"
+                  className={chapter}
+                >
+                  <h2
+                    id="your-agreements-are-your-own-heading"
+                    className={chapterHeading}
+                  >
+                    Your agreements are your own
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      Students and founders arrange scope, timeline, and payment
+                      directly with each other.
+                    </li>
+                    <li>
+                      We recommend a simple written agreement before work starts
+                      (a template is provided in the founder dashboard).
+                    </li>
+                    <li>
+                      We are not responsible for payment disputes, work quality,
+                      or either party&apos;s conduct.
+                    </li>
+                  </ul>
+                </section>
+
+                <section
+                  id="premium-shortlists"
+                  aria-labelledby="premium-shortlists-heading"
+                  className={chapter}
+                >
+                  <h2
+                    id="premium-shortlists-heading"
+                    className={chapterHeading}
+                  >
+                    Premium Shortlists
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      The fee covers research, curation, and ranking. It is not a
+                      hiring fee.
+                    </li>
+                    <li>
+                      Shortlists are delivered after payment is confirmed and are
+                      non-refundable once delivered.
+                    </li>
+                    <li>
+                      Shortlist contents are for hiring evaluation only and must
+                      not be redistributed or published.
+                    </li>
+                  </ul>
+                </section>
+
+                <section
+                  id="fair-use"
+                  aria-labelledby="fair-use-heading"
+                  className={chapter}
+                >
+                  <h2 id="fair-use-heading" className={chapterHeading}>
+                    Fair use
+                  </h2>
+                  <ul className={listCopy}>
+                    <li>
+                      Be truthful in your profile, CV, and project postings.
+                    </li>
+                    <li>
+                      Do not misuse other users&apos; contact details (no spam, no
+                      resale).
+                    </li>
+                    <li>Report abuse using the contact address below.</li>
+                  </ul>
+                </section>
+
+                <section
+                  id="questions"
+                  aria-labelledby="questions-heading"
+                  className={chapter}
+                >
+                  <h2 id="questions-heading" className={chapterHeading}>
+                    Questions
+                  </h2>
+                  <p
+                    className={cn(
+                      "mt-7 border-t pt-7 text-base leading-7 sm:text-lg sm:leading-8",
+                      hairline,
+                      bodyCopy,
+                    )}
+                  >
+                    Questions about these terms:{" "}
+                    <a href={`mailto:${APP_CONTACT.email}`} className={mailLink}>
+                      {APP_CONTACT.email}
+                    </a>
+                  </p>
+                  <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+                    <RuleLink href="/privacy">Read the privacy policy</RuleLink>
+                    <RuleLink href="/contact">Contact the team</RuleLink>
+                    <Link
+                      href="/public"
+                      className={cn(
+                        "inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-[#356464] transition-colors hover:text-[#0b2e2e]",
+                        focusRing,
+                      )}
+                    >
+                      Back to the homepage
+                    </Link>
+                  </div>
+                </section>
+              </div>
+            </article>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 }

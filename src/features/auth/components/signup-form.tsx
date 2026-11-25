@@ -13,6 +13,7 @@
 import { useActionState, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { signup } from "@/features/auth/actions";
+import { authInputClassName } from "@/features/auth/components/styles";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 type FieldName = "firstName" | "lastName" | "email" | "password";
@@ -34,9 +35,6 @@ const EMPTY_VALUES: FieldValues = {
 };
 
 const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
-
-const inputClassName =
-  "w-full min-w-0 rounded-xl border border-[#b9dede] bg-white px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]/20";
 
 const labelClassName = "mb-2 block text-sm font-semibold text-[#0b5c5c]";
 
@@ -172,7 +170,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
           role="alert"
           tabIndex={-1}
           data-auth-message
-          className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          className="mb-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
         >
           {serverError}
         </div>
@@ -202,7 +200,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={(event) => setField("firstName", event.target.value)}
               autoComplete="given-name"
               placeholder="Tashi"
-              className={inputClassName}
+              className={authInputClassName}
             />
             {errors.firstName && (
               <FieldError id={firstNameErrorId}>{errors.firstName}</FieldError>
@@ -225,7 +223,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={(event) => setField("lastName", event.target.value)}
               autoComplete="family-name"
               placeholder="Dorji"
-              className={inputClassName}
+              className={authInputClassName}
             />
             {errors.lastName && (
               <FieldError id={lastNameErrorId}>{errors.lastName}</FieldError>
@@ -249,7 +247,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             onChange={(event) => setField("email", event.target.value)}
             autoComplete="email"
             placeholder="you@example.com"
-            className={inputClassName}
+            className={authInputClassName}
           />
           {errors.email && (
             <FieldError id={emailErrorId}>{errors.email}</FieldError>
@@ -278,7 +276,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={(event) => setField("password", event.target.value)}
               autoComplete="new-password"
               placeholder="At least 6 characters"
-              className={inputClassName}
+              className={authInputClassName}
             />
             <button
               type="button"
@@ -286,7 +284,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               aria-pressed={showPassword}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setShowPassword((prev) => !prev)}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] transition-[border-color,background-color] duration-150 ease-[var(--ease-out)] hover:bg-[#eaf6f6] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]/20"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] hover:bg-[#eaf6f6] hover:border-[#66bfbf] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66bfbf]/25"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>

@@ -14,10 +14,10 @@ export function WorkspacePageHeading({
 }) {
   return (
     <div className="min-w-0" data-role-context={eyebrow}>
-      <h1 className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.25] tracking-[-0.02em] text-[#0b2e2e] text-balance">
+      <h1 className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.15] tracking-[-0.035em] text-[#0b2e2e] text-balance">
         {title}
       </h1>
-      <p className="mt-2 max-w-xs text-sm leading-6 text-[#356464] sm:max-w-sm">
+      <p className="mt-2 max-w-sm text-sm leading-6 text-[#356464] sm:max-w-md">
         {description}
       </p>
     </div>
