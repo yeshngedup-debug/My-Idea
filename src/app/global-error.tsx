@@ -22,8 +22,8 @@ export default function GlobalError({
           alignItems: 'center',
           justifyContent: 'center',
           padding: '24px',
-          background: '#f5f2ea',
-          color: '#18251f',
+          background: '#eaf6f6',
+          color: '#0b2e2e',
           fontFamily: 'system-ui, sans-serif',
         }}
       >
@@ -31,12 +31,12 @@ export default function GlobalError({
             focus styles) are unavailable. Scope a visible focus ring here. */}
         <style>{`
           .retry-button:focus-visible {
-            outline: 3px solid #b23c26;
+            outline: 3px solid #c2004b;
             outline-offset: 3px;
           }
         `}</style>
         <main style={{ maxWidth: '52ch' }}>
-          <h1 style={{ fontSize: '2rem', lineHeight: 1.1, color: '#17352b' }}>
+          <h1 style={{ fontSize: '2rem', lineHeight: 1.1, color: '#0b5c5c' }}>
             Something went wrong
           </h1>
           <p style={{ lineHeight: 1.6 }}>
@@ -51,8 +51,8 @@ export default function GlobalError({
               padding: '12px 28px',
               border: 0,
               borderRadius: 8,
-              background: '#17352b',
-              color: '#fff',
+              background: '#ff0063',
+              color: '#000000',
               fontSize: 14,
               cursor: 'pointer',
             }}

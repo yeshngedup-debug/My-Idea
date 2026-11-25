@@ -22,18 +22,18 @@ export function SectionIntro({
   return (
     <Reveal className={cn("max-w-3xl", className)}>
       {eyebrow ? (
-        <p className="text-sm font-medium text-[#56645c]">
+        <p className="text-sm font-medium text-[#356464]">
           {eyebrow}
         </p>
       ) : null}
       <h2
         id={headingId}
-        className="mt-3 text-balance text-4xl font-medium leading-[1.04] tracking-normal text-[#17352b] sm:text-6xl sm:tracking-[-0.02em]"
+        className="mt-3 text-balance text-4xl font-medium leading-[1.04] tracking-normal text-[#0b5c5c] sm:text-6xl sm:tracking-[-0.02em]"
       >
         {title}
       </h2>
       {lead ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-[#5e554a] sm:text-base">
+        <p className="mt-4 max-w-xl text-sm leading-6 text-[#356464] sm:text-base">
           {lead}
         </p>
       ) : null}

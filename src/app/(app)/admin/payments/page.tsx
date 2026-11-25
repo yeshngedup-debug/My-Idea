@@ -91,7 +91,7 @@ export default async function AdminPaymentsPage() {
             />
           }
         >
-          <div className="rounded-2xl border border-[#ded8cb] bg-[#f5f2ea] p-4 sm:p-6">
+          <div className="rounded-2xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-6">
             <PaymentsClient orders={orders} />
           </div>
         </PinnedHeadingSection>

@@ -24,51 +24,51 @@ export function ProfileDetails({
 }) {
   return (
     <>
-      <section className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 sm:p-6">
-        <h2 className="text-base font-semibold text-[#17352b]">Account</h2>
-        <dl className="mt-4 divide-y divide-[#ded8cb] border-t border-[#ded8cb] text-sm">
+      <section className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-[#0b5c5c]">Account</h2>
+        <dl className="mt-4 divide-y divide-[#b9dede] border-t border-[#b9dede] text-sm">
           <div className="flex flex-wrap items-baseline justify-between gap-2 py-3">
-            <dt className="inline-flex min-h-6 items-center gap-2 text-[#657069]">
+            <dt className="inline-flex min-h-6 items-center gap-2 text-[#356464]">
               <UserCircle size={16} aria-hidden="true" className="shrink-0" />
               Name
             </dt>
-            <dd className="break-words font-medium text-[#17352b]">
+            <dd className="break-words font-medium text-[#0b5c5c]">
               {fullName || 'Not set'}
             </dd>
           </div>
           <div className="flex flex-wrap items-baseline justify-between gap-2 py-3">
-            <dt className="inline-flex min-h-6 items-center gap-2 text-[#657069]">
+            <dt className="inline-flex min-h-6 items-center gap-2 text-[#356464]">
               <Briefcase size={16} aria-hidden="true" className="shrink-0" />
               Role
             </dt>
-            <dd className="font-medium capitalize text-[#17352b]">{role}</dd>
+            <dd className="font-medium capitalize text-[#0b5c5c]">{role}</dd>
           </div>
           <div className="flex flex-wrap items-baseline justify-between gap-2 py-3">
-            <dt className="inline-flex min-h-6 items-center gap-2 text-[#657069]">
+            <dt className="inline-flex min-h-6 items-center gap-2 text-[#356464]">
               <CalendarBlank size={16} aria-hidden="true" className="shrink-0" />
               Account created
             </dt>
-            <dd className="font-medium tabular-nums text-[#17352b]">
+            <dd className="font-medium tabular-nums text-[#0b5c5c]">
               {accountCreated}
             </dd>
           </div>
         </dl>
       </section>
 
-      <section className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 sm:p-6">
-        <h2 className="text-base font-semibold text-[#17352b]">Your projects</h2>
-        <dl className="mt-4 divide-y divide-[#ded8cb] border-t border-[#ded8cb] text-sm">
+      <section className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-6">
+        <h2 className="text-base font-semibold text-[#0b5c5c]">Your projects</h2>
+        <dl className="mt-4 divide-y divide-[#b9dede] border-t border-[#b9dede] text-sm">
           <div className="flex items-baseline justify-between gap-4 py-3">
-            <dt className="text-[#657069]">Projects posted</dt>
-            <dd className="font-semibold tabular-nums text-[#17352b]">{total}</dd>
+            <dt className="text-[#356464]">Projects posted</dt>
+            <dd className="font-semibold tabular-nums text-[#0b5c5c]">{total}</dd>
           </div>
           {counts.map((item) => (
             <div
               key={item.value}
               className="flex items-baseline justify-between gap-4 py-3"
             >
-              <dt className="text-[#657069]">{item.label}</dt>
-              <dd className="font-medium tabular-nums text-[#17352b]">
+              <dt className="text-[#356464]">{item.label}</dt>
+              <dd className="font-medium tabular-nums text-[#0b5c5c]">
                 {item.count}
               </dd>
             </div>

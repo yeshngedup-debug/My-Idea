@@ -42,10 +42,10 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_DOT: Record<string, string> = {
-  pending: "bg-[#b08947]",
-  shortlisted: "bg-[#17352b]",
-  accepted: "bg-[#17352b]",
-  rejected: "bg-[#b23c26]",
+  pending: "bg-[#66bfbf]",
+  shortlisted: "bg-[#0b5c5c]",
+  accepted: "bg-[#0b5c5c]",
+  rejected: "bg-[#ff0063]",
 };
 
 export function ApplicationsClient({
@@ -85,16 +85,16 @@ export function ApplicationsClient({
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
+      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
           You haven&apos;t applied to any projects yet
         </h2>
-        <p className="mb-6 text-sm text-[#657069]">
+        <p className="mb-6 text-sm text-[#356464]">
           Browse open projects and apply to ones that match your skills.
         </p>
         <Link
           href="/student/projects"
-          className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-semibold text-[#fffefa] transition-colors motion-reduce:transition-none! hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
+          className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors motion-reduce:transition-none! hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
         >
           Browse projects
         </Link>
@@ -117,22 +117,22 @@ export function ApplicationsClient({
         ariaLabel="Filter applications by status"
       />
 
-      <p role="status" aria-live="polite" className="text-xs text-[#657069]">
+      <p role="status" aria-live="polite" className="text-xs text-[#356464]">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-          <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
+        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+          <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
             No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} applications
           </h2>
-          <p className="mb-6 text-sm text-[#657069]">
+          <p className="mb-6 text-sm text-[#356464]">
             None of your applications are at this stage right now.
           </p>
           <button
             type="button"
             onClick={() => handleFilterChange("all")}
-            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#fffefa] px-6 py-3 text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none! hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
+            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
           >
             Show all applications
           </button>
@@ -142,23 +142,23 @@ export function ApplicationsClient({
           {filtered.map((item) => (
             <li
               key={item.id}
-              className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4"
+              className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   {item.project?.id ? (
                     <Link
                       href={`/student/projects/${item.project.id}`}
-                      className="inline-block max-w-full truncate rounded text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none! hover:text-[#244b3e] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
+                      className="inline-block max-w-full truncate rounded text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:text-[#d40054] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
                     >
                       {item.project.title}
                     </Link>
                   ) : (
-                    <p className="truncate text-sm font-semibold text-[#17352b]">
+                    <p className="truncate text-sm font-semibold text-[#0b5c5c]">
                       {item.project?.title ?? "Project"}
                     </p>
                   )}
-                  <p className="mt-1 text-xs tabular-nums text-[#657069]">
+                  <p className="mt-1 text-xs tabular-nums text-[#356464]">
                     Applied{" "}
                     {new Date(item.created_at).toLocaleDateString("en-GB", {
                       day: "numeric",
@@ -167,8 +167,8 @@ export function ApplicationsClient({
                     })}
                   </p>
                 </div>
-                <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
-                  <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-[#657069]"}`} />
+                <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
+                  <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-[#356464]"}`} />
                   {STATUS_LABEL[item.status] ?? item.status}
                 </Badge>
               </div>
@@ -181,7 +181,7 @@ export function ApplicationsClient({
               {item.status === "rejected" && (
                 <Link
                   href="/student/projects"
-                  className="mt-3 inline-flex min-h-9 items-center rounded text-sm font-semibold text-[#b23c26] transition-colors motion-reduce:transition-none! hover:text-[#17352b] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2"
+                  className="mt-3 inline-flex min-h-9 items-center rounded text-sm font-semibold text-[#c2004b] transition-colors motion-reduce:transition-none! hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
                 >
                   Browse open projects
                 </Link>

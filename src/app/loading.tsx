@@ -8,7 +8,7 @@ export default function Loading() {
       id="main-content"
       role="status"
       aria-live="polite"
-      className="flex min-h-svh items-center justify-center bg-[#f5f2ea] px-6 text-[#18251f]"
+      className="flex min-h-svh items-center justify-center bg-[#eaf6f6] px-6 text-[#0b2e2e]"
     >
       <div className="w-full max-w-md space-y-4" aria-hidden="true">
         <div className="h-3 w-24 rounded bg-[#ded8cb]" />

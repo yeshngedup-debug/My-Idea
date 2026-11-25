@@ -19,7 +19,7 @@ function useActiveHref(links: WorkspaceNavLink[]) {
 }
 
 const focusRing =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a4b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]';
 
 export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
   const isActive = useActiveHref(links);
@@ -35,8 +35,8 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`inline-flex min-h-11 items-center rounded-full border px-3.5 py-2 text-sm font-medium ${focusRing} ${
               active
-                ? 'border-[#ded8cb] bg-[#fffefa] font-semibold text-[#18251f]'
-                : 'border-transparent text-[#56645c] hover:text-[#18251f]'
+                ? 'border-[#b9dede] bg-[#ffffff] font-semibold text-[#0b2e2e]'
+                : 'border-transparent text-[#356464] hover:text-[#0b2e2e]'
             }`}
           >
             {item.label}
@@ -53,7 +53,7 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
   return (
     <nav
       aria-label="Workspace navigation"
-      className="-mx-4 flex gap-2 overflow-x-auto border-b border-[#ded8cb] px-4 pb-3 pt-1 lg:hidden"
+      className="-mx-4 flex gap-2 overflow-x-auto border-b border-[#b9dede] px-4 pb-3 pt-1 lg:hidden"
     >
       {links.map((item) => {
         const active = isActive(item.href);
@@ -64,8 +64,8 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`min-h-11 shrink-0 rounded-full border px-3.5 py-2 text-xs font-semibold ${focusRing} ${
               active
-                ? 'border-[#17352b] bg-[#17352b] text-[#fffefa]'
-                : 'border-[#ded8cb] bg-[#fffefa] text-[#56645c]'
+                ? 'border-[#66bfbf] bg-[#66bfbf] text-[#0b2e2e]'
+                : 'border-[#b9dede] bg-[#ffffff] text-[#356464]'
             }`}
           >
             {item.label}

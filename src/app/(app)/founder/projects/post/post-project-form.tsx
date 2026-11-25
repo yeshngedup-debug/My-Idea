@@ -150,7 +150,7 @@ export function PostProjectForm() {
 
   function fieldError(id: FieldId) {
     return errors[id] ? (
-      <p id={`${id}-error`} className="mt-1.5 text-xs text-[#b23c26]">
+      <p id={`${id}-error`} className="mt-1.5 text-xs text-[#c2004b]">
         {errors[id]}
       </p>
     ) : null;
@@ -202,26 +202,26 @@ export function PostProjectForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {status && !status.ok && (
-        <p role="alert" className="flex items-center gap-2 rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-3 text-sm text-[#b23c26]">
+        <p role="alert" className="flex items-center gap-2 rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-3 text-sm text-[#c2004b]">
           {status.msg}
         </p>
       )}
 
-      <div className="rounded-xl border border-[#ded8cb] bg-[#f5f2ea] p-4">
+      <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4">
         <Progress
           value={ready}
           max={requirements.length}
           label="Ready to post"
           valueLabel={`${ready} of ${requirements.length} details ready`}
         />
-        <p id="post-form-missing" aria-live="polite" className="mt-2 text-xs leading-5 text-[#56645c]">
+        <p id="post-form-missing" aria-live="polite" className="mt-2 text-xs leading-5 text-[#356464]">
           {missing.length === 0
             ? 'All required details are ready. You can post the project.'
             : `Still needed: ${missing.join('; ')}.`}
         </p>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
+      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
         <div>
           <Label htmlFor="title" className="mb-2">Project title *</Label>
           <Input
@@ -234,7 +234,7 @@ export function PostProjectForm() {
             maxLength={120}
             invalid={Boolean(errors.title)}
             describedBy={errors.title ? 'title-error' : undefined}
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
           {fieldError('title')}
         </div>
@@ -242,7 +242,7 @@ export function PostProjectForm() {
         <div>
           <div className="flex items-center justify-between mb-2">
             <Label htmlFor="description">Description *</Label>
-            <span className="text-xs text-[#56645c]">{description.length}/2000</span>
+            <span className="text-xs text-[#356464]">{description.length}/2000</span>
           </div>
           <Textarea
             id="description"
@@ -254,7 +254,7 @@ export function PostProjectForm() {
             maxLength={2000}
             invalid={Boolean(errors.description)}
             describedBy={errors.description ? 'description-error' : undefined}
-            className="w-full min-h-[140px] rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+            className="w-full min-h-[140px] rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
           {fieldError('description')}
         </div>
@@ -273,31 +273,31 @@ export function PostProjectForm() {
                 }
               }}
               placeholder="React, Figma, Python..."
-              className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+              className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
             />
             <Button
               type="button"
               onClick={addSkill}
               disabled={skills.length >= 15}
               variant="outline"
-              className="pressable h-auto min-h-11 shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b] hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+              className="pressable h-auto min-h-11 shrink-0 border-[#b9dede] bg-[#ffffff] px-4 text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
             >
               Add
             </Button>
           </div>
-          <p className="mt-1.5 text-xs text-[#56645c]">
+          <p className="mt-1.5 text-xs text-[#356464]">
             Optional. Add up to 15 skills, separated by commas.
           </p>
           {skills.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
               {skills.map((s) => (
-                <Badge key={s} className="gap-1 border-[#ded8cb] bg-[#f5f2ea] pr-1 text-[#17352b]">
+                <Badge key={s} className="gap-1 border-[#b9dede] bg-[#eaf6f6] pr-1 text-[#0b5c5c]">
                   {s}
                   <button
                     type="button"
                     aria-label={`Remove ${s}`}
                     onClick={() => setSkills(skills.filter((x) => x !== s))}
-                    className="pressable grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                    className="pressable grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                   >
                     <X className="w-3 h-3" aria-hidden="true" />
                   </button>
@@ -308,7 +308,7 @@ export function PostProjectForm() {
         </div>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
+      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
         <div>
           <Label htmlFor="duration" className="mb-2">Duration *</Label>
           <select
@@ -318,7 +318,7 @@ export function PostProjectForm() {
             required
             aria-invalid={Boolean(errors.duration)}
             aria-describedby={errors.duration ? 'duration-error' : undefined}
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           >
             <option value="">Select duration</option>
             {DURATIONS.map((d) => (
@@ -346,7 +346,7 @@ export function PostProjectForm() {
                 aria-label="Budget minimum"
                 invalid={Boolean(errors['budget-min'])}
                 describedBy={errors['budget-min'] ? 'budget-min-error' : undefined}
-                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base tabular-nums text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+                className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
               />
               {fieldError('budget-min')}
             </div>
@@ -365,18 +365,18 @@ export function PostProjectForm() {
                 aria-label="Budget maximum"
                 invalid={Boolean(errors['budget-max'])}
                 describedBy={errors['budget-max'] ? 'budget-max-error' : undefined}
-                className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base tabular-nums text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+                className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
               />
               {fieldError('budget-max')}
             </div>
           </div>
-          <p className="mt-1.5 text-xs text-[#56645c]">
+          <p className="mt-1.5 text-xs text-[#356464]">
             Nu. amounts can have up to 2 decimal places.
           </p>
         </div>
 
         <fieldset>
-          <legend className="mb-2 text-sm font-medium text-[#18251f]">
+          <legend className="mb-2 text-sm font-medium text-[#0b2e2e]">
             Work mode
           </legend>
           <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Work mode">
@@ -392,10 +392,10 @@ export function PostProjectForm() {
                 tabIndex={workMode === mode ? 0 : -1}
                 onKeyDown={(e) => handleWorkModeKeyDown(e, mode)}
                 onClick={() => setWorkMode(mode)}
-                className={`pressable min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                className={`pressable min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
                   workMode === mode
-                    ? 'bg-[#17352b] text-[#fffefa]'
-                    : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
+                    ? 'bg-[#66bfbf] text-[#0b2e2e]'
+                    : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
                 }`}
               >
                 {mode === 'remote' ? 'Remote' : 'On-site'}
@@ -412,9 +412,9 @@ export function PostProjectForm() {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             describedBy="deadline-help"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#56645c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]/30 focus-visible:border-[#b23c26]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
-          <p id="deadline-help" className="mt-1.5 text-xs text-[#56645c]">
+          <p id="deadline-help" className="mt-1.5 text-xs text-[#356464]">
             Optional. Open through this date in your local time; students see it on the card.
           </p>
         </div>
@@ -423,7 +423,7 @@ export function PostProjectForm() {
       <Button
         type="submit"
         disabled={saving}
-        className="pressable h-12 w-full bg-[#17352b] text-base font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+        className="pressable h-12 w-full bg-[#ff0063] text-base font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
       >
         {saving ? 'Posting...' : 'Post project'}
       </Button>

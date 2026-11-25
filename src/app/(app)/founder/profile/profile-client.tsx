@@ -61,10 +61,10 @@ export function ProfileClient({ fullName }: { fullName: string }) {
   }
 
   return (
-    <section className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 sm:p-6">
+    <section className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-6">
       <div>
-        <h2 className="text-base font-semibold text-[#17352b]">Display name</h2>
-        <p className="mt-1 text-sm leading-6 text-[#56645c]">
+        <h2 className="text-base font-semibold text-[#0b5c5c]">Display name</h2>
+        <p className="mt-1 text-sm leading-6 text-[#356464]">
           Shown on your projects and wherever your profile appears.
         </p>
       </div>
@@ -94,20 +94,20 @@ export function ProfileClient({ fullName }: { fullName: string }) {
                 ? 'founder-name-result'
                 : undefined
             }
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c]"
           />
         </div>
 
         <Button
           type="submit"
           disabled={saving || draft.trim() === name}
-          className="pressable inline-flex min-h-11 bg-[#17352b] px-5 py-3 font-semibold text-[#fffefa] hover:bg-[#244b3e]"
+          className="pressable inline-flex min-h-11 bg-[#ff0063] px-5 py-3 font-semibold text-[#000000] hover:bg-[#d40054]"
         >
           {saving ? 'Saving...' : 'Save name'}
         </Button>
       </form>
 
-      <p className="text-xs text-[#657069]">Current name: {name}</p>
+      <p className="text-xs text-[#356464]">Current name: {name}</p>
 
       {result && (
         <p
@@ -115,8 +115,8 @@ export function ProfileClient({ fullName }: { fullName: string }) {
           role={result.ok ? 'status' : 'alert'}
           className={`rounded-xl border px-4 py-3 text-sm ${
             result.ok
-              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-              : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+              : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
           }`}
         >
           {result.message}

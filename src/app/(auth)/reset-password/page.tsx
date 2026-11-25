@@ -36,11 +36,11 @@ export default async function ResetPasswordPage({
     <AuthShell>
       <h1
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#17352b]"
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
       >
         Choose a new password
       </h1>
-      <p className="mt-3 text-sm leading-6 text-slate-600">
+      <p className="mt-3 text-sm leading-6 text-[#356464]">
         Use 6 to 128 characters. You&apos;ll sign in again after saving.
       </p>
 

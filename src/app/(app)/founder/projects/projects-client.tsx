@@ -37,16 +37,16 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_DOT: Record<string, string> = {
-  open: 'bg-[#b08947]',
-  in_progress: 'bg-[#17352b]',
-  review: 'bg-[#b23c26]',
-  completed: 'bg-[#657069]',
+  open: 'bg-[#66bfbf]',
+  in_progress: 'bg-[#0b5c5c]',
+  review: 'bg-[#ff0063]',
+  completed: 'bg-[#356464]',
 };
 
 const PRIMARY_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#17352b] px-4 py-2 text-sm font-semibold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
 const ROW_LINK =
-  'inline-flex min-h-11 items-center rounded text-xs font-semibold text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]';
+  'inline-flex min-h-11 items-center rounded text-xs font-semibold text-[#0b5c5c] transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]';
 
 export function ProjectsClient({
   projects,
@@ -82,11 +82,11 @@ export function ProjectsClient({
 
   if (!signedIn) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
+      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
           Sign in to see your projects
         </h2>
-        <p className="mb-6 text-sm text-[#56645c]">
+        <p className="mb-6 text-sm text-[#356464]">
           Your posted projects and their applicants live in your founder
           workspace.
         </p>
@@ -99,11 +99,11 @@ export function ProjectsClient({
 
   if (projects.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#17352b]">
+      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
           No projects yet
         </h2>
-        <p className="mb-6 text-sm text-[#56645c]">
+        <p className="mb-6 text-sm text-[#356464]">
           Post your first short paid project and students can apply right away.
         </p>
         <Link href="/founder/projects/post" className={`${PRIMARY_LINK} w-full`}>
@@ -134,23 +134,23 @@ export function ProjectsClient({
       <p
         role="status"
         aria-live="polite"
-        className="text-xs tabular-nums text-[#56645c]"
+        className="text-xs tabular-nums text-[#356464]"
       >
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
             No {statusLabel(filter).toLowerCase()} projects
           </h3>
-          <p className="mb-6 text-sm text-[#56645c]">
+          <p className="mb-6 text-sm text-[#356464]">
             None of your projects are at this stage right now.
           </p>
           <button
             type="button"
             onClick={() => setFilter('all')}
-            className="pressable inline-flex min-h-11 items-center rounded-lg border border-[#ded8cb] bg-[#fffefa] px-4 py-2 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+            className="pressable inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
           >
             Show all projects
           </button>
@@ -161,24 +161,24 @@ export function ProjectsClient({
             {filtered.map((p) => (
               <li
                 key={p.id}
-                className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4"
+                className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <p
-                    className="min-w-0 line-clamp-2 break-words text-sm font-semibold text-[#17352b]"
+                    className="min-w-0 line-clamp-2 break-words text-sm font-semibold text-[#0b5c5c]"
                     title={p.title}
                   >
                     {p.title}
                   </p>
-                  <Badge className="shrink-0 gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                  <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
                     <span
                       aria-hidden="true"
-                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#657069]'}`}
+                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
                     />
                     {statusLabel(p.status)}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs tabular-nums text-[#56645c]">
+                <p className="mt-1 text-xs tabular-nums text-[#356464]">
                   {date(p.created_at)}
                 </p>
                 <Link
@@ -192,9 +192,9 @@ export function ProjectsClient({
             ))}
           </ul>
 
-          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#b9dede] bg-[#ffffff] sm:block">
             <table className="w-full text-left text-sm" aria-label="My projects">
-              <thead className="bg-[#f5f2ea] text-xs font-medium text-[#56645c]">
+              <thead className="bg-[#eaf6f6] text-xs font-medium text-[#356464]">
                 <tr>
                   <th
                     scope="col"
@@ -216,29 +216,29 @@ export function ProjectsClient({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#ded8cb]">
+              <tbody className="divide-y divide-[#b9dede]">
                 {filtered.map((p) => (
                   <tr
                     key={p.id}
-                    className="transition-colors duration-150 hover:bg-[#f5f2ea]"
+                    className="transition-colors duration-150 hover:bg-[#eaf6f6]"
                   >
                     <th
                       scope="row"
-                      className="max-w-xs break-words px-4 py-3.5 text-left font-semibold text-[#17352b]"
+                      className="max-w-xs break-words px-4 py-3.5 text-left font-semibold text-[#0b5c5c]"
                       title={p.title}
                     >
                       {p.title}
                     </th>
                     <td className="px-4 py-3.5">
-                      <Badge className="gap-1.5 border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]">
+                      <Badge className="gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
                         <span
                           aria-hidden="true"
-                          className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#657069]'}`}
+                          className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
                         />
                         {statusLabel(p.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#56645c]">
+                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#356464]">
                       {date(p.created_at)}
                     </td>
                     <td className="px-4 py-3.5 text-right">

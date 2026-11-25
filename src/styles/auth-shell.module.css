@@ -2,10 +2,10 @@
    its fallbacks never leak into the marketing pages. */
 
 .canvas {
-  background-color: #f5f2ea;
+  background-color: var(--color-background);
   background-image: radial-gradient(
     62% 48% at 88% 4%,
-    rgba(216, 79, 55, 0.07),
+    rgba(255, 0, 99, 0.07),
     transparent 72%
   );
 }
@@ -16,23 +16,23 @@
   background-image:
     radial-gradient(
       78% 72% at 28% 18%,
-      rgba(16, 29, 23, 0.2) 0%,
-      rgba(16, 29, 23, 0.56) 52%,
-      rgba(8, 17, 12, 0.94) 100%
+      rgba(11, 46, 46, 0.2) 0%,
+      rgba(11, 46, 46, 0.56) 52%,
+      rgba(11, 46, 46, 0.94) 100%
     ),
-    linear-gradient(to top, rgba(8, 17, 12, 0.88) 0%, transparent 60%);
+    linear-gradient(to top, rgba(11, 46, 46, 0.88) 0%, transparent 60%);
 }
 
 /* Floating glass card: translucent surface, bright 1px edge, soft lift. */
 .formCard {
-  background-color: rgba(255, 254, 250, 0.74);
+  background-color: rgba(255, 255, 255, 0.74);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 2px 6px -3px rgba(23, 53, 43, 0.12),
-    0 26px 56px -30px rgba(23, 53, 43, 0.26);
+    0 2px 6px -3px rgba(11, 46, 46, 0.12),
+    0 26px 56px -30px rgba(11, 46, 46, 0.26);
   animation: cardEnter var(--duration-250) var(--ease-out) backwards;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .formCard button[type="submit"]:focus-visible {
-  outline: 2px solid #d84f37;
+  outline: 2px solid var(--color-ring);
   outline-offset: 3px;
 }
 
@@ -81,7 +81,7 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .formCard {
-    background-color: #fffefa;
+    background-color: var(--color-card);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -89,10 +89,10 @@
 
 @media (prefers-contrast: more) {
   .formCard {
-    background-color: #fffefa;
+    background-color: var(--color-card);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border-color: #18251f;
+    border-color: var(--color-foreground);
     box-shadow: none;
   }
 }

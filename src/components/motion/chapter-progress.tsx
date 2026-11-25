@@ -81,13 +81,13 @@ export function ChapterProgress({
       ref={root}
       aria-label="On this page"
       data-chapter-progress=""
-      className={cn("border-y border-[#17352b]/15", className)}
+      className={cn("border-y border-[#66bfbf]/15", className)}
     >
       <span
         ref={bar}
         aria-hidden="true"
         data-chapter-bar=""
-        className="block h-px w-full origin-left scale-x-0 bg-[#d84f37] motion-reduce:hidden"
+        className="block h-px w-full origin-left scale-x-0 bg-[#ff0063] motion-reduce:hidden"
       />
       <ol className="mx-auto flex max-w-[1440px] flex-wrap gap-x-6 gap-y-2 px-5 py-4 sm:px-8 lg:px-12">
         {chapters.map((chapter) => {
@@ -98,10 +98,10 @@ export function ChapterProgress({
                 href={`#${chapter.id}`}
                 aria-current={current ? "location" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center rounded-sm text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] sm:text-sm",
+                  "inline-flex min-h-11 items-center rounded-sm text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] sm:text-sm",
                   current
-                    ? "text-[#17352b] underline decoration-[#d84f37] decoration-2 underline-offset-8"
-                    : "text-body-secondary hover:text-[#17352b]",
+                    ? "text-[#0b5c5c] underline decoration-[#ff0063] decoration-2 underline-offset-8"
+                    : "text-body-secondary hover:text-[#0b5c5c]",
                 )}
               >
                 {chapter.label}

@@ -15,7 +15,7 @@ export function PinnedStepChapter({
 }) {
   return (
     <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
-      <div className="lg:sticky lg:top-24 lg:self-start lg:border-t lg:border-[#17352b]/15 lg:pt-6 lg:pr-6">
+      <div className="lg:sticky lg:top-24 lg:self-start lg:border-t lg:border-[#b9dede]/15 lg:pt-6 lg:pr-6">
         {title}
       </div>
       <div>{children}</div>

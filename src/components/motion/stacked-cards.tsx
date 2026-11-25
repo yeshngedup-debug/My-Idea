@@ -111,11 +111,11 @@ export function StackedCards({
             { "--stack-top": `${96 + index * 12}px` } as CSSProperties
           }
         >
-          <article className="rounded-[1.25rem] border border-[#18251f]/15 bg-[#fffefa] p-6 sm:p-8">
-            <p className="text-sm font-semibold tabular-nums text-[#b23c26]">
+          <article className="rounded-[1.25rem] border border-[#0b2e2e]/15 bg-[#ffffff] p-6 sm:p-8">
+            <p className="text-sm font-semibold tabular-nums text-[#c2004b]">
               {item.number}
             </p>
-            <h3 className="mt-4 text-balance text-xl font-semibold leading-snug tracking-tight text-[#17352b] sm:text-2xl">
+            <h3 className="mt-4 text-balance text-xl font-semibold leading-snug tracking-tight text-[#0b5c5c] sm:text-2xl">
               {item.title}
             </h3>
             <p className="mt-3 max-w-xl text-sm leading-7 text-body-secondary sm:text-base">
@@ -124,7 +124,7 @@ export function StackedCards({
             {item.action ? (
               <a
                 href={item.action.href}
-                className="mt-5 inline-flex min-h-11 items-center rounded-sm text-sm font-medium text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition-colors hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+                className="mt-5 inline-flex min-h-11 items-center rounded-sm text-sm font-medium text-[#c2004b] underline decoration-[#ff0063]/30 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
               >
                 {item.action.label}
               </a>

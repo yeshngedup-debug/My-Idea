@@ -32,26 +32,26 @@ function ProfileNotice({
       aria-labelledby="profile-notice-title"
       className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
     >
-      <div className="mx-auto max-w-3xl rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5 sm:p-7">
+      <div className="mx-auto max-w-3xl rounded-xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-7">
         <h1
           id="profile-notice-title"
-          className="text-[clamp(1.5rem,4vw,2rem)] font-semibold leading-tight tracking-[-0.02em] text-[#17352b] text-balance"
+          className="text-[clamp(1.5rem,4vw,2rem)] font-semibold leading-tight tracking-[-0.02em] text-[#0b5c5c] text-balance"
         >
           {title}
         </h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#657069]">
+        <p className="mt-3 max-w-xl text-sm leading-6 text-[#356464]">
           {description}
         </p>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Link
             href="/student/profile"
-            className="inline-flex min-h-11 items-center rounded-lg bg-[#17352b] px-5 py-3 text-sm font-semibold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
+            className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
           >
             Try again
           </Link>
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center rounded-lg border border-[#ded8cb] px-5 py-3 text-sm font-medium text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
+            className="inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] px-5 py-3 text-sm font-medium text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
           >
             Go to home
           </Link>

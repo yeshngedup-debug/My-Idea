@@ -36,9 +36,9 @@ const EMPTY_VALUES: FieldValues = {
 const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
 
 const inputClassName =
-  "w-full min-w-0 rounded-xl border border-border bg-card px-4 py-3.5 text-base text-body placeholder:text-muted-foreground transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20";
+  "w-full min-w-0 rounded-xl border border-[#b9dede] bg-white px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] sm:text-sm duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]/20";
 
-const labelClassName = "mb-2 block text-sm font-semibold text-primary";
+const labelClassName = "mb-2 block text-sm font-semibold text-[#0b5c5c]";
 
 /** Local: identical accessible markup for every inline error. The fade comes
  *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
@@ -286,12 +286,12 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               aria-pressed={showPassword}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setShowPassword((prev) => !prev)}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-border bg-card px-3 text-sm font-medium text-primary transition-[border-color,background-color] duration-150 ease-[var(--ease-out)] hover:bg-muted focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/20"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] transition-[border-color,background-color] duration-150 ease-[var(--ease-out)] hover:bg-[#eaf6f6] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]/20"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>
           </div>
-          <p id={passwordHintId} className="mt-1.5 text-xs text-body-secondary">
+          <p id={passwordHintId} className="mt-1.5 text-xs text-[#356464]">
             Minimum 6 characters.
           </p>
           {errors.password && (

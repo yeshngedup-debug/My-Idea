@@ -56,7 +56,7 @@ export function HorizontalAccordion({
             }}
             onFocus={() => setActiveId(item.id)}
             className={cn(
-              "group relative isolate flex min-h-11 flex-[1_1_0%] flex-col justify-end overflow-hidden rounded-[1.25rem] border border-[#1B4D3E]/15 bg-white transition-[flex-grow,flex-basis] duration-700 ease-out motion-reduce:transition-none",
+              "group relative isolate flex min-h-11 flex-[1_1_0%] flex-col justify-end overflow-hidden rounded-[1.25rem] border border-[#b9dede]/15 bg-white transition-[flex-grow,flex-basis] duration-700 ease-out motion-reduce:transition-none",
               "data-[open=true]:flex-[3_1_0%] sm:data-[open=true]:flex-[5_1_0%]",
             )}
           >
@@ -66,12 +66,12 @@ export function HorizontalAccordion({
               aria-expanded={open}
               aria-controls={panelId}
               onClick={() => setActiveId(open ? null : item.id)}
-              className="relative z-10 flex min-h-11 w-full flex-col items-start justify-end gap-2 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#1B4D3E] sm:p-6"
+              className="relative z-10 flex min-h-11 w-full flex-col items-start justify-end gap-2 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#4d8c8c] sm:p-6"
             >
-              <span className="text-xs font-semibold tabular-nums text-[#1B4D3E]">
+              <span className="text-xs font-semibold tabular-nums text-[#0b5c5c]">
                 {item.number}
               </span>
-              <span className="text-balance text-lg font-semibold leading-snug tracking-tight text-[#0B1F1A] sm:text-xl">
+              <span className="text-balance text-lg font-semibold leading-snug tracking-tight text-[#0b2e2e] sm:text-xl">
                 {item.title}
               </span>
             </button>
@@ -82,7 +82,7 @@ export function HorizontalAccordion({
                 aria-labelledby={triggerId}
                 className="relative z-0 px-5 pb-6 sm:px-6"
               >
-                <p className="max-w-xl text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+                <p className="max-w-xl text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
                   {item.body}
                 </p>
               </div>

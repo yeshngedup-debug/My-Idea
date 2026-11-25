@@ -282,8 +282,8 @@ export function ShortlistsClient({
           status
             ? `flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
                 status.ok
-                  ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-                  : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+                  ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+                  : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
               }`
             : 'sr-only'
         }
@@ -292,24 +292,24 @@ export function ShortlistsClient({
       </p>
 
       {!PAYMENT_CONFIGURED && (
-        <p role="alert" className="rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-3 text-sm text-[#b23c26]">
+        <p role="alert" className="rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-3 text-sm text-[#c2004b]">
           Payments are not configured yet. Shortlist orders are paused until the bank and mBoB details are published.
         </p>
       )}
 
-      <p className="text-xs text-[#657069]">
+      <p className="text-xs text-[#356464]">
         All amounts are in Bhutanese ngultrum (Nu).
       </p>
 
       {!isUnlocked && visibleStep === 'closed' && (
-        <Button type="button" onClick={() => setStep('package')} disabled={!PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+        <Button type="button" onClick={() => setStep('package')} disabled={!PAYMENT_CONFIGURED} className="w-full pressable bg-[#ff0063] font-semibold text-[#000000] hover:bg-[#d40054] h-12 text-base">
           Get Shortlist
         </Button>
       )}
 
       {visibleStep === 'package' && (
         <PanelEntrance id="order-form" className="space-y-3" skipInitial={skipInitial}>
-          <h2 className="text-base font-semibold text-[#17352b]">Choose a package</h2>
+          <h2 className="text-base font-semibold text-[#0b5c5c]">Choose a package</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {(Object.values(PACKAGES) as (typeof PACKAGES)[PackageId][]).map((pkg) => (
               <button
@@ -320,21 +320,21 @@ export function ShortlistsClient({
                   setAmount(String(pkg.defaultAmount));
                 }}
                 aria-pressed={chosenPackage === pkg.id}
-                className={`pressable rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                className={`pressable rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
                   chosenPackage === pkg.id
-                    ? 'border-[#17352b] bg-[#17352b]/6'
-                    : 'border-[#ded8cb] bg-[#fffefa] hover:bg-[#f5f2ea]'
+                    ? 'border-[#66bfbf] bg-[#0b5c5c]/6'
+                    : 'border-[#b9dede] bg-[#ffffff] hover:bg-[#eaf6f6]'
                 }`}
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-[#17352b]">{pkg.name}</h3>
-                  {chosenPackage === pkg.id && <span className="h-2.5 w-2.5 rounded-full bg-[#d84f37]" aria-hidden="true" />}
+                  <h3 className="text-base font-semibold text-[#0b5c5c]">{pkg.name}</h3>
+                  {chosenPackage === pkg.id && <span className="h-2.5 w-2.5 rounded-full bg-[#ff0063]" aria-hidden="true" />}
                 </div>
-                <p className="mb-3 text-sm font-semibold text-[#b23c26]">{pkg.priceRange}</p>
-                <ul className="space-y-1.5 text-xs text-[#657069]">
+                <p className="mb-3 text-sm font-semibold text-[#c2004b]">{pkg.priceRange}</p>
+                <ul className="space-y-1.5 text-xs text-[#356464]">
                   {pkg.features.map((f) => (
                     <li key={f} className="flex items-start gap-1.5">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#8d948e]" aria-hidden="true" />
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#356464]" aria-hidden="true" />
                       {f}
                     </li>
                   ))}
@@ -344,16 +344,16 @@ export function ShortlistsClient({
           </div>
 
           {chosenPackage && (
-            <div className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
+            <div className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
               <div>
-                <label htmlFor="order-project" className="block text-sm font-medium text-[#17352b] mb-2">
+                <label htmlFor="order-project" className="block text-sm font-medium text-[#0b5c5c] mb-2">
                   Attach to project (optional)
                 </label>
                 <select
                   id="order-project"
                   value={projectId}
                   onChange={(e) => setProjectId(e.target.value)}
-                  className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] focus:outline-none focus:ring-2 focus:ring-[#b23c26]/30 focus:border-[#b23c26]"
+                  className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] focus:outline-none focus:ring-2 focus:ring-[#c2004b]/30 focus:border-[#c2004b]"
                 >
                   <option value="">No specific project</option>
                   {projects.map((p) => (
@@ -362,7 +362,7 @@ export function ShortlistsClient({
                 </select>
               </div>
               <div>
-                <label htmlFor="order-amount" className="block text-sm font-medium text-[#17352b] mb-2">
+                <label htmlFor="order-amount" className="block text-sm font-medium text-[#0b5c5c] mb-2">
                   Amount you will pay (Nu)
                 </label>
                 <Input
@@ -375,7 +375,7 @@ export function ShortlistsClient({
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <Button type="button" onClick={handleCreateOrder} disabled={creating} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+              <Button type="button" onClick={handleCreateOrder} disabled={creating} className="w-full pressable bg-[#ff0063] font-semibold text-[#000000] hover:bg-[#d40054] h-12 text-base">
                 {creating ? 'Creating order...' : 'Continue to payment'}
               </Button>
             </div>
@@ -385,45 +385,45 @@ export function ShortlistsClient({
 
       {visibleStep === 'pay' && pendingOrder && (
         <PanelEntrance className="space-y-4" skipInitial={skipInitial}>
-          <h2 className="text-base font-semibold text-[#17352b]">
+          <h2 className="text-base font-semibold text-[#0b5c5c]">
             Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} -{' '}
             <span className="tabular-nums">{formatNuAmount(pendingOrder.amount)}</span>
           </h2>
 
           {openOrders.length > 1 && (
-            <p className="text-xs text-[#657069]">
+            <p className="text-xs text-[#356464]">
               You have {openOrders.length} orders awaiting payment. Open one
               under &quot;Your orders&quot; to continue it.
             </p>
           )}
 
-          <div className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
+          <div className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
             <div className="flex items-start gap-3">
               <div className="text-sm">
-                <p className="font-semibold text-[#17352b]">Bank transfer</p>
-                <p className="text-[#4c5a52]">
+                <p className="font-semibold text-[#0b5c5c]">Bank transfer</p>
+                <p className="text-[#356464]">
                   {PAYMENT_DETAILS.bank.bankName} - {PAYMENT_DETAILS.bank.branch}<br />
                   {PAYMENT_DETAILS.bank.accountName}
                   <br />
-                  A/C: <span className="font-mono text-[#17352b]">{PAYMENT_DETAILS.bank.accountNumber}</span>
+                  A/C: <span className="font-mono text-[#0b5c5c]">{PAYMENT_DETAILS.bank.accountNumber}</span>
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <div className="text-sm">
-                <p className="font-semibold text-[#17352b]">{PAYMENT_DETAILS.mbob.label}</p>
-                <p className="text-[#4c5a52]">
+                <p className="font-semibold text-[#0b5c5c]">{PAYMENT_DETAILS.mbob.label}</p>
+                <p className="text-[#356464]">
                   {PAYMENT_DETAILS.mbob.name}
                   <br />
-                  <span className="font-mono text-[#17352b]">{PAYMENT_DETAILS.mbob.number}</span>
+                  <span className="font-mono text-[#0b5c5c]">{PAYMENT_DETAILS.mbob.number}</span>
                 </p>
               </div>
             </div>
-            <p className="text-xs text-[#657069]">{PAYMENT_DETAILS.note}</p>
+            <p className="text-xs text-[#356464]">{PAYMENT_DETAILS.note}</p>
           </div>
 
-          <form onSubmit={handleUpload} className="space-y-4 rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
-            <h3 className="text-sm font-semibold text-[#17352b]">Upload payment screenshot</h3>
+          <form onSubmit={handleUpload} className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+            <h3 className="text-sm font-semibold text-[#0b5c5c]">Upload payment screenshot</h3>
             <input
               id="screenshot"
               name="screenshot"
@@ -433,16 +433,16 @@ export function ShortlistsClient({
               onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name ?? '')}
               className="peer sr-only"
             />
-            <label htmlFor="screenshot" className="flex min-h-11 items-center justify-center gap-2 w-full border border-dashed border-[#ded8cb] rounded-xl px-4 py-4 text-sm text-[#4c5a52] hover:border-[#17352b]/40 hover:text-[#17352b] transition-colors cursor-pointer peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#b23c26]">
+            <label htmlFor="screenshot" className="flex min-h-11 items-center justify-center gap-2 w-full border border-dashed border-[#b9dede] rounded-xl px-4 py-4 text-sm text-[#356464] hover:border-[#66bfbf]/40 hover:text-[#0b5c5c] transition-colors cursor-pointer peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#c2004b]">
               Choose image (PNG / JPG / WEBP)
             </label>
-            <p id="screenshot-help" className="text-xs text-[#657069]">
+            <p id="screenshot-help" className="text-xs text-[#356464]">
               Max 5 MB. {selectedFileName ? `Selected: ${selectedFileName}` : 'Choose a screenshot before submitting.'}
             </p>
-            <Button type="submit" disabled={uploading || !PAYMENT_CONFIGURED} className="w-full pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-12 text-base">
+            <Button type="submit" disabled={uploading || !PAYMENT_CONFIGURED} className="w-full pressable bg-[#ff0063] font-semibold text-[#000000] hover:bg-[#d40054] h-12 text-base">
               {uploading ? 'Submitting...' : 'Submit screenshot'}
             </Button>
-            <button type="button" onClick={startAnotherOrder} className="inline-flex min-h-11 items-center rounded text-sm text-[#657069] hover:text-[#17352b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+            <button type="button" onClick={startAnotherOrder} className="inline-flex min-h-11 items-center rounded text-sm text-[#356464] hover:text-[#0b5c5c] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
               Start a different order
             </button>
           </form>
@@ -451,7 +451,7 @@ export function ShortlistsClient({
 
       {orders.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-[#17352b]">Your orders</h2>
+          <h2 className="text-base font-semibold text-[#0b5c5c]">Your orders</h2>
           <ul className="space-y-2">
             {orders.map((o) => {
               const packageName = o.package === 'full' ? 'Full Support' : 'Basic';
@@ -462,12 +462,12 @@ export function ShortlistsClient({
               const isOpen = o.status === 'pending' || o.status === 'submitted';
 
               return (
-                <li key={o.id} className="bg-[#fffefa] border border-[#ded8cb] rounded-2xl p-4 space-y-3">
+                <li key={o.id} className="bg-[#ffffff] border border-[#b9dede] rounded-2xl p-4 space-y-3">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold truncate">
                       {packageName} shortlist - {projectTitle}
                     </p>
-                    <p className="text-xs tabular-nums text-[#657069]">
+                    <p className="text-xs tabular-nums text-[#356464]">
                       {formatNuAmount(o.amount)} - {orderDate}
                     </p>
                   </div>
@@ -480,7 +480,7 @@ export function ShortlistsClient({
                         setStatus(null);
                         setStep('pay');
                       }}
-                      className="inline-flex min-h-11 items-center rounded border border-[#ded8cb] px-3 text-sm text-[#17352b] hover:bg-[#f5f2ea] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                      className="inline-flex min-h-11 items-center rounded border border-[#b9dede] px-3 text-sm text-[#0b5c5c] hover:bg-[#eaf6f6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                     >
                       Continue payment
                     </button>
@@ -495,7 +495,7 @@ export function ShortlistsClient({
                     <a
                       href="#order-form"
                       onClick={startAnotherOrder}
-                      className="inline-flex min-h-11 items-center rounded text-sm text-[#b23c26] hover:text-[#17352b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                      className="inline-flex min-h-11 items-center rounded text-sm text-[#c2004b] hover:text-[#0b5c5c] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                     >
                       {ORDER_COPY.createNewOrder}
                     </a>
@@ -510,19 +510,19 @@ export function ShortlistsClient({
       {isUnlocked && (
         <section className="space-y-3">
           <div className="flex flex-wrap items-center gap-3">
-            <h2 className="text-base font-semibold text-[#17352b]">Your shortlist</h2>
+            <h2 className="text-base font-semibold text-[#0b5c5c]">Your shortlist</h2>
             {visibleStep === 'closed' && PAYMENT_CONFIGURED && (
               <Button
                 type="button"
                 onClick={startAnotherOrder}
-                className="pressable bg-[#17352b] font-semibold text-[#fffefa] hover:bg-[#244b3e] h-10 text-sm"
+                className="pressable bg-[#ff0063] font-semibold text-[#000000] hover:bg-[#d40054] h-10 text-sm"
               >
                 Order another shortlist
               </Button>
             )}
           </div>
           {students.length === 0 ? (
-            <p className="text-sm text-[#657069]">
+            <p className="text-sm text-[#356464]">
               {ORDER_COPY.shortlistPending}
             </p>
           ) : (
@@ -531,14 +531,14 @@ export function ShortlistsClient({
                 const studentName = s.full_name?.trim() || 'Student record';
 
                 return (
-                  <li key={s.shortlistId} className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
+                  <li key={s.shortlistId} className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-full bg-[#17352b] text-[#fffefa] font-semibold text-sm tabular-nums flex items-center justify-center shrink-0">
+                      <span className="w-7 h-7 rounded-full bg-[#66bfbf] text-[#0b2e2e] font-semibold text-sm tabular-nums flex items-center justify-center shrink-0">
                         {i + 1}
                       </span>
-                      <h3 className="truncate text-base font-semibold text-[#17352b]">{studentName}</h3>
+                      <h3 className="truncate text-base font-semibold text-[#0b5c5c]">{studentName}</h3>
                     </div>
-                    <p className="text-xs text-[#657069] mb-2">
+                    <p className="text-xs text-[#356464] mb-2">
                       {s.college}{s.course ? ` - ${s.course}` : ''}{s.year ? ` (${s.year} year)` : ''}{s.availability ? ` - ${AVAILABILITY_LABEL[s.availability] ?? s.availability}` : ''}
                     </p>
                     <div className="flex flex-wrap gap-1.5 mb-3">
@@ -548,7 +548,7 @@ export function ShortlistsClient({
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 text-sm">
                       {s.contact_email && (
-                        <a href={`mailto:${s.contact_email}`} className="break-all text-[#b23c26] underline-offset-2 hover:text-[#17352b] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+                        <a href={`mailto:${s.contact_email}`} className="break-all text-[#c2004b] underline-offset-2 hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           {s.contact_email}
                         </a>
                       )}
@@ -558,7 +558,7 @@ export function ShortlistsClient({
                           aria-label={`View ${studentName}'s CV (rank ${i + 1})`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex min-h-11 items-center gap-1.5 rounded text-[#17352b] hover:text-[#17352b] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                          className="inline-flex min-h-11 items-center gap-1.5 rounded text-[#0b5c5c] hover:text-[#0b5c5c] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                         >
                           View CV
                         </a>
@@ -572,9 +572,9 @@ export function ShortlistsClient({
         </section>
       )}
 
-      <section className="rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5">
-        <h2 className="text-sm font-semibold text-[#17352b] mb-1">Service agreement</h2>
-        <a href="/founder/shortlists/agreement" download className="inline-flex items-center gap-2 rounded-xl border border-[#ded8cb] px-4 py-2.5 text-sm font-semibold text-[#17352b] hover:bg-[#f5f2ea] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+      <section className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+        <h2 className="text-sm font-semibold text-[#0b5c5c] mb-1">Service agreement</h2>
+        <a href="/founder/shortlists/agreement" download className="inline-flex items-center gap-2 rounded-xl border border-[#b9dede] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
           Download agreement (PDF)
         </a>
       </section>

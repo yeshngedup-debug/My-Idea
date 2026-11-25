@@ -19,9 +19,9 @@ export default function ProjectsError({
     <div className="px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
       <div
         role="alert"
-        className="mx-auto max-w-xl rounded-2xl border border-[#b23c26]/25 bg-[#fffefa] p-6 text-center sm:p-8"
+        className="mx-auto max-w-xl rounded-2xl border border-[#c2004b]/25 bg-[#ffffff] p-6 text-center sm:p-8"
       >
-        <h1 className="text-xl font-semibold text-[#17352b]">
+        <h1 className="text-xl font-semibold text-[#0b5c5c]">
           Could not load your projects
         </h1>
         <p className="mt-2 text-sm text-body-secondary">
@@ -31,13 +31,13 @@ export default function ProjectsError({
           <button
             type="button"
             onClick={retry}
-            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#17352b] px-4 py-2 text-sm font-semibold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
           >
             Try again
           </button>
           <Link
             href="/founder"
-            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg border border-[#ded8cb] bg-[#fffefa] px-4 py-2 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
           >
             Back to overview
           </Link>

@@ -27,17 +27,17 @@ export function Accordion({ items, className }: AccordionProps) {
       {items.map((item, index) => (
         <details
           key={`${item.question}-${index}`}
-          className="group border-t border-[#18251f]/15 transition-colors duration-150 ease-[var(--ease-out)] last:border-b hover:bg-[#fffefa] open:bg-[#fffefa]"
+          className="group border-t border-[#0b2e2e]/15 transition-colors duration-150 ease-[var(--ease-out)] last:border-b hover:bg-[#ffffff] open:bg-[#ffffff]"
         >
-          <summary className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded-sm px-2 py-3 text-left text-base font-semibold leading-snug tracking-tight text-[#17352b] ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] [&::-webkit-details-marker]:hidden sm:text-lg`}>
+          <summary className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded-sm px-2 py-3 text-left text-base font-semibold leading-snug tracking-tight text-[#0b5c5c] ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] [&::-webkit-details-marker]:hidden sm:text-lg`}>
             <span>{item.question}</span>
             <CaretRight
               aria-hidden="true"
               weight="bold"
-              className="h-5 w-5 shrink-0 text-[#d84f37] transition-transform duration-250 ease-[var(--ease-out)] group-open:rotate-90 motion-reduce:transition-none"
+              className="h-5 w-5 shrink-0 text-[#ff0063] transition-transform duration-250 ease-[var(--ease-out)] group-open:rotate-90 motion-reduce:transition-none"
             />
           </summary>
-          <div className="px-2 pb-6 pr-10 text-sm leading-7 text-[#18251f]/75 sm:text-base">
+          <div className="px-2 pb-6 pr-10 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
             {item.answer}
           </div>
         </details>

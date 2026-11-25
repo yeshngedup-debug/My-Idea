@@ -273,7 +273,7 @@ export function AdminStudentsClient({
     <div className="space-y-4 pb-28">
       {/* Search + filters */}
       <div className="relative">
-        <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#17352b]/30 pointer-events-none" aria-hidden="true" />
+        <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#0b5c5c]/30 pointer-events-none" aria-hidden="true" />
         <Input
           type="search"
           value={query}
@@ -308,10 +308,10 @@ export function AdminStudentsClient({
               setPage(1);
             }}
             aria-pressed={verifiedFilter === f.value}
-            className={`pressable min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+            className={`pressable min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
               verifiedFilter === f.value
-                ? 'bg-amber-300 text-[#17352b]'
-                : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
+                ? 'bg-[#66bfbf] text-[#0b2e2e]'
+                : 'bg-[#eaf6f6] border border-[#b9dede] text-[#356464] hover:bg-[#0b5c5c]/10'
             }`}
           >
             {f.label}
@@ -322,7 +322,7 @@ export function AdminStudentsClient({
       <h2 className="sr-only">Student profiles</h2>
 
       {!loadError && filtered.length > 0 && (
-        <p className="text-xs text-[#657069]" role="status" aria-live="polite">
+        <p className="text-xs text-[#356464]" role="status" aria-live="polite">
           {`Showing ${(currentPage - 1) * STUDENTS_PER_PAGE + 1}–${Math.min(
             currentPage * STUDENTS_PER_PAGE,
             filtered.length
@@ -336,8 +336,8 @@ export function AdminStudentsClient({
           role={status.ok ? 'status' : 'alert'}
           className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
             status.ok
-              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-              : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+              : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
           }`}
         >
           {status.ok ? <CheckCircle className="w-4 h-4 shrink-0" /> : <Warning className="w-4 h-4 shrink-0" />}
@@ -350,10 +350,10 @@ export function AdminStudentsClient({
         <button
           type="button"
           onClick={toggleSelectAll}
-          className="pressable inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+          className="pressable inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
         >
           {allVisibleSelected ? (
-            <CheckSquare className="w-4 h-4 text-[#8a5a00]" />
+            <CheckSquare className="w-4 h-4 text-[#0b5c5c]" />
           ) : (
             <Square className="w-4 h-4" />
           )}
@@ -364,25 +364,25 @@ export function AdminStudentsClient({
       {/* Student cards */}
       {filtered.length === 0 ? (
         loadError ? (
-          <div role="alert" className="rounded-2xl border border-[#b23c26]/25 bg-[#b23c26]/8 p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#b23c26]">
+          <div role="alert" className="rounded-2xl border border-[#c2004b]/25 bg-[#ff0063]/8 p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#c2004b]">
               Students unavailable
             </h3>
-            <p className="mb-5 text-sm text-[#4c5a52]">{loadError}</p>
+            <p className="mb-5 text-sm text-[#356464]">{loadError}</p>
             <button
               type="button"
               onClick={() => router.refresh()}
-              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
             >
               Try again
             </button>
           </div>
         ) : (
-          <div className="bg-[#fffefa] border border-[#ded8cb] rounded-2xl p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+          <div className="bg-[#ffffff] border border-[#b9dede] rounded-2xl p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
               {students.length === 0 ? 'No students yet' : 'No students match'}
             </h3>
-            <p className="text-[#657069] text-sm">
+            <p className="text-[#356464] text-sm">
               {students.length === 0
                 ? 'Students appear here once they sign up and save a profile.'
                 : 'Adjust the search or filters.'}
@@ -395,7 +395,7 @@ export function AdminStudentsClient({
                   setVerifiedFilter('');
                   setPage(1);
                 }}
-                className="pressable mt-5 inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#fffefa] px-6 py-3 text-sm font-semibold text-[#17352b] hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+                className="pressable mt-5 inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
                 Clear filters
               </button>
@@ -414,8 +414,8 @@ export function AdminStudentsClient({
               <li
                 key={s.id}
                 aria-busy={savingRank || savingVerify}
-                className={`bg-[#fffefa] border rounded-2xl p-4 transition-colors ${
-                  isSelected ? 'border-[#d84f37]/40 bg-[#d84f37]/8' : 'border-[#ded8cb]'
+                className={`bg-[#ffffff] border rounded-2xl p-4 transition-colors ${
+                  isSelected ? 'border-[#ff0063]/40 bg-[#ff0063]/8' : 'border-[#b9dede]'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -425,18 +425,18 @@ export function AdminStudentsClient({
                     onClick={() => toggleSelect(s.id)}
                     aria-label={isSelected ? `Deselect ${displayName}` : `Select ${displayName}`}
                     aria-pressed={isSelected}
-                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                   >
                     {isSelected ? (
-                      <CheckSquare className="w-5 h-5 text-[#8a5a00]" aria-hidden="true" />
+                      <CheckSquare className="w-5 h-5 text-[#0b5c5c]" aria-hidden="true" />
                     ) : (
-                      <Square className="w-5 h-5 text-[#657069]" aria-hidden="true" />
+                      <Square className="w-5 h-5 text-[#356464]" aria-hidden="true" />
                     )}
                   </button>
 
                   {/* Rank */}
                   <div className="shrink-0">
-                    <label htmlFor={`rank-${s.id}`} className="block text-xs text-[#657069] mb-1 text-center">
+                    <label htmlFor={`rank-${s.id}`} className="block text-xs text-[#356464] mb-1 text-center">
                       Rank
                     </label>
                     <input
@@ -450,23 +450,23 @@ export function AdminStudentsClient({
                       onKeyDown={(e) => e.key === 'Enter' && saveRank(s.id)}
                       disabled={savingRank}
                       placeholder="-"
-                      className="w-14 h-11 rounded-xl bg-[#f5f2ea] border border-[#ded8cb] text-center text-[#17352b] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 [color-scheme:light]"
+                      className="w-14 h-11 rounded-xl bg-[#eaf6f6] border border-[#b9dede] text-center text-[#0b5c5c] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 [color-scheme:light]"
                     />
                   </div>
 
                   {/* Identity */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="truncate text-base font-semibold text-[#17352b]">
+                      <h3 className="truncate text-base font-semibold text-[#0b5c5c]">
                         {displayName}
                       </h3>
                       {isVerified ? (
-                        <SealCheck className="w-4 h-4 text-[#17352b] shrink-0" aria-hidden="true" />
+                        <SealCheck className="w-4 h-4 text-[#0b5c5c] shrink-0" aria-hidden="true" />
                       ) : (
-                        <Bag className="w-4 h-4 text-[#17352b]/30 shrink-0" aria-hidden="true" />
+                        <Bag className="w-4 h-4 text-[#0b5c5c]/30 shrink-0" aria-hidden="true" />
                       )}
                     </div>
-                    <p className="text-xs text-[#657069] truncate">
+                    <p className="text-xs text-[#356464] truncate">
                       {s.college}
                       {s.course ? ` - ${s.course}` : ''}
                       {s.year ? ` (${s.year})` : ''}
@@ -474,18 +474,18 @@ export function AdminStudentsClient({
                     {(s.skills?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {(s.skills ?? []).slice(0, 4).map((k) => (
-                          <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[10px] text-[#4c5a52]">
+                          <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[10px] text-[#356464]">
                             {k}
                           </Badge>
                         ))}
                         {(s.skills ?? []).length > 4 && (
-                          <Badge variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[10px] text-[#657069]">
+                          <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[10px] text-[#356464]">
                             +{(s.skills ?? []).length - 4}
                           </Badge>
                         )}
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-[#657069]">
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-[#356464]">
                       {s.availability && <span>{AVAILABILITY_LABEL[s.availability] ?? s.availability}</span>}
                       <span>
                         {(s.applications ?? 0) > 0
@@ -498,7 +498,7 @@ export function AdminStudentsClient({
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Open CV for ${displayName} in a new tab`}
-                          className="inline-flex min-h-11 items-center gap-1 rounded px-1 text-[#8a5a00] underline decoration-[#d84f37]/40 underline-offset-2 transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                          className="inline-flex min-h-11 items-center gap-1 rounded px-1 text-[#0b5c5c] underline decoration-[#ff0063]/40 underline-offset-2 transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                         >
                           <FileText className="w-3 h-3" aria-hidden="true" /> CV on file
                         </a>
@@ -514,10 +514,10 @@ export function AdminStudentsClient({
                     onClick={() => toggleVerified(s)}
                     disabled={savingVerify}
                     aria-busy={savingVerify}
-                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
                       isVerified
-                        ? 'border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b] hover:bg-[#17352b]/12'
-                        : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
+                        ? 'border border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c] hover:bg-[#0b5c5c]/12'
+                        : 'bg-[#eaf6f6] border border-[#b9dede] text-[#356464] hover:bg-[#0b5c5c]/10'
                     }`}
                   >
                     {isVerified ? (
@@ -544,11 +544,11 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-4 py-2 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#17352b]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
           >
             Previous
           </button>
-          <span aria-current="page" className="text-xs text-[#657069]">
+          <span aria-current="page" className="text-xs text-[#356464]">
             Page {currentPage} of {totalPages}
           </span>
           <button
@@ -556,7 +556,7 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-4 py-2 text-sm font-semibold text-[#17352b] transition-colors hover:bg-[#17352b]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
           >
             Next
           </button>
@@ -566,13 +566,13 @@ export function AdminStudentsClient({
       {/* Shortlist generation result */}
       {shortlistText && (
         <ResultEntrance>
-        <div className="bg-[#fffefa] border border-[#d84f37]/25 rounded-2xl p-5 space-y-3">
-          <h3 className="text-sm font-semibold text-[#8a5a00]">Generated shortlist</h3>
+        <div className="bg-[#ffffff] border border-[#ff0063]/25 rounded-2xl p-5 space-y-3">
+          <h3 className="text-sm font-semibold text-[#0b5c5c]">Generated shortlist</h3>
           <textarea
             readOnly
             value={shortlistText}
             rows={12}
-            className="w-full rounded-xl bg-[#f5f2ea] border border-[#ded8cb] p-4 text-xs text-[#17352b] font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+            className="w-full rounded-xl bg-[#eaf6f6] border border-[#b9dede] p-4 text-xs text-[#0b5c5c] font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
             aria-label="Generated shortlist text"
           />
           <div className="flex flex-col sm:flex-row gap-2">
@@ -580,14 +580,14 @@ export function AdminStudentsClient({
               <CopyButton
                 text={shortlistText}
                 label="Copy"
-                className="w-full rounded-xl border-amber-300 bg-amber-300 font-semibold text-[#17352b] hover:bg-amber-200"
+                className="w-full rounded-xl border-[#66bfbf] bg-[#eaf6f6] font-semibold text-[#0b5c5c] hover:bg-[#b9dede]"
               />
             </div>
             <Button
               type="button"
               onClick={downloadShortlist}
               variant="outline"
-              className="flex-1 border-[#ded8cb] bg-transparent text-[#17352b] hover:bg-[#17352b]/10 h-11"
+              className="flex-1 border-[#b9dede] bg-transparent text-[#0b5c5c] hover:bg-[#0b5c5c]/10 h-11"
             >
               <Download className="w-4 h-4 mr-1" aria-hidden="true" /> Download .txt
             </Button>
@@ -598,9 +598,9 @@ export function AdminStudentsClient({
 
       {/* Sticky action bar */}
       {selected.size > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#fffefa] border-t border-[#ded8cb] px-4 py-3">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#ffffff] border-t border-[#b9dede] px-4 py-3">
           <div className="max-w-2xl mx-auto space-y-2">
-            <p className="text-xs text-[#657069] text-center sm:text-left">
+            <p className="text-xs text-[#356464] text-center sm:text-left">
               {selected.size} {selected.size === 1 ? 'student' : 'students'} selected
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -611,7 +611,7 @@ export function AdminStudentsClient({
                   setProjectId('');
                 }}
                 aria-label="Choose founder"
-                className="min-w-0 flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] [&>option]:bg-[#fffefa]"
+                className="min-w-0 flex-1 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] [&>option]:bg-[#ffffff]"
               >
                 <option value="">Choose founder...</option>
                 {founders.map((f) => (
@@ -625,7 +625,7 @@ export function AdminStudentsClient({
                 onChange={(e) => setProjectId(e.target.value)}
                 aria-label="Choose project"
                 disabled={!founderId}
-                className="min-w-0 flex-1 rounded-xl border border-[#ded8cb] bg-[#f5f2ea] px-3 py-2.5 text-sm text-[#17352b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-40 [&>option]:bg-[#fffefa]"
+                className="min-w-0 flex-1 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40 [&>option]:bg-[#ffffff]"
               >
                 <option value="">No specific project</option>
                 {founderProjects.map((p) => (
@@ -638,7 +638,7 @@ export function AdminStudentsClient({
                 type="button"
                 onClick={handleGenerate}
                 disabled={generating || !founderId}
-                className="pressable bg-amber-300 text-[#17352b] font-semibold hover:bg-amber-200 h-11 shrink-0"
+                className="pressable bg-[#ff0063] text-[#000000] font-semibold hover:bg-[#d40054] h-11 shrink-0"
               >
                 <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                 {generating ? 'Generating...' : 'Generate'}

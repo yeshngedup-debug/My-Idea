@@ -108,7 +108,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
         <div>
           <label
             htmlFor="password"
-            className="mb-2 block text-sm font-semibold text-[#17352b]"
+            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
           >
             New password
           </label>
@@ -125,7 +125,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("password")}
             autoComplete="new-password"
             placeholder="Enter a new password"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
@@ -135,7 +135,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
         <div>
           <label
             htmlFor="confirmPassword"
-            className="mb-2 block text-sm font-semibold text-[#17352b]"
+            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
           >
             Confirm new password
           </label>
@@ -152,7 +152,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("confirmPassword")}
             autoComplete="new-password"
             placeholder="Enter the new password again"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
           />
           {errors.confirmPassword && (
             <FieldError id={confirmErrorId}>{errors.confirmPassword}</FieldError>

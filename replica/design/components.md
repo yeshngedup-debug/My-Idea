@@ -2,20 +2,22 @@
 
 Layout patterns are derived from the public reference; copy, media and brand remain BTC's own.
 
+Brand reference: teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`; derived roles ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b` and black `#000000` on magenta.
+
 ## Button
-- variants: primary (saffron fill, ink text), secondary (pine outline on paper), ghost (text + hover wash)
+- variants: primary (magenta fill, black text), secondary (teal outline on mist), ghost (text + hover wash)
 - sizes: 32 / 44 / 48px (44 is the default touch target)
 - states: default, hover, active `scale(0.98)` 120–160ms, focus-visible 2px ring, disabled, loading label retained
-- tokens: bg accent, text on-accent, radius pill, type sm/600
+- tokens: bg magenta, text black on magenta, radius pill, type sm/600
 - used on: all public pages and workspace headers
 
 ## SectionCard
-- variants: default (white surface, hairline border, radius 24), featured (gradient hairline border) one per page max
+- variants: default (white surface, hairline `#b9dede` border, radius 24), featured (gradient hairline border) one per page max
 - states: static
 - tokens: surface, border, radius lg, space 64–80 between cards
 
 ## PillLabel
-- variants: default (pine text on paper), accent (accent-text on paper)
+- variants: default (brand text on mist), accent (accent text on mist)
 - states: static
 - tokens: type xs/600, tracking .08em, radius pill
 
@@ -25,7 +27,7 @@ Layout patterns are derived from the public reference; copy, media and brand rem
 - tokens: surface, border, radius lg, soft gradient glow behind
 
 ## PricingCard
-- variants: default (surface + hairline), featured (solid pine or saffron with correct on-colour)
+- variants: default (white surface + `#b9dede` hairline), featured (solid teal or magenta with correct on-colour)
 - states: static
 - tokens: price from `src/config/payment.ts`, never hardcoded
 - a11y: heading hierarchy, list semantics, honest PAYMENT_CONFIGURED note

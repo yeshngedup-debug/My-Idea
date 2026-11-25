@@ -30,7 +30,7 @@ export function ShortlistPreview({
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <h2
             id="shortlist-preview-heading"
-            className="text-2xl font-semibold tracking-[-0.03em] text-[#17352b] sm:text-3xl"
+            className="text-2xl font-semibold tracking-[-0.03em] text-[#0b5c5c] sm:text-3xl"
           >
             What the shortlist looks like
           </h2>
@@ -38,13 +38,13 @@ export function ShortlistPreview({
             Sample, using local demo data
           </p>
         </div>
-        <div aria-hidden="true" className="mt-4 h-px w-12 bg-[#d84f37]" />
+        <div aria-hidden="true" className="mt-4 h-px w-12 bg-[#ff0063]" />
         <p className="mt-5 max-w-2xl text-sm leading-6 text-body-secondary">
           An admin confirms payment, finalizes and ranks the shortlist, then
           releases it. This is the founder view after that final step.
         </p>
 
-        <div className="mt-8 rounded-[1.5rem] border border-[#18251f]/15 bg-[#eae5d9] p-5 sm:p-7">
+        <div className="mt-8 rounded-[1.5rem] border border-[#0b2e2e]/15 bg-[#eaf6f6] p-5 sm:p-7">
           <p className="mb-3 text-xs font-semibold text-body-secondary">
             Payment confirmation
           </p>
@@ -59,8 +59,8 @@ export function ShortlistPreview({
             then finalizes and ranks the shortlist before release.
           </p>
 
-          <div className="mt-7 border-t border-[#ded8cb] pt-6">
-            <h3 className="text-base font-semibold text-[#17352b]">
+          <div className="mt-7 border-t border-[#b9dede] pt-6">
+            <h3 className="text-base font-semibold text-[#0b5c5c]">
               Ranked shortlist
             </h3>
             <ol className="mt-4 space-y-3">
@@ -103,11 +103,11 @@ export function ShortlistPreviewCompact({
           <p className="text-xs font-medium text-body-secondary">Sample</p>
           <h2
             id="shortlist-row-preview-heading"
-            className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.04] tracking-[-0.03em] text-[#17352b] sm:text-5xl"
+            className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.04] tracking-[-0.03em] text-[#0b5c5c] sm:text-5xl"
           >
             One row from the shortlist
           </h2>
-          <div aria-hidden="true" className="mt-5 h-px w-12 bg-[#d84f37]" />
+          <div aria-hidden="true" className="mt-5 h-px w-12 bg-[#ff0063]" />
           <p className="mt-5 max-w-lg text-sm leading-6 text-body-secondary">
             An admin ranks the students by hand. This row is a sample from the
             local demo seed, not a real order.
@@ -117,7 +117,7 @@ export function ShortlistPreviewCompact({
             <ShortlistRow student={first} rank={1} headingLevel="h3" />
           </ol>
 
-          <div className="mt-6 border-t border-[#18251f]/15 pt-5">
+          <div className="mt-6 border-t border-[#0b2e2e]/15 pt-5">
             <p className="text-xs font-semibold text-body-secondary">
               Payment confirmation
             </p>
@@ -129,7 +129,7 @@ export function ShortlistPreviewCompact({
         </div>
 
         <figure className="mx-auto w-full max-w-xl lg:max-w-none">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#342d20] sm:aspect-[5/4] lg:aspect-[4/5]">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#0b2e2e] sm:aspect-[5/4] lg:aspect-[4/5]">
             <Image
               src="/images/bhutanese-team.jpg"
               alt="Bhutanese students in kira performing in national dress"
@@ -138,13 +138,13 @@ export function ShortlistPreviewCompact({
               className="object-cover object-[50%_35%]"
             />
           </div>
-          <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-[#5e554a]">
-            <span className="font-medium text-[#17352b]">
+          <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-[#356464]">
+            <span className="font-medium text-[#0b5c5c]">
               Bhutanese students in kira
             </span>
             <PhotoCredit fileUrl={PHOTO_CREDITS.market} />
           </figcaption>
-          <p className="mt-2 text-xs leading-5 text-[#5e554a]">
+          <p className="mt-2 text-xs leading-5 text-[#356464]">
             These photographs show Bhutanese places, not platform listings or
             members.
           </p>

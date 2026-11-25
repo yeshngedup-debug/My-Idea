@@ -11,25 +11,25 @@
   color-scheme: light;
   themecontroller: false;
 
-  --color-base-100: #f5f2ea;
-  --color-base-200: #eae5d9;
-  --color-base-300: #ded8cb;
-  --color-base-content: #18251f;
-  --color-primary: #17352b;
-  --color-primary-content: #fffefa;
-  --color-secondary: #eae5d9;
-  --color-secondary-content: #25352d;
-  --color-accent: #e8a317;
-  --color-accent-content: #0b1f1a;
-  --color-neutral: #17352b;
-  --color-neutral-content: #fffefa;
-  --color-info: #2563eb;
-  --color-info-content: #ffffff;
-  --color-success: #1b4d3e;
+  --color-base-100: #eaf6f6;
+  --color-base-200: #eaf6f6;
+  --color-base-300: #b9dede;
+  --color-base-content: #0b2e2e;
+  --color-primary: #0b5c5c;
+  --color-primary-content: #ffffff;
+  --color-secondary: #66bfbf;
+  --color-secondary-content: #0b2e2e;
+  --color-accent: #ff0063;
+  --color-accent-content: #000000;
+  --color-neutral: #0b2e2e;
+  --color-neutral-content: #ffffff;
+  --color-info: #66bfbf;
+  --color-info-content: #0b2e2e;
+  --color-success: #0b5c5c;
   --color-success-content: #ffffff;
-  --color-warning: #e8a317;
-  --color-warning-content: #0b1f1a;
-  --color-error: #b23c26;
+  --color-warning: #ff0063;
+  --color-warning-content: #000000;
+  --color-error: #c2004b;
   --color-error-content: #ffffff;
 
   --radius-selector: 999px;
@@ -43,70 +43,75 @@
 }
 
 @theme inline {
-  --color-background: #f5f2ea;
-  --color-foreground: #18251f;
-  --color-card: #fffefa;
-  --color-card-foreground: #18251f;
-  --color-popover: #fffefa;
-  --color-popover-foreground: #18251f;
-  --color-primary: #17352b;
-  --color-primary-foreground: #fffefa;
-  --color-secondary: #eae5d9;
-  --color-secondary-foreground: #25352d;
-  --color-muted: #eeeae1;
-  --color-muted-foreground: #657069;
-  --color-accent: #d84f37;
-  --color-accent-foreground: #fffefa;
+  --color-background: #eaf6f6;
+  --color-foreground: #0b2e2e;
+  --color-card: #ffffff;
+  --color-card-foreground: #0b2e2e;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0b2e2e;
+  /* Dark teal is the legible brand text role on mist and white. Core teal
+     #66bfbf is decorative only and lives in --color-brand below. */
+  --color-primary: #0b5c5c;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #eaf6f6;
+  --color-secondary-foreground: #0b2e2e;
+  --color-muted: #eaf6f6;
+  --color-muted-foreground: #356464;
+  --color-accent: #ff0063;
+  --color-accent-foreground: #000000;
   /* Deep accent for small text and focus rings. Mirrors
      colors.smallTextAccent in lib/design-tokens.ts. */
-  --color-accent-deep: #b23c26;
-  --color-destructive: hsl(0 84.2% 60.2%);
-  --color-destructive-foreground: #fffefa;
-  --color-border: #ded8cb;
-  --color-input: #ded8cb;
-  --color-ring: #d84f37;
+  --color-accent-deep: #c2004b;
+  --color-destructive: #c2004b;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #b9dede;
+  --color-input: #4d8c8c;
+  --color-ring: #c2004b;
+  /* Core teal: decorative fills, borders and structure. Use --color-primary
+     for text on light surfaces; core teal on white is not a text colour. */
+  --color-brand: #66bfbf;
   /* Semantic body copy roles. Replaces opacity-derived greys that fell below
-     4.5:1. Secondary is #56645c (5.57:1 on paper). */
-  --color-body: #18251f;
-  --color-body-secondary: #56645c;
-  /* Quiet ink for metadata and inactive controls on paper. */
-  --color-ink-soft: #4c5a52;
-  /* The single filled CTA. Role tokens: yellow on forest ink. Mirrors
-     colors.cta / ctaHover / onCta in lib/design-tokens.ts. Forest stays
-     --color-primary so the app's quiet dark actions keep their meaning. */
-  --color-cta: #fbbf24;
-  --color-cta-hover: #e7b648;
-  --color-cta-foreground: #17352b;
-  /* One stronger edge for grouped surfaces on cream. Mirrors
+     4.5:1. Secondary is #356464 (legible on mist and white). */
+  --color-body: #0b2e2e;
+  --color-body-secondary: #356464;
+  /* Quiet ink for metadata and inactive controls on light surfaces. */
+  --color-ink-soft: #356464;
+  /* The single filled CTA. Role tokens: magenta with black text, since white
+     on magenta fails AA. Mirrors colors.cta / ctaHover / onCta in
+     lib/design-tokens.ts. --color-primary stays the quiet dark teal role. */
+  --color-cta: #ff0063;
+  --color-cta-hover: #d40054;
+  --color-cta-foreground: #000000;
+  /* One stronger edge for grouped surfaces on mist. Mirrors
      colors.borderStrong in lib/design-tokens.ts. */
-  --color-border-strong: #cfc6b6;
+  --color-border-strong: #4d8c8c;
   /* Two soft, offset elevation steps. Mirrors elevation.card/cardRaised in
      lib/design-tokens.ts: base groups read fast, raised marks importance. */
-  --shadow-card: 0 1px 2px rgb(24 37 31 / 0.06), 0 1px 3px rgb(24 37 31 / 0.04);
-  --shadow-card-raised: 0 6px 18px rgb(24 37 31 / 0.09), 0 2px 6px rgb(24 37 31 / 0.05);
+  --shadow-card: 0 1px 2px rgb(11 46 46 / 0.06), 0 1px 3px rgb(11 46 46 / 0.04);
+  --shadow-card-raised: 0 6px 18px rgb(11 46 46 / 0.09), 0 2px 6px rgb(11 46 46 / 0.05);
   --radius: 0.5rem;
 }
 
 :root {
-  --background: 42 32% 94%;
-  --foreground: 150 17% 12%;
-  --card: 48 100% 100%;
-  --card-foreground: 150 17% 12%;
-  --popover: 48 100% 100%;
-  --popover-foreground: 150 17% 12%;
-  --primary: 155 40% 15%;
-  --primary-foreground: 48 100% 100%;
-  --secondary: 42 25% 91%;
-  --secondary-foreground: 145 18% 18%;
-  --muted: 42 23% 92%;
-  --muted-foreground: 140 7% 42%;
-  --accent: 9 66% 53%;
-  --accent-foreground: 48 100% 100%;
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: 48 100% 100%;
-  --border: 40 22% 83%;
-  --input: 40 22% 83%;
-  --ring: 9 66% 53%;
+  --background: 180 40% 94%;
+  --foreground: 180 61% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 180 61% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 180 61% 11%;
+  --primary: 180 79% 20%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 180 40% 94%;
+  --secondary-foreground: 180 61% 11%;
+  --muted: 180 40% 94%;
+  --muted-foreground: 180 31% 30%;
+  --accent: 337 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 337 100% 38%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 180 36% 80%;
+  --input: 180 29% 43%;
+  --ring: 337 100% 38%;
   --radius: 0.5rem;
 
   /* One easing curve and three durations, mirrored in the motion constants. */
@@ -118,7 +123,7 @@
 
 @layer base {
   /* Tailwind's default ring-offset colour is white, which is nearly invisible
-     on our warm paper. Components that sit on forest set their own explicit
+     on the mist page. Components that sit on dark teal set their own explicit
      ring-offset colour and win in the utilities layer. */
   :root {
     --tw-ring-offset-color: var(--color-background);
@@ -165,8 +170,8 @@
     text-wrap: pretty;
   }
 
-  /* Browser surfaces belong to the palette too: a warm, legible selection
-     instead of the default blue on cream. */
+  /* Browser surfaces belong to the palette too: a legible magenta selection
+     with black text instead of the default blue. */
   ::selection {
     background-color: var(--color-cta);
     color: var(--color-cta-foreground);
@@ -197,10 +202,10 @@
    scrolled state only deepens the tint; it never adds a shadow. */
 .site-chrome {
   position: relative;
-  background-color: rgb(245 242 234 / 0.94);
+  background-color: rgb(234 246 246 / 0.94);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgb(24 37 31 / 0.08);
+  border-bottom: 1px solid rgb(11 46 46 / 0.08);
   transition: background-color var(--duration-250) var(--ease-out);
 }
 .site-chrome[data-scrolled="true"] {

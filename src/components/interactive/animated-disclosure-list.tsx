@@ -93,7 +93,7 @@ export function AnimatedDisclosureList({
             data-expanded={open}
             className={cn(
               "group border-t last:border-b",
-              dark ? "border-white/15" : "border-[#18251f]/15",
+              dark ? "border-white/15" : "border-[#0b2e2e]/15",
             )}
           >
             <button
@@ -105,8 +105,8 @@ export function AnimatedDisclosureList({
               className={cn(
                 "flex min-h-11 w-full items-center justify-between gap-4 rounded-sm px-2 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
                 dark
-                  ? "focus-visible:ring-[#fbbf24] focus-visible:ring-offset-[#17352b]"
-                  : "focus-visible:ring-[#d84f37] focus-visible:ring-offset-[#f5f2ea]",
+                  ? "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#0b5c5c]"
+                  : "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#eaf6f6]",
               )}
             >
               <span className="min-w-0 flex-1">{item.trigger}</span>
@@ -117,7 +117,7 @@ export function AnimatedDisclosureList({
                 strokeWidth={1.5}
                 className={cn(
                   "h-4 w-4 shrink-0 transition-transform duration-200 ease-out group-data-[expanded=true]:rotate-90 motion-reduce:transition-none",
-                  dark ? "text-[#e7b648]" : "text-[#b23c26]",
+                  dark ? "text-[#66bfbf]" : "text-[#c2004b]",
                 )}
               />
             </button>
@@ -148,7 +148,7 @@ export function AnimatedDisclosureList({
                   <div
                     className={cn(
                       "px-2 pb-5 pr-8 text-sm leading-7 sm:text-base",
-                      dark ? "text-white/70" : "text-[#18251f]/70",
+                      dark ? "text-white/70" : "text-[#0b2e2e]/70",
                     )}
                   >
                     {item.children}

@@ -90,7 +90,7 @@ export function PinnedScrollChapter({
             ref={titleColumn}
             data-pinned-title=""
             data-pin-progress="static"
-            className="self-start lg:border-t lg:border-[#17352b]/15 lg:pt-6 lg:pr-6"
+            className="self-start lg:border-t lg:border-[#66bfbf]/15 lg:pt-6 lg:pr-6"
           >
             {title}
           </div>

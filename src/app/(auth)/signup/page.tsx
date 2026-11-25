@@ -3,7 +3,6 @@ import Link from "next/link";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { SignupForm } from "@/features/auth/components/signup-form";
 import { displayFont, focusRing } from "@/features/auth/components/styles";
-import { colors } from "@/lib/design-tokens";
 
 export const metadata = {
   title: "Create an account",
@@ -26,7 +25,7 @@ const GENERIC_ERROR = "We couldn't create your account. Please try again.";
 
 /** Named token exposed as a CSS variable so hover utilities still win. */
 const smallAccentStyle = {
-  "--link-accent": colors.smallTextAccent,
+  "--link-accent": "#c2004b",
 } as CSSProperties;
 
 export default async function SignupPage({
@@ -40,7 +39,7 @@ export default async function SignupPage({
     <AuthShell>
       <h2
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-primary"
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
       >
         Create your account
       </h2>
@@ -49,22 +48,22 @@ export default async function SignupPage({
         <SignupForm serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined} />
       </div>
 
-      <p className="mt-6 text-center text-sm leading-6 text-body-secondary sm:mt-7">
+      <p className="mt-6 text-center text-sm leading-6 text-[#356464] sm:mt-7">
         <Link
           href="/contact"
           style={smallAccentStyle}
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[var(--link-accent)] underline decoration-accent/40 underline-offset-4 hover:text-accent ${focusRing}`}
+          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[var(--link-accent)] underline decoration-[#ff0063]/40 underline-offset-4 hover:text-[#ff0063] ${focusRing}`}
         >
           Ask for founder access
         </Link>
-        <span aria-hidden="true" className="mx-2 text-slate-400">
+        <span aria-hidden="true" className="mx-2 text-[#356464]">
           ·
         </span>
         Already have an account?{" "}
         <Link
           href="/login"
           style={smallAccentStyle}
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-primary underline decoration-accent underline-offset-4 hover:text-[var(--link-accent)] ${focusRing}`}
+          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] underline-offset-4 hover:text-[#c2004b] ${focusRing}`}
         >
           Log in
         </Link>

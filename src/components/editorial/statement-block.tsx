@@ -33,9 +33,9 @@ export function StatementBlock({
       <div className={cn("mx-auto", centered ? "max-w-5xl" : "max-w-6xl")}>
         <span
           aria-hidden="true"
-          className={cn("mb-6 block h-px w-10 bg-[#b23c26] sm:mb-8", centered && "mx-auto")}
+          className={cn("mb-6 block h-px w-10 bg-[#ff0063] sm:mb-8", centered && "mx-auto")}
         />
-        <h2 className="text-balance text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-[#17352b]">
+        <h2 className="text-balance text-[clamp(2.5rem,6vw,5.5rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-[#0b5c5c]">
           {statement}
         </h2>
         {support ? (

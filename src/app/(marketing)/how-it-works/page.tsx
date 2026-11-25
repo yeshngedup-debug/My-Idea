@@ -43,15 +43,15 @@ const YOUTH_CREDIT =
   "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg";
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
-const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
-const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
+const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054]/85 motion-reduce:transition-none ${focusRing}`;
+const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#0b5c5c] underline decoration-[#0b5c5c]/30 underline-offset-4 transition-colors hover:text-[#0b2e2e] motion-reduce:transition-none ${focusRing}`;
 const bandClass =
   "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
 const headingClass =
-  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]";
+  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]";
 const bodyClass =
-  "max-w-2xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8";
+  "max-w-2xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8";
 const bentoClass = "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
 const imageZoom =
   "object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
@@ -177,17 +177,17 @@ export default function HowItWorksPage() {
       <SiteHeader />
       <main
         id="main-content"
-        className="w-full max-w-full overflow-x-hidden bg-[#F7F4EE] text-[#0B1F1A]"
+        className="w-full max-w-full overflow-x-hidden bg-[#eaf6f6] text-[#0b2e2e]"
       >
         {/* Editorial split hero: copy left, one credited photograph right. */}
         <section className="w-full max-w-full overflow-x-hidden px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
           <div className="mx-auto w-full max-w-6xl">
             <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
               <HeroCopyEntrance>
-                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0B1F1A]">
+                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
                   Founders post the brief. Students do the work.
                 </h1>
-                <p className="mt-8 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8">
+                <p className="mt-8 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8">
                   Three steps connect a founder&apos;s scoped project with a
                   student ready to build.
                 </p>
@@ -202,7 +202,7 @@ export default function HowItWorksPage() {
               </HeroCopyEntrance>
 
               <HeroPhotoEntrance>
-                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-[#0B1F1A]">
+                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-[#0b2e2e]">
                   <Image
                     src="/images/bhutanese-students.jpg"
                     alt="Young Bhutanese people in gho and kira working together at computers"
@@ -225,7 +225,7 @@ export default function HowItWorksPage() {
                   <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
                     <PhotoCredit
                       fileUrl={YOUTH_CREDIT}
-                      className="text-[#F7F4EE]/90"
+                      className="text-[#eaf6f6]/90"
                     />
                   </figcaption>
                 </figure>
@@ -239,7 +239,7 @@ export default function HowItWorksPage() {
             <ScrubbedTextReveal
               as="p"
               text="The brief stays the reference point."
-              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#1B4D3E]"
+              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#0b5c5c]"
             />
           </div>
         </section>
@@ -247,20 +247,20 @@ export default function HowItWorksPage() {
         {/* Chapter wayfinding — palette scoped to BTC tokens. */}
         <ChapterProgress
           chapters={guideChapters}
-          className="border-[#1B4D3E]/15 bg-white [&_a]:text-[#0B1F1A] [&_a]:focus-visible:ring-[#1B4D3E] [&_a]:focus-visible:ring-offset-[#F7F4EE] [&_a[aria-current]]:decoration-[#E8A317] [&_[data-chapter-bar]]:bg-[#E8A317]"
+          className="border-[#b9dede]/15 bg-white [&_a]:text-[#000000] [&_a]:focus-visible:ring-[#4d8c8c] [&_a]:focus-visible:ring-offset-[#eaf6f6] [&_a[aria-current]]:decoration-[#ff0063] [&_[data-chapter-bar]]:bg-[#ff0063]"
         />
 
         <PinnedScrollChapter
           id="journey"
           labelledBy="journey-heading"
-          className="w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12 [&_[data-pinned-title]]:border-[#1B4D3E]/15"
+          className="w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12 [&_[data-pinned-title]]:border-[#b9dede]/15"
           title={
             <Reveal>
-              <div className="rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 sm:p-8">
+              <div className="rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:p-8">
                 <h2 id="journey-heading" className={headingClass}>
                   Three steps, one clear brief
                 </h2>
-                <p className="mt-6 text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+                <p className="mt-6 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
                   Each step keeps the work focused and the expectations visible
                   to everyone involved.
                 </p>
@@ -299,16 +299,16 @@ export default function HowItWorksPage() {
               <Reveal
                 key={column.heading}
                 delay={index * 0.08}
-                className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 sm:p-8"
+                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 sm:p-8"
               >
-                <h3 className="text-sm font-semibold text-[#1B4D3E]">
+                <h3 className="text-sm font-semibold text-[#0b5c5c]">
                   {column.heading}
                 </h3>
                 <ul className="mt-7 space-y-5">
                   {column.items.map((item) => (
                     <li
                       key={item}
-                      className="border-b border-[#1B4D3E]/15 pb-4 text-lg font-medium leading-7 text-[#0B1F1A] sm:text-xl"
+                      className="border-b border-[#b9dede]/15 pb-4 text-lg font-medium leading-7 text-[#0b2e2e] sm:text-xl"
                     >
                       {item}
                     </li>
@@ -320,7 +320,7 @@ export default function HowItWorksPage() {
 
           <Reveal className="mt-14">
             <GsapScaleFadeImage>
-              <figure className="group relative isolate aspect-[21/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
+              <figure className="group relative isolate aspect-[21/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e]">
                 <Image
                   src="/images/bhutanese-community.jpg"
                   alt="Bhutanese boys in traditional gho sitting together"
@@ -330,15 +330,15 @@ export default function HowItWorksPage() {
                 />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
+                  className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
                 />
                 <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                  <span className="text-sm font-medium text-[#F7F4EE]">
+                  <span className="text-sm font-medium text-[#eaf6f6]">
                     The people the work is built around
                   </span>
                   <PhotoCredit
                     fileUrl={PHOTO_CREDITS.dzong}
-                    className="text-[#F7F4EE]/90"
+                    className="text-[#eaf6f6]/90"
                   />
                 </figcaption>
               </figure>
@@ -349,7 +349,7 @@ export default function HowItWorksPage() {
         <SectionCard id="place" labelledBy="place-heading">
           <Reveal>
             <GsapScaleFadeImage>
-              <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A] sm:aspect-[21/9]">
+              <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e] sm:aspect-[21/9]">
                 <Image
                   src="/images/bhutanese-team.jpg"
                   alt="Bhutanese students in kira performing in national dress"
@@ -359,12 +359,12 @@ export default function HowItWorksPage() {
                 />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
+                  className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
                 />
                 <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
                   <PhotoCredit
                     fileUrl={MARKET_CREDIT}
-                    className="text-[#F7F4EE]/90"
+                    className="text-[#eaf6f6]/90"
                   />
                 </figcaption>
               </figure>
@@ -375,7 +375,7 @@ export default function HowItWorksPage() {
               <h2 id="place-heading" className={headingClass}>
                 Built for work here
               </h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+              <p className="mt-5 max-w-xl text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
                 The platform connects Bhutanese students with startup founders;
                 these photographs show Bhutanese places, not platform listings or
                 members.
@@ -385,7 +385,7 @@ export default function HowItWorksPage() {
               <Link href="/for-students" className={quietLink}>
                 See the student path
               </Link>
-              <PhotoCredit fileUrl={MARKET_CREDIT} className="text-[#0B1F1A]/70" />
+              <PhotoCredit fileUrl={MARKET_CREDIT} className="text-[#0b2e2e]/70" />
             </div>
           </div>
         </SectionCard>
@@ -405,15 +405,15 @@ export default function HowItWorksPage() {
               <Reveal
                 key={rule.title}
                 delay={index * 0.08}
-                className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-4 sm:p-8"
+                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-4 sm:p-8"
               >
-                <span className="text-sm font-semibold tabular-nums text-[#1B4D3E]">
+                <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-6 text-balance text-xl font-semibold leading-snug text-[#0B1F1A]">
+                <h3 className="mt-6 text-balance text-xl font-semibold leading-snug text-[#0b2e2e]">
                   {rule.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/75">
+                <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/75">
                   {rule.body}
                 </p>
               </Reveal>
@@ -428,7 +428,7 @@ export default function HowItWorksPage() {
                 <h2 id="shortlist-heading" className={headingClass}>
                   What happens after a shortlist
                 </h2>
-                <p className="mt-6 text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+                <p className="mt-6 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">
                   The handoff stays explicit so founders and students know where
                   they stand.
                 </p>
@@ -443,12 +443,12 @@ export default function HowItWorksPage() {
                 {afterShortlist.map((item) => (
                   <div
                     key={item.title}
-                    className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-4 sm:p-8"
+                    className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-4 sm:p-8"
                   >
-                    <h3 className="text-balance text-lg font-semibold leading-snug text-[#0B1F1A] sm:text-xl">
+                    <h3 className="text-balance text-lg font-semibold leading-snug text-[#0b2e2e] sm:text-xl">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/75">
+                    <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/75">
                       {item.body}
                     </p>
                   </div>
@@ -462,8 +462,8 @@ export default function HowItWorksPage() {
           aria-label="Keep reading"
           className="w-full max-w-full overflow-x-hidden px-5 pb-10 sm:px-8 lg:px-12"
         >
-          <Reveal className="mx-auto flex w-full max-w-6xl flex-col gap-6 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-            <p className="text-base font-semibold text-[#0B1F1A]">
+          <Reveal className="mx-auto flex w-full max-w-6xl flex-col gap-6 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <p className="text-base font-semibold text-[#0b2e2e]">
               Still have questions?
             </p>
             <div className="flex flex-wrap gap-x-10 gap-y-3">
@@ -480,11 +480,11 @@ export default function HowItWorksPage() {
         {/* Closing band: one saffron action. */}
         <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
           <Reveal className="mx-auto w-full max-w-6xl">
-            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-white px-6 py-24 text-left sm:px-12">
-              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
+            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-white px-6 py-24 text-left sm:px-12">
+              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]">
                 Start with one clear project
               </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg">
+              <p className="mt-6 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg">
                 Bring a focused brief and meet students ready to build.
               </p>
               <Link href="/contact" className={cn(primaryCta, "mt-8")}>

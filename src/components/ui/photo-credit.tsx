@@ -42,7 +42,7 @@ export function PhotoCredit({
         href={fileUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={`inline-flex min-h-6 items-center rounded-sm underline underline-offset-2 ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]`}
+        className={`inline-flex min-h-6 items-center rounded-sm underline underline-offset-2 ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b5c5c]`}
       >
         {credit.author} / Wikimedia Commons
       </a>{" "}
@@ -51,7 +51,7 @@ export function PhotoCredit({
         href={credit.licenceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={`inline-flex min-h-6 items-center rounded-sm underline underline-offset-2 ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#17352b]`}
+        className={`inline-flex min-h-6 items-center rounded-sm underline underline-offset-2 ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b5c5c]`}
       >
         {credit.licence}
       </a>

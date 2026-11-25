@@ -8,6 +8,8 @@ Audit date: 2026-11-24. Source of truth: current working tree (branch `main`, ba
 
 > **Historical note (2026-11-25):** this audit was written when Supabase was the Auth and Storage provider. The app now runs entirely on Neon (Managed Better Auth, Postgres, Object Storage, Realtime, Functions); the Supabase references below record the state at audit time and are not current setup instructions. Password hashes could not migrate, so existing users re-registered and application user IDs changed.
 
+> **Brand note (2026-11-25):** the auth screens and their documentation now use the BTC palette — teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063` — with derived roles ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b` and black `#000000` on magenta. This is presentation only: validation, redirects, cookie checks, action names, ARIA, focus management, pending labels and copy are unchanged.
+
 ---
 
 ## 0. Remediation applied (same day)

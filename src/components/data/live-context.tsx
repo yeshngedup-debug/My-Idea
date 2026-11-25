@@ -42,7 +42,7 @@ type LiveState = {
 };
 
 const sourceLink =
-  "font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] motion-reduce:transition-none";
+  "font-semibold text-[#c2004b] underline decoration-[#ff0063]/30 underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] motion-reduce:transition-none";
 
 function absoluteLabel(iso: string): string {
   if (!/^\d{4}-\d{2}-\d{2}T/.test(iso)) return "time unknown";
@@ -158,7 +158,7 @@ function RefreshControls({
   onToggle: () => void;
 }) {
   const control =
-    "inline-flex min-h-11 items-center rounded-lg border border-[#17352b]/15 bg-[#fffefa]/70 px-3 text-xs font-medium text-[#17352b] transition-colors hover:border-[#17352b]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] disabled:cursor-wait disabled:opacity-60";
+    "inline-flex min-h-11 items-center rounded-lg border border-[#66bfbf]/15 bg-[#ffffff]/70 px-3 text-xs font-medium text-[#0b5c5c] transition-colors hover:border-[#66bfbf]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] disabled:cursor-wait disabled:opacity-60";
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -243,7 +243,7 @@ function UnavailableNote({
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[#18251f]/10 bg-[#f5f2ea] px-4 py-2.5 text-xs leading-5 text-body-secondary"
+      className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-[#0b2e2e]/10 bg-[#eaf6f6] px-4 py-2.5 text-xs leading-5 text-body-secondary"
     >
       <span>Could not check for updates. Showing the last available figures.</span>
       <button
@@ -251,7 +251,7 @@ function UnavailableNote({
         onClick={onRefresh}
         disabled={refreshing}
         aria-busy={refreshing}
-        className="inline-flex min-h-6 items-center rounded-sm font-medium text-[#b23c26] underline underline-offset-2 transition-colors duration-150 ease-[var(--ease-out)] hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60"
+        className="inline-flex min-h-6 items-center rounded-sm font-medium text-[#c2004b] underline underline-offset-2 transition-colors duration-150 ease-[var(--ease-out)] hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] motion-reduce:transition-none disabled:cursor-wait disabled:opacity-60"
       >
         {refreshing ? "Refreshing…" : "Refresh"}
       </button>
@@ -280,7 +280,7 @@ function PartialDataNote({
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className="mt-6 rounded-lg border border-[#18251f]/15 bg-[#f5f2ea] px-4 py-3 text-sm leading-6 text-[#17352b]"
+      className="mt-6 rounded-lg border border-[#0b2e2e]/15 bg-[#eaf6f6] px-4 py-3 text-sm leading-6 text-[#0b5c5c]"
     >
       <p className="font-semibold">This check is incomplete.</p>
       {missing.length > 0 ? (
@@ -308,10 +308,10 @@ function IndicatorItem({
   compact: boolean;
 }) {
   return (
-    <div className={compact ? "" : "border-t border-[#18251f]/10 pt-5"}>
+    <div className={compact ? "" : "border-t border-[#0b2e2e]/10 pt-5"}>
       <dt
         className={cn(
-          "font-semibold tracking-[-0.06em] text-[#17352b]",
+          "font-semibold tracking-[-0.06em] text-[#0b5c5c]",
           compact
             ? "text-2xl leading-none"
             : "text-[clamp(2.25rem,4.5vw,3.5rem)] leading-none",
@@ -320,7 +320,7 @@ function IndicatorItem({
         {indicator.displayValue}
       </dt>
       <dd className={cn("mt-3", compact ? "text-xs leading-5" : "text-sm leading-6")}>
-        <span className="block font-semibold text-[#17352b]">
+        <span className="block font-semibold text-[#0b5c5c]">
           {indicator.name}
         </span>
         <span className="mt-1 block text-xs leading-5 text-body-secondary">
@@ -333,8 +333,8 @@ function IndicatorItem({
 
 function WhyTwoNumbers({ youth }: { youth: LiveIndicator }) {
   return (
-    <div id="why-two-numbers" className="mt-9 border-t border-[#18251f]/15 pt-6">
-      <p className="text-sm font-semibold text-[#17352b]">Why two numbers?</p>
+    <div id="why-two-numbers" className="mt-9 border-t border-[#0b2e2e]/15 pt-6">
+      <p className="text-sm font-semibold text-[#0b5c5c]">Why two numbers?</p>
       <p className="mt-2 max-w-3xl text-xs leading-5 text-body-secondary">
         The press release reports {YOUTH_UNEMPLOYMENT.value} youth unemployment.
         The API series is a modeled ILO estimate of {youth.displayValue} for{" "}
@@ -388,7 +388,7 @@ function FullPanel({
       id="auto-refreshing-statistics"
       aria-labelledby="auto-refreshing-heading"
       className={cn(
-        "border-t border-[#18251f]/15 bg-[#eae5d9] px-5 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20",
+        "border-t border-[#0b2e2e]/15 bg-[#eaf6f6] px-5 py-12 sm:px-8 sm:py-16 lg:px-12 lg:py-20",
         className,
       )}
     >
@@ -396,7 +396,7 @@ function FullPanel({
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <h2
             id="auto-refreshing-heading"
-            className="text-3xl font-semibold tracking-tight text-[#17352b] sm:text-4xl"
+            className="text-3xl font-semibold tracking-tight text-[#0b5c5c] sm:text-4xl"
           >
             Auto-refreshing official statistics
           </h2>
@@ -428,13 +428,13 @@ function FullPanel({
         ) : null}
 
         {data.indicators.length > 0 ? (
-          <dl className="mt-10 grid gap-8 border-t border-[#18251f]/15 pt-2 sm:grid-cols-2 lg:grid-cols-3">
+          <dl className="mt-10 grid gap-8 border-t border-[#0b2e2e]/15 pt-2 sm:grid-cols-2 lg:grid-cols-3">
             {data.indicators.map((indicator) => (
               <IndicatorItem key={indicator.code} indicator={indicator} compact={false} />
             ))}
           </dl>
         ) : (
-          <p className="mt-10 border-t border-[#18251f]/15 pt-6 text-sm text-body-secondary">
+          <p className="mt-10 border-t border-[#0b2e2e]/15 pt-6 text-sm text-body-secondary">
             No official statistics are available right now.
           </p>
         )}
@@ -467,7 +467,7 @@ function CompactPanel({
       id="auto-refreshing-statistics"
       aria-labelledby="auto-refreshing-compact-heading"
       className={cn(
-        "border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-8 sm:px-8 sm:py-10 lg:px-12",
+        "border-y border-[#0b2e2e]/15 bg-[#ffffff] px-5 py-8 sm:px-8 sm:py-10 lg:px-12",
         className,
       )}
     >
@@ -476,7 +476,7 @@ function CompactPanel({
           <div className="flex flex-wrap items-center gap-3">
             <h2
               id="auto-refreshing-compact-heading"
-              className="text-lg font-semibold tracking-tight text-[#17352b]"
+              className="text-lg font-semibold tracking-tight text-[#0b5c5c]"
             >
               Auto-refreshing official statistics
             </h2>
@@ -500,18 +500,18 @@ function CompactPanel({
         ) : null}
 
         {data.indicators.length > 0 ? (
-          <dl className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-[#18251f]/15 pt-6 sm:grid-cols-3 lg:grid-cols-4">
+          <dl className="mt-7 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-[#0b2e2e]/15 pt-6 sm:grid-cols-3 lg:grid-cols-4">
             {data.indicators.map((indicator) => (
               <IndicatorItem key={indicator.code} indicator={indicator} compact />
             ))}
           </dl>
         ) : (
-          <p className="mt-6 border-t border-[#18251f]/15 pt-5 text-sm text-body-secondary">
+          <p className="mt-6 border-t border-[#0b2e2e]/15 pt-5 text-sm text-body-secondary">
             No official statistics are available right now.
           </p>
         )}
 
-        <div className="mt-7 border-t border-[#18251f]/10 pt-5">
+        <div className="mt-7 border-t border-[#0b2e2e]/10 pt-5">
           <SourceList sources={data.sources} />
           <p className="mt-3 text-xs leading-5 text-body-secondary">
             These annual dataset figures are separate from the press release

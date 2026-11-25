@@ -209,14 +209,14 @@ export default async function AdminDashboard() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-gradient-to-r from-[#10241c] via-[#10241c]/90 to-[#10241c]/70"
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0b2e2e] via-[#0b2e2e]/90 to-[#0b2e2e]/70"
         />
         <div className="relative z-10 min-w-0 max-w-3xl">
           <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-white text-balance">
             {nextOrder ? "Review the next payment" : "Platform overview"}
           </h1>
           <p className="mt-3 max-w-lg text-sm leading-6 text-primary-foreground/75 sm:text-base">
-            <span className="font-medium text-amber-200/90">Platform operations ·</span>{" "}
+            <span className="font-medium text-[#66bfbf]/90">Platform operations ·</span>{" "}
             {nextOrder
               ? `${verifying} payment${verifying === 1 ? "" : "s"} waiting. Start with the longest-waiting order below.`
               : "Members, projects and payment reviews at a glance."}
@@ -265,7 +265,7 @@ export default async function AdminDashboard() {
           </div>
           <Link
             href="/admin/payments"
-            className="pressable inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+            className="pressable inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
           >
             Review payment
           </Link>
@@ -304,7 +304,7 @@ export default async function AdminDashboard() {
               </p>
               <Link
                 href="/admin/payments"
-                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
               >
                 Open payments
               </Link>

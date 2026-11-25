@@ -85,7 +85,7 @@ export function ForgotPasswordForm({
           className={`mb-5 rounded-xl border px-4 py-3 text-sm ${
             serverError
               ? "border-red-200 bg-red-50 text-red-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-900"
+              : "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]"
           }`}
         >
           {status}
@@ -102,7 +102,7 @@ export function ForgotPasswordForm({
         <div>
           <label
             htmlFor="email"
-            className="mb-2 block text-sm font-semibold text-[#17352b]"
+            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
           >
             Email
           </label>
@@ -117,7 +117,7 @@ export function ForgotPasswordForm({
             onChange={() => setEmailError(undefined)}
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
           />
           {emailError && (
             <FieldError id={emailErrorId}>{emailError}</FieldError>

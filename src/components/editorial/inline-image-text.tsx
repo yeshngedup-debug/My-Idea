@@ -54,12 +54,12 @@ export function InlineImageText({
       <Heading
         id={id}
         aria-label={accessibleText}
-        className="text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#17352b]"
+        className="text-balance text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b5c5c]"
       >
         <span aria-hidden="true">{lead}</span>{" "}
         <span
           aria-hidden="true"
-          className="mx-[0.08em] inline-block h-[0.62em] w-[1.85em] overflow-hidden rounded-full bg-[#17352b] align-middle"
+          className="mx-[0.08em] inline-block h-[0.62em] w-[1.85em] overflow-hidden rounded-full bg-[#0b5c5c] align-middle"
         >
           <Image
             src={imageSrc}

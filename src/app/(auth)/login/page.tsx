@@ -45,7 +45,7 @@ export default async function LoginPage({
     <AuthShell>
       <h1
         style={displayFont}
-        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#17352b]"
+        className="text-[clamp(1.75rem,2.4vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b5c5c]"
       >
         Log in
       </h1>
@@ -58,11 +58,11 @@ export default async function LoginPage({
         />
       </div>
 
-      <p className="mt-7 text-center text-sm leading-6 text-slate-600">
+      <p className="mt-7 text-center text-sm leading-6 text-[#356464]">
         Don&apos;t have an account?{" "}
         <Link
           href="/signup"
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#17352b] underline decoration-[#d84f37] underline-offset-4 hover:text-[#b23c26] ${focusRing}`}
+          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#ff0063] underline-offset-4 hover:text-[#c2004b] ${focusRing}`}
         >
           Create a student account
         </Link>

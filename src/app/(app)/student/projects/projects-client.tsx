@@ -261,7 +261,7 @@ export function ProjectCard({
           className={`pressable inline-flex min-h-11 items-center justify-center rounded-lg px-5 text-sm font-semibold transition-colors motion-reduce:transition-none! focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
             applied || closed
               ? 'cursor-not-allowed bg-muted text-muted-foreground'
-              : 'bg-amber-300 text-primary hover:bg-amber-200'
+              : 'bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
           }`}
         >
           {applied

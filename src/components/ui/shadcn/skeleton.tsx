@@ -15,7 +15,7 @@ function Skeleton({ className, ref, ...props }: SkeletonProps) {
       ref={ref}
       data-slot="skeleton"
       aria-hidden="true"
-      className={cn("rounded-md bg-[#eeeae1]", className)}
+      className={cn("rounded-md bg-[#eaf6f6]", className)}
       {...props}
     />
   )

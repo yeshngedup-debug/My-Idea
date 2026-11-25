@@ -18,15 +18,15 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="min-w-0 rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-4 py-4 shadow-[0_1px_2px_rgba(24,37,31,.05)]"
+            className="min-w-0 rounded-[24px] border border-[#b9dede] bg-[#ffffff] px-4 py-4 shadow-[0_1px_2px_rgba(24,37,31,.05)]"
           >
-            <dt className="text-xs font-medium text-[#56645c]">
+            <dt className="text-xs font-medium text-[#356464]">
               {stat.label}
             </dt>
-            <dd className="mt-2 text-2xl font-semibold leading-none tabular-nums tracking-tight text-[#17352b]">
+            <dd className="mt-2 text-2xl font-semibold leading-none tabular-nums tracking-tight text-[#0b5c5c]">
               {stat.value}
               {stat.detail ? (
-                <span className="mt-2 block text-xs font-normal leading-5 tracking-normal text-[#56645c]">
+                <span className="mt-2 block text-xs font-normal leading-5 tracking-normal text-[#356464]">
                   {stat.detail}
                 </span>
               ) : null}

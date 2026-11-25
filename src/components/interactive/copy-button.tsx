@@ -65,7 +65,7 @@ export function CopyButton({
         type="button"
         onClick={handleClick}
         className={cn(
-          `inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#ded8cb] bg-[#fffefa] px-5 py-2 text-sm font-semibold text-[#17352b] ${styles.press} hover:border-[#17352b] hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]`,
+          `inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#b9dede] bg-[#ffffff] px-5 py-2 text-sm font-semibold text-[#0b5c5c] ${styles.press} hover:border-[#66bfbf] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]`,
           className,
         )}
       >
@@ -74,8 +74,8 @@ export function CopyButton({
           weight="bold"
           className={cn(
             "h-4 w-4 shrink-0",
-            status === "copied" && "text-[#377553]",
-            status === "error" && "text-[#c24132]",
+            status === "copied" && "text-[#0b5c5c]",
+            status === "error" && "text-[#c2004b]",
           )}
         />
         {label}

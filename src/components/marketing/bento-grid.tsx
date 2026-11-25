@@ -77,7 +77,7 @@ export function BentoGrid({ cells, className }: BentoGridProps) {
           role={cell.ariaLabel ? "group" : undefined}
           aria-label={cell.ariaLabel}
           className={cn(
-            "bento-cell relative flex min-h-44 flex-col overflow-hidden rounded-xl border border-[#18251f]/10 bg-[#fffefa] p-6",
+            "bento-cell relative flex min-h-44 flex-col overflow-hidden rounded-xl border border-[#0b2e2e]/10 bg-[#ffffff] p-6",
             SPAN_CLASSES[cell.span],
             cell.className,
           )}

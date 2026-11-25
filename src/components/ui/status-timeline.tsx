@@ -40,7 +40,7 @@ export function StatusTimeline({
 
   return (
     <div
-      className={`rounded-xl border border-[#17352b]/10 bg-[#fffefa] px-4 py-3 ${className}`}
+      className={`rounded-xl border border-[#66bfbf]/10 bg-[#ffffff] px-4 py-3 ${className}`}
     >
       <ol aria-label={label} className="m-0 flex list-none flex-col p-0 sm:flex-row sm:items-start">
         {steps.map((step, index) => {
@@ -70,17 +70,17 @@ export function StatusTimeline({
               {!isLast && (
                 <span
                   aria-hidden="true"
-                  className="absolute left-[11px] top-7 h-[calc(100%-1.75rem)] w-px bg-[#17352b]/15 sm:left-7 sm:top-[11px] sm:h-px sm:w-[calc(100%-1.75rem)]"
+                  className="absolute left-[11px] top-7 h-[calc(100%-1.75rem)] w-px bg-[#0b5c5c]/15 sm:left-7 sm:top-[11px] sm:h-px sm:w-[calc(100%-1.75rem)]"
                 />
               )}
               <span
                 aria-hidden="true"
                 className={`relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-medium ${
                   isCurrent
-                    ? 'border-[#b23c26] bg-[#b23c26] text-[#fffefa] ring-4 ring-[#b23c26]/15'
+                    ? 'border-[#c2004b] bg-[#ff0063] text-[#000000] ring-4 ring-[#c2004b]/15'
                     : isDone
-                      ? 'border-[#17352b] bg-[#17352b] text-[#fffefa]'
-                      : 'border-[#17352b]/15 bg-[#fffefa] text-[#17352b]/40'
+                      ? 'border-[#66bfbf] bg-[#66bfbf] text-[#0b2e2e]'
+                      : 'border-[#66bfbf]/15 bg-[#ffffff] text-[#0b5c5c]/40'
                 }`}
               >
                 {isDone ? '✓' : String(index + 1)}
@@ -88,25 +88,25 @@ export function StatusTimeline({
               <div className="min-w-0">
                 <p
                   className={`text-xs font-semibold leading-5 sm:text-[13px] ${
-                    isCurrent ? 'text-[#17352b]' : 'text-body-secondary'
+                    isCurrent ? 'text-[#0b5c5c]' : 'text-body-secondary'
                   }`}
                 >
                   {step.label}
                 </p>
                 <p
                   className={`mt-0.5 text-xs font-medium ${
-                    isCurrent ? 'text-[#b23c26]' : 'text-body-secondary'
+                    isCurrent ? 'text-[#c2004b]' : 'text-body-secondary'
                   }`}
                 >
                   {stateText}
                 </p>
                 {isCurrent && (
                   <p
-                    className={`mt-2 max-w-[22rem] rounded-lg bg-[#eeeae1] px-3 py-2 text-xs leading-5 text-body-secondary ring-1 ring-[#ded8cb] sm:text-sm ${
+                    className={`mt-2 max-w-[22rem] rounded-lg bg-[#eaf6f6] px-3 py-2 text-xs leading-5 text-body-secondary ring-1 ring-[#b9dede] sm:text-sm ${
                       compact ? 'sm:max-w-[12rem]' : ''
                     }`}
                   >
-                    <span className="font-medium text-[#17352b]">Next: </span>
+                    <span className="font-medium text-[#0b5c5c]">Next: </span>
                     {step.next}
                   </p>
                 )}

@@ -1,10 +1,12 @@
 /**
  * Bhutan Tech Connect — canonical design tokens.
  *
- * Warm paper, forest ink, vermilion and amber, paired with editorial Geist
- * type, generous spacing and restrained motion. This module is the single
- * typed source of truth for the visual language. `app/globals.css` mirrors the
- * colour, radius and motion values for Tailwind/CSS; keep the two in sync.
+ * BTC brand: teal structure, mist page, white surfaces and magenta CTA, paired
+ * with editorial Geist type, generous spacing and restrained motion. Dark teal
+ * and dark magenta roles are derived for legibility on light surfaces. This
+ * module is the single typed source of truth for the visual language.
+ * `app/globals.css` mirrors the colour, radius and motion values for
+ * Tailwind/CSS; keep the two in sync.
  *
  * The old `designTokens` object and its helpers are kept for additive
  * compatibility (they are currently unused by the app). New work should use
@@ -17,70 +19,81 @@
 
 export const colors = {
   /* Surfaces and lines */
-  page: "#f5f2ea",
-  surface: "#fffefa",
-  surfaceMuted: "#eeeae1",
-  secondary: "#eae5d9",
-  border: "#ded8cb",
-  borderHover: "#cfc6b6",
-  input: "#ded8cb",
+  page: "#eaf6f6",
+  surface: "#ffffff",
+  surfaceMuted: "#eaf6f6",
+  secondary: "#eaf6f6",
+  border: "#b9dede",
+  borderHover: "#4d8c8c",
+  input: "#4d8c8c",
 
   /* Ink */
-  ink: "#18251f",
-  /** Quiet ink for metadata and inactive controls on paper; CSS: --color-ink-soft. */
-  inkSoft: "#4c5a52",
-  textSecondary: "#56645c",
-  /** Canonical body-copy roles. 5.57:1 on paper; use instead of opacity greys. */
-  body: "#18251f",
-  bodySecondary: "#56645c",
-  textMuted: "#657069",
-  textMutedLegacy: "#748078",
-  textDim: "#9da49e",
-  onDark: "#fffefa",
+  ink: "#0b2e2e",
+  /** Quiet ink for metadata and inactive controls on light; CSS: --color-ink-soft. */
+  inkSoft: "#356464",
+  textSecondary: "#356464",
+  /** Canonical body-copy roles; use instead of opacity greys. */
+  body: "#0b2e2e",
+  bodySecondary: "#356464",
+  textMuted: "#356464",
+  textMutedLegacy: "#356464",
+  textDim: "#356464",
+  onDark: "#ffffff",
 
-  /* Primary action: forest. Headings use the same green. */
-  forest: "#17352b",
-  forestHover: "#244b3e",
-  heroInk: "#101d17",
+  /* Quiet structural teal. Headings use the same legible dark teal. */
+  forest: "#0b5c5c",
+  forestHover: "#0b2e2e",
+  heroInk: "#0b2e2e",
 
   /* The single filled CTA role (mirrors --color-cta* in app/globals.css).
-     Shares the amber primitive value, but this is the action role, not a
-     highlight: one filled action per view, peers stay outline or quiet. */
-  cta: "#fbbf24",
-  ctaHover: "#e7b648",
-  onCta: "#17352b",
-  /** Stronger edge for grouped surfaces on cream; mirrors --color-border-strong. */
-  borderStrong: "#cfc6b6",
+     Magenta is the action role only: one filled action per view, peers stay
+     outline or quiet. Text on magenta is black; white fails AA. */
+  cta: "#ff0063",
+  ctaHover: "#d40054",
+  onCta: "#000000",
+  /** Stronger edge for grouped surfaces on mist; mirrors --color-border-strong. */
+  borderStrong: "#4d8c8c",
 
-  /* Warm accent: vermilion. The deep tone is for small text and focus rings;
+  /* Accent: magenta. The deep tone is for small text and focus rings;
      CSS mirrors it as --color-accent-deep. */
-  accent: "#d84f37",
-  accentHover: "#b44532",
-  smallTextAccent: "#b23c26",
-  onAccent: "#fffefa",
+  accent: "#ff0063",
+  accentHover: "#d40054",
+  smallTextAccent: "#c2004b",
+  onAccent: "#000000",
 
-  /* Amber highlight. Display and logo tones are the rendered variants. */
-  amber: "#fbbf24",
-  amberDisplay: "#e7b648",
-  amberLogo: "#e0ad3c",
+  /* Highlight primitives. Display and logo tones are the rendered variants. */
+  amber: "#ff0063",
+  amberDisplay: "#d40054",
+  amberLogo: "#66bfbf",
 
   /* Status */
-  success: "#377553",
-  successBg: "#e7f2e9",
-  successBorder: "#bad8c2",
-  successText: "#286341",
-  error: "#c24132",
-  errorBg: "#fcebea",
-  errorBorder: "#f0c4bd",
-  errorText: "#9d3328",
-  info: "#466e8c",
-  infoBg: "#e9f1f5",
-  infoBorder: "#c7dce8",
-  infoText: "#345a76",
-  destructive: "hsl(0 84.2% 60.2%)",
+  success: "#0b5c5c",
+  successBg: "#eaf6f6",
+  successBorder: "#b9dede",
+  successText: "#0b5c5c",
+  error: "#c2004b",
+  errorBg: "#eaf6f6",
+  errorBorder: "#c2004b",
+  errorText: "#c2004b",
+  info: "#0b5c5c",
+  infoBg: "#eaf6f6",
+  infoBorder: "#b9dede",
+  infoText: "#0b5c5c",
+  destructive: "#c2004b",
 
   /* Focus */
-  focus: "#d84f37",
+  focus: "#c2004b",
+
+  /* Core brand primitives and derived legible roles. Mirrors
+     replica/design/tokens.json and the --color-* variables in app/globals.css. */
+  brand: "#66bfbf",
+  mist: "#eaf6f6",
+  magenta: "#ff0063",
+  brandText: "#0b5c5c",
+  accentText: "#c2004b",
+  onMagenta: "#000000",
+  magentaHover: "#d40054",
+  borderInput: "#4d8c8c",
 } as const;
 
 /** Alias for callers that prefer the longer name. */
@@ -139,8 +152,8 @@ export type RadiusStep = keyof typeof radii;
  * `cardRaised` for the one or two cards that carry extra importance.
  */
 export const elevation = {
-  card: "0 1px 2px rgb(24 37 31 / 0.06), 0 1px 3px rgb(24 37 31 / 0.04)",
-  cardRaised: "0 6px 18px rgb(24 37 31 / 0.09), 0 2px 6px rgb(24 37 31 / 0.05)",
+  card: "0 1px 2px rgb(11 46 46 / 0.06), 0 1px 3px rgb(11 46 46 / 0.04)",
+  cardRaised: "0 6px 18px rgb(11 46 46 / 0.09), 0 2px 6px rgb(11 46 46 / 0.05)",
 } as const;
 
 export type ElevationRole = keyof typeof elevation;
@@ -154,7 +167,7 @@ export const touchTarget = {
 /** Focus appearance used by `focus-visible` utilities across the app. */
 export const focus = {
   ringWidth: "2px",
-  ringColor: colors.accent,
+  ringColor: colors.smallTextAccent,
   ringOffset: "2px",
 } as const;
 
@@ -357,7 +370,7 @@ export const designTokens = {
   radius: radii,
   touchTarget,
   focus: {
-    ring: `2px solid ${colors.accent}`,
+    ring: `2px solid ${colors.smallTextAccent}`,
     ringOffset: focus.ringOffset,
   },
 } as const;

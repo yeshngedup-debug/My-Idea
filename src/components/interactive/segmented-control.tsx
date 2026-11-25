@@ -78,7 +78,7 @@ export function SegmentedControl({
       aria-label={ariaLabel}
       onKeyDown={handleKeyDown}
       className={cn(
-        "inline-flex max-w-full flex-wrap gap-1 rounded-full border border-[#ded8cb] bg-[#eae5d9]/70 p-1",
+        "inline-flex max-w-full flex-wrap gap-1 rounded-full border border-[#b9dede] bg-[#eaf6f6]/70 p-1",
         className,
       )}
     >
@@ -94,10 +94,10 @@ export function SegmentedControl({
             aria-pressed={selected}
             onClick={() => onChange(option.value)}
             className={cn(
-              `inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea] sm:px-5`,
+              `inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] sm:px-5`,
               selected
-                ? "bg-[#17352b] text-[#fffefa] ring-1 ring-[#17352b] ring-offset-2 ring-offset-[#eae5d9]/70 hover:bg-[#244b3e]"
-                : "text-[#17352b] hover:bg-[#fffefa]",
+                ? "bg-[#66bfbf] text-[#0b2e2e] ring-1 ring-[#66bfbf] ring-offset-2 ring-offset-[#eaf6f6]/70 hover:bg-[#0b5c5c] hover:text-[#ffffff]"
+                : "text-[#0b5c5c] hover:bg-[#ffffff]",
             )}
           >
             {option.label}

@@ -35,17 +35,17 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_BADGE: Record<string, string> = {
-  open: "border-[#ded8cb] bg-[#eae5d9] text-[#b23c26]",
-  in_progress: "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]",
-  review: "border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]",
-  completed: "border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]",
+  open: "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]",
+  in_progress: "border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]",
+  review: "border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]",
+  completed: "border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]",
 };
 
 const STATUS_DOT: Record<string, string> = {
-  open: "bg-[#e0ad3c]",
-  in_progress: "bg-[#17352b]",
-  review: "bg-[#b23c26]",
-  completed: "bg-[#657069]",
+  open: "bg-[#66bfbf]",
+  in_progress: "bg-[#0b5c5c]",
+  review: "bg-[#ff0063]",
+  completed: "bg-[#356464]",
 };
 
 export function ProjectsClient({
@@ -68,25 +68,25 @@ export function ProjectsClient({
       <div className="space-y-4">
         <h2 className="sr-only">Project list</h2>
         {loadError ? (
-          <div role="alert" className="rounded-2xl border border-[#b23c26]/25 bg-[#b23c26]/8 p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#b23c26]">
+          <div role="alert" className="rounded-2xl border border-[#c2004b]/25 bg-[#ff0063]/8 p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#c2004b]">
               Projects unavailable
             </h3>
-            <p className="mb-5 text-sm text-[#4c5a52]">{loadError}</p>
+            <p className="mb-5 text-sm text-[#356464]">{loadError}</p>
             <button
               type="button"
               onClick={() => router.refresh()}
-              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#17352b] px-6 py-3 text-sm font-semibold text-[#fffefa] hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
             >
               Try again
             </button>
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+          <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+            <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
               No projects yet
             </h3>
-            <p className="text-sm text-[#657069]">
+            <p className="text-sm text-[#356464]">
               Projects appear here as soon as founders post them.
             </p>
           </div>
@@ -120,22 +120,22 @@ export function ProjectsClient({
         selectOnArrow
       />
 
-      <p role="status" aria-live="polite" className="text-xs text-[#657069]">
+      <p role="status" aria-live="polite" className="text-xs text-[#356464]">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
             No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} projects
           </h3>
-          <p className="mb-6 text-sm text-[#657069]">
+          <p className="mb-6 text-sm text-[#356464]">
             No stored project is at this stage right now.
           </p>
           <button
             type="button"
             onClick={() => setFilter("all")}
-            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#fffefa] px-6 py-3 text-sm font-semibold text-[#17352b] hover:bg-[#eae5d9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2"
+            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
           >
             Show all projects
           </button>
@@ -146,12 +146,12 @@ export function ProjectsClient({
             {filtered.map((row) => (
               <li
                 key={row.id}
-                className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4"
+                className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <h3
                     title={row.title}
-                    className="min-w-0 break-words text-sm font-semibold text-[#17352b]"
+                    className="min-w-0 break-words text-sm font-semibold text-[#0b5c5c]"
                   >
                     {row.title}
                   </h3>
@@ -162,7 +162,7 @@ export function ProjectsClient({
                     {statusLabel(row.status)}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs text-[#657069]">
+                <p className="mt-1 text-xs text-[#356464]">
                   {row.founderName ?? "Unknown founder"} · Posted{" "}
                   {date(row.created_at)}
                 </p>
@@ -170,9 +170,9 @@ export function ProjectsClient({
             ))}
           </ul>
 
-          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#ded8cb] bg-[#fffefa] sm:block">
+          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#b9dede] bg-[#ffffff] sm:block">
             <table className="w-full text-left text-sm" aria-label="All projects by status">
-              <thead className="sticky top-[72px] z-10 bg-[#f5f2ea] text-xs font-medium text-[#657069]">
+              <thead className="sticky top-[72px] z-10 bg-[#eaf6f6] text-xs font-medium text-[#356464]">
                 <tr>
                   <th
                     scope="col"
@@ -194,19 +194,19 @@ export function ProjectsClient({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#ded8cb]">
+              <tbody className="divide-y divide-[#b9dede]">
                 {filtered.map((row) => (
                   <tr
                     key={row.id}
-                    className="transition-colors duration-150 hover:bg-[#f5f2ea]"
+                    className="transition-colors duration-150 hover:bg-[#eaf6f6]"
                   >
                     <td
                       title={row.title}
-                      className="max-w-xs break-words px-4 py-3.5 font-semibold text-[#17352b]"
+                      className="max-w-xs break-words px-4 py-3.5 font-semibold text-[#0b5c5c]"
                     >
                       {row.title}
                     </td>
-                    <td className="px-4 py-3.5 text-[#4c5a52]">
+                    <td className="px-4 py-3.5 text-[#356464]">
                       {row.founderName ?? "Unknown founder"}
                     </td>
                     <td className="px-4 py-3.5">
@@ -217,7 +217,7 @@ export function ProjectsClient({
                         {statusLabel(row.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#657069]">
+                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#356464]">
                       {date(row.created_at)}
                     </td>
                   </tr>

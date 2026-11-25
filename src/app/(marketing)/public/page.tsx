@@ -27,19 +27,19 @@ export const metadata = pageMetadata({
 });
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B1F1A] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b2e2e] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 const primaryCta =
-  `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#d9950f] motion-reduce:transition-none ${focusRing}`;
+  `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054] motion-reduce:transition-none ${focusRing}`;
 
 const secondaryCta =
-  `inline-flex min-h-11 items-center justify-center rounded-full border border-[#1B4D3E]/30 px-6 py-3 text-sm font-semibold text-[#1B4D3E] transition-colors duration-150 hover:bg-[#E8E4DB]/70 motion-reduce:transition-none ${focusRing}`;
+  `inline-flex min-h-11 items-center justify-center rounded-full border border-[#b9dede]/30 px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 hover:bg-[#eaf6f6]/70 motion-reduce:transition-none ${focusRing}`;
 
 const sectionHeading =
-  "w-full max-w-6xl text-balance text-[clamp(2.5rem,4vw,4rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-[#0B1F1A]";
+  "w-full max-w-6xl text-balance text-[clamp(2.5rem,4vw,4rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-[#0b2e2e]";
 
 const bentoCard =
-  "group relative flex flex-col overflow-hidden rounded-[24px] border border-[#1B4D3E]/10 bg-white p-7 sm:p-9";
+  "group relative flex flex-col overflow-hidden rounded-[24px] border border-[#b9dede]/10 bg-white p-7 sm:p-9";
 
 const hoverZoom =
   "object-cover grayscale contrast-125 opacity-90 transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
@@ -157,7 +157,7 @@ const localContext =
 
 function GalleryFigure({ portrait }: { portrait: FactPortrait }) {
   return (
-    <figure className="group relative isolate aspect-[4/5] overflow-hidden rounded-[20px] bg-[#17352b]">
+    <figure className="group relative isolate aspect-[4/5] overflow-hidden rounded-[20px] bg-[#66bfbf]">
       <Image
         src={portrait.src}
         alt={portrait.alt}
@@ -174,7 +174,7 @@ function GalleryFigure({ portrait }: { portrait: FactPortrait }) {
         }}
       />
       <figcaption className="absolute inset-x-0 bottom-0 p-4">
-        <PhotoCredit fileUrl={portrait.creditFileUrl} className="text-[#F7F4EE]" />
+        <PhotoCredit fileUrl={portrait.creditFileUrl} className="text-[#eaf6f6]" />
       </figcaption>
     </figure>
   );
@@ -187,7 +187,7 @@ export default async function PublicHomePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F7F4EE] text-[#0B1F1A]">
+    <div className="min-h-screen bg-[#eaf6f6] text-[#0b2e2e]">
       <SiteHeader />
 
       <main id="main-content" className="w-full max-w-full overflow-x-hidden">
@@ -211,11 +211,11 @@ export default async function PublicHomePage() {
         <section className="mx-auto max-w-[1200px] px-5 pb-32 pt-20 sm:px-8 md:pb-48 md:pt-28">
           <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-24">
             <div>
-              <h1 className="text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0B1F1A]">
+              <h1 className="text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
                 Paid project work for{" "}
-                <span className="text-[#E8A317]">Bhutanese students.</span>
+                <span className="text-[#c2004b]">Bhutanese students.</span>
               </h1>
-              <p className="mt-8 max-w-[52ch] text-lg leading-8 text-[#1B4D3E]">
+              <p className="mt-8 max-w-[52ch] text-lg leading-8 text-[#0b5c5c]">
                 Founders post a clear brief and budget. Students apply with skills
                 and a CV. Admins verify people by hand — not by algorithm.
               </p>
@@ -228,7 +228,7 @@ export default async function PublicHomePage() {
                 </Link>
               </div>
             </div>
-            <div className="group relative isolate aspect-[4/5] overflow-hidden rounded-[28px] bg-[#17352b]">
+            <div className="group relative isolate aspect-[4/5] overflow-hidden rounded-[28px] bg-[#66bfbf]">
               <Image
                 src="https://picsum.photos/seed/bhutan-work/1920/1080"
                 alt=""
@@ -258,7 +258,7 @@ export default async function PublicHomePage() {
                 key={path.title}
                 className={`${bentoCard} col-span-12 min-h-[420px] ${index === 0 ? "lg:col-span-7" : "lg:col-span-5"}`}
               >
-                <div className="relative isolate mb-8 h-44 overflow-hidden rounded-[16px] bg-[#E8E4DB] sm:h-52">
+                <div className="relative isolate mb-8 h-44 overflow-hidden rounded-[16px] bg-[#eaf6f6] sm:h-52">
                   <Image
                     src={path.portrait.src}
                     alt={path.portrait.alt}
@@ -267,10 +267,10 @@ export default async function PublicHomePage() {
                     className={hoverZoom}
                   />
                 </div>
-                <h3 className="text-2xl font-semibold tracking-[-0.03em] text-[#0B1F1A] sm:text-3xl">
+                <h3 className="text-2xl font-semibold tracking-[-0.03em] text-[#0b2e2e] sm:text-3xl">
                   {path.title}
                 </h3>
-                <p className="mt-4 max-w-[46ch] text-base leading-7 text-[#1B4D3E]">
+                <p className="mt-4 max-w-[46ch] text-base leading-7 text-[#0b5c5c]">
                   {path.body}
                 </p>
                 <Link href={path.href} className={`${secondaryCta} mt-8 self-start`}>
@@ -278,7 +278,7 @@ export default async function PublicHomePage() {
                 </Link>
                 <PhotoCredit
                   fileUrl={path.portrait.creditFileUrl}
-                  className="mt-5 text-[#0B1F1A]/55"
+                  className="mt-5 text-[#0b2e2e]/55"
                 />
               </article>
             ))}
@@ -291,18 +291,18 @@ export default async function PublicHomePage() {
             {steps.map((step) => (
               <article
                 key={step.number}
-                className="col-span-12 flex min-h-[320px] flex-col rounded-[24px] border border-[#1B4D3E]/10 bg-[#E8E4DB]/70 p-7 sm:p-8 lg:col-span-4"
+                className="col-span-12 flex min-h-[320px] flex-col rounded-[24px] border border-[#b9dede]/10 bg-[#eaf6f6]/70 p-7 sm:p-8 lg:col-span-4"
               >
-                <span className="text-sm font-semibold tabular-nums text-[#1B4D3E]">
+                <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
                   {step.number}
                 </span>
-                <h3 className="mt-12 text-xl font-semibold tracking-[-0.02em] text-[#0B1F1A] sm:text-2xl">
+                <h3 className="mt-12 text-xl font-semibold tracking-[-0.02em] text-[#0b2e2e] sm:text-2xl">
                   {step.title}
                 </h3>
-                <p className="mt-4 text-sm leading-7 text-[#1B4D3E]">
+                <p className="mt-4 text-sm leading-7 text-[#0b5c5c]">
                   {step.body}
                 </p>
-                <p className="mt-auto pt-8 text-xs font-medium text-[#1B4D3E]/80">
+                <p className="mt-auto pt-8 text-xs font-medium text-[#0b5c5c]/80">
                   {step.hint}
                 </p>
               </article>
@@ -332,7 +332,7 @@ export default async function PublicHomePage() {
           <ScrubbedTextReveal
             as="p"
             text={localContext}
-            className="max-w-[62ch] text-lg leading-8 text-[#1B4D3E]"
+            className="max-w-[62ch] text-lg leading-8 text-[#0b5c5c]"
           />
           <div className="mt-12 grid gap-5 px-5 sm:grid-cols-2 sm:px-8 lg:px-0">
             {portraits.map((portrait) => (
@@ -341,35 +341,35 @@ export default async function PublicHomePage() {
           </div>
           <div className="mt-12 px-5 sm:px-8 lg:px-0">
             <dl className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[18px] border border-[#1B4D3E]/10 bg-white p-5">
-                <dt className="text-xs font-medium text-[#0B1F1A]/55">
+              <div className="rounded-[18px] border border-[#b9dede]/10 bg-white p-5">
+                <dt className="text-xs font-medium text-[#0b2e2e]/55">
                   Youth unemployment · Bhutan
                 </dt>
                 <dd className="mt-2 text-2xl font-semibold tabular-nums">
                   {youth?.displayValue ?? "—"}
                 </dd>
-                <dd className="mt-1 text-xs text-[#0B1F1A]/55">
+                <dd className="mt-1 text-xs text-[#0b2e2e]/55">
                   {youth ? `${youth.year} · ${youth.seriesNote}` : "Source unavailable"}
                 </dd>
               </div>
-              <div className="rounded-[18px] border border-[#1B4D3E]/10 bg-white p-5">
-                <dt className="text-xs font-medium text-[#0B1F1A]/55">Payments</dt>
+              <div className="rounded-[18px] border border-[#b9dede]/10 bg-white p-5">
+                <dt className="text-xs font-medium text-[#0b2e2e]/55">Payments</dt>
                 <dd className="mt-2 text-lg font-semibold">In Nu</dd>
-                <dd className="mt-1 text-xs text-[#0B1F1A]/55">
+                <dd className="mt-1 text-xs text-[#0b2e2e]/55">
                   Bank transfer or mBoB
                 </dd>
               </div>
-              <div className="rounded-[18px] border border-[#1B4D3E]/10 bg-white p-5">
-                <dt className="text-xs font-medium text-[#0B1F1A]/55">
+              <div className="rounded-[18px] border border-[#b9dede]/10 bg-white p-5">
+                <dt className="text-xs font-medium text-[#0b2e2e]/55">
                   Verification
                 </dt>
                 <dd className="mt-2 text-lg font-semibold">By people</dd>
-                <dd className="mt-1 text-xs text-[#0B1F1A]/55">
+                <dd className="mt-1 text-xs text-[#0b2e2e]/55">
                   Admin-reviewed, every time
                 </dd>
               </div>
             </dl>
-            <p className="mt-6 text-xs leading-5 text-[#0B1F1A]/55">
+            <p className="mt-6 text-xs leading-5 text-[#0b2e2e]/55">
               National indicator from the World Bank API, World Development
               Indicators. This is context, not a platform result.
             </p>
@@ -379,7 +379,7 @@ export default async function PublicHomePage() {
         {/* Infinite marquee — real platform facts, paused under reduced motion. */}
         <section
           aria-label="Platform facts"
-          className="border-y border-[#1B4D3E]/10 bg-[#17352b] py-7"
+          className="border-y border-[#b9dede]/10 bg-[#66bfbf] py-7"
         >
           <p className="sr-only">
             Platform facts: {marqueeFacts.join(", ")}.
@@ -391,10 +391,10 @@ export default async function PublicHomePage() {
                   {marqueeFacts.map((fact) => (
                     <span
                       key={`${fact}-${copy}`}
-                      className="flex items-center gap-12 whitespace-nowrap text-[clamp(1.5rem,3vw,2.5rem)] font-semibold tracking-[-0.03em] text-[#F7F4EE]"
+                      className="flex items-center gap-12 whitespace-nowrap text-[clamp(1.5rem,3vw,2.5rem)] font-semibold tracking-[-0.03em] text-[#0b2e2e]"
                     >
                       {fact}
-                      <span aria-hidden="true" className="text-[#E8A317]">
+                      <span aria-hidden="true" className="text-[#c2004b]">
                         ·
                       </span>
                     </span>
@@ -419,15 +419,15 @@ export default async function PublicHomePage() {
         </section>
 
         {/* Final CTA — one high-contrast band, one saffron action. */}
-        <section className="bg-[#17352b] px-5 py-32 text-[#F7F4EE] sm:px-8 md:py-48">
+        <section className="bg-[#66bfbf] px-5 py-32 text-[#0b2e2e] sm:px-8 md:py-48">
           <div className="mx-auto max-w-[1200px]">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#E8A317]">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#0b5c5c]">
               {CTA_LABELS.closingEyebrow}
             </p>
             <h2 className="mt-6 text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.045em]">
               Start with one paid project
             </h2>
-            <p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#F7F4EE]/80">
+            <p className="mt-6 max-w-[52ch] text-lg leading-8 text-[#0b2e2e]/80">
               {SITE.tagline}
             </p>
             <div className="mt-10">

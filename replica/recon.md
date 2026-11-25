@@ -17,7 +17,7 @@
 | https://paywave.framer.website/about | 404 (no source page) — BTC about page keeps its own content |
 
 ## Additional patterns observed
-- Pricing cards: mostly white with hairline lavender borders; one highlighted card filled with the accent colour, inside a large rounded white section card.
+- Pricing cards: mostly white with hairline lavender borders on the reference site only; one highlighted card filled with the accent colour, inside a large rounded white section card. BTC maps these to white surfaces and `#b9dede` hairlines.
 - Contact: centred form with small pill label, muted subtitle, and two solid corner wedges (dark + accent) as decoration.
 - Footer: wordmark + tagline left, two compact link columns right, copyright bottom-right, inside a rounded card.
 - Blog/article cards and integration logo grids are decorative patterns only — BTC has no real blog posts or partner logos, so these map to FAQ links and stack facts, never invented content.
@@ -46,6 +46,7 @@
 - Two-column feature cards with heading, muted body, and a visual (product UI, avatars, logo grid).
 - Quote/testimonial grid — **adapt**: BTC has no real testimonials, so use verified product facts, not invented quotes.
 - Final CTA card with soft gradient, minimal footer.
+- BTC palette mapping for these borrowed patterns: mist `#eaf6f6` and white `#ffffff` for surfaces, teal `#66bfbf` for quiet accents, magenta `#ff0063` with black `#000000` text for the single filled action, brand text `#0b5c5c`, muted `#356464` and `#b9dede` hairlines.
 
 ## BTC facts that must stay true
 - Neon Auth, Neon Postgres, Neon Object Storage; admin verification; bank/mBoB payments confirmed by admin.

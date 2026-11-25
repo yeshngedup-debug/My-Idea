@@ -52,24 +52,24 @@ const sections: StickySection[] = [
 
 /** The sticky rail uses theme variables; scope them to this page's palette. */
 const stickyVars = {
-  "--color-background": "#F7F4EE",
-  "--color-foreground": "#0B1F1A",
+  "--color-background": "#eaf6f6",
+  "--color-foreground": "#0b2e2e",
   "--color-card": "#FFFFFF",
-  "--color-border": "#E8E4DB",
-  "--color-body-secondary": "#0B1F1A",
-  "--color-accent": "#E8A317",
+  "--color-border": "#b9dede",
+  "--color-body-secondary": "#0b2e2e",
+  "--color-accent": "#ff0063",
 } as CSSProperties;
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
-const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
-const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
+const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054]/85 motion-reduce:transition-none ${focusRing}`;
+const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#0b5c5c] underline decoration-[#0b5c5c]/30 underline-offset-4 transition-colors hover:text-[#0b2e2e] motion-reduce:transition-none ${focusRing}`;
 const bandClass =
   "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
 const headingClass =
-  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]";
+  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]";
 const bodyClass =
-  "max-w-2xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8";
+  "max-w-2xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8";
 const bentoClass =
   "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
 const imageZoom =
@@ -161,17 +161,17 @@ export default function ForStudentsPage() {
       <SiteHeader />
       <main
         id="main-content"
-        className="w-full max-w-full overflow-x-hidden bg-[#F7F4EE] text-[#0B1F1A]"
+        className="w-full max-w-full overflow-x-hidden bg-[#eaf6f6] text-[#0b2e2e]"
       >
         {/* Editorial split hero: copy left, one credited photograph right. */}
         <section className="w-full max-w-full overflow-x-hidden px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
           <div className="mx-auto w-full max-w-6xl">
             <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
               <HeroCopyEntrance>
-                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0B1F1A]">
+                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
                   Turn your skills into paid work.
                 </h1>
-                <p className="mt-8 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8">
+                <p className="mt-8 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8">
                   Build a profile, find a focused project, and get paid for the
                   work you do.
                 </p>
@@ -186,7 +186,7 @@ export default function ForStudentsPage() {
               </HeroCopyEntrance>
 
               <HeroPhotoEntrance>
-                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-[#0B1F1A]">
+                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-[#0b2e2e]">
                   <Image
                     src="/images/bhutanese-students.jpg"
                     alt="Young Bhutanese people working in groups at a training day in Thimphu"
@@ -209,7 +209,7 @@ export default function ForStudentsPage() {
                   <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
                     <PhotoCredit
                       fileUrl={YOUTH_CREDIT}
-                      className="text-[#F7F4EE]/90"
+                      className="text-[#eaf6f6]/90"
                     />
                   </figcaption>
                 </figure>
@@ -224,7 +224,7 @@ export default function ForStudentsPage() {
             <ScrubbedTextReveal
               as="p"
               text="Everything you need to browse and apply lives in your student workspace."
-              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#1B4D3E]"
+              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#0b5c5c]"
             />
           </div>
         </section>
@@ -251,19 +251,19 @@ export default function ForStudentsPage() {
                   return (
                     <article
                       key={fit.title}
-                      className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
+                      className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
                     >
                       <FitIcon
                         aria-hidden="true"
                         weight="light"
                         size={24}
                         strokeWidth={1.5}
-                        className="text-[#1B4D3E]"
+                        className="text-[#0b5c5c]"
                       />
-                      <h3 className="mt-6 text-lg font-semibold text-[#0B1F1A]">
+                      <h3 className="mt-6 text-lg font-semibold text-[#0b2e2e]">
                         {fit.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-6 text-[#0B1F1A]/70">
+                      <p className="mt-2 text-sm leading-6 text-[#0b2e2e]/70">
                         {fit.body}
                       </p>
                     </article>
@@ -295,47 +295,47 @@ export default function ForStudentsPage() {
                   delay={0.08}
                   className="col-span-12 lg:col-span-7"
                 >
-                  <div className="rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 sm:p-8">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#1B4D3E]/15 pb-5">
-                      <p className="text-base font-semibold text-[#0B1F1A]">
+                  <div className="rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:p-8">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#b9dede]/15 pb-5">
+                      <p className="text-base font-semibold text-[#0b2e2e]">
                         Student profile
                       </p>
-                      <p className="text-sm font-semibold text-[#1B4D3E]">
+                      <p className="text-sm font-semibold text-[#0b5c5c]">
                         Helps founders decide
                       </p>
                     </div>
-                    <dl className="divide-y divide-[#1B4D3E]/15">
+                    <dl className="divide-y divide-[#0b5c5c]/15">
                       {profileFields.map((field) => (
                         <div
                           key={field.label}
                           className="grid gap-1 py-4 sm:grid-cols-[11rem_1fr] sm:gap-6"
                         >
-                          <dt className="flex items-start gap-2 text-sm font-medium text-[#0B1F1A]">
+                          <dt className="flex items-start gap-2 text-sm font-medium text-[#0b2e2e]">
                             <CheckCircle
                               aria-hidden="true"
                               weight="light"
                               size={18}
                               strokeWidth={1.5}
-                              className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                              className="mt-0.5 shrink-0 text-[#0b5c5c]"
                             />
                             {field.label}
                           </dt>
-                          <dd className="text-sm leading-6 text-[#0B1F1A]/70">
+                          <dd className="text-sm leading-6 text-[#0b2e2e]/70">
                             {field.detail}
                           </dd>
                         </div>
                       ))}
                     </dl>
-                    <p className="mt-4 flex items-start gap-3 border-t border-[#1B4D3E]/15 pt-5 text-sm leading-6 text-[#0B1F1A]/70">
+                    <p className="mt-4 flex items-start gap-3 border-t border-[#b9dede]/15 pt-5 text-sm leading-6 text-[#0b2e2e]/70">
                       <Files
                         aria-hidden="true"
                         weight="light"
                         size={18}
                         strokeWidth={1.5}
-                        className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                        className="mt-0.5 shrink-0 text-[#0b5c5c]"
                       />
                       <span>
-                        <span className="font-semibold text-[#0B1F1A]">
+                        <span className="font-semibold text-[#0b2e2e]">
                           Your CV:
                         </span>{" "}
                         PDF only, up to 5 MB, stored privately.
@@ -367,7 +367,7 @@ export default function ForStudentsPage() {
               </Reveal>
               <Reveal className="mt-14">
                 <GsapScaleFadeImage>
-                  <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A] sm:aspect-[2/1]">
+                  <figure className="group relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e] sm:aspect-[2/1]">
                     <Image
                       src="/images/bhutanese-community.jpg"
                       alt="Bhutanese boys in traditional gho sitting together"
@@ -377,15 +377,15 @@ export default function ForStudentsPage() {
                     />
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
+                      className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
                     />
                     <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                      <span className="text-sm font-medium text-[#F7F4EE]">
+                      <span className="text-sm font-medium text-[#eaf6f6]">
                         Work grounded in the local community
                       </span>
                       <PhotoCredit
                         fileUrl={DZONG_CREDIT}
-                        className="text-[#F7F4EE]/90"
+                        className="text-[#eaf6f6]/90"
                       />
                     </figcaption>
                   </figure>
@@ -413,22 +413,22 @@ export default function ForStudentsPage() {
                   return (
                     <article
                       key={step.title}
-                      className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
+                      className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-4 sm:p-8"
                     >
-                      <span className="text-sm font-semibold tabular-nums text-[#1B4D3E]">
+                      <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="mt-6 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0B1F1A]">
+                      <h3 className="mt-6 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0b2e2e]">
                         <StepIcon
                           aria-hidden="true"
                           weight="light"
                           size={22}
                           strokeWidth={1.5}
-                          className="shrink-0 text-[#1B4D3E]"
+                          className="shrink-0 text-[#0b5c5c]"
                         />
                         {step.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/70">
+                      <p className="mt-3 text-sm leading-7 text-[#0b2e2e]/70">
                         {step.body}
                       </p>
                     </article>
@@ -453,7 +453,7 @@ export default function ForStudentsPage() {
               </Reveal>
               <Reveal className="mt-14">
                 <GsapScaleFadeImage>
-                  <figure className="group relative isolate aspect-[16/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
+                  <figure className="group relative isolate aspect-[16/9] w-full overflow-hidden rounded-[1.5rem] bg-[#0b2e2e]">
                     <Image
                       src="/images/bhutanese-team.jpg"
                       alt="Bhutanese students in kira performing in national dress"
@@ -463,15 +463,15 @@ export default function ForStudentsPage() {
                     />
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/85 via-transparent to-transparent"
+                      className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/85 via-transparent to-transparent"
                     />
                     <figcaption className="absolute inset-x-5 bottom-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 sm:inset-x-7 sm:bottom-5">
-                      <span className="text-sm font-medium text-[#F7F4EE]">
+                      <span className="text-sm font-medium text-[#eaf6f6]">
                         Work grounded in the local community
                       </span>
                       <PhotoCredit
                         fileUrl={PHOTO_CREDITS.market}
-                        className="text-[#F7F4EE]/90"
+                        className="text-[#eaf6f6]/90"
                       />
                     </figcaption>
                   </figure>
@@ -484,11 +484,11 @@ export default function ForStudentsPage() {
         {/* Closing band: one saffron action. */}
         <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
           <Reveal className="mx-auto w-full max-w-6xl">
-            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-white px-6 py-24 text-left sm:px-12">
-              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
+            <div className="relative isolate overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-white px-6 py-24 text-left sm:px-12">
+              <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]">
                 Your profile is the first step
               </h2>
-              <p className="mt-6 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg">
+              <p className="mt-6 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg">
                 Complete it once, then apply to projects that fit.
               </p>
               <Link href="/signup" className={cn(primaryCta, "mt-8")}>

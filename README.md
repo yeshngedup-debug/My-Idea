@@ -283,6 +283,8 @@ Workspace state persists per page in local storage under
 
 The public experience uses an editorial, photo-led layout with oversized type, clear hierarchy, and responsive motion. The photographs in `public/assets/` show Bhutanese people in gho and kira, sourced from Wikimedia Commons under CC BY-SA licences; the per-image author and licence are kept with the image credits, and credit links appear with each image.
 
+The BTC brand palette is teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`. Derived legibility roles are ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b`, and black `#000000` for text on magenta. The auth screens use these roles: magenta carries the single filled action, and mist and white carry the quiet surfaces.
+
 ---
 
 ## Testing
@@ -314,7 +316,7 @@ job sets `E2E_REQUIRE_DB=1` so a missing database fails the job instead.
 
 ## Notes
 
-- ⚠️ Seed users created by `scripts/neon-setup.mjs` have fixed placeholder IDs
+- Seed users created by `scripts/neon-setup.mjs` have fixed placeholder IDs
   and are **not** Neon Auth identities. Real logins must be registered through
   Neon Auth; never use seeded IDs as real user accounts.
 - CVs and payment screenshots live in a private Neon Object Storage bucket —

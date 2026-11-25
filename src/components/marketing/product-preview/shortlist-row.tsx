@@ -23,16 +23,16 @@ export function ShortlistRow({
   headingLevel?: "h3" | "h4";
   className?: string;
 }) {
-  const nameClass = "truncate text-base font-semibold text-[#17352b]";
+  const nameClass = "truncate text-base font-semibold text-[#0b5c5c]";
   const availability =
     AVAILABILITY_LABEL[student.availability] ?? student.availability;
 
   return (
-    <li className={`rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 ${className}`}>
+    <li className={`rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 ${className}`}>
       <div className="mb-2 flex items-center gap-3">
         <span
           aria-hidden="true"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#17352b] text-sm font-semibold text-[#fffefa]"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#66bfbf] text-sm font-semibold text-[#0b2e2e]"
         >
           {rank}
         </span>
@@ -43,7 +43,7 @@ export function ShortlistRow({
         )}
       </div>
 
-      <p className="mb-2 text-xs text-[#657069]">
+      <p className="mb-2 text-xs text-[#356464]">
         {student.college} - {student.course} ({student.year} year) -{" "}
         {availability}
       </p>
@@ -57,10 +57,10 @@ export function ShortlistRow({
       </div>
 
       <div className="flex flex-col gap-2 text-sm sm:flex-row sm:gap-6">
-        <span className="break-all text-[#5e554a]">
+        <span className="break-all text-[#356464]">
           {student.contact_email}
         </span>
-        <span className="text-[#17352b]">View CV</span>
+        <span className="text-[#0b5c5c]">View CV</span>
       </div>
     </li>
   );

@@ -13,7 +13,7 @@ import { PostProjectForm } from './post-project-form';
 export const metadata = { title: 'Post a Project | Bhutan Tech Connect' };
 
 const LOGIN_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#17352b] px-4 py-2 text-sm font-semibold text-[#fffefa] transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
 
 export default async function PostProjectPage() {
   const user = await getUser();
@@ -37,8 +37,8 @@ export default async function PostProjectPage() {
           {user ? (
             <PostProjectForm />
           ) : (
-            <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-              <p className="text-sm text-[#56645c]">
+            <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+              <p className="text-sm text-[#356464]">
                 Only signed-in founders can publish a brief.
               </p>
               <Link href="/login" className={`${LOGIN_LINK} mt-6`}>

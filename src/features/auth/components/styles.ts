@@ -6,7 +6,7 @@ import type { CSSProperties } from "react";
  * changing how the links look at rest.
  */
 export const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
 
 /**
  * Display face for auth headings. Read from the inherited `--font-outfit`
@@ -53,24 +53,30 @@ export const authMotionStyles = `
     animation: auth-message-in 180ms var(--ease-out) both;
   }
 
-  /* The single saffron primary action. Colour and press feedback are
+  /* The single magenta primary action. Colour and press feedback are
      retargeted here so the shared, accessible SubmitButton keeps its API and
      pending/live-region behaviour untouched. */
   [data-auth-card] button[type="submit"] {
-    background-color: #e8a317 !important;
-    color: #0b1f1a !important;
+    background-color: #ff0063 !important;
+    color: #000000 !important;
     transition:
       transform 160ms var(--ease-out),
       background-color 150ms var(--ease-out) !important;
   }
 
   [data-auth-card] button[type="submit"]:hover:not(:disabled) {
-    background-color: #d9950f !important;
+    background-color: #d40054 !important;
   }
 
-  /* Forest reads against saffron; the default vermilion ring does not. */
+  /* The shared spinner inherits a cream tint; retarget it to ink on magenta. */
+  [data-auth-card] button[type="submit"] > span > span[aria-hidden="true"] {
+    border-color: rgba(0, 0, 0, 0.35) !important;
+    border-top-color: #000000 !important;
+  }
+
+  /* Ink reads against magenta; the default bright ring does not. */
   [data-auth-card] button[type="submit"]:focus-visible {
-    outline-color: #17352b !important;
+    outline-color: #0b2e2e !important;
   }
 
   [data-auth-card] button[type="submit"]:active {

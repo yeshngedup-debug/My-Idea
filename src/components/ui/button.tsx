@@ -43,7 +43,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   default: 'bg-cta text-cta-foreground hover:bg-cta-hover',
   outline: 'border border-border-strong bg-card text-primary hover:bg-secondary',
   ghost: 'text-primary hover:bg-secondary',
-  destructive: 'bg-[#b23c26] text-[#fffefa] hover:bg-[#9d3328]',
+  destructive: 'bg-[#ff0063] text-[#000000] hover:bg-[#c2004b]',
 };
 
 export function Button({

@@ -78,6 +78,8 @@ The full module shape is `components/`, `hooks/`, `actions.ts`, `queries.ts`, `s
 | `env.ts` | Required-variable validation, called when a client is created (never at import). |
 | `validators.ts` | Shared Zod schemas. |
 | `format.ts`, `order-status.ts`, `metadata.ts`, `design-tokens.ts` | Formatting, domain copy, SEO helpers, design tokens. |
+
+The auth screens (`src/app/(auth)/**` and `src/features/auth/components/**`) carry the BTC brand palette: teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`, with derived legibility roles ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b` and black `#000000` on magenta.
 | `pdf.ts` | Hand-built PDF 1.4 byte stream. |
 | `rate-limit.ts` | In-memory limiter — documented multi-instance limitation. |
 | `utils.ts` | `cn()` and small helpers. |

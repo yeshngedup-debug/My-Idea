@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#f5f2ea",
+  themeColor: "#eaf6f6",
 };
 
 export default async function RootLayout({
@@ -88,7 +88,7 @@ export default async function RootLayout({
             descriptions on every route. */}
 
         {/* Favicons & app icons (new logo mark) */}
-        {/* Preferred: the vector mark (forest #17352b + amber #e0ad3c arch cap). */}
+        {/* Preferred: the vector mark (brand teal + magenta arch cap). */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         {/* PNG/ICO fallbacks for browsers without SVG favicon support. All were
             regenerated deterministically from /favicon.svg in the canonical
@@ -148,7 +148,7 @@ export default async function RootLayout({
         {/* Skip to main content link */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:bg-[#fffefa] focus:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:bg-[#ffffff] focus:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
         >
           Skip to main content
         </a>

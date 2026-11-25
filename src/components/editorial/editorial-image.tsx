@@ -49,7 +49,7 @@ export function EditorialImage({
     <figure
       className={cn(
         styles.frame,
-        "group relative isolate overflow-hidden rounded-[1.5rem] bg-[#17352b]",
+        "group relative isolate overflow-hidden rounded-[1.5rem] bg-[#0b5c5c]",
         RATIO_CLASS[ratio],
         className,
       )}
@@ -66,7 +66,7 @@ export function EditorialImage({
           atmospheric without a flat black scrim. Both are decorative only. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-[#17352b]/95 via-[#17352b]/25 to-transparent"
+        className="absolute inset-0 bg-gradient-to-t from-[#0b5c5c]/95 via-[#0b5c5c]/25 to-transparent"
       />
       <div
         aria-hidden="true"
@@ -78,11 +78,11 @@ export function EditorialImage({
       />
       <figcaption className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-x-6 gap-y-1 p-5 sm:p-6">
         {caption ? (
-          <span className="max-w-[32ch] text-balance text-lg font-semibold leading-snug text-[#fffefa] sm:text-xl">
+          <span className="max-w-[32ch] text-balance text-lg font-semibold leading-snug text-[#ffffff] sm:text-xl">
             {caption}
           </span>
         ) : null}
-        <PhotoCredit fileUrl={creditFileUrl} className="text-[#ded8cb]" />
+        <PhotoCredit fileUrl={creditFileUrl} className="text-[#0b5c5c]" />
       </figcaption>
     </figure>
   );

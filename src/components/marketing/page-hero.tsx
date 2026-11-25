@@ -73,7 +73,7 @@ export function PageHero({
         : null);
 
     return (
-      <section className="relative isolate overflow-hidden bg-[#f5f2ea] pt-16 sm:pt-20 lg:pt-20">
+      <section className="relative isolate overflow-hidden bg-[#eaf6f6] pt-16 sm:pt-20 lg:pt-20">
         <div className="px-5 sm:px-8 lg:px-12">
           <div className="mx-auto max-w-6xl text-center">
             <HeroCopyEntrance>
@@ -82,7 +82,7 @@ export function PageHero({
                   {eyebrow}
                 </p>
               ) : null}
-              <h1 className="mx-auto max-w-6xl text-balance text-[clamp(3rem,6vw,6rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-[#17352b]">
+              <h1 className="mx-auto max-w-6xl text-balance text-[clamp(3rem,6vw,6rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-[#0b5c5c]">
                 {title}
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-[1.65] text-body-secondary sm:text-lg">
@@ -109,7 +109,7 @@ export function PageHero({
             no radial wash, no color grade. */}
         <div className="relative mt-12 sm:mt-16">
           <HeroPhotoEntrance>
-            <figure className="relative isolate h-[46vh] min-h-[340px] w-full overflow-hidden bg-[#17352b] sm:h-[58vh] sm:min-h-[460px]">
+            <figure className="relative isolate h-[46vh] min-h-[340px] w-full overflow-hidden bg-[#66bfbf] sm:h-[58vh] sm:min-h-[460px]">
               <Image
                 src={heroImage.src}
                 alt={heroImage.alt}
@@ -120,10 +120,10 @@ export function PageHero({
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#101d17]/55 to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/55 to-transparent"
               />
               <figcaption className="absolute bottom-4 left-5 right-5 sm:bottom-6 sm:left-8 sm:right-8">
-                <PhotoCredit fileUrl={heroImage.fileUrl} className="text-[#fffefa]/80" />
+                <PhotoCredit fileUrl={heroImage.fileUrl} className="text-[#ffffff]/80" />
               </figcaption>
             </figure>
           </HeroPhotoEntrance>
@@ -145,7 +145,7 @@ export function PageHero({
                 {eyebrow}
               </p>
             ) : null}
-            <h1 className="max-w-6xl text-balance text-[clamp(2rem,7vw,3rem)] font-semibold leading-[1.06] tracking-[-0.04em] text-[#17352b] sm:text-[clamp(3.25rem,5.5vw,5.25rem)] sm:leading-[1.02] sm:tracking-[-0.04em]">
+            <h1 className="max-w-6xl text-balance text-[clamp(2rem,7vw,3rem)] font-semibold leading-[1.06] tracking-[-0.04em] text-[#0b5c5c] sm:text-[clamp(3.25rem,5.5vw,5.25rem)] sm:leading-[1.02] sm:tracking-[-0.04em]">
               {title}
             </h1>
             <p className="mt-6 max-w-xl text-pretty text-base leading-[1.65] text-body-secondary sm:text-lg">
@@ -164,7 +164,7 @@ export function PageHero({
           </HeroCopyEntrance>
 
           <HeroPhotoEntrance>
-            <figure className="relative isolate min-h-80 overflow-hidden rounded-xl bg-[#28453a] sm:aspect-[1.28] sm:min-h-0">
+            <figure className="relative isolate min-h-80 overflow-hidden rounded-xl bg-[#0b2e2e] sm:aspect-[1.28] sm:min-h-0">
               <Image
                 src={heroImage.src}
                 alt={heroImage.alt}
@@ -175,10 +175,10 @@ export function PageHero({
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-0 bg-gradient-to-t from-[#101d17]/55 to-transparent"
+                className="absolute inset-0 bg-gradient-to-t from-[#0b2e2e]/55 to-transparent"
               />
               <figcaption className="absolute bottom-4 left-5 right-5 sm:left-7">
-                <PhotoCredit fileUrl={heroImage.fileUrl} className="text-[#fffefa]/80" />
+                <PhotoCredit fileUrl={heroImage.fileUrl} className="text-[#ffffff]/80" />
               </figcaption>
             </figure>
           </HeroPhotoEntrance>

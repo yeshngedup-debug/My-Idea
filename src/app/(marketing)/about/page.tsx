@@ -33,18 +33,18 @@ export const metadata: Metadata = pageMetadata({
 
 /** BTC palette, applied as a restrained editorial card system. */
 const card =
-  "rounded-3xl border border-[#1B4D3E]/12 bg-white shadow-[0_2px_10px_rgba(11,31,26,0.04)]";
+  "rounded-3xl border border-[#b9dede]/12 bg-white shadow-[0_2px_10px_rgba(11,46,46,0.04)]";
 const cardBody = "p-6 sm:p-10 lg:p-14";
 const band = "px-4 py-16 sm:px-6 md:py-24 lg:px-8";
 const wideBand = "px-4 py-32 sm:px-6 md:py-48 lg:px-8";
 const sectionHeading =
-  "text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-5xl";
-const accent = "text-[#E8A317]";
-const muted = "text-[#5A6A61]";
+  "text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-[#0b2e2e] sm:text-4xl lg:text-5xl";
+const accent = "text-[#c2004b]";
+const muted = "text-[#356464]";
 
 /** Interactive surfaces share one hover/press treatment and a 44px target. */
 const lift =
-  "min-h-11 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(11,31,26,0.10)] motion-reduce:transform-none motion-reduce:transition-none";
+  "min-h-11 transition-[transform,box-shadow] duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(11,46,46,0.10)] motion-reduce:transform-none motion-reduce:transition-none";
 
 const dzong = {
   src: "/images/bhutanese-community.jpg",
@@ -68,7 +68,7 @@ const market = {
 };
 
 const textLink =
-  "inline-flex min-h-11 items-center font-semibold text-[#1B4D3E] underline decoration-[#E8A317] decoration-2 underline-offset-4 transition-colors hover:text-[#0B1F1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
+  "inline-flex min-h-11 items-center font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-2 underline-offset-4 transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
 
 /**
  * The disclosure component builds button IDs and `aria-controls` values from
@@ -83,15 +83,15 @@ function contextFactId(label: string): string {
 }
 
 const heroPrimary =
-  "pressable inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors hover:bg-[#F2B733] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
+  "pressable inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
 const heroSecondary =
-  "pressable inline-flex min-h-11 items-center justify-center rounded-full border border-[#1B4D3E]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B4D3E] transition-colors hover:bg-[#E8E4DB]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
+  "pressable inline-flex min-h-11 items-center justify-center rounded-full border border-[#b9dede]/20 bg-white px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
 
 export default async function AboutPage() {
   const liveContext = await getLiveContext();
 
   return (
-    <div className="min-h-screen bg-[#F7F4EE] text-[#0B1F1A]">
+    <div className="min-h-screen bg-[#eaf6f6] text-[#0b2e2e]">
       <SiteHeader />
 
       <main id="main-content" className="w-full max-w-full overflow-x-clip">
@@ -103,12 +103,12 @@ export default async function AboutPage() {
               <HeroCopyEntrance className="col-span-12 flex flex-col justify-center px-2 py-6 md:col-span-7 md:px-8 lg:pr-16">
                 <h1
                   id="about-heading"
-                  className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.05em] text-[#0B1F1A]"
+                  className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.05em] text-[#0b2e2e]"
                 >
                   <ScrubbedTextReveal
                     as="span"
                     text="Paid projects for"
-                    className="[&_span]:!text-[#0B1F1A]"
+                    className="[&_span]:!text-[#0b2e2e]"
                   />{" "}
                   <span className={accent}>Bhutanese students</span>
                 </h1>
@@ -126,7 +126,7 @@ export default async function AboutPage() {
               </HeroCopyEntrance>
 
               <figure className="col-span-12 md:col-span-5">
-                <ScaleFadeImage className="relative isolate aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0B1F1A]">
+                <ScaleFadeImage className="relative isolate aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#0b2e2e]">
                   <Image
                     src={dzong.src}
                     alt={dzong.alt}
@@ -140,17 +140,17 @@ export default async function AboutPage() {
                     className="absolute inset-0"
                     style={{
                       background:
-                        "radial-gradient(circle at 45% 35%, rgba(11,31,26,0.05) 0%, rgba(11,31,26,0.78) 100%)",
+                        "radial-gradient(circle at 45% 35%, rgba(11,46,46,0.05) 0%, rgba(11,46,46,0.78) 100%)",
                     }}
                   />
                 </ScaleFadeImage>
                 <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                  <span className="text-sm font-medium text-[#0B1F1A]">
+                  <span className="text-sm font-medium text-[#0b2e2e]">
                     Bhutanese boys in gho, sitting together
                   </span>
                   <PhotoCredit
                     fileUrl={dzong.fileUrl}
-                    className="text-[#5A6A61]"
+                    className="text-[#356464]"
                   />
                 </figcaption>
               </figure>
@@ -165,17 +165,17 @@ export default async function AboutPage() {
                 <ScrubbedTextReveal
                   as="span"
                   text="Young people need work close to home"
-                  className="[&_span]:!text-[#0B1F1A]"
+                  className="[&_span]:!text-[#0b2e2e]"
                 />
               </h2>
               <p className={`mx-auto mt-6 max-w-2xl text-base leading-7 sm:text-lg sm:leading-8 ${muted}`}>
                 A practical first step for students and founders.
               </p>
-              <Reveal className="mx-auto mt-16 max-w-xl border-t border-[#1B4D3E]/12 pt-10 text-center">
-                <p className="text-[clamp(4.5rem,10vw,8rem)] font-semibold leading-[0.8] tracking-[-0.09em] text-[#0B1F1A]">
+              <Reveal className="mx-auto mt-16 max-w-xl border-t border-[#b9dede]/12 pt-10 text-center">
+                <p className="text-[clamp(4.5rem,10vw,8rem)] font-semibold leading-[0.8] tracking-[-0.09em] text-[#0b2e2e]">
                   {YOUTH_UNEMPLOYMENT.value}
                 </p>
-                <h3 className="mt-6 text-balance text-2xl font-semibold leading-snug tracking-tight text-[#1B4D3E] sm:text-3xl">
+                <h3 className="mt-6 text-balance text-2xl font-semibold leading-snug tracking-tight text-[#0b5c5c] sm:text-3xl">
                   {YOUTH_UNEMPLOYMENT.label}
                 </h3>
               </Reveal>
@@ -191,7 +191,7 @@ export default async function AboutPage() {
                 heading={
                   <h2
                     id="context-heading"
-                    className="text-balance text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl lg:text-left"
+                    className="text-balance text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#0b2e2e] sm:text-4xl lg:text-left"
                   >
                     The context{" "}
                     <span className={accent}>behind the work</span>
@@ -206,13 +206,13 @@ export default async function AboutPage() {
                     id: contextFactId(fact.label),
                     trigger: (
                       <span className="grid gap-2 py-1 sm:grid-cols-[8rem_1fr] sm:gap-8">
-                        <span className="text-2xl font-semibold text-[#0B1F1A] sm:text-3xl">
+                        <span className="text-2xl font-semibold text-[#0b2e2e] sm:text-3xl">
                           {fact.value}
                         </span>
                         <span
                           role="heading"
                           aria-level={3}
-                          className="text-base font-semibold leading-snug text-[#0B1F1A] sm:text-lg"
+                          className="text-base font-semibold leading-snug text-[#0b2e2e] sm:text-lg"
                         >
                           {fact.label}
                         </span>
@@ -225,7 +225,7 @@ export default async function AboutPage() {
                 />
 
                 <figure className="mt-12">
-                  <ScaleFadeImage className="relative isolate aspect-[4/1] overflow-hidden rounded-[1.25rem] border border-[#1B4D3E]/12 bg-[#E8E4DB]">
+                  <ScaleFadeImage className="relative isolate aspect-[4/1] overflow-hidden rounded-[1.25rem] border border-[#b9dede]/12 bg-[#eaf6f6]">
                     <Image
                       src="/images/thimphu-market.webp"
                       alt="Open sacks of spices and grain at a market stall in Thimphu"
@@ -239,8 +239,8 @@ export default async function AboutPage() {
                   </figcaption>
                 </figure>
 
-                <Reveal className="mt-16 grid gap-8 border-t border-[#1B4D3E]/12 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
-                  <blockquote className="border-l-2 border-[#E8A317] pl-6 text-xl leading-relaxed text-[#0B1F1A] sm:text-2xl">
+                <Reveal className="mt-16 grid gap-8 border-t border-[#b9dede]/12 pt-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+                  <blockquote className="border-l-2 border-[#ff0063] pl-6 text-xl leading-relaxed text-[#0b2e2e] sm:text-2xl">
                     &ldquo;{CONTEXT_QUOTE.text}&rdquo;
                   </blockquote>
                   <p className={`self-end text-sm leading-6 ${muted}`}>
@@ -248,14 +248,14 @@ export default async function AboutPage() {
                   </p>
                 </Reveal>
 
-                <Reveal className="mt-12 border-t border-[#1B4D3E]/12 pt-6">
+                <Reveal className="mt-12 border-t border-[#b9dede]/12 pt-6">
                   <p className={`text-xs leading-5 ${muted}`}>
                     Source:{" "}
                     <a
                       href={WORLD_BANK_SOURCE.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-6 items-center font-semibold text-[#1B4D3E] underline decoration-[#E8A317] decoration-2 underline-offset-4 transition-colors hover:text-[#0B1F1A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none"
+                      className="inline-flex min-h-6 items-center font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-2 underline-offset-4 transition-colors hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none"
                     >
                       {WORLD_BANK_SOURCE.label}
                     </a>
@@ -271,7 +271,7 @@ export default async function AboutPage() {
           <div className="mx-auto w-full max-w-[1440px]">
             <div className={`${card} ${cardBody}`}>
               <details>
-                <summary className="mx-auto max-w-[1440px] min-h-11 cursor-pointer rounded-full py-2 text-center text-sm font-semibold text-[#1B4D3E] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A317] focus-visible:ring-offset-2 focus-visible:ring-offset-white">
+                <summary className="mx-auto max-w-[1440px] min-h-11 cursor-pointer rounded-full py-2 text-center text-sm font-semibold text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-white">
                   Official statistics
                 </summary>
                 <LiveContext initial={liveContext} variant="full" />
@@ -299,7 +299,7 @@ export default async function AboutPage() {
                     Students and founders meet around paid project work. Not an
                     employer or agent.
                   </p>
-                  <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-[#1B4D3E]/12 pt-8">
+                  <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-[#b9dede]/12 pt-8">
                     <Link href="/how-it-works" className={textLink}>
                       See how it works
                     </Link>
@@ -342,10 +342,10 @@ export default async function AboutPage() {
                 A manual check, never an algorithm.
               </p>
               {/* Gapless 12-column mosaic: 6 + 3 + 3. */}
-              <div className="mt-12 grid grid-cols-12 grid-flow-dense gap-4 border-t border-[#1B4D3E]/12 pt-10">
+              <div className="mt-12 grid grid-cols-12 grid-flow-dense gap-4 border-t border-[#b9dede]/12 pt-10">
                 <Reveal delay={0} className="col-span-12 sm:col-span-6">
-                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
-                    <h3 className="text-base font-semibold text-[#0B1F1A]">
+                  <div className={`h-full rounded-[1.25rem] border border-[#b9dede]/10 bg-[#eaf6f6] p-6 ${lift}`}>
+                    <h3 className="text-base font-semibold text-[#0b2e2e]">
                       Identity and institution details
                     </h3>
                     <p className={`mt-2 text-sm leading-6 ${muted}`}>
@@ -355,8 +355,8 @@ export default async function AboutPage() {
                   </div>
                 </Reveal>
                 <Reveal delay={0.05} className="col-span-12 sm:col-span-3">
-                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
-                    <h3 className="text-base font-semibold text-[#0B1F1A]">
+                  <div className={`h-full rounded-[1.25rem] border border-[#b9dede]/10 bg-[#eaf6f6] p-6 ${lift}`}>
+                    <h3 className="text-base font-semibold text-[#0b2e2e]">
                       CV review
                     </h3>
                     <p className={`mt-2 text-sm leading-6 ${muted}`}>
@@ -365,8 +365,8 @@ export default async function AboutPage() {
                   </div>
                 </Reveal>
                 <Reveal delay={0.1} className="col-span-12 sm:col-span-3">
-                  <div className={`h-full rounded-[1.25rem] border border-[#1B4D3E]/10 bg-[#F7F4EE] p-6 ${lift}`}>
-                    <h3 className="text-base font-semibold text-[#0B1F1A]">
+                  <div className={`h-full rounded-[1.25rem] border border-[#b9dede]/10 bg-[#eaf6f6] p-6 ${lift}`}>
+                    <h3 className="text-base font-semibold text-[#0b2e2e]">
                       Rank and verified badge
                     </h3>
                     <p className={`mt-2 text-sm leading-6 ${muted}`}>
@@ -420,8 +420,8 @@ export default async function AboutPage() {
 
         <section className={wideBand}>
           <div className="mx-auto w-full max-w-[1440px]">
-            <div className="rounded-3xl border border-[#1B4D3E]/12 bg-[#1B4D3E] px-6 py-20 text-center sm:px-10 sm:py-28">
-              <h2 className="text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-white">
+            <div className="rounded-3xl border border-[#b9dede]/12 bg-[#66bfbf] px-6 py-20 text-center sm:px-10 sm:py-28">
+              <h2 className="text-balance text-[clamp(2.75rem,5vw,4.5rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-[#0b2e2e]">
                 See how it all <span className={accent}>fits together</span>
               </h2>
               <div className="mt-10 flex justify-center">

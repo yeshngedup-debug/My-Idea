@@ -156,7 +156,7 @@ export default async function FounderDashboard() {
         </Link>
         <Link
           href="/founder/projects/post"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-primary-foreground/35 px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-primary-foreground/35 px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#66bfbf]"
         >
           Post a project
         </Link>
@@ -190,7 +190,7 @@ export default async function FounderDashboard() {
               </p>
               <Link
                 href="/founder/projects/post"
-                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
               >
                 Create your first project
               </Link>

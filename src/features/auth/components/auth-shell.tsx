@@ -52,7 +52,12 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main
       id="main-content"
-      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-5 py-5 text-[#18251f] sm:px-10 sm:py-9 lg:px-14`}
+      style={{
+        backgroundColor: "#eaf6f6",
+        backgroundImage:
+          "radial-gradient(62% 48% at 88% 4%, rgba(102, 191, 191, 0.16), transparent 72%)",
+      }}
+      className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-5 py-5 text-[#0b2e2e] sm:px-10 sm:py-9 lg:px-14`}
     >
       <style>{authMotionStyles}</style>
 
@@ -62,28 +67,28 @@ export function AuthShell({ children }: { children: ReactNode }) {
           className={`pressable inline-flex min-h-11 items-center gap-2.5 rounded-full ${pressStyles.press} ${focusRing}`}
         >
           <Logo size="h-7 w-7" />
-          <span className="text-[13px] font-semibold text-[#17352b] sm:text-base">
+          <span className="text-[13px] font-semibold text-[#0b5c5c] sm:text-base">
             Bhutan Tech Connect
           </span>
         </Link>
         <Link
           href="/public"
-          className={`pressable inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 py-2 text-xs font-medium text-[#56645c] underline decoration-[#17352b]/25 underline-offset-4 hover:bg-white hover:text-[#17352b] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
+          className={`pressable inline-flex min-h-11 shrink-0 items-center rounded-lg px-2 py-2 text-xs font-medium text-[#356464] underline decoration-[#0b5c5c]/25 underline-offset-4 hover:bg-white hover:text-[#0b5c5c] sm:px-3 sm:text-sm ${pressStyles.press} ${focusRing}`}
         >
           About the platform
         </Link>
       </header>
 
       <div className="mx-auto grid max-w-[1440px] gap-5 lg:min-h-[calc(100vh-9rem)] lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-        <section className="relative isolate flex min-h-[210px] flex-col justify-end overflow-hidden rounded-[1.5rem] bg-[#17352b] p-7 text-white sm:min-h-[300px] sm:rounded-[2rem] sm:p-12 lg:min-h-0 lg:p-16">
-          <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <section className="relative isolate flex min-h-[210px] flex-col justify-between overflow-hidden rounded-[1.5rem] bg-[#0b5c5c] p-7 text-white sm:min-h-[300px] sm:rounded-[2rem] sm:p-12 lg:min-h-0 lg:p-16">
+          <div aria-hidden="true" className="absolute right-0 bottom-0 -z-10 h-4/5 w-4/5">
             <Image
               src="/images/bhutanese-students.jpg"
               alt=""
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover object-[42%_50%] opacity-70 brightness-80 saturate-125"
+              className="object-cover object-[70%_60%] opacity-60 grayscale contrast-125"
             />
             <div className={`absolute inset-0 ${styles.imageWash}`} />
           </div>
@@ -91,7 +96,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           <div className="w-full max-w-6xl">
             <Headline
               style={displayFont}
-              className="w-full text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-balance"
+              className="w-full text-left text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-balance"
             >
               Paid project work in Bhutan
             </Headline>
@@ -111,6 +116,12 @@ export function AuthShell({ children }: { children: ReactNode }) {
             ref={cardRef}
             data-auth-card
             data-auth-enter
+            style={{
+              backgroundColor: "#ffffff",
+              borderColor: "#b9dede",
+              boxShadow:
+                "inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px -3px rgba(11, 92, 92, 0.12), 0 26px 56px -30px rgba(11, 92, 92, 0.26)",
+            }}
             className={`${styles.formCard} w-full max-w-md rounded-[1.5rem] px-6 py-9 sm:max-w-lg sm:rounded-[2rem] sm:px-10 sm:py-12 lg:px-14`}
           >
             {children}

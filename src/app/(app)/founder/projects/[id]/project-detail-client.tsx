@@ -38,10 +38,10 @@ export interface ProjectInfo {
 }
 
 const APP_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: 'Pending', cls: 'border-amber-200 bg-amber-50 text-[#8a5a00]' },
-  shortlisted: { label: 'Shortlisted', cls: 'border-[#ded8cb] bg-[#f5f2ea] text-[#17352b]' },
-  accepted: { label: 'Accepted', cls: 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]' },
-  rejected: { label: 'Rejected', cls: 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]' },
+  pending: { label: 'Pending', cls: 'border-amber-200 bg-amber-50 text-[#0b5c5c]' },
+  shortlisted: { label: 'Shortlisted', cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
+  accepted: { label: 'Accepted', cls: 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]' },
+  rejected: { label: 'Rejected', cls: 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]' },
 };
 
 const APPLICATION_STATUSES = [
@@ -149,7 +149,7 @@ export function ProjectDetailClient({
     <div className="space-y-6" aria-busy={busy}>
       <Link
         href="/founder/projects"
-        className="inline-flex min-h-9 items-center gap-2 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded"
+        className="inline-flex min-h-9 items-center gap-2 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded"
       >
         Back to my projects
       </Link>
@@ -157,8 +157,8 @@ export function ProjectDetailClient({
       {status && (
         <p role={status.ok ? 'status' : 'alert'} className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
           status.ok
-            ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-            : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+            ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+            : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
         }`}>
           {status.msg}
         </p>
@@ -166,17 +166,17 @@ export function ProjectDetailClient({
 
       <section className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold tracking-tight text-[#17352b] sm:text-2xl">{project.title}</h2>
-          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#56645c]">
+          <h2 className="text-xl font-semibold tracking-tight text-[#0b5c5c] sm:text-2xl">{project.title}</h2>
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#356464]">
             {project.duration && <span>{project.duration}</span>}
             <span className="inline-flex items-center gap-1">
               Work mode:{' '}
-              <span className="font-semibold text-[#17352b]">
+              <span className="font-semibold text-[#0b5c5c]">
                 {project.work_mode === 'onsite' ? 'On-site' : 'Remote'}
               </span>
             </span>
             {project.budget_min != null && (
-              <span className="font-semibold tabular-nums text-[#17352b]">
+              <span className="font-semibold tabular-nums text-[#0b5c5c]">
                 Nu {project.budget_min.toLocaleString('en-IN')}
                 {project.budget_max != null && project.budget_max !== project.budget_min ? ` - ${project.budget_max.toLocaleString('en-IN')}` : ''}
               </span>
@@ -195,10 +195,10 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`pressable inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+              className={`pressable inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
                 projectStatus === s.value
-                  ? 'bg-[#17352b] text-[#fffefa]'
-                  : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
+                  ? 'bg-[#0b5c5c] text-[#ffffff]'
+                  : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
                 }`}
               >
                 {s.label}
@@ -215,13 +215,13 @@ export function ProjectDetailClient({
         />
 
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-[#17352b]">
-            Applicants <span className="font-normal tabular-nums text-[#56645c]">({applicants.length})</span>
+          <h2 className="text-base font-semibold text-[#0b5c5c]">
+            Applicants <span className="font-normal tabular-nums text-[#356464]">({applicants.length})</span>
           </h2>
 
           {applicants.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-              <p className="text-sm text-[#56645c]">
+            <div className="rounded-xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+              <p className="text-sm text-[#356464]">
                 No applications yet. When a student applies, you can review their
                 details here.
               </p>
@@ -234,13 +234,13 @@ export function ProjectDetailClient({
                 const badge = APP_BADGE[current] ?? APP_BADGE.pending;
                 const statusHelpId = `applicant-status-help-${a.id}`;
                 return (
-                  <li key={a.id} className="space-y-3 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5">
+                  <li key={a.id} className="space-y-3 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="truncate text-base font-semibold text-[#17352b]">
+                        <h3 className="truncate text-base font-semibold text-[#0b5c5c]">
                           {s?.full_name ?? 'Applicant'}
                         </h3>
-                        <p className="text-xs text-[#56645c]">
+                        <p className="text-xs text-[#356464]">
                           {s?.college ?? 'College not set'}
                           {s?.course ? ` - ${s.course}` : ''}
                           {s?.year ? ` (${s.year} year)` : ''}
@@ -260,14 +260,14 @@ export function ProjectDetailClient({
                     {(s?.skills?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-1.5">
                         {(s?.skills ?? []).slice(0, 6).map((k) => (
-                          <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#4c5a52]">{k}</Badge>
+                          <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">{k}</Badge>
                         ))}
                       </div>
                     )}
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                       {s?.cv_path && (
-                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 text-[#b23c26] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 text-[#c2004b] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           View CV
                           <span className="sr-only">
                             {' '}for {s?.full_name ?? 'this applicant'} (opens in a new tab)
@@ -275,11 +275,11 @@ export function ProjectDetailClient({
                         </a>
                       )}
                       {s?.contact_email && (
-                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-9 items-center gap-1.5 break-all text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] rounded">
+                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-9 items-center gap-1.5 break-all text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           {s.contact_email}
                         </a>
                       )}
-                      <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-[#56645c]">
+                      <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-[#356464]">
                         Applied {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                       </span>
                     </div>
@@ -288,7 +288,7 @@ export function ProjectDetailClient({
                       role="group"
                       aria-label={`Applicant status for ${s?.full_name ?? 'applicant'}`}
                       aria-describedby={statusHelpId}
-                      className="space-y-2 border-t border-[#ded8cb] pt-3"
+                      className="space-y-2 border-t border-[#b9dede] pt-3"
                     >
                       <div className="flex flex-wrap gap-2">
                         {APPLICATION_STATUSES.map((st) => {
@@ -301,10 +301,10 @@ export function ProjectDetailClient({
                               disabled={busy || isCurrent || !isAllowed}
                               onClick={() => setApplication(a.id, st, s?.full_name ?? 'this applicant')}
                               aria-pressed={isCurrent}
-                              className={`pressable inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:cursor-not-allowed disabled:opacity-60 ${
+                              className={`pressable inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:cursor-not-allowed disabled:opacity-60 ${
                                 isCurrent
-                                  ? 'bg-[#17352b] text-[#fffefa]'
-                                  : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
+                                  ? 'bg-[#0b5c5c] text-[#ffffff]'
+                                  : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
                               }`}
                             >
                               {applicantStatusLabel(st)}

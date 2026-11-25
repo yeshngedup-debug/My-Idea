@@ -46,16 +46,16 @@ function LiveStatus({
   return (
     <p
       role="status"
-      className="inline-flex min-h-8 items-center gap-2 rounded-lg border border-[#17352b]/15 bg-[#fffefa] px-3 py-1 text-xs font-medium text-[#17352b]"
+      className="inline-flex min-h-8 items-center gap-2 rounded-lg border border-[#66bfbf]/15 bg-[#ffffff] px-3 py-1 text-xs font-medium text-[#0b5c5c]"
     >
       <span
         aria-hidden="true"
         className={`h-1.5 w-1.5 rounded-full ${
-          confirmed ? "bg-[#17352b]" : "bg-[#b23c26]"
+          confirmed ? "bg-[#0b5c5c]" : "bg-[#ff0063]"
         }`}
       />
       {latest ? (LABELS[latest.status] ?? latest.status) : "No orders yet"}
-      {status === "stale" ? <span className="text-[#657069]">Updating</span> : null}
+      {status === "stale" ? <span className="text-[#356464]">Updating</span> : null}
     </p>
   );
 }

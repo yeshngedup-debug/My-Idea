@@ -1,15 +1,15 @@
 feature,area,priority,original,clone,notes
 Pill sticky navigation,shell,must,yes,no,Adapt with BTC wordmark and links
 Hero with product mockup,home,must,yes,no,Use real BTC brief/shortlist panel
-Centered heading with accent phrase,all pages,must,yes,no,Use saffron accent on pine text
+Centered heading with accent phrase,all pages,must,yes,no,Use magenta accent on ink text
 Large rounded white section cards,all pages,must,yes,no,Adopt radius and hairline border
 Pill section labels,all pages,should,yes,no,"Demo, Features, Trust"
 Bento feature grid,home,should,yes,no,BTC steps and benefits
 Two-column feature cards,home,should,yes,no,Students and Founders paths
-Gradient glow behind product,home,should,yes,no,Soft saffron/pine tint
+Gradient glow behind product,home,should,yes,no,Soft teal/mist tint
 Quote grid,home,could,yes,no,Replace with verified platform facts - no invented quotes
 Integration logo row,home,could,yes,no,Replace with stack facts (Neon Supabase removed) - no fake logos
 Blog cards,home,could,yes,no,Use real help/FAQ links - no invented posts
-Final CTA card,all pages,must,yes,no,Saffron primary on pine
+Final CTA card,all pages,must,yes,no,Magenta primary on mist
 Minimal footer,shell,must,yes,no,Keep legal and contact links
 Authenticated dashboards,app,must,yes,yes,Functionality unchanged; visual alignment only

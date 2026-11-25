@@ -32,15 +32,15 @@ export const metadata: Metadata = pageMetadata({
 const FOUNDER_ACCESS = "Ask for founder access";
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
-const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
-const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]";
+const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054]/85 motion-reduce:transition-none ${focusRing}`;
+const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#0b5c5c] underline decoration-[#0b5c5c]/30 underline-offset-4 transition-colors hover:text-[#0b2e2e] motion-reduce:transition-none ${focusRing}`;
 const bandClass =
   "w-full max-w-full overflow-x-hidden px-5 py-32 sm:px-8 md:py-48 lg:px-12";
 const headingClass =
-  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]";
+  "text-balance text-left text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]";
 const bodyClass =
-  "max-w-2xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8";
+  "max-w-2xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8";
 const bentoClass = "grid w-full max-w-full grid-cols-12 grid-flow-dense gap-4";
 const imageZoom =
   "object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100";
@@ -137,7 +137,7 @@ const controls = [
 
 export default function ForFoundersPage() {
   return (
-    <div className="min-h-[100dvh] bg-[#F7F4EE] text-[#0B1F1A]">
+    <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
       <SiteHeader />
 
       <main id="main-content" className="w-full max-w-full overflow-x-hidden">
@@ -146,10 +146,10 @@ export default function ForFoundersPage() {
           <div className="mx-auto w-full max-w-6xl">
             <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr] lg:gap-20">
               <HeroCopyEntrance>
-                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0B1F1A]">
+                <h1 className="w-full max-w-6xl text-balance text-[clamp(3rem,5vw,5.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-[#0b2e2e]">
                   Hire verified student talent for scoped work.
                 </h1>
-                <p className="mt-8 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg sm:leading-8">
+                <p className="mt-8 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg sm:leading-8">
                   Post a clear brief and budget. Browse students by skill and
                   availability. Or buy a ranked shortlist when you need a short
                   list fast — verified by an admin, paid in Ngultrum.
@@ -165,7 +165,7 @@ export default function ForFoundersPage() {
               </HeroCopyEntrance>
 
               <HeroPhotoEntrance>
-                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-[#0B1F1A]">
+                <figure className="group relative isolate aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-[#0b2e2e]">
                   <Image
                     src="https://picsum.photos/seed/bhutan-startup-founders/1200/1500"
                     alt=""
@@ -197,7 +197,7 @@ export default function ForFoundersPage() {
             <ScrubbedTextReveal
               as="p"
               text="Choose Basic or Full Support and upload a payment screenshot. An admin confirms payment, ranks the students and releases the shortlist."
-              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#1B4D3E]"
+              className="max-w-4xl text-balance text-[clamp(1.75rem,3.5vw,3rem)] font-medium leading-tight tracking-[-0.03em] text-[#0b5c5c]"
             />
           </div>
         </section>
@@ -209,12 +209,12 @@ export default function ForFoundersPage() {
             {pains.map((row) => (
               <div
                 key={row.pain}
-                className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-4 sm:p-8"
+                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-4 sm:p-8"
               >
-                <p className="text-base font-medium text-[#0B1F1A]/65">
+                <p className="text-base font-medium text-[#0b2e2e]/65">
                   {row.pain}
                 </p>
-                <p className="mt-4 flex items-start gap-3 text-base font-medium text-[#1B4D3E]">
+                <p className="mt-4 flex items-start gap-3 text-base font-medium text-[#0b5c5c]">
                   <CheckCircle
                     aria-hidden="true"
                     weight="light"
@@ -236,18 +236,18 @@ export default function ForFoundersPage() {
             {steps.map((step) => (
               <li
                 key={step.number}
-                className="col-span-12 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-3 sm:p-8"
+                className="col-span-12 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-3 sm:p-8"
               >
-                <span className="text-sm font-semibold tabular-nums text-[#1B4D3E]">
+                <span className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
                   {step.number}
                 </span>
-                <h3 className="mt-6 text-lg font-semibold tracking-[-0.01em] text-[#0B1F1A]">
+                <h3 className="mt-6 text-lg font-semibold tracking-[-0.01em] text-[#0b2e2e]">
                   {step.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-[#0B1F1A]/70">
+                <p className="mt-3 text-sm leading-6 text-[#0b2e2e]/70">
                   {step.body}
                 </p>
-                <p className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#E8E4DB]/60 px-3 py-2 text-xs font-medium text-[#1B4D3E]">
+                <p className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#eaf6f6]/60 px-3 py-2 text-xs font-medium text-[#0b5c5c]">
                   <FileText aria-hidden="true" weight="light" size={14} />
                   {step.hint}
                 </p>
@@ -273,9 +273,9 @@ export default function ForFoundersPage() {
               return (
                 <div
                   key={item.title}
-                  className="col-span-12 flex gap-4 rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 lg:col-span-3 sm:p-8"
+                  className="col-span-12 flex gap-4 rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 lg:col-span-3 sm:p-8"
                 >
-                  <span className="mt-0.5 shrink-0 text-[#1B4D3E]">
+                  <span className="mt-0.5 shrink-0 text-[#0b5c5c]">
                     <Icon
                       aria-hidden="true"
                       weight="light"
@@ -284,10 +284,10 @@ export default function ForFoundersPage() {
                     />
                   </span>
                   <div>
-                    <h3 className="text-sm font-semibold text-[#0B1F1A]">
+                    <h3 className="text-sm font-semibold text-[#0b2e2e]">
                       {item.title}
                     </h3>
-                    <p className="mt-1.5 text-sm leading-6 text-[#0B1F1A]/70">
+                    <p className="mt-1.5 text-sm leading-6 text-[#0b2e2e]/70">
                       {item.body}
                     </p>
                   </div>
@@ -312,33 +312,33 @@ export default function ForFoundersPage() {
             <div
               role="group"
               aria-label="Sample shortlist order panel"
-              className="mt-14 w-full max-w-3xl rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 sm:p-8"
+              className="mt-14 w-full max-w-3xl rounded-[1.25rem] border border-[#b9dede] bg-white p-6 sm:p-8"
             >
-              <h3 className="text-lg font-semibold tracking-[-0.02em] text-[#0B1F1A]">
+              <h3 className="text-lg font-semibold tracking-[-0.02em] text-[#0b2e2e]">
                 Sample shortlist order
               </h3>
-              <p className="mt-1 text-xs text-[#0B1F1A]/60">
+              <p className="mt-1 text-xs text-[#0b2e2e]/60">
                 Example order · not a live order
               </p>
-              <p className="mt-7 border-t border-[#E8E4DB] pt-5 text-2xl font-semibold tabular-nums tracking-[-0.02em] text-[#0B1F1A]">
+              <p className="mt-7 border-t border-[#b9dede] pt-5 text-2xl font-semibold tabular-nums tracking-[-0.02em] text-[#0b2e2e]">
                 Basic shortlist · {basicPrice}
               </p>
-              <p className="mt-2 text-sm text-[#0B1F1A]/65">
+              <p className="mt-2 text-sm text-[#0b2e2e]/65">
                 Ranked, verified students for your brief
               </p>
-              <p className="mt-7 border-t border-[#E8E4DB] pt-5 text-sm font-medium text-[#1B4D3E]">
+              <p className="mt-7 border-t border-[#b9dede] pt-5 text-sm font-medium text-[#0b5c5c]">
                 Status: Payment confirmed → Admin ranking
               </p>
-              <div className="mt-6 flex items-center justify-between gap-4 border-t border-[#E8E4DB] pt-5">
-                <span className="text-xs text-[#0B1F1A]/55">
+              <div className="mt-6 flex items-center justify-between gap-4 border-t border-[#b9dede] pt-5">
+                <span className="text-xs text-[#0b2e2e]/55">
                   Sample view · not a live order
                 </span>
-                <span className="inline-flex min-h-9 items-center rounded-lg border border-[#1B4D3E]/30 px-4 text-xs font-semibold text-[#1B4D3E]/65">
+                <span className="inline-flex min-h-9 items-center rounded-lg border border-[#b9dede]/30 px-4 text-xs font-semibold text-[#0b5c5c]/65">
                   Order shortlist
                 </span>
               </div>
               {!PAYMENT_CONFIGURED ? (
-                <p className="mt-4 text-xs leading-5 text-[#0B1F1A]/65">
+                <p className="mt-4 text-xs leading-5 text-[#0b2e2e]/65">
                   Orders are unavailable until the bank and mBoB details are
                   published.
                 </p>
@@ -356,31 +356,31 @@ export default function ForFoundersPage() {
               </p>
 
               {/* Basic: quiet card. */}
-              <article className="col-span-12 flex h-full flex-col rounded-[1.25rem] border border-[#E8E4DB] bg-white p-6 md:col-span-6 sm:p-8">
-                <h3 className="text-xl font-semibold tracking-[-0.01em] text-[#0B1F1A]">
+              <article className="col-span-12 flex h-full flex-col rounded-[1.25rem] border border-[#b9dede] bg-white p-6 md:col-span-6 sm:p-8">
+                <h3 className="text-xl font-semibold tracking-[-0.01em] text-[#0b2e2e]">
                   {PACKAGES.basic.name}
                 </h3>
-                <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#1B4D3E]">
+                <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#0b5c5c]">
                   {basicPrice}
                 </p>
-                <p className="mt-1 text-xs text-[#0B1F1A]/60">
+                <p className="mt-1 text-xs text-[#0b2e2e]/60">
                   Suggested range: {PACKAGES.basic.priceRange}
                 </p>
-                <p className="mt-6 text-sm leading-6 text-[#0B1F1A]/70">
+                <p className="mt-6 text-sm leading-6 text-[#0b2e2e]/70">
                   Ranked shortlist from verified students matching the brief
                 </p>
-                <ul className="mt-6 space-y-3 border-t border-[#1B4D3E]/15 pt-6">
+                <ul className="mt-6 space-y-3 border-t border-[#b9dede]/15 pt-6">
                   {PACKAGES.basic.features.map((feature) => (
                     <li
                       key={feature}
-                      className="flex items-start gap-3 text-sm leading-6 text-[#0B1F1A]/75"
+                      className="flex items-start gap-3 text-sm leading-6 text-[#0b2e2e]/75"
                     >
                       <CheckCircle
                         aria-hidden="true"
                         weight="light"
                         size={18}
                         strokeWidth={1.6}
-                        className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                        className="mt-0.5 shrink-0 text-[#0b5c5c]"
                       />
                       {feature}
                     </li>
@@ -389,32 +389,32 @@ export default function ForFoundersPage() {
               </article>
 
               {/* Full Support: the one featured card, with a hairline. */}
-              <div className="col-span-12 rounded-[1.25rem] bg-gradient-to-br from-[#E8A317] via-[#E8E4DB] to-[#1B4D3E] p-px md:col-span-6">
-                <article className="flex h-full flex-col rounded-[1.24rem] bg-[#1B4D3E] p-6 text-[#F7F4EE] sm:p-8">
+              <div className="col-span-12 rounded-[1.25rem] bg-gradient-to-br from-[#ff0063] via-[#eaf6f6] to-[#0b5c5c] p-px md:col-span-6">
+                <article className="flex h-full flex-col rounded-[1.24rem] bg-[#66bfbf] p-6 text-[#0b2e2e] sm:p-8">
                   <h3 className="text-xl font-semibold tracking-[-0.01em]">
                     {PACKAGES.full.name}
                   </h3>
-                  <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#E8A317]">
+                  <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#c2004b]">
                     {fullPrice}
                   </p>
-                  <p className="mt-1 text-xs text-[#F7F4EE]/70">
+                  <p className="mt-1 text-xs text-[#0b2e2e]/75">
                     Suggested range: {PACKAGES.full.priceRange}
                   </p>
-                  <p className="mt-6 text-sm leading-6 text-[#F7F4EE]/85">
+                  <p className="mt-6 text-sm leading-6 text-[#0b2e2e]/85">
                     Ranked shortlist + admin help refining scope and fit
                   </p>
-                  <ul className="mt-6 space-y-3 border-t border-[#F7F4EE]/25 pt-6">
+                  <ul className="mt-6 space-y-3 border-t border-[#0b5c5c]/25 pt-6">
                     {PACKAGES.full.features.map((feature) => (
                       <li
                         key={feature}
-                        className="flex items-start gap-3 text-sm leading-6 text-[#F7F4EE]/90"
+                        className="flex items-start gap-3 text-sm leading-6 text-[#0b2e2e]/90"
                       >
                         <CheckCircle
                           aria-hidden="true"
                           weight="light"
                           size={18}
                           strokeWidth={1.6}
-                          className="mt-0.5 shrink-0 text-[#E8A317]"
+                          className="mt-0.5 shrink-0 text-[#c2004b]"
                         />
                         {feature}
                       </li>
@@ -424,14 +424,14 @@ export default function ForFoundersPage() {
               </div>
             </div>
 
-            <p className="mx-auto mt-8 max-w-[70ch] text-center text-sm leading-6 text-[#0B1F1A]/70">
+            <p className="mx-auto mt-8 max-w-[70ch] text-center text-sm leading-6 text-[#0b2e2e]/70">
               Pay by bank transfer or mBoB. Upload the screenshot. An admin
               confirms payment before the shortlist is released.
             </p>
             {!PAYMENT_CONFIGURED ? (
               <div
                 role="note"
-                className="mx-auto mt-5 max-w-[70ch] rounded-[16px] border border-[#1B4D3E]/20 bg-[#E8E4DB]/50 px-4 py-3 text-sm leading-6 text-[#1B4D3E]"
+                className="mx-auto mt-5 max-w-[70ch] rounded-[16px] border border-[#b9dede]/20 bg-[#eaf6f6]/50 px-4 py-3 text-sm leading-6 text-[#0b5c5c]"
               >
                 Shortlist orders are unavailable right now. Bank and mBoB
                 details have not been published yet. The amounts above are the
@@ -448,11 +448,11 @@ export default function ForFoundersPage() {
 
         {/* Closing band: one saffron action. */}
         <section className="w-full max-w-full overflow-x-hidden px-5 pb-16 sm:px-8 lg:px-12">
-          <div className="relative isolate mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-[#E8E4DB] bg-white px-6 py-24 text-left sm:px-12">
-            <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
+          <div className="relative isolate mx-auto w-full max-w-6xl overflow-hidden rounded-[1.5rem] border border-[#b9dede] bg-white px-6 py-24 text-left sm:px-12">
+            <h2 className="text-balance text-[clamp(2.25rem,4.5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0b2e2e]">
               Post your first brief
             </h2>
-            <p className="mt-6 max-w-xl text-base leading-7 text-[#0B1F1A]/75 sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-7 text-[#0b2e2e]/75 sm:text-lg">
               Scoped work, verified students, payments in Ngultrum.
             </p>
             <div className="mt-8">

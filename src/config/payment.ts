@@ -1,7 +1,7 @@
 /**
  * Payment configuration — MVP manual payment details.
  *
- * ⚠️ TODO before real users pay:
+ * TODO before real users pay:
  *   1. Replace `accountNumber` with your real Bank of Bhutan account number.
  *   2. Replace `number` (mBoB) with your real mobile banking number.
  *   The values are intentionally empty — the payment screen will show

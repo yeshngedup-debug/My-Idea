@@ -100,7 +100,7 @@ export function BrowseClient({
           fill="none"
           stroke="currentColor"
           strokeWidth={2}
-          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#657069]"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#356464]"
         >
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" strokeLinecap="round" />
@@ -124,7 +124,7 @@ export function BrowseClient({
       />
 
       <h2 className="sr-only">Student profiles</h2>
-      <p className="text-xs tabular-nums text-[#657069]" role="status" aria-live="polite">
+      <p className="text-xs tabular-nums text-[#356464]" role="status" aria-live="polite">
         {filtered.length} {filtered.length === 1 ? 'student' : 'students'}
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
@@ -139,8 +139,8 @@ export function BrowseClient({
           status
             ? `flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
                 status.ok
-                  ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-                  : 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
+                  ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+                  : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
               }`
             : 'sr-only'
         }
@@ -149,11 +149,11 @@ export function BrowseClient({
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ded8cb] bg-[#fffefa] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#17352b]">
+        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
+          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
             {students.length === 0 ? 'No students yet' : 'No students match'}
           </h3>
-          <p className="text-sm text-[#657069]">
+          <p className="text-sm text-[#356464]">
             {students.length === 0
               ? 'Students are still signing up and completing their profiles. Check back soon.'
               : 'Try a different skill, college, or availability filter.'}
@@ -166,19 +166,19 @@ export function BrowseClient({
             const isPending = pendingId === s.id;
             const studentName = s.full_name ?? 'student';
             return (
-              <li key={s.id} className="group flex flex-col rounded-2xl border border-[#ded8cb] bg-[#fffefa] p-5 transition-colors duration-150 motion-reduce:transition-none hover:border-[#17352b]/25 hover:bg-[#f5f2ea]">
+              <li key={s.id} className="group flex flex-col rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 transition-colors duration-150 motion-reduce:transition-none hover:border-[#66bfbf]/25 hover:bg-[#eaf6f6]">
                 <div className="mb-1 flex items-start justify-between gap-3">
-                  <h3 className="text-base font-semibold leading-snug text-[#17352b]">
+                  <h3 className="text-base font-semibold leading-snug text-[#0b5c5c]">
                     {s.full_name}
                   </h3>
                   {s.availability && (
-                    <Badge variant="outline" className="shrink-0 text-[#8a5a00]">
+                    <Badge variant="outline" className="shrink-0 text-[#0b5c5c]">
                       {AVAILABILITY_LABEL[s.availability] ?? s.availability}
                     </Badge>
                   )}
                 </div>
 
-                <p className="mb-3 inline-flex items-center gap-1.5 text-sm text-[#4c5a52]">
+                <p className="mb-3 inline-flex items-center gap-1.5 text-sm text-[#356464]">
                   {s.college}
                   {s.course ? ` - ${s.course}` : ''}
                   {s.year ? ` (${s.year} year)` : ''}
@@ -187,10 +187,10 @@ export function BrowseClient({
                 {(s.skills?.length ?? 0) > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {(s.skills ?? []).slice(0, 4).map((k) => (
-                      <Badge key={k} variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#4c5a52]">{k}</Badge>
+                      <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">{k}</Badge>
                     ))}
                     {(s.skills ?? []).length > 4 && (
-                      <Badge variant="outline" className="border-[#ded8cb] bg-[#f5f2ea] text-[#657069]">
+                      <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">
                         +{(s.skills ?? []).length - 4}
                       </Badge>
                     )}
@@ -198,11 +198,11 @@ export function BrowseClient({
                 )}
 
                 {s.bio && (
-                  <p className="mb-4 line-clamp-2 text-sm text-[#4c5a52]">{s.bio}</p>
+                  <p className="mb-4 line-clamp-2 text-sm text-[#356464]">{s.bio}</p>
                 )}
 
                 <div className="mt-auto flex flex-col sm:flex-row gap-2">
-                  <Link href={`/founder/students/${s.id}`} className="pressable inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+                  <Link href={`/founder/students/${s.id}`} className="pressable inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
                     View full profile
                   </Link>
                   {s.canRequestShortlist ? (
@@ -218,10 +218,10 @@ export function BrowseClient({
                             ? `Sending shortlist request for ${studentName}`
                             : `Request shortlist for ${studentName}`
                       }
-                      className={`pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                      className={`pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
                         isShortlisted
-                          ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
-                          : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'
+                          ? 'cursor-default border border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
+                          : 'bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
                       } disabled:opacity-80`}
                     >
                       {isShortlisted ? (
@@ -236,7 +236,7 @@ export function BrowseClient({
                     <Link
                       href="/founder/shortlists"
                       aria-label={`View shortlist options for ${studentName}`}
-                      className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                      className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                     >
                       View shortlist options
                     </Link>
@@ -244,7 +244,7 @@ export function BrowseClient({
                 </div>
                 {status?.id === s.id && (
                   <p
-                    className={`mt-2 text-xs ${status.ok ? 'text-[#17352b]' : 'text-[#b23c26]'}`}
+                    className={`mt-2 text-xs ${status.ok ? 'text-[#0b5c5c]' : 'text-[#c2004b]'}`}
                   >
                     {status.msg}
                   </p>

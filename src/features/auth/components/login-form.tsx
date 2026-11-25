@@ -121,7 +121,7 @@ export function LoginForm({
         <p
           role="status"
           data-auth-message
-          className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+          className="mb-5 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-4 py-3 text-sm text-[#0b5c5c]"
         >
           {serverMessage}
         </p>
@@ -137,7 +137,7 @@ export function LoginForm({
         <div>
           <label
             htmlFor="email"
-            className="mb-2 block text-sm font-semibold text-[#17352b]"
+            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
           >
             Email
           </label>
@@ -152,7 +152,7 @@ export function LoginForm({
             onChange={() => clearError("email")}
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
           />
           {errors.email && (
             <FieldError id={emailErrorId}>{errors.email}</FieldError>
@@ -162,13 +162,13 @@ export function LoginForm({
           <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
             <label
               htmlFor="password"
-              className="text-sm font-semibold text-[#17352b]"
+              className="text-sm font-semibold text-[#0b5c5c]"
             >
               Password
             </label>
             <Link
               href="/forgot-password"
-              className={`pressable inline-flex min-h-6 items-center rounded-sm text-xs font-medium text-[#b23c26] underline decoration-[#d84f37] underline-offset-4 hover:text-[#17352b] ${focusRing}`}
+              className={`pressable inline-flex min-h-6 items-center rounded-sm text-xs font-medium text-[#c2004b] underline decoration-[#ff0063] underline-offset-4 hover:text-[#0b5c5c] ${focusRing}`}
             >
               Forgot password?
             </Link>
@@ -184,16 +184,16 @@ export function LoginForm({
             onChange={() => clearError("password")}
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="w-full rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
+            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3.5 text-base text-[#0b2e2e] placeholder:text-[#356464] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
-          <p className="mt-2 text-xs leading-5 text-[#5e6863]">
+          <p className="mt-2 text-xs leading-5 text-[#356464]">
             Didn&apos;t get a reset email?{" "}
             <a
               href={passwordHelpContactHref}
-              className={`pressable inline-flex min-h-6 items-center rounded-sm font-medium text-[#b23c26] underline decoration-[#d84f37] underline-offset-4 hover:text-[#17352b] ${focusRing}`}
+              className={`pressable inline-flex min-h-6 items-center rounded-sm font-medium text-[#c2004b] underline decoration-[#ff0063] underline-offset-4 hover:text-[#0b5c5c] ${focusRing}`}
             >
               Contact us
             </a>

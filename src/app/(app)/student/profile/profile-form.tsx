@@ -46,7 +46,7 @@ async function hasPdfHeader(file: File) {
 
 /** One style contract for every text field, including select controls. */
 const FIELD_CLASS =
-  'w-full min-w-0 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#5f6b63] focus:outline-none focus-visible:border-[#d84f37] focus-visible:ring-2 focus-visible:ring-[#d84f37]/35 motion-reduce:transition-none';
+  'w-full min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus:outline-none focus-visible:border-[#ff0063] focus-visible:ring-2 focus-visible:ring-[#ff0063]/35 motion-reduce:transition-none';
 
 type Banner = { tone: 'success' | 'error'; msg: string };
 
@@ -299,39 +299,39 @@ export function ProfileForm({
     <div className="space-y-6">
       <section
         aria-labelledby="profile-summary-heading"
-        className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5"
+        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
       >
-        <h2 id="profile-summary-heading" className="text-sm font-semibold text-[#17352b]">
+        <h2 id="profile-summary-heading" className="text-sm font-semibold text-[#0b5c5c]">
           Progress
         </h2>
         <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="min-w-0">
-            <dt className="text-xs text-[#657069]">Name</dt>
-            <dd className="mt-1 truncate text-sm font-semibold text-[#17352b]">
+            <dt className="text-xs text-[#356464]">Name</dt>
+            <dd className="mt-1 truncate text-sm font-semibold text-[#0b5c5c]">
               {fullName.trim() || 'Not set'}
             </dd>
           </div>
           <div className="min-w-0">
-            <dt className="text-xs text-[#657069]">Details added</dt>
-            <dd className="mt-1 text-sm font-semibold tabular-nums text-[#17352b]">
+            <dt className="text-xs text-[#356464]">Details added</dt>
+            <dd className="mt-1 text-sm font-semibold tabular-nums text-[#0b5c5c]">
               {completion}%
             </dd>
           </div>
           <div className="min-w-0">
-            <dt className="text-xs text-[#657069]">CV</dt>
-            <dd className="mt-1 text-sm font-semibold text-[#17352b]">
+            <dt className="text-xs text-[#356464]">CV</dt>
+            <dd className="mt-1 text-sm font-semibold text-[#0b5c5c]">
               {hasCv ? 'Uploaded' : 'Not uploaded'}
             </dd>
           </div>
         </dl>
-        <div className="mt-4 border-t border-[#ded8cb] pt-4">
+        <div className="mt-4 border-t border-[#b9dede] pt-4">
           <Progress
             value={completion}
             label="Profile details"
             valueLabel={`${completed} of ${total} added`}
             aria-valuetext={`${completion}% of profile details added, ${completed} of ${total}`}
           />
-          <p className="mt-3 text-xs leading-5 text-[#657069]">
+          <p className="mt-3 text-xs leading-5 text-[#356464]">
             {missing.includes('Full name')
               ? 'Add your full name to save this profile. Other details are optional.'
               : missing.length === 0
@@ -347,10 +347,10 @@ export function ProfileForm({
           role={visibleBanner.tone === 'error' ? 'alert' : 'status'}
           className={`flex min-w-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm leading-6 ${
             visibleBanner.tone === 'success'
-              ? 'border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
+              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
               : visibleBanner.tone === 'error'
-                ? 'border-[#b23c26]/25 bg-[#b23c26]/8 text-[#b23c26]'
-                : 'border-[#ded8cb] bg-[#f5f2ea] text-[#4c5a52]'
+                ? 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
+                : 'border-[#b9dede] bg-[#eaf6f6] text-[#356464]'
           }`}
         >
           {visibleBanner.tone === 'success' ? (
@@ -368,22 +368,22 @@ export function ProfileForm({
       <form
         onSubmit={(e) => { void handleCvSubmit(e); }}
         aria-labelledby="cv-heading"
-        className="rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5"
+        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
       >
-        <h2 id="cv-heading" className="text-sm font-semibold text-[#17352b]">
+        <h2 id="cv-heading" className="text-sm font-semibold text-[#0b5c5c]">
           CV / Resume
         </h2>
-        <p id="cv-hint" className="mt-1 text-xs text-[#657069]">
+        <p id="cv-hint" className="mt-1 text-xs text-[#356464]">
           PDF only, max 5 MB.
         </p>
 
         {hasCv && (
-          <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#17352b]/20 bg-[#17352b]/8 px-4 py-3">
-            <FileText className="h-5 w-5 shrink-0 text-[#17352b]" aria-hidden="true" />
+          <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#66bfbf]/20 bg-[#0b5c5c]/8 px-4 py-3">
+            <FileText className="h-5 w-5 shrink-0 text-[#0b5c5c]" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-[#17352b]">CV uploaded</p>
+              <p className="truncate text-sm font-medium text-[#0b5c5c]">CV uploaded</p>
               {fileName && (
-                <p className="break-all text-xs leading-5 text-[#657069]" title={fileName}>
+                <p className="break-all text-xs leading-5 text-[#356464]" title={fileName}>
                   {fileName}
                 </p>
               )}
@@ -393,7 +393,7 @@ export function ProfileForm({
                 href={cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded text-xs font-semibold text-[#17352b] underline underline-offset-2 transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
+                className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded text-xs font-semibold text-[#0b5c5c] underline underline-offset-2 transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
               >
                 View PDF
               </a>
@@ -401,7 +401,7 @@ export function ProfileForm({
           </div>
         )}
         {hasCv && !cvUrl && cvPreviewUnavailable && (
-          <p role="alert" className="mt-2 text-xs leading-5 text-[#b23c26]">
+          <p role="alert" className="mt-2 text-xs leading-5 text-[#c2004b]">
             Preview is unavailable right now. The uploaded CV is saved.
           </p>
         )}
@@ -419,15 +419,15 @@ export function ProfileForm({
           />
           <label
             htmlFor="cv"
-            className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#ded8cb] px-4 py-4 text-sm text-[#4c5a52] transition-colors hover:border-[#17352b]/40 hover:text-[#17352b] peer-focus-visible:border-[#d84f37] peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#d84f37] peer-focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#b9dede] px-4 py-4 text-sm text-[#356464] transition-colors hover:border-[#66bfbf]/40 hover:text-[#0b5c5c] peer-focus-visible:border-[#ff0063] peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#ff0063] peer-focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             <Upload className="h-4 w-4 shrink-0" aria-hidden="true" />
             {hasCv ? 'Replace PDF' : 'Choose PDF file'}
           </label>
           {fileName && !hasCv && (
-            <p className="mt-2 text-xs leading-5 text-[#657069]">
+            <p className="mt-2 text-xs leading-5 text-[#356464]">
               Selected file:{' '}
-              <span className="break-all font-medium text-[#17352b]" title={fileName}>
+              <span className="break-all font-medium text-[#0b5c5c]" title={fileName}>
                 {fileName}
               </span>
             </p>
@@ -437,7 +437,7 @@ export function ProfileForm({
           type="submit"
           disabled={uploading}
           variant="outline"
-          className="pressable mt-3 w-full border-[#ded8cb] bg-[#fffefa] text-[#17352b]"
+          className="pressable mt-3 w-full border-[#b9dede] bg-[#ffffff] text-[#0b5c5c]"
         >
           {uploading ? 'Uploading...' : 'Upload CV'}
         </Button>
@@ -447,9 +447,9 @@ export function ProfileForm({
         onSubmit={handleProfileSubmit}
         noValidate
         aria-labelledby="details-heading"
-        className="space-y-5 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-5"
+        className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
       >
-        <h2 id="details-heading" className="text-sm font-semibold text-[#17352b]">
+        <h2 id="details-heading" className="text-sm font-semibold text-[#0b5c5c]">
           Your details
         </h2>
 
@@ -467,7 +467,7 @@ export function ProfileForm({
             minLength={2}
             autoComplete="name"
           />
-          <p id="full-name-hint" className="mt-1 text-xs leading-5 text-[#657069]">
+          <p id="full-name-hint" className="mt-1 text-xs leading-5 text-[#356464]">
             Required. The other details are optional.
           </p>
         </div>
@@ -534,25 +534,25 @@ export function ProfileForm({
               type="button"
               onClick={addSkill}
               variant="outline"
-              className="pressable h-auto min-h-[48px] shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b]"
+              className="pressable h-auto min-h-[48px] shrink-0 border-[#b9dede] bg-[#ffffff] px-4 text-[#0b5c5c]"
             >
               Add
             </Button>
           </div>
-          <p id="skills-hint" className="mt-2 text-xs text-[#657069]">
+          <p id="skills-hint" className="mt-2 text-xs text-[#356464]">
             Press Enter or Add. Separate multiple skills with commas. Up to {MAX_SKILLS}.
           </p>
           {skills.length > 0 && (
             <ul className="mt-3 flex flex-wrap gap-2">
               {skills.map((s) => (
                 <li key={s} className="min-w-0">
-                  <Badge className="max-w-full gap-1 border-[#ded8cb] bg-[#f5f2ea] py-1 pl-2.5 pr-1 text-[#17352b]">
+                  <Badge className="max-w-full gap-1 border-[#b9dede] bg-[#eaf6f6] py-1 pl-2.5 pr-1 text-[#0b5c5c]">
                     <span className="truncate" title={s}>{s}</span>
                     <button
                       type="button"
                       aria-label={`Remove ${s}`}
                       onClick={() => setSkills(skills.filter((x) => x !== s))}
-                      className="pressable grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-[#ded8cb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
+                      className="pressable grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
                     >
                       <X className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
@@ -574,7 +574,7 @@ export function ProfileForm({
             aria-describedby="bio-count"
             className={`${FIELD_CLASS} min-h-[140px] resize-y`}
           />
-          <p id="bio-count" className="mt-1 text-right text-xs text-[#657069]">
+          <p id="bio-count" className="mt-1 text-right text-xs text-[#356464]">
             {bio.length}/{MAX_BIO}
           </p>
         </div>
@@ -597,7 +597,7 @@ export function ProfileForm({
         <Button
           type="submit"
           disabled={saving}
-          className="pressable h-12 w-full bg-[#17352b] text-base font-semibold text-[#fffefa]"
+          className="pressable h-12 w-full bg-[#ff0063] text-base font-semibold text-[#000000]"
         >
           {saving ? 'Saving...' : 'Save profile'}
         </Button>

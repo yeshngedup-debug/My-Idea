@@ -35,7 +35,7 @@ export function Tooltip({ label, children, side = "top", className }: TooltipPro
         id={tooltipId}
         role="tooltip"
         className={cn(
-          "pointer-events-none absolute left-1/2 z-50 w-max max-w-[16rem] -translate-x-1/2 rounded-md bg-[#17352b] px-3 py-2 text-xs font-medium leading-snug text-[#fffefa] opacity-0 shadow-lg transition-opacity duration-150 ease-[var(--ease-out)]",
+          "pointer-events-none absolute left-1/2 z-50 w-max max-w-[16rem] -translate-x-1/2 rounded-md bg-[#0b5c5c] px-3 py-2 text-xs font-medium leading-snug text-[#ffffff] opacity-0 shadow-lg transition-opacity duration-150 ease-[var(--ease-out)]",
           "group-hover:opacity-100 group-focus-within:opacity-100",
           // Origin faces the trigger so the tooltip is anchored to it; the
           // opacity-only fade is symmetric and survives reduced motion.
@@ -46,7 +46,7 @@ export function Tooltip({ label, children, side = "top", className }: TooltipPro
         <span
           aria-hidden="true"
           className={cn(
-            "absolute left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-[#17352b]",
+            "absolute left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-[#0b5c5c]",
             isTop ? "top-full -mt-1" : "bottom-full -mb-1",
           )}
         />

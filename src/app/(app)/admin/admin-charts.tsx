@@ -18,16 +18,16 @@ type Series = {
 type Arc = Series & { count: number; length: number; offset: number };
 
 const ROLE_SERIES: Series[] = [
-  { key: "student", label: "Students", color: "#17352b", pattern: "" },
-  { key: "founder", label: "Founders", color: "#b08947", pattern: "" },
-  { key: "admin", label: "Admins", color: "#8d948e", pattern: "dots" },
+  { key: "student", label: "Students", color: "#0b5c5c", pattern: "" },
+  { key: "founder", label: "Founders", color: "#66bfbf", pattern: "" },
+  { key: "admin", label: "Admins", color: "#356464", pattern: "dots" },
 ];
 
 const STAGE_SERIES: Series[] = [
-  { key: "open", label: "Open", color: "#b08947", pattern: "" },
-  { key: "in_progress", label: "In progress", color: "#17352b", pattern: "" },
-  { key: "review", label: "In review", color: "#8d948e", pattern: "hatch" },
-  { key: "completed", label: "Completed", color: "#3f6b58", pattern: "" },
+  { key: "open", label: "Open", color: "#66bfbf", pattern: "" },
+  { key: "in_progress", label: "In progress", color: "#0b5c5c", pattern: "" },
+  { key: "review", label: "In review", color: "#356464", pattern: "hatch" },
+  { key: "completed", label: "Completed", color: "#0b5c5c", pattern: "" },
 ];
 
 function share(count: number, total: number): number {
@@ -44,7 +44,7 @@ function ChartDefs() {
     <svg aria-hidden="true" focusable="false" width="0" height="0" className="absolute">
       <defs>
         <pattern id="admin-chart-dots" width="6" height="6" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.2" fill="#fffefa" fillOpacity="0.9" />
+          <circle cx="2" cy="2" r="1.2" fill="#ffffff" fillOpacity="0.9" />
         </pattern>
         <pattern
           id="admin-chart-hatch"
@@ -53,7 +53,7 @@ function ChartDefs() {
           patternUnits="userSpaceOnUse"
           patternTransform="rotate(45)"
         >
-          <line x1="0" y1="0" x2="0" y2="6" stroke="#fffefa" strokeOpacity="0.85" strokeWidth="2" />
+          <line x1="0" y1="0" x2="0" y2="6" stroke="#ffffff" strokeOpacity="0.85" strokeWidth="2" />
         </pattern>
       </defs>
     </svg>
@@ -124,7 +124,7 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
   const series: Series[] = otherCount > 0
     ? [
         ...ROLE_SERIES,
-        { key: "other", label: "Other roles", color: "#657069", pattern: "hatch" },
+        { key: "other", label: "Other roles", color: "#356464", pattern: "hatch" },
       ]
     : ROLE_SERIES;
 
@@ -146,8 +146,8 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
     .join(", ");
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
-      <figcaption className="text-sm font-semibold text-[#17352b]">
+    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
+      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
         Members by role
       </figcaption>
       <div className="mt-3 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
@@ -160,7 +160,7 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
         >
           <title id="admin-role-title">Members by role</title>
           <desc id="admin-role-desc">{description}</desc>
-          <circle cx="60" cy="60" r="46" fill="none" stroke="#eae5d9" strokeWidth="14" />
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#eaf6f6" strokeWidth="14" />
           <g transform="rotate(-90 60 60)">
             {arcs.map((arc) => (
               <g key={arc.key}>
@@ -195,11 +195,11 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
             x="60"
             y="58"
             textAnchor="middle"
-            className="fill-[#17352b] text-[20px] font-semibold tabular-nums"
+            className="fill-[#0b5c5c] text-[20px] font-semibold tabular-nums"
           >
             {total}
           </text>
-          <text x="60" y="72" textAnchor="middle" className="fill-[#657069] text-[8px]">
+          <text x="60" y="72" textAnchor="middle" className="fill-[#356464] text-[8px]">
             members
           </text>
         </svg>
@@ -213,11 +213,11 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <Swatch series={item} />
-                  <span className="truncate text-[#4c5a52]">{item.label}</span>
+                  <span className="truncate text-[#356464]">{item.label}</span>
                 </span>
-                <span className="shrink-0 tabular-nums text-[#17352b]">
+                <span className="shrink-0 tabular-nums text-[#0b5c5c]">
                   {count}{" "}
-                  <span className="text-[#657069]">
+                  <span className="text-[#356464]">
                     ({roundedShare(count, total)}%)
                   </span>
                 </span>
@@ -254,33 +254,33 @@ export function ProjectStageBars({ statuses }: { statuses: string[] }) {
     otherCount > 0
       ? [
           ...known,
-          { key: "other", label: "Other", color: "#657069", pattern: "hatch" as const, count: otherCount },
+          { key: "other", label: "Other", color: "#356464", pattern: "hatch" as const, count: otherCount },
         ]
       : known;
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
-      <figcaption className="text-sm font-semibold text-[#17352b]">
+    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
+      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
         Projects by stage
       </figcaption>
-      <p className="mt-0.5 text-xs tabular-nums text-[#657069]">
+      <p className="mt-0.5 text-xs tabular-nums text-[#356464]">
         {total} {total === 1 ? "project" : "projects"} total
       </p>
       <ul className="mt-3 space-y-2.5">
         {rows.map((row) => (
           <li key={row.key}>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="flex min-w-0 items-center gap-2 text-xs text-[#4c5a52]">
+              <span className="flex min-w-0 items-center gap-2 text-xs text-[#356464]">
                 <Swatch series={row} />
                 <span className="truncate">{row.label}</span>
               </span>
-              <span className="shrink-0 text-xs tabular-nums text-[#17352b]">
+              <span className="shrink-0 text-xs tabular-nums text-[#0b5c5c]">
                 {row.count}
               </span>
             </div>
             <div
               aria-hidden="true"
-              className="mt-1 h-2 w-full rounded-full border border-[#ded8cb] bg-[#f5f2ea]"
+              className="mt-1 h-2 w-full rounded-full border border-[#b9dede] bg-[#eaf6f6]"
             >
               <div
                 className="h-full rounded-full"
@@ -351,12 +351,12 @@ export function ActivityTrend({
   ).length;
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#ded8cb] bg-[#fffefa] p-4">
-      <figcaption className="text-sm font-semibold text-[#17352b]">
+    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
+      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
         Projects and orders created by month
       </figcaption>
       {activeMonths < 2 ? (
-        <p className="mt-2 text-sm leading-6 text-[#657069]">
+        <p className="mt-2 text-sm leading-6 text-[#356464]">
           {activeMonths === 0
             ? "No dated projects or orders are available for the last six months, so the trend is not shown yet."
             : "Only one month of dated activity is available so far, so the six-month trend is not shown yet."}
@@ -389,7 +389,7 @@ export function ActivityTrend({
                     x2="620"
                     y1={y}
                     y2={y}
-                    stroke="#ded8cb"
+                    stroke="#b9dede"
                     strokeWidth="1"
                   />
                 );
@@ -402,22 +402,22 @@ export function ActivityTrend({
                   values.map((value, index) => `${pointX(index)},${pointY(value)}`).join(" ");
                 return (
                   <>
-                    <text x="34" y="16" textAnchor="end" className="fill-[#657069] text-[10px] tabular-nums">
+                    <text x="34" y="16" textAnchor="end" className="fill-[#356464] text-[10px] tabular-nums">
                       {max}
                     </text>
-                    <text x="34" y="115" textAnchor="end" className="fill-[#657069] text-[10px] tabular-nums">
+                    <text x="34" y="115" textAnchor="end" className="fill-[#356464] text-[10px] tabular-nums">
                       0
                     </text>
-                    <polyline points={linePoints(projects)} fill="none" stroke="#17352b" strokeWidth="2" />
+                    <polyline points={linePoints(projects)} fill="none" stroke="#0b5c5c" strokeWidth="2" />
                     <polyline
                       points={linePoints(orders)}
                       fill="none"
-                      stroke="#b08947"
+                      stroke="#66bfbf"
                       strokeWidth="2"
                       strokeDasharray="5 4"
                     />
                     {projects.map((value, index) => (
-                      <circle key={`p-${index}`} cx={pointX(index)} cy={pointY(value)} r="2.5" fill="#17352b" />
+                      <circle key={`p-${index}`} cx={pointX(index)} cy={pointY(value)} r="2.5" fill="#0b5c5c" />
                     ))}
                     {orders.map((value, index) => (
                       <circle
@@ -425,8 +425,8 @@ export function ActivityTrend({
                         cx={pointX(index)}
                         cy={pointY(value)}
                         r="2.5"
-                        fill="#fffefa"
-                        stroke="#b08947"
+                        fill="#ffffff"
+                        stroke="#66bfbf"
                         strokeWidth="1.5"
                       />
                     ))}
@@ -436,7 +436,7 @@ export function ActivityTrend({
                         x={pointX(index)}
                         y="138"
                         textAnchor="middle"
-                        className="fill-[#657069] text-[10px]"
+                        className="fill-[#356464] text-[10px]"
                       >
                         {month.label}
                       </text>
@@ -445,16 +445,16 @@ export function ActivityTrend({
                 );
               })()}
             </svg>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#4c5a52]">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#356464]">
               <span className="inline-flex items-center gap-1.5">
                 <svg width="18" height="8" aria-hidden="true" focusable="false">
-                  <line x1="0" y1="4" x2="18" y2="4" stroke="#17352b" strokeWidth="2" />
+                  <line x1="0" y1="4" x2="18" y2="4" stroke="#0b5c5c" strokeWidth="2" />
                 </svg>
                 Projects
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <svg width="18" height="8" aria-hidden="true" focusable="false">
-                  <line x1="0" y1="4" x2="18" y2="4" stroke="#b08947" strokeWidth="2" strokeDasharray="5 4" />
+                  <line x1="0" y1="4" x2="18" y2="4" stroke="#66bfbf" strokeWidth="2" strokeDasharray="5 4" />
                 </svg>
                 Orders
               </span>
@@ -464,10 +464,10 @@ export function ActivityTrend({
             {months.map((month, index) => (
               <li
                 key={month.key}
-                className="flex items-center justify-between gap-3 border-b border-[#ded8cb] py-1.5 text-xs last:border-0"
+                className="flex items-center justify-between gap-3 border-b border-[#b9dede] py-1.5 text-xs last:border-0"
               >
-                <span className="text-[#4c5a52]">{month.label}</span>
-                <span className="tabular-nums text-[#17352b]">
+                <span className="text-[#356464]">{month.label}</span>
+                <span className="tabular-nums text-[#0b5c5c]">
                   {projects[index]} projects · {orders[index]} orders
                 </span>
               </li>

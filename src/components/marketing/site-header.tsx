@@ -20,7 +20,7 @@ import {
 } from "./nav";
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4d8c8c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 /** Mirrors the --ease-out token in app/globals.css. */
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -62,9 +62,9 @@ export function SiteHeader() {
       <div
         data-scrolled={scrolled}
         className={cn(
-          "mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-3 rounded-full border border-white/70 bg-white/75 px-3 shadow-[0_2px_14px_-10px_rgba(11,31,26,0.25)] backdrop-blur-xl ring-1 ring-[#1B4D3E]/5 transition-[background-color,box-shadow] duration-200 sm:px-4 motion-reduce:transition-none",
+          "mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-3 rounded-full border border-white/70 bg-white/75 px-3 shadow-[0_2px_14px_-10px_rgba(11,46,46,0.25)] backdrop-blur-xl ring-1 ring-[#4d8c8c]/5 transition-[background-color,box-shadow] duration-200 sm:px-4 motion-reduce:transition-none",
           scrolled
-            ? "bg-white/90 shadow-[0_14px_36px_-20px_rgba(11,31,26,0.45)]"
+            ? "bg-white/90 shadow-[0_14px_36px_-20px_rgba(11,46,46,0.45)]"
             : "bg-white/75",
         )}
       >
@@ -81,7 +81,7 @@ export function SiteHeader() {
             )}
           >
             <Logo size="h-7 w-7" />
-            <span className="text-sm font-medium text-[#0B1F1A] sm:text-base">
+            <span className="text-sm font-medium text-[#0b2e2e] sm:text-base">
               {SITE.name}
             </span>
           </Link>
@@ -100,8 +100,8 @@ export function SiteHeader() {
                       pressStyles.press,
                       focusRing,
                       active
-                        ? "text-[#1B4D3E]"
-                        : "text-[#0B1F1A]/60 hover:text-[#1B4D3E]",
+                        ? "text-[#0b5c5c]"
+                        : "text-[#0b2e2e]/60 hover:text-[#0b5c5c]",
                     )}
                   >
                     {link.label}
@@ -112,7 +112,7 @@ export function SiteHeader() {
                         layoutId="site-nav-hairline"
                         aria-hidden="true"
                         transition={{ duration: reduce ? 0 : 0.18, ease: EASE_OUT }}
-                        className="absolute inset-x-0 bottom-2 h-px bg-[#E8A317]"
+                        className="absolute inset-x-0 bottom-2 h-px bg-[#ff0063]"
                       />
                     ) : null}
                   </Link>
@@ -125,7 +125,7 @@ export function SiteHeader() {
             <Link
               href={LOGIN_LINK.href}
               className={cn(
-                "pressable hidden min-h-11 items-center text-sm font-medium text-[#0B1F1A]/70 hover:text-[#1B4D3E] sm:inline-flex",
+                "pressable hidden min-h-11 items-center text-sm font-medium text-[#0b2e2e]/70 hover:text-[#0b5c5c] sm:inline-flex",
                 pressStyles.press,
                 focusRing,
               )}
@@ -136,7 +136,7 @@ export function SiteHeader() {
               <Link
                 href={primaryHref}
                 className={cn(
-                  "pressable inline-flex min-h-11 items-center rounded-full bg-[#E8A317] px-5 py-2.5 text-sm font-semibold text-[#0B1F1A] hover:bg-[#d9950f]",
+                  "pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] hover:bg-[#d40054]",
                   pressStyles.press,
                   focusRing,
                 )}
@@ -153,7 +153,7 @@ export function SiteHeader() {
             aria-controls={open ? "marketing-mobile-nav" : undefined}
             aria-label={open ? "Close menu" : "Open menu"}
             className={cn(
-              "pressable inline-flex min-h-11 w-11 shrink-0 items-center justify-center justify-self-end rounded-full border border-[#1B4D3E]/15 text-[#1B4D3E] lg:hidden",
+              "pressable inline-flex min-h-11 w-11 shrink-0 items-center justify-center justify-self-end rounded-full border border-[#b9dede]/15 text-[#0b5c5c] lg:hidden",
               pressStyles.press,
               focusRing,
             )}
@@ -181,7 +181,7 @@ export function SiteHeader() {
           >
             <nav
               aria-label="Mobile navigation"
-              className="mx-auto flex max-w-[1200px] flex-col rounded-[20px] border border-white/70 bg-white/90 p-4 shadow-[0_18px_40px_-22px_rgba(11,31,26,0.35)] backdrop-blur-xl"
+              className="mx-auto flex max-w-[1200px] flex-col rounded-[20px] border border-white/70 bg-white/90 p-4 shadow-[0_18px_40px_-22px_rgba(11,46,46,0.35)] backdrop-blur-xl"
             >
               {NAV_LINKS.map((link) => {
                 const active = isActivePath(pathname, link.href);
@@ -192,22 +192,22 @@ export function SiteHeader() {
                     aria-current={active ? "page" : undefined}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "pressable flex min-h-11 items-center border-b border-[#1B4D3E]/10 text-sm font-medium last:border-b-0",
+                      "pressable flex min-h-11 items-center border-b border-[#b9dede]/10 text-sm font-medium last:border-b-0",
                       pressStyles.press,
                       focusRing,
-                      active ? "text-[#1B4D3E]" : "text-[#0B1F1A]/70",
+                      active ? "text-[#0b5c5c]" : "text-[#0b2e2e]/70",
                     )}
                   >
                     {link.label}
                   </Link>
                 );
               })}
-              <div className="mt-4 grid gap-2 border-t border-[#1B4D3E]/10 pt-4 md:hidden">
+              <div className="mt-4 grid gap-2 border-t border-[#b9dede]/10 pt-4 md:hidden">
                 <Link
                   href={LOGIN_LINK.href}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "pressable inline-flex min-h-11 items-center justify-center rounded-full border border-[#1B4D3E]/15 px-4 text-sm font-medium text-[#1B4D3E]",
+                    "pressable inline-flex min-h-11 items-center justify-center rounded-full border border-[#b9dede]/15 px-4 text-sm font-medium text-[#0b5c5c]",
                     pressStyles.press,
                     focusRing,
                   )}
@@ -219,7 +219,7 @@ export function SiteHeader() {
                     href={primaryHref}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      "pressable inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-4 text-sm font-semibold text-[#0B1F1A]",
+                      "pressable inline-flex min-h-11 items-center justify-center rounded-full bg-[#ff0063] px-4 text-sm font-semibold text-[#000000]",
                       pressStyles.press,
                       focusRing,
                     )}
@@ -279,7 +279,7 @@ export function FactCarousel({
   const slide = slides[index] ?? slides[0];
 
   const arrowClass = cn(
-    "pressable inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#1B4D3E]/20 text-[#1B4D3E] transition-colors duration-150 hover:bg-[#E8E4DB]/70 motion-reduce:transition-none",
+    "pressable inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#b9dede]/20 text-[#0b5c5c] transition-colors duration-150 hover:bg-[#eaf6f6]/70 motion-reduce:transition-none",
     pressStyles.press,
     focusRing,
   );
@@ -310,7 +310,7 @@ export function FactCarousel({
                 <div
                   key={`${slide.title}-${portrait.src}`}
                   className={cn(
-                    "group absolute overflow-hidden rounded-full border-4 border-[#F7F4EE] bg-[#17352b] shadow-[0_18px_40px_-24px_rgba(11,31,26,0.45)]",
+                    "group absolute overflow-hidden rounded-full border-4 border-[#eaf6f6] bg-[#66bfbf] shadow-[0_18px_40px_-24px_rgba(11,46,46,0.45)]",
                     portraitIndex === 0
                       ? "left-0 top-0 h-40 w-40 sm:h-44 sm:w-44"
                       : "bottom-0 right-0 h-44 w-44 sm:h-52 sm:w-52",
@@ -327,10 +327,10 @@ export function FactCarousel({
               ))}
             </div>
             <div>
-              <h3 className="text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-[#0B1F1A] sm:text-4xl">
+              <h3 className="text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-[#0b2e2e] sm:text-4xl">
                 {slide.title}
               </h3>
-              <p className="mt-5 max-w-[48ch] text-lg leading-8 text-[#1B4D3E]">
+              <p className="mt-5 max-w-[48ch] text-lg leading-8 text-[#0b5c5c]">
                 {slide.body}
               </p>
               <div className="mt-7 flex flex-wrap gap-x-6 gap-y-1">
@@ -338,7 +338,7 @@ export function FactCarousel({
                   <PhotoCredit
                     key={`${slide.title}-credit-${portrait.src}`}
                     fileUrl={portrait.creditFileUrl}
-                    className="text-[#0B1F1A]/60"
+                    className="text-[#0b2e2e]/60"
                   />
                 ))}
               </div>
@@ -347,7 +347,7 @@ export function FactCarousel({
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-10 flex items-center justify-between gap-4 border-t border-[#1B4D3E]/10 pt-6">
+      <div className="mt-10 flex items-center justify-between gap-4 border-t border-[#b9dede]/10 pt-6">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -384,7 +384,7 @@ export function FactCarousel({
                 aria-hidden="true"
                 className={cn(
                   "h-1.5 w-1.5 rounded-full transition-colors duration-150 motion-reduce:transition-none",
-                  dotIndex === index ? "bg-[#1B4D3E]" : "bg-[#1B4D3E]/25",
+                  dotIndex === index ? "bg-[#66bfbf]" : "bg-[#66bfbf]/25",
                 )}
               />
             </button>
