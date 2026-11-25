@@ -23,6 +23,21 @@ type FieldErrors = Partial<Record<FieldName, string>>;
 const FIELD_ORDER: FieldName[] = ["email", "password"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Local: identical accessible markup for every inline error. The fade comes
+ *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+function FieldError({ id, children }: { id: string; children: string }) {
+  return (
+    <p
+      id={id}
+      role="alert"
+      data-auth-message
+      className="mt-1.5 text-xs font-medium text-red-700"
+    >
+      {children}
+    </p>
+  );
+}
+
 export function LoginForm({
   serverError,
   serverMessage,
@@ -96,6 +111,7 @@ export function LoginForm({
           id={serverErrorId}
           role="alert"
           tabIndex={-1}
+          data-auth-message
           className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {serverError}
@@ -104,6 +120,7 @@ export function LoginForm({
       {serverMessage && (
         <p
           role="status"
+          data-auth-message
           className="mb-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
         >
           {serverMessage}
@@ -138,13 +155,7 @@ export function LoginForm({
             className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.email && (
-            <p
-              id={emailErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.email}
-            </p>
+            <FieldError id={emailErrorId}>{errors.email}</FieldError>
           )}
         </div>
         <div>
@@ -176,13 +187,7 @@ export function LoginForm({
             className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.password && (
-            <p
-              id={passwordErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.password}
-            </p>
+            <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
           <p className="mt-2 text-xs leading-5 text-[#5e6863]">
             Didn&apos;t get a reset email?{" "}

@@ -40,6 +40,21 @@ const inputClassName =
 
 const labelClassName = "mb-2 block text-sm font-semibold text-primary";
 
+/** Local: identical accessible markup for every inline error. The fade comes
+ *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+function FieldError({ id, children }: { id: string; children: string }) {
+  return (
+    <p
+      id={id}
+      role="alert"
+      data-auth-message
+      className="mt-1.5 text-xs font-medium text-red-700"
+    >
+      {children}
+    </p>
+  );
+}
+
 function validate(values: FieldValues): FieldErrors {
   const next: FieldErrors = {};
   const firstName = values.firstName.trim();
@@ -156,6 +171,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
           id={serverErrorId}
           role="alert"
           tabIndex={-1}
+          data-auth-message
           className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {serverError}
@@ -189,13 +205,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               className={inputClassName}
             />
             {errors.firstName && (
-              <p
-                id={firstNameErrorId}
-                role="alert"
-                className="mt-1.5 text-xs font-medium text-red-700"
-              >
-                {errors.firstName}
-              </p>
+              <FieldError id={firstNameErrorId}>{errors.firstName}</FieldError>
             )}
           </div>
           <div>
@@ -218,13 +228,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               className={inputClassName}
             />
             {errors.lastName && (
-              <p
-                id={lastNameErrorId}
-                role="alert"
-                className="mt-1.5 text-xs font-medium text-red-700"
-              >
-                {errors.lastName}
-              </p>
+              <FieldError id={lastNameErrorId}>{errors.lastName}</FieldError>
             )}
           </div>
         </div>
@@ -248,13 +252,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             className={inputClassName}
           />
           {errors.email && (
-            <p
-              id={emailErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.email}
-            </p>
+            <FieldError id={emailErrorId}>{errors.email}</FieldError>
           )}
         </div>
         <div>
@@ -297,13 +295,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             Minimum 6 characters.
           </p>
           {errors.password && (
-            <p
-              id={passwordErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.password}
-            </p>
+            <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
         </div>
         <SubmitButton pendingLabel="Creating account…">

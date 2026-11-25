@@ -8,7 +8,8 @@
  * and setOrderStatus only transitions pending/submitted rows in Neon. This
  * component keeps a mirrors-only local view so the buttons respond instantly.
  */
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, WarningCircle, X, FileImage, Clock } from '@phosphor-icons/react';
 import { confirmOrder, rejectOrder } from '@/features/payments/actions';
@@ -50,6 +51,24 @@ const FILTERS = [
 
 function isActionable(status: string): boolean {
   return status === 'submitted' || status === 'pending';
+}
+
+/** Mirrors the --ease-out token in app/globals.css. */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/** Entrance for a panel that appears after a decision, never for the list. */
+function PanelEntrance({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div>{children}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
@@ -140,6 +159,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
     <div className="space-y-4">
       {/* Action result: the only role=status on this page (E2E contract). */}
       {status && (
+        <PanelEntrance>
         <p
           role="status"
           className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
@@ -155,6 +175,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
           )}
           {status.msg}
         </p>
+        </PanelEntrance>
       )}
 
       <h2 className="sr-only">Payment orders</h2>
@@ -302,6 +323,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
               )}
 
               {actionable && confirmingId === o.id && (
+                <PanelEntrance>
                 <Alert
                   ref={alertRef}
                   tabIndex={-1}
@@ -336,6 +358,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     </button>
                   </div>
                 </Alert>
+                </PanelEntrance>
               )}
             </li>
           );

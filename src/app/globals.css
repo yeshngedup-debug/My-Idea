@@ -1,5 +1,47 @@
 @import "tailwindcss";
 
+@plugin "daisyui" {
+  logs: false;
+  exclude: rootscrollgutter, themecontroller;
+}
+
+@plugin "daisyui/theme" {
+  name: "btc";
+  default: true;
+  color-scheme: light;
+  themecontroller: false;
+
+  --color-base-100: #f5f2ea;
+  --color-base-200: #eae5d9;
+  --color-base-300: #ded8cb;
+  --color-base-content: #18251f;
+  --color-primary: #17352b;
+  --color-primary-content: #fffefa;
+  --color-secondary: #eae5d9;
+  --color-secondary-content: #25352d;
+  --color-accent: #e8a317;
+  --color-accent-content: #0b1f1a;
+  --color-neutral: #17352b;
+  --color-neutral-content: #fffefa;
+  --color-info: #2563eb;
+  --color-info-content: #ffffff;
+  --color-success: #1b4d3e;
+  --color-success-content: #ffffff;
+  --color-warning: #e8a317;
+  --color-warning-content: #0b1f1a;
+  --color-error: #b23c26;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 999px;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
 @theme inline {
   --color-background: #f5f2ea;
   --color-foreground: #18251f;

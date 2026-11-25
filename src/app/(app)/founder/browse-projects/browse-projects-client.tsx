@@ -59,7 +59,7 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 const DISCLOSURE_CLASS =
-  'inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-0.5 text-xs font-medium text-[#657069] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]';
+  'pressable inline-flex min-h-11 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-0.5 text-xs font-medium text-[#657069] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]';
 
 function formatDate(value: string | null): string {
   if (!value) return 'Not set';

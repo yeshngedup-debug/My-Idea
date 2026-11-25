@@ -1,7 +1,11 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { PhotoCredit } from "@/components/ui/photo-credit";
 
+/**
+ * Data-first workspace hero: a quiet paper card with pill label, one heading,
+ * a short purpose line and its actions. Caller-supplied action links are
+ * restyled here so the first stays the single saffron primary on a light card.
+ */
 export function WorkspaceHero({
   eyebrow,
   title,
@@ -16,34 +20,28 @@ export function WorkspaceHero({
   return (
     <section
       aria-label={eyebrow}
-      className="relative isolate overflow-hidden rounded-2xl border border-primary/10 bg-primary px-6 py-8 text-card sm:px-9 sm:py-10"
+      className="relative isolate overflow-hidden rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-6 py-8 text-[#18251f] shadow-[0_1px_2px_rgba(24,37,31,.05)] sm:px-9 sm:py-10"
     >
-      <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <Image
-          src="/images/bhutanese-community.jpg"
-          alt=""
-          fill
-          sizes="(max-width: 768px) 100vw, 1100px"
-          className="object-cover object-center opacity-35 brightness-[0.65] saturate-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#10241c] via-[#10241c]/90 to-[#10241c]/70" />
-      </div>
       <div className="relative z-10 min-w-0 max-w-3xl">
-        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-primary-foreground text-balance">
+        <span className="inline-flex items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#7a4b00]">
+          {eyebrow}
+        </span>
+        <h1 className="mt-4 text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#17352b] text-balance">
           {title}
         </h1>
-        <p className="mt-3 max-w-lg text-sm leading-6 text-primary-foreground/75 sm:text-base">
-          <span className="font-medium text-amber-200/90">{eyebrow} ·</span>{" "}
+        <p className="mt-2 max-w-lg text-sm leading-6 text-[#56645c] sm:text-base">
           {description}
         </p>
         {children && (
-          <div className="mt-5 flex flex-wrap items-center gap-2.5">{children}</div>
+          <div className="mt-5 flex flex-wrap items-center gap-2.5 [&>a]:rounded-full! [&>a]:focus-visible:ring-[#17352b]! [&>a]:focus-visible:ring-offset-[#fffefa]! [&>a]:motion-safe:active:scale-[0.98] [&>a]:motion-reduce:active:scale-100 [&>a.bg-cta]:bg-[#e8a317]! [&>a.bg-cta]:text-[#0b1f1a]! [&>a.bg-cta]:hover:bg-[#d9950c]! [&>a:not(.bg-cta)]:border-[#17352b]! [&>a:not(.bg-cta)]:bg-transparent! [&>a:not(.bg-cta)]:text-[#17352b]! [&>a:not(.bg-cta)]:hover:bg-[#eae5d9]!">
+            {children}
+          </div>
         )}
       </div>
-      <div className="relative z-10 mt-8 border-t border-primary-foreground/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
+      <div className="relative z-10 mt-6 border-t border-[#ded8cb] pt-3">
         <PhotoCredit
           fileUrl="https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg"
-          className="text-primary-foreground/70"
+          className="text-[#56645c]"
         />
       </div>
     </section>

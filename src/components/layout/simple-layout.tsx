@@ -10,7 +10,6 @@ import { getProfile } from "@/lib/neon-data";
 import { Logo } from "@/components/ui/logo";
 import { WorkspaceNav, WorkspaceMobileNav } from "./workspace-nav";
 import { WorkspaceClock } from "./workspace-clock";
-import pressStyles from "@/styles/pressable.module.css";
 
 const ROLE_LABEL: Record<string, string> = {
   student: "Student",
@@ -57,22 +56,22 @@ export default async function SimpleLayout({
     : null;
 
   return (
-    <div className="min-h-screen bg-background text-primary">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/92 backdrop-blur-xl">
+    <div className="min-h-screen bg-[#f5f2ea] text-[#18251f]">
+      <header className="sticky top-0 z-30 border-b border-[#ded8cb] bg-[#fffefa]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <div className="flex min-h-[72px] items-center justify-between gap-4">
+          <div className="flex min-h-[60px] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3">
               <Link
                 href="/"
-                className={`flex shrink-0 items-center gap-2.5 rounded-lg ${pressStyles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+                className="flex shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a4b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
               >
                 <Logo size="h-7 w-7" />
-                <span className="truncate text-sm font-semibold tracking-tight text-primary sm:text-base">
+                <span className="truncate text-sm font-semibold tracking-tight text-[#18251f] sm:text-base">
                   Bhutan Tech Connect
                 </span>
               </Link>
               {roleLabel && (
-                <span className="hidden shrink-0 rounded-full border border-accent-deep/25 bg-accent-deep/8 px-2.5 py-1 text-xs font-semibold text-accent-deep sm:inline-flex">
+                <span className="hidden shrink-0 items-center rounded-full border border-[#ded8cb] bg-[#f5f2ea] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#56645c] sm:inline-flex">
                   {roleLabel}
                 </span>
               )}
@@ -82,13 +81,13 @@ export default async function SimpleLayout({
 
             <div className="flex min-w-0 items-center gap-3">
               <WorkspaceClock />
-              <span className="hidden max-w-36 truncate text-sm text-ink-soft sm:inline">
+              <span className="hidden max-w-36 truncate text-sm text-[#56645c] sm:inline">
                 {profile?.full_name ?? "Signed in"}
               </span>
               <form action={logout} className="inline">
                 <button
                   type="submit"
-                  className={`inline-flex min-h-9 items-center rounded-full border border-primary/20 bg-card px-4 py-2 text-xs font-semibold text-primary ${pressStyles.press} hover:border-primary hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep sm:text-sm`}
+                  className="inline-flex min-h-11 items-center rounded-full border border-[#17352b] bg-transparent px-4 py-2 text-sm font-medium text-[#17352b] hover:bg-[#17352b] hover:text-[#fffefa] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7a4b00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa] motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 motion-safe:ease-[var(--ease-out)] motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
                 >
                   Log out
                 </button>

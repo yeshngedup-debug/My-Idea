@@ -280,7 +280,7 @@ export function PostProjectForm() {
               onClick={addSkill}
               disabled={skills.length >= 15}
               variant="outline"
-              className="h-auto min-h-11 shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b] hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+              className="pressable h-auto min-h-11 shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b] hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
             >
               Add
             </Button>
@@ -297,7 +297,7 @@ export function PostProjectForm() {
                     type="button"
                     aria-label={`Remove ${s}`}
                     onClick={() => setSkills(skills.filter((x) => x !== s))}
-                    className="grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+                    className="pressable grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
                   >
                     <X className="w-3 h-3" aria-hidden="true" />
                   </button>
@@ -392,7 +392,7 @@ export function PostProjectForm() {
                 tabIndex={workMode === mode ? 0 : -1}
                 onKeyDown={(e) => handleWorkModeKeyDown(e, mode)}
                 onClick={() => setWorkMode(mode)}
-                className={`min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                className={`pressable min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                   workMode === mode
                     ? 'bg-[#17352b] text-[#fffefa]'
                     : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'

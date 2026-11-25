@@ -1,6 +1,6 @@
 /**
- * Workspace figures with a deliberate typographic rhythm: one leading number,
- * the rest as a compact hairline ledger. Server-only, no icons or charts.
+ * Workspace figures as quiet cards. The numbers stay legible and tabular, but
+ * no single figure dominates the page. Server-only, no icons or charts.
  */
 export interface WorkspaceStat {
   label: string;
@@ -9,46 +9,31 @@ export interface WorkspaceStat {
 }
 
 export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
-  const [lead, ...rest] = stats;
+  const [lead] = stats;
   if (!lead) return null;
 
   return (
-    <section
-      aria-label="Workspace figures"
-      className="border-y border-primary/10 py-6 sm:py-7"
-    >
-      <div className="grid grid-cols-12 gap-6 sm:gap-10">
-        <div className="col-span-12 min-w-0 sm:col-span-5">
-          <p className="text-sm text-body-secondary">{lead.label}</p>
-          <p className="mt-1 text-[clamp(2.5rem,6vw,3.5rem)] font-medium leading-none tabular-nums tracking-[-0.03em] text-primary">
-            {lead.value}
-          </p>
-          {lead.detail ? (
-            <p className="mt-2 text-xs leading-5 text-body-secondary">{lead.detail}</p>
-          ) : null}
-        </div>
-        <dl className="col-span-12 min-w-0 sm:col-span-7">
-          {rest.map((stat) => (
-            <div
-              key={stat.label}
-              className="flex items-baseline justify-between gap-4 border-b border-primary/10 py-2.5 last:border-0"
-            >
-              <dt className="min-w-0 text-sm text-body-secondary">
-                {stat.label}
-                {stat.detail ? (
-                  <span className="ml-2 text-xs text-body-secondary">
-                    {" · "}
-                    {stat.detail}
-                  </span>
-                ) : null}
-              </dt>
-              <dd className="shrink-0 tabular-nums text-lg font-medium tracking-tight text-primary">
-                {stat.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+    <section aria-label="Workspace figures">
+      <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="min-w-0 rounded-[24px] border border-[#ded8cb] bg-[#fffefa] px-4 py-4 shadow-[0_1px_2px_rgba(24,37,31,.05)]"
+          >
+            <dt className="text-xs font-medium uppercase tracking-[0.08em] text-[#56645c]">
+              {stat.label}
+            </dt>
+            <dd className="mt-2 text-2xl font-semibold leading-none tabular-nums tracking-tight text-[#17352b]">
+              {stat.value}
+              {stat.detail ? (
+                <span className="mt-2 block text-xs font-normal leading-5 tracking-normal text-[#56645c]">
+                  {stat.detail}
+                </span>
+              ) : null}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

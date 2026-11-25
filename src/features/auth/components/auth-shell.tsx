@@ -1,11 +1,28 @@
+"use client";
+
 import Image from "next/image";
-import { Children, isValidElement, type ReactNode } from "react";
+import {
+  Children,
+  isValidElement,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/logo";
 import { PhotoCredit } from "@/components/ui/photo-credit";
-import { focusRing } from "@/features/auth/components/styles";
+import {
+  authMotionStyles,
+  focusRing,
+} from "@/features/auth/components/styles";
 import styles from "@/styles/auth-shell.module.css";
 import pressStyles from "@/styles/pressable.module.css";
+
+/**
+ * The card entrance is a first-impression detail. The flag lives in the client
+ * module, so a client-side navigation between auth routes does not replay it.
+ */
+let authEntranceConsumed = false;
 
 /**
  * The task heading belongs to the page; the shell supplies one only when the
@@ -19,12 +36,25 @@ function hasPageH1(children: ReactNode): boolean {
 
 export function AuthShell({ children }: { children: ReactNode }) {
   const Headline = hasPageH1(children) ? "p" : "h1";
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Runs before paint: on the first mount the CSS animation starts as usual;
+  // on later mounts the attribute is removed, so no route-change replay.
+  useLayoutEffect(() => {
+    if (authEntranceConsumed) {
+      cardRef.current?.removeAttribute("data-auth-enter");
+      return;
+    }
+    authEntranceConsumed = true;
+  }, []);
 
   return (
     <main
       id="main-content"
       className={`${styles.canvas} min-h-screen w-full max-w-full overflow-x-clip px-4 py-4 text-[#18251f] sm:px-7 sm:py-7`}
     >
+      <style>{authMotionStyles}</style>
+
       <header className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 pb-5 sm:gap-4">
         <Link
           href="/"
@@ -74,6 +104,9 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
         <section className="flex items-center justify-center px-1 py-1 sm:px-2 lg:px-3">
           <div
+            ref={cardRef}
+            data-auth-card
+            data-auth-enter
             className={`${styles.formCard} w-full max-w-md rounded-[1.5rem] px-6 py-8 sm:max-w-lg sm:rounded-[2rem] sm:px-10 sm:py-10 lg:px-12`}
           >
             {children}

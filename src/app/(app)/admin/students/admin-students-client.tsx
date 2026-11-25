@@ -5,7 +5,8 @@
  * multi-select, shortlist generation with copy + download.
  * Mobile-first: cards with 44px+ touch targets, sticky action bar.
  */
-import { useMemo, useState, useTransition } from 'react';
+import { useMemo, useState, useTransition, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import {
   MagnifyingGlass,
@@ -63,6 +64,24 @@ const AVAILABILITY_LABEL: Record<string, string> = {
 };
 
 const STUDENTS_PER_PAGE = 12;
+
+/** Mirrors the --ease-out token in app/globals.css. */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/** One gentle entrance for the generated result, which appears after an action. */
+function ResultEntrance({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div>{children}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function AdminStudentsClient({
   students,
@@ -289,7 +308,7 @@ export function AdminStudentsClient({
               setPage(1);
             }}
             aria-pressed={verifiedFilter === f.value}
-            className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+            className={`pressable min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
               verifiedFilter === f.value
                 ? 'bg-amber-300 text-[#17352b]'
                 : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
@@ -331,7 +350,7 @@ export function AdminStudentsClient({
         <button
           type="button"
           onClick={toggleSelectAll}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
+          className="pressable inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-[#4c5a52] transition-colors hover:text-[#17352b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]"
         >
           {allVisibleSelected ? (
             <CheckSquare className="w-4 h-4 text-[#8a5a00]" />
@@ -495,7 +514,7 @@ export function AdminStudentsClient({
                     onClick={() => toggleVerified(s)}
                     disabled={savingVerify}
                     aria-busy={savingVerify}
-                    className={`inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                       isVerified
                         ? 'border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b] hover:bg-[#17352b]/12'
                         : 'bg-[#f5f2ea] border border-[#ded8cb] text-[#4c5a52] hover:bg-[#17352b]/10'
@@ -546,6 +565,7 @@ export function AdminStudentsClient({
 
       {/* Shortlist generation result */}
       {shortlistText && (
+        <ResultEntrance>
         <div className="bg-[#fffefa] border border-[#d84f37]/25 rounded-2xl p-5 space-y-3">
           <h3 className="text-sm font-semibold text-[#8a5a00]">Generated shortlist</h3>
           <textarea
@@ -573,6 +593,7 @@ export function AdminStudentsClient({
             </Button>
           </div>
         </div>
+        </ResultEntrance>
       )}
 
       {/* Sticky action bar */}

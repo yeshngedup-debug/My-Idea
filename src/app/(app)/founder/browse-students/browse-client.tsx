@@ -202,7 +202,7 @@ export function BrowseClient({
                 )}
 
                 <div className="mt-auto flex flex-col sm:flex-row gap-2">
-                  <Link href={`/founder/students/${s.id}`} className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
+                  <Link href={`/founder/students/${s.id}`} className="pressable inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-2.5 text-sm font-semibold text-[#17352b] transition-colors motion-reduce:transition-none hover:bg-[#f5f2ea] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26]">
                     View full profile
                   </Link>
                   {s.canRequestShortlist ? (
@@ -218,7 +218,7 @@ export function BrowseClient({
                             ? `Sending shortlist request for ${studentName}`
                             : `Request shortlist for ${studentName}`
                       }
-                      className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                      className={`pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                         isShortlisted
                           ? 'cursor-default border border-[#17352b]/20 bg-[#17352b]/8 text-[#17352b]'
                           : 'bg-[#17352b] text-[#fffefa] hover:bg-[#244b3e]'

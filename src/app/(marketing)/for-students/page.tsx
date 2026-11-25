@@ -1,4 +1,6 @@
+import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Briefcase,
   CheckCircle,
@@ -11,19 +13,16 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { CtaBand } from "@/components/marketing/cta-band";
 import { PhotoCredit } from "@/components/ui/photo-credit";
+import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { Reveal } from "@/components/ui/motion";
-import { GuideHero } from "@/components/marketing/guides/guide-hero";
-import {
-  Chapter,
-  TextLink,
-  ActionLink,
-} from "@/components/marketing/guides/primitives";
+import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
+import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
 import {
   StickySectionHeadings,
   type StickySection,
 } from "@/components/layout/sticky-section-headings";
+import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
 
 type Icon = typeof NotePencil;
@@ -37,6 +36,8 @@ export const metadata = pageMetadata({
 
 const DZONG_CREDIT =
   "https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg";
+const YOUTH_CREDIT =
+  "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg";
 
 const sections: StickySection[] = [
   { id: "who-heading", label: "Who it's for" },
@@ -45,6 +46,59 @@ const sections: StickySection[] = [
   { id: "apply-heading", label: "Apply" },
   { id: "pay-heading", label: "Pay" },
 ];
+
+/** The sticky rail uses theme variables; scope them to this page's palette. */
+const stickyVars = {
+  "--color-background": "#F7F4EE",
+  "--color-foreground": "#0B1F1A",
+  "--color-card": "#FFFFFF",
+  "--color-border": "#E8E4DB",
+  "--color-body-secondary": "#0B1F1A",
+  "--color-accent": "#E8A317",
+} as CSSProperties;
+
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
+const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
+const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
+const pillClass =
+  "inline-flex items-center rounded-full border border-[#1B4D3E]/15 bg-[#E8E4DB]/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const headingClass =
+  "text-balance text-center text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]";
+const bodyClass = "text-center text-sm leading-7 text-[#0B1F1A]/75 sm:text-base";
+
+/** Saffron marker behind a phrase, with ink text kept readable. */
+function Highlight({ children }: { children: ReactNode }) {
+  return (
+    <span className="box-decoration-clone rounded-[4px] bg-[#E8A317] px-1 text-[#0B1F1A]">
+      {children}
+    </span>
+  );
+}
+
+function SectionCard({
+  id,
+  labelledBy,
+  className,
+  children,
+}: {
+  id?: string;
+  labelledBy?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      aria-labelledby={labelledBy}
+      className={cn("px-5 py-10 sm:px-8 lg:px-12", className)}
+    >
+      <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
+        {children}
+      </div>
+    </section>
+  );
+}
 
 type Fit = {
   Icon: Icon;
@@ -108,252 +162,344 @@ export default function ForStudentsPage() {
   return (
     <>
       <SiteHeader />
-      <main
-        id="main-content"
-        className="overflow-x-clip bg-[#f5f2ea] text-[#18251f]"
-      >
-        <GuideHero
-          title={
-            <>
-              Turn your skills into{" "}
-              <span className="text-[#b23c26]">paid work.</span>
-            </>
-          }
-          lead="Build a profile, find a focused project, and get paid for the work you do."
-          primary={{ href: "/signup", label: "Create student account" }}
-          secondary={{ href: "/how-it-works", label: "See how it works" }}
-          image="/images/bhutanese-students.jpg"
-          imageAlt="Young Bhutanese people working in groups at a training day in Thimphu"
-          creditFileUrl="https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg"
-          reverse
-        />
+      <main id="main-content" className="overflow-x-clip bg-[#F7F4EE] text-[#0B1F1A]">
+        {/* Hero */}
+        <section className="px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
+          <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
+            <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+              <HeroCopyEntrance>
+                <p className={pillClass}>Student guide</p>
+                <h1 className="mt-3 max-w-[18ch] text-balance text-[clamp(2.25rem,6vw,4rem)] font-semibold leading-[1.05] tracking-[-0.04em] text-[#0B1F1A]">
+                  Turn your skills into <Highlight>paid work.</Highlight>
+                </h1>
+                <p className="mt-6 max-w-[52ch] text-base leading-7 text-[#0B1F1A]/75">
+                  Build a profile, find a focused project, and get paid for the
+                  work you do.
+                </p>
+                <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+                  <Link href="/signup" className={primaryCta}>
+                    Create student account
+                  </Link>
+                  <Link href="/how-it-works" className={quietLink}>
+                    See how it works
+                  </Link>
+                </div>
+              </HeroCopyEntrance>
 
-        <StickySectionHeadings
-          title="For students"
-          eyebrow="Student guide"
-          sections={sections}
-          navLabel="Student guide sections"
-        >
-        <Chapter labelledBy="who-heading">
-          <Reveal className="max-w-3xl">
-            <h2
-              id="who-heading"
-              data-sticky-section
-              className="max-w-2xl text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
-            >
-              Built for students ready to begin
-            </h2>
-            <p className="mt-6 max-w-xl text-sm leading-7 text-[#56645c] sm:text-base">
-              You do not need a long work history. Clear skills and time for
-              focused work are enough to begin.
-            </p>
-          </Reveal>
-          <ul className="mt-12 max-w-2xl space-y-8">
-            {fits.map((fit) => {
-              const FitIcon = fit.Icon;
-              return (
-                <li key={fit.title} className="flex gap-5">
-                  <FitIcon
+              <HeroPhotoEntrance>
+                <div className="relative">
+                  <div
                     aria-hidden="true"
-                    weight="light"
-                    size={24}
-                    strokeWidth={1.5}
-                    className="mt-1 shrink-0 text-[#56645c]"
+                    className="absolute -inset-5 rounded-[36px] bg-gradient-to-br from-[#E8A317]/25 via-[#E8E4DB]/70 to-[#1B4D3E]/15 blur-2xl"
                   />
-                  <div>
-                    <h3 className="text-lg font-semibold text-[#17352b]">
-                      {fit.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-6 text-[#56645c]">
-                      {fit.body}
+                  <figure className="relative isolate aspect-[4/5] overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-white">
+                    <Image
+                      src="/images/bhutanese-students.jpg"
+                      alt="Young Bhutanese people working in groups at a training day in Thimphu"
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                      className="object-cover"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-t from-[#0B1F1A]/55 to-transparent"
+                    />
+                    <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
+                      <PhotoCredit
+                        fileUrl={YOUTH_CREDIT}
+                        className="text-[#F7F4EE]/80"
+                      />
+                    </figcaption>
+                  </figure>
+                </div>
+              </HeroPhotoEntrance>
+            </div>
+          </div>
+        </section>
+
+        <div style={stickyVars}>
+          <StickySectionHeadings
+            title="For students"
+            eyebrow="Student guide"
+            sections={sections}
+            navLabel="Student guide sections"
+          >
+            <SectionCard labelledBy="who-heading">
+              <Reveal className="mx-auto max-w-3xl text-center">
+                <p className={pillClass}>Who it&apos;s for</p>
+                <h2
+                  id="who-heading"
+                  data-sticky-section
+                  className={headingClass}
+                >
+                  Built for students ready to <Highlight>begin</Highlight>
+                </h2>
+                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
+                  You do not need a long work history. Clear skills and time for
+                  focused work are enough to begin.
+                </p>
+              </Reveal>
+              <Reveal className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {fits.map((fit, index) => {
+                  const FitIcon = fit.Icon;
+                  const inner = (
+                    <div className="flex h-full flex-col">
+                      <FitIcon
+                        aria-hidden="true"
+                        weight="light"
+                        size={24}
+                        strokeWidth={1.5}
+                        className="text-[#1B4D3E]"
+                      />
+                      <h3 className="mt-5 text-lg font-semibold text-[#0B1F1A]">
+                        {fit.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-[#0B1F1A]/70">
+                        {fit.body}
+                      </p>
+                    </div>
+                  );
+                  return index === 0 ? (
+                    <div
+                      key={fit.title}
+                      className="rounded-[24px] bg-gradient-to-br from-[#E8A317] via-[#E8E4DB] to-[#1B4D3E] p-px"
+                    >
+                      <div className="h-full rounded-[23px] bg-white p-6">
+                        {inner}
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      key={fit.title}
+                      className="h-full rounded-[24px] border border-[#E8E4DB] bg-white p-6"
+                    >
+                      {inner}
+                    </div>
+                  );
+                })}
+              </Reveal>
+            </SectionCard>
+
+            <SectionCard labelledBy="profile-heading">
+              <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+                <div className="self-start">
+                  <Reveal>
+                    <p className={pillClass}>Profile</p>
+                    <h2
+                      id="profile-heading"
+                      data-sticky-section
+                      className={headingClass}
+                    >
+                      Make your profile <Highlight>complete</Highlight>
+                    </h2>
+                    <p className="mt-6 max-w-sm text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+                      A complete profile and CV help founders decide.
+                    </p>
+                    <Link href="/signup" className={cn(primaryCta, "mt-8")}>
+                      Start your profile
+                    </Link>
+                  </Reveal>
+                </div>
+
+                <Reveal direction="right" delay={0.08}>
+                  <div className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6 sm:p-8">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#1B4D3E]/15 pb-5">
+                      <p className="text-base font-semibold text-[#0B1F1A]">
+                        Student profile
+                      </p>
+                      <p className="text-sm font-semibold text-[#1B4D3E]">
+                        Helps founders decide
+                      </p>
+                    </div>
+                    <dl className="divide-y divide-[#1B4D3E]/15">
+                      {profileFields.map((field) => (
+                        <div
+                          key={field.label}
+                          className="grid gap-1 py-4 sm:grid-cols-[11rem_1fr] sm:gap-6"
+                        >
+                          <dt className="flex items-start gap-2 text-sm font-medium text-[#0B1F1A]">
+                            <CheckCircle
+                              aria-hidden="true"
+                              weight="light"
+                              size={18}
+                              strokeWidth={1.5}
+                              className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                            />
+                            {field.label}
+                          </dt>
+                          <dd className="text-sm leading-6 text-[#0B1F1A]/70">
+                            {field.detail}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <p className="mt-4 flex items-start gap-3 border-t border-[#1B4D3E]/15 pt-5 text-sm leading-6 text-[#0B1F1A]/70">
+                      <Files
+                        aria-hidden="true"
+                        weight="light"
+                        size={18}
+                        strokeWidth={1.5}
+                        className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                      />
+                      <span>
+                        <span className="font-semibold text-[#0B1F1A]">
+                          Your CV:
+                        </span>{" "}
+                        PDF only, up to 5 MB, stored privately.
+                      </span>
                     </p>
                   </div>
-                </li>
-              );
-            })}
-          </ul>
-        </Chapter>
-
-        <Chapter labelledBy="profile-heading">
-          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-            <div className="self-start">
-              <Reveal>
-                <h2
-                  id="profile-heading"
-                  data-sticky-section
-                  className="max-w-2xl text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl lg:text-6xl"
-                >
-                  Make your profile complete
-                </h2>
-                <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
-                  A complete profile and CV help founders decide.
-                </p>
-                <ActionLink href="/signup" className="mt-8">
-                  Start your profile
-                </ActionLink>
-              </Reveal>
-            </div>
-
-            <Reveal direction="right" delay={0.08}>
-              <div className="rounded-2xl border border-[#17352b]/15 bg-[#fffefa] p-6 sm:p-8">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-[#17352b]/10 pb-5">
-                  <p className="text-base font-semibold text-[#17352b]">
-                    Student profile
-                  </p>
-                  <p className="text-sm font-semibold text-[#b23c26]">
-                    Helps founders decide
-                  </p>
-                </div>
-                <dl className="divide-y divide-[#17352b]/10">
-                  {profileFields.map((field) => (
-                    <div
-                      key={field.label}
-                      className="grid gap-1 py-4 sm:grid-cols-[11rem_1fr] sm:gap-6"
-                    >
-                      <dt className="flex items-start gap-2 text-sm font-medium text-[#17352b]">
-                        <CheckCircle
-                          aria-hidden="true"
-                          weight="light"
-                          size={18}
-                          strokeWidth={1.5}
-                          className="mt-0.5 shrink-0 text-[#b23c26]"
-                        />
-                        {field.label}
-                      </dt>
-                      <dd className="text-sm leading-6 text-[#56645c]">
-                        {field.detail}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="mt-4 flex items-start gap-3 border-t border-[#17352b]/10 pt-5 text-sm leading-6 text-[#56645c]">
-                  <Files
-                    aria-hidden="true"
-                    weight="light"
-                    size={18}
-                    strokeWidth={1.5}
-                    className="mt-0.5 shrink-0 text-[#b23c26]"
-                  />
-                  <span>
-                    <span className="font-semibold text-[#17352b]">
-                      Your CV:
-                    </span>{" "}
-                    PDF only, up to 5 MB, stored privately.
-                  </span>
-                </p>
+                </Reveal>
               </div>
-            </Reveal>
-          </div>
-        </Chapter>
+            </SectionCard>
 
-        <Chapter labelledBy="rooted-heading">
-          <Reveal className="max-w-3xl">
-            <h2
-              id="rooted-heading"
-              data-sticky-section
-              className="max-w-sm text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl"
-            >
-              Start close to home
-            </h2>
-            <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
-              Built around Bhutanese students and founders; these photographs
-              show Bhutanese people in community settings, not platform listings
-              or members.
-            </p>
-          </Reveal>
-          <Reveal className="mt-12">
-            <figure className="relative isolate aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-[#fffefa] sm:aspect-[2/1]">
-              <Image
-                src="/images/bhutanese-community.jpg"
-                alt="Bhutanese boys in traditional gho sitting together"
-                fill
-                sizes="(max-width: 1024px) 100vw, 90vw"
-                className="object-cover"
-              />
-            </figure>
-            <div className="mt-4 flex justify-end">
-              <PhotoCredit fileUrl={DZONG_CREDIT} className="text-[#56645c]" />
-            </div>
-          </Reveal>
-        </Chapter>
+            <SectionCard labelledBy="rooted-heading">
+              <Reveal className="mx-auto max-w-3xl text-center">
+                <p className={pillClass}>Close to home</p>
+                <h2
+                  id="rooted-heading"
+                  data-sticky-section
+                  className={headingClass}
+                >
+                  Start close to <Highlight>home</Highlight>
+                </h2>
+                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
+                  Built around Bhutanese students and founders; these photographs
+                  show Bhutanese people in community settings, not platform
+                  listings or members.
+                </p>
+              </Reveal>
+              <Reveal className="mt-12">
+                <figure>
+                  <div className="relative isolate aspect-[16/10] w-full overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-[#F7F4EE] sm:aspect-[2/1]">
+                    <Image
+                      src="/images/bhutanese-community.jpg"
+                      alt="Bhutanese boys in traditional gho sitting together"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 90vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                    <span className="text-sm font-medium text-[#0B1F1A]">
+                      Work grounded in the local community
+                    </span>
+                    <PhotoCredit fileUrl={DZONG_CREDIT} className="text-[#0B1F1A]/70" />
+                  </figcaption>
+                </figure>
+              </Reveal>
+            </SectionCard>
 
-        <Chapter labelledBy="apply-heading" tone="surface">
-          <div className="grid gap-12 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20">
-            <div className="self-start">
-              <Reveal>
+            <SectionCard labelledBy="apply-heading">
+              <Reveal className="mx-auto max-w-3xl text-center">
+                <p className={pillClass}>Apply</p>
                 <h2
                   id="apply-heading"
                   data-sticky-section
-                  className="max-w-sm text-balance text-4xl font-semibold leading-[1.02] tracking-[-0.045em] text-[#17352b] sm:text-5xl"
+                  className={headingClass}
                 >
-                  Browse, apply, and track
+                  Browse, apply, and <Highlight>track</Highlight>
                 </h2>
-                <p className="mt-6 max-w-sm text-sm leading-7 text-[#56645c] sm:text-base">
+                <p className={cn(bodyClass, "mx-auto mt-6 max-w-xl")}>
                   Everything you need to browse and apply lives in your student
                   workspace.
                 </p>
               </Reveal>
-            </div>
-            <ol className="space-y-10">
-              {applicationSteps.map((step, index) => {
-                const StepIcon = step.Icon;
-                return (
-                  <li
-                    key={step.title}
-                    className="grid gap-3 sm:grid-cols-[5rem_1fr] sm:gap-8"
-                  >
-                    <span className="text-4xl font-semibold tracking-[-0.05em] text-[#b23c26] tabular-nums sm:text-5xl">
-                      {String(index + 1).padStart(2, "0")}
+              <Reveal className="mt-12">
+                <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {applicationSteps.map((step, index) => {
+                    const StepIcon = step.Icon;
+                    return (
+                      <li
+                        key={step.title}
+                        className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6"
+                      >
+                        <span className="inline-flex rounded-full bg-[#E8A317]/20 px-2.5 py-1 text-sm font-semibold tabular-nums text-[#0B1F1A]">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <h3 className="mt-5 flex items-center gap-3 text-xl font-semibold leading-tight text-[#0B1F1A]">
+                          <StepIcon
+                            aria-hidden="true"
+                            weight="light"
+                            size={22}
+                            strokeWidth={1.5}
+                            className="shrink-0 text-[#1B4D3E]"
+                          />
+                          {step.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-7 text-[#0B1F1A]/70">
+                          {step.body}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </Reveal>
+            </SectionCard>
+
+            <SectionCard labelledBy="pay-heading" className="pb-16">
+              <Reveal className="mx-auto max-w-3xl text-center">
+                <p className={pillClass}>Pay</p>
+                <h2
+                  id="pay-heading"
+                  data-sticky-section
+                  className={headingClass}
+                >
+                  Projects list a budget <Highlight>up front</Highlight>
+                </h2>
+                <p className={cn(bodyClass, "mx-auto mt-6 max-w-2xl")}>
+                  Every paid project lists its budget range and scope before you
+                  apply, and founders update project and applicant status as work
+                  progresses.
+                </p>
+                <Link href="/faq" className={cn(quietLink, "mt-4")}>
+                  Read the FAQ about pay
+                </Link>
+              </Reveal>
+              <Reveal className="mt-12">
+                <figure>
+                  <div className="relative isolate aspect-[16/9] w-full overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-[#F7F4EE]">
+                    <Image
+                      src="/images/bhutanese-team.jpg"
+                      alt="Bhutanese students in kira performing in national dress"
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 90vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                    <span className="text-sm font-medium text-[#0B1F1A]">
+                      Work grounded in the local community
                     </span>
-                    <div>
-                      <h3 className="flex items-center gap-3 text-2xl font-semibold leading-tight text-[#17352b] sm:text-3xl">
-                        <StepIcon
-                          aria-hidden="true"
-                          weight="light"
-                          size={22}
-                          strokeWidth={1.5}
-                          className="shrink-0 text-[#56645c]"
-                        />
-                        {step.title}
-                      </h3>
-                      <p className="mt-3 max-w-2xl text-base leading-7 text-[#56645c]">
-                        {step.body}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-          </div>
-        </Chapter>
+                    <PhotoCredit
+                      fileUrl={PHOTO_CREDITS.market}
+                      className="text-[#0B1F1A]/70"
+                    />
+                  </figcaption>
+                </figure>
+              </Reveal>
+            </SectionCard>
+          </StickySectionHeadings>
+        </div>
 
-        <Chapter labelledBy="pay-heading">
-          <Reveal className="max-w-3xl">
-            <h2
-              id="pay-heading"
-              data-sticky-section
-              className="max-w-3xl text-balance text-[clamp(2rem,4.5vw,3.75rem)] font-semibold leading-[1.04] tracking-[-0.05em] text-[#17352b]"
-            >
-              Projects list a budget up front
-            </h2>
-            <p className="mt-6 max-w-2xl text-sm leading-7 text-[#56645c] sm:text-base">
-              Every paid project lists its budget range and scope before you
-              apply, and founders update project and applicant status as work
-              progresses.
-            </p>
-            <TextLink href="/faq" className="mt-6">
-              Read the FAQ about pay
-            </TextLink>
+        {/* Final CTA */}
+        <section className="px-5 pb-16 sm:px-8 lg:px-12">
+          <Reveal className="mx-auto max-w-[1120px]">
+            <div className="relative isolate overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-gradient-to-br from-[#E8E4DB] via-white to-[#E8A317]/25 px-6 py-14 text-center sm:px-12">
+              <p className={pillClass}>Next step</p>
+              <h2 className="mt-4 text-balance text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]">
+                Your profile is the <Highlight>first step</Highlight>
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[#0B1F1A]/75 sm:text-base">
+                Complete it once, then apply to projects that fit.
+              </p>
+              <Link href="/signup" className={cn(primaryCta, "mt-8")}>
+                Create student account
+              </Link>
+            </div>
           </Reveal>
-        </Chapter>
-        </StickySectionHeadings>
-
-        <CtaBand
-          title="Your profile is the first step"
-          lead="Complete it once, then apply to projects that fit."
-          href="/signup"
-          label="Create student account"
-        />
+        </section>
       </main>
       <SiteFooter />
     </>

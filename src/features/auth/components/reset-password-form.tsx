@@ -19,6 +19,21 @@ const FIELD_ORDER: FieldName[] = ["password", "confirmPassword"];
 const MIN_PASSWORD_LENGTH = 6;
 const MAX_PASSWORD_LENGTH = 128;
 
+/** Local: identical accessible markup for every inline error. The fade comes
+ *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+function FieldError({ id, children }: { id: string; children: string }) {
+  return (
+    <p
+      id={id}
+      role="alert"
+      data-auth-message
+      className="mt-1.5 text-xs font-medium text-red-700"
+    >
+      {children}
+    </p>
+  );
+}
+
 export function ResetPasswordForm({ serverError }: { serverError?: string }) {
   const rawId = useId();
   const uid = rawId.replace(/[^a-zA-Z0-9_-]/g, "");
@@ -76,6 +91,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
           id={serverErrorId}
           role="alert"
           tabIndex={-1}
+          data-auth-message
           className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {serverError}
@@ -112,13 +128,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.password && (
-            <p
-              id={passwordErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.password}
-            </p>
+            <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
         </div>
 
@@ -145,13 +155,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             className="w-full rounded-xl border border-[#d8d1c4] bg-[#f8f6f0] px-4 py-3.5 text-base text-[#18251f] placeholder:text-[#6b655c] transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] focus-visible:border-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fffefa]"
           />
           {errors.confirmPassword && (
-            <p
-              id={confirmErrorId}
-              role="alert"
-              className="mt-1.5 text-xs font-medium text-red-700"
-            >
-              {errors.confirmPassword}
-            </p>
+            <FieldError id={confirmErrorId}>{errors.confirmPassword}</FieldError>
           )}
         </div>
 

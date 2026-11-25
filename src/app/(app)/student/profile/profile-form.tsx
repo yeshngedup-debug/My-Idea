@@ -5,7 +5,8 @@
  * only writes are the two server actions, which re-check the session and
  * the student role. No client code reads a table directly.
  */
-import { useMemo, useRef, useState, useTransition, type ChangeEvent, type FormEvent } from 'react';
+import { useMemo, useRef, useState, useTransition, type ChangeEvent, type FormEvent, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { X, Upload, FileText, CheckCircle, Warning } from '@phosphor-icons/react';
 import { saveStudentProfile, uploadCv } from '@/features/users/actions';
@@ -48,6 +49,24 @@ const FIELD_CLASS =
   'w-full min-w-0 rounded-xl border border-[#ded8cb] bg-[#fffefa] px-4 py-3 text-base text-[#17352b] placeholder:text-[#5f6b63] focus:outline-none focus-visible:border-[#d84f37] focus-visible:ring-2 focus-visible:ring-[#d84f37]/35 motion-reduce:transition-none';
 
 type Banner = { tone: 'success' | 'error'; msg: string };
+
+/** Mirrors the --ease-out token in app/globals.css. */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/** One gentle entrance for the result banner, never for the form fields. */
+function BannerEntrance({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div>{children}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export interface StudentProfileData {
   full_name: string | null;
@@ -323,6 +342,7 @@ export function ProfileForm({
       </section>
 
       {visibleBanner && (
+        <BannerEntrance>
         <p
           role={visibleBanner.tone === 'error' ? 'alert' : 'status'}
           className={`flex min-w-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm leading-6 ${
@@ -342,6 +362,7 @@ export function ProfileForm({
           )}
           <span>{visibleBanner.msg}</span>
         </p>
+        </BannerEntrance>
       )}
 
       <form
@@ -416,7 +437,7 @@ export function ProfileForm({
           type="submit"
           disabled={uploading}
           variant="outline"
-          className="mt-3 w-full border-[#ded8cb] bg-[#fffefa] text-[#17352b]"
+          className="pressable mt-3 w-full border-[#ded8cb] bg-[#fffefa] text-[#17352b]"
         >
           {uploading ? 'Uploading...' : 'Upload CV'}
         </Button>
@@ -513,7 +534,7 @@ export function ProfileForm({
               type="button"
               onClick={addSkill}
               variant="outline"
-              className="h-auto min-h-[48px] shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b]"
+              className="pressable h-auto min-h-[48px] shrink-0 border-[#ded8cb] bg-[#fffefa] px-4 text-[#17352b]"
             >
               Add
             </Button>
@@ -531,7 +552,7 @@ export function ProfileForm({
                       type="button"
                       aria-label={`Remove ${s}`}
                       onClick={() => setSkills(skills.filter((x) => x !== s))}
-                      className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-[#ded8cb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
+                      className="pressable grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-[#ded8cb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] motion-reduce:transition-none"
                     >
                       <X className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>

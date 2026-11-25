@@ -195,7 +195,7 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
+              className={`pressable inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:opacity-60 ${
                 projectStatus === s.value
                   ? 'bg-[#17352b] text-[#fffefa]'
                   : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'
@@ -301,7 +301,7 @@ export function ProjectDetailClient({
                               disabled={busy || isCurrent || !isAllowed}
                               onClick={() => setApplication(a.id, st, s?.full_name ?? 'this applicant')}
                               aria-pressed={isCurrent}
-                              className={`inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:cursor-not-allowed disabled:opacity-60 ${
+                              className={`pressable inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] disabled:cursor-not-allowed disabled:opacity-60 ${
                                 isCurrent
                                   ? 'bg-[#17352b] text-[#fffefa]'
                                   : 'border border-[#ded8cb] bg-[#fffefa] text-[#4c5a52] hover:bg-[#f5f2ea]'

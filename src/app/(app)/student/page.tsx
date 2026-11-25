@@ -1,11 +1,12 @@
 /**
- * Student Dashboard: the next action first, then applications health, recent
+ * Student Overview — one next action, quiet application figures, dense recent
  * applications and shortcuts.
  *
- * The session and role checks and the applications read are unchanged. The
- * skill-match figure comes from an additional read-only query so the headline
- * is never a made-up number; if that query fails, the page simply falls back
- * to action-led copy without a count.
+ * The session/role checks and the applications read are unchanged. The next
+ * action and every figure come from existing rows: profile completeness mirrors
+ * the eight checks in the profile form, and the counts come from the real
+ * applications list. Extra reads are fault-tolerant — a failure drops only the
+ * affected fact, never the page or its authorization.
  */
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -17,18 +18,15 @@ import {
   listStudentApplications,
   type Role,
 } from "@/lib/neon-data";
-import { WorkspaceHero } from "@/components/layout/workspace-hero";
-import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
-import {
-  Reveal,
-  StaggerGroup,
-  StaggerItem,
-} from "@/components/ui/motion";
 
 export const metadata = { title: "Student Dashboard | Bhutan Tech Connect" };
 
 const BHUTAN_TIME_ZONE = "Asia/Thimphu";
+
+/** The project detail route only accepts UUIDs; anything else uses the list. */
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // Keep in sync with the applications list allow-list at
 // app/student/applications/page.tsx:17-23 and
@@ -74,8 +72,25 @@ const APPLICATION_TONE: Record<string, PillTone> = {
   rejected: "danger",
 };
 
-const ROW_LINK =
-  "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded py-3.5 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
+const APPLICATION_LABEL: Record<string, string> = {
+  pending: "Pending",
+  accepted: "Accepted",
+  rejected: "Declined",
+  shortlisted: "Shortlisted",
+};
+
+/* Quiet, shared link treatment: one filled CTA stays in the page header. */
+const QUIET_LINK =
+  "inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline decoration-border underline-offset-4 transition-colors hover:text-accent-deep hover:decoration-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
+
+type ProfileRow = Awaited<ReturnType<typeof getStudentProfile>>;
+
+type NextAction = {
+  title: string;
+  action: string;
+  href: string;
+  progress: string | null;
+};
 
 function WorkspaceNotice({
   title,
@@ -136,6 +151,46 @@ function formatAppliedDate(value: string): string {
   }).format(date);
 }
 
+/**
+ * Mirrors the eight checks in student/profile/profile-form.tsx so a progress
+ * figure is counted from the same fields the profile page itself uses.
+ */
+function profileCompletion(profile: ProfileRow) {
+  const checks = [
+    (profile?.full_name ?? "").trim().length > 1,
+    (profile?.college ?? "").trim().length > 1,
+    (profile?.course ?? "").trim().length > 1,
+    Boolean(profile?.year),
+    (profile?.skills ?? []).length > 0,
+    (profile?.bio ?? "").trim().length > 20,
+    Boolean(profile?.availability),
+    Boolean(profile?.cv_path),
+  ];
+  return {
+    completed: checks.filter(Boolean).length,
+    total: checks.length,
+  };
+}
+
+function statusLabel(status: string): string {
+  return (
+    APPLICATION_LABEL[status] ??
+    status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ")
+  );
+}
+
+function applicationHref(application: {
+  status: string;
+  project: { id: string } | null;
+}): string {
+  if (application.project?.id && UUID_PATTERN.test(application.project.id)) {
+    return `/student/projects/${application.project.id}`;
+  }
+  return APPLICATION_FILTER_VALUES.has(application.status)
+    ? `/student/applications?status=${application.status}`
+    : "/student/applications";
+}
+
 export default async function StudentDashboard() {
   const user = await getUser();
 
@@ -173,7 +228,7 @@ export default async function StudentDashboard() {
     id: string;
     status: string;
     created_at: string;
-    project: { title: string } | null;
+    project: { id: string; title: string } | null;
   }[];
   try {
     const appRows = await listStudentApplications(user.id);
@@ -192,28 +247,19 @@ export default async function StudentDashboard() {
     );
   }
 
-  // Additional read-only data for the action headline. A failure here does not
-  // fail the page or change any of the authorization checks above.
-  let skillMatchCount: number | null = null;
+  // Completion needs a truthful profile row. A failed read leaves the state
+  // unknown, so the page never claims a profile is unfinished without proof.
+  let profile: ProfileRow = null;
+  let profileReadFailed = false;
   try {
-    const [profile, openProjects] = await Promise.all([
-      getStudentProfile(user.id),
-      listOpenProjects(),
-    ]);
-    const skills = new Set(
-      (profile?.skills ?? [])
-        .map((skill) => skill.trim().toLowerCase())
-        .filter(Boolean),
-    );
-    skillMatchCount = openProjects.filter((project) =>
-      (project.required_skills ?? []).some((skill) =>
-        skills.has(skill.trim().toLowerCase()),
-      ),
-    ).length;
+    profile = await getStudentProfile(user.id);
   } catch {
-    // Keep the action-led headline; drop only the number.
-    skillMatchCount = null;
+    profileReadFailed = true;
   }
+
+  // Retained existing read from the previous headline. The replacement copy is
+  // fixed, so its match count is no longer rendered; a failure only drops it.
+  await listOpenProjects().catch(() => []);
 
   const awaitingResponse = applications.filter(
     (application) => application.status === "pending",
@@ -222,135 +268,223 @@ export default async function StudentDashboard() {
     (application) => application.status === "accepted",
   ).length;
 
+  const completion = profileCompletion(profile);
+  const profileKnown = !profileReadFailed;
+  const profileComplete = profileKnown && completion.completed === completion.total;
+
+  // Exactly one next action: an unfinished profile wins while it is known to
+  // be unfinished, then a live pending response, then the ready-to-browse nudge.
+  let nextAction: NextAction;
+  if (profileKnown && !profileComplete) {
+    nextAction = {
+      title: "Finish your profile so founders can find you.",
+      action: "Complete profile",
+      href: "/student/profile",
+      progress: `${completion.completed}/${completion.total} profile details added`,
+    };
+  } else if (awaitingResponse > 0) {
+    nextAction = {
+      title: `You have ${awaitingResponse} application${awaitingResponse === 1 ? "" : "s"} awaiting a response.`,
+      action: "View applications",
+      href: "/student/applications?status=pending",
+      progress: null,
+    };
+  } else {
+    nextAction = {
+      title: "You're ready. Browse open projects that match your skills.",
+      action: "Browse projects",
+      href: "/student/projects",
+      progress: null,
+    };
+  }
+
   const stats = [
-    { label: "Applications sent", value: applications.length, detail: null },
-    { label: "Awaiting response", value: awaitingResponse, detail: null },
-    { label: "Accepted", value: acceptedApplications, detail: null },
+    { label: "Applications sent", value: applications.length, href: "/student/applications" },
+    { label: "Awaiting response", value: awaitingResponse, href: "/student/applications?status=pending" },
+    { label: "Accepted", value: acceptedApplications, href: "/student/applications?status=accepted" },
   ];
 
-  const heroTitle =
-    skillMatchCount === null
-      ? "Find work that fits your skills"
-      : skillMatchCount === 0
-        ? "No open brief matches your skills yet"
-        : `${skillMatchCount} project${skillMatchCount === 1 ? "" : "s"} match your skills`;
-  const heroDescription =
-    skillMatchCount === 0
-      ? "Add your skills to see better matches, or browse every open brief."
-      : "Open a brief, check the scope, then apply with your profile and CV.";
-
-  const statusLabel = (status: string) =>
-    status.charAt(0).toUpperCase() + status.slice(1);
+  const shortcuts = [
+    { href: "/student/projects", title: "Projects", description: "Open briefs you can apply to" },
+    { href: "/student/applications", title: "Applications", description: "Track where each one stands" },
+    { href: "/student/profile", title: "Profile", description: "Skills, availability, CV" },
+  ];
 
   return (
     <div className="space-y-8">
-      <Reveal>
-        <WorkspaceHero
-          eyebrow="Student workspace"
-          title={heroTitle}
-          description={heroDescription}
-        >
+      {/* Page header — the only filled CTA on this page. */}
+      <section
+        aria-labelledby="student-overview-title"
+        className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
+      >
+        <div className="min-w-0">
+          <h1
+            id="student-overview-title"
+            className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.25] tracking-[-0.02em] text-primary text-balance"
+          >
+            Overview
+          </h1>
+          <p className="mt-2 max-w-xs text-sm leading-6 text-body-secondary sm:max-w-sm">
+            <span className="font-medium text-accent-deep">Student workspace ·</span>{" "}
+            Your applications, next steps and shortcuts.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             href="/student/projects"
-            className="pressable inline-flex min-h-11 items-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
           >
             Browse projects
           </Link>
           <Link
             href="/student/profile"
-            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-primary-foreground/35 px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
           >
-            {skillMatchCount === 0 ? "Complete profile" : "Update profile"}
+            Update profile
           </Link>
-        </WorkspaceHero>
-      </Reveal>
+        </div>
+      </section>
 
-      <Reveal>
-        <WorkspaceStats stats={stats} />
-      </Reveal>
+      {/* Block A — the single next action, ahead of the figures. */}
+      <section
+        aria-labelledby="student-next-action-title"
+        className="rounded-2xl border border-border bg-card px-5 py-5 sm:px-6"
+      >
+        <p className="text-xs font-semibold text-accent-deep">Next action</p>
+        <h2
+          id="student-next-action-title"
+          className="mt-2 text-lg font-semibold tracking-tight text-primary"
+        >
+          {nextAction.title}
+        </h2>
+        {nextAction.progress && (
+          <p className="mt-1 text-xs tabular-nums text-body-secondary">
+            {nextAction.progress}
+          </p>
+        )}
+        <Link href={nextAction.href} className={`mt-3 ${QUIET_LINK}`}>
+          {nextAction.action}
+          <span aria-hidden="true" className="ml-1.5">
+            →
+          </span>
+        </Link>
+      </section>
+
+      {/* Block B — quiet figures, each labelled by a real destination. */}
+      <section aria-label="Application figures" className="border-y border-border py-4">
+        <dl className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="flex items-baseline justify-between gap-3"
+            >
+              <dt className="min-w-0">
+                <Link
+                  href={stat.href}
+                  className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary underline decoration-border underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                >
+                  {stat.label}
+                </Link>
+              </dt>
+              <dd className="shrink-0 text-base font-medium tabular-nums text-primary">
+                {stat.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       <section className="grid grid-cols-12 gap-6 lg:gap-8">
+        {/* Block C — dense rows, not cards. */}
         <div className="col-span-12 min-w-0 lg:col-span-8">
           <div className="mb-4 flex items-end justify-between gap-4">
             <h2 className="min-w-0 text-lg font-semibold tracking-tight text-primary">
               Recent applications
             </h2>
-            {applications.length > 0 && (
-              <Link
-                href="/student/applications"
-                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-primary hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-              >
-                View all
-              </Link>
-            )}
+            <Link href="/student/applications" className={`shrink-0 ${QUIET_LINK}`}>
+              View all
+            </Link>
           </div>
           {applications.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-10">
-              <h3 className="text-base font-semibold text-primary">
-                Your first application starts here
-              </h3>
-              <p className="mt-2 max-w-md text-sm leading-6 text-body-secondary">
-                Each brief you apply to will appear here with its current
-                status, so you can see where you stand at a glance.
+              <p className="text-base font-semibold text-primary">
+                No applications yet.
               </p>
-              <Link
-                href="/student/projects"
-                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#244b3e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
-              >
+              <Link href="/student/projects" className={`mt-2 ${QUIET_LINK}`}>
                 Browse open projects
               </Link>
             </div>
           ) : (
-            <StaggerGroup className="divide-y divide-border border-y border-border">
-              {applications.slice(0, 5).map((application) => {
-                const tone = APPLICATION_TONE[application.status] ?? "neutral";
-                return (
-                  <StaggerItem key={application.id}>
-                    <Link
-                      href={
-                        APPLICATION_FILTER_VALUES.has(application.status)
-                          ? `/student/applications?status=${application.status}`
-                          : "/student/applications"
-                      }
-                      className={ROW_LINK}
+            <table className="w-full border-collapse text-left">
+              <caption className="sr-only">Your most recent applications</caption>
+              <thead>
+                <tr className="border-b border-border text-xs text-muted-foreground">
+                  <th scope="col" className="w-full py-2 pr-3 font-medium">
+                    Project
+                  </th>
+                  <th scope="col" className="whitespace-nowrap px-3 py-2 font-medium">
+                    Applied
+                  </th>
+                  <th scope="col" className="whitespace-nowrap py-2 pl-3 text-right font-medium">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {applications.slice(0, 5).map((application) => {
+                  const tone = APPLICATION_TONE[application.status] ?? "neutral";
+                  return (
+                    <tr
+                      key={application.id}
+                      className="relative border-b border-border last:border-0 transition-colors hover:bg-secondary"
                     >
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-medium text-primary">
-                          {application.project?.title ?? "Project"}
-                        </span>
-                        <span className="mt-0.5 block text-xs tabular-nums text-body-secondary">
-                          Applied {formatAppliedDate(application.created_at)}
-                        </span>
-                      </span>
-                      <Badge className={`shrink-0 gap-1.5 ${PILL[tone]}`}>
-                        <span
-                          aria-hidden="true"
-                          className={`h-1.5 w-1.5 rounded-full ${PILL_DOT[tone]}`}
-                        />
-                        {statusLabel(application.status)}
-                      </Badge>
-                    </Link>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerGroup>
+                      <td className="py-2 pr-3">
+                        <Link
+                          href={applicationHref(application)}
+                          className="inline-flex min-h-11 max-w-full items-center rounded text-sm font-medium text-primary after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-inset"
+                        >
+                          <span
+                            className="block max-w-full truncate"
+                            title={application.project?.title ?? undefined}
+                          >
+                            {application.project?.title ?? "Project"}
+                          </span>
+                        </Link>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-xs tabular-nums text-body-secondary">
+                        {formatAppliedDate(application.created_at)}
+                      </td>
+                      <td className="whitespace-nowrap py-2 pl-3 text-right">
+                        <Badge className={`gap-1.5 ${PILL[tone]}`}>
+                          <span
+                            aria-hidden="true"
+                            className={`h-1.5 w-1.5 rounded-full ${PILL_DOT[tone]}`}
+                          />
+                          {statusLabel(application.status)}
+                        </Badge>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           )}
         </div>
 
+        {/* Block D — quiet shortcuts. */}
         <div className="col-span-12 min-w-0 lg:col-span-4">
           <h2 className="mb-4 text-lg font-semibold tracking-tight text-primary">
             Go to
           </h2>
-          <nav aria-label="Student shortcuts" className="workspace-paper divide-y divide-border border-y border-border">
-            {[
-              { href: "/student/projects", title: "Browse projects", description: "Open briefs you can apply to" },
-              { href: "/student/applications", title: "Track applications", description: "See where each one stands" },
-              { href: "/student/profile", title: "Complete profile", description: "Keep your details and CV current" },
-            ].map((item) => (
+          <nav
+            aria-label="Student shortcuts"
+            className="workspace-paper divide-y divide-border border-y border-border"
+          >
+            {shortcuts.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex flex-col gap-0.5 rounded py-3.5 text-sm font-medium text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

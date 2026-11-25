@@ -1,684 +1,467 @@
-import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  CalendarBlank,
   CheckCircle,
-  Clock,
+  ClipboardText,
   FileText,
-  MagnifyingGlass,
-  Receipt,
-  Signpost,
+  LockKey,
+  UsersThree,
   Wallet,
 } from "@phosphor-icons/react/dist/ssr";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
-import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
-import { PhotoCredit } from "@/components/ui/photo-credit";
-import { SectionIntro } from "@/components/marketing/section-intro";
-import { CtaBand } from "@/components/marketing/cta-band";
-import { PhotoFeature } from "@/components/marketing/photo-feature";
-import { ShortlistPreview } from "@/components/marketing/product-preview/shortlist-preview";
-import { Reveal } from "@/components/ui/motion";
-import { TextReveal } from "@/components/ui/text-reveal";
-import { StackedCards } from "@/components/motion";
-import { Accordion } from "@/components/interactive/accordion";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
-import {
-  StickySectionHeadings,
-  type StickySection,
-} from "@/components/layout/sticky-section-headings";
-import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
+import { CTA_HREFS } from "@/components/marketing/nav";
 import { PACKAGES, PAYMENT_CONFIGURED } from "@/config/payment";
+import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "For founders",
   description:
-    "Founder access is assigned by an admin. Post a scoped project, browse student profiles and CVs, and request a manually curated Premium Shortlist.",
+    "Post a scoped project brief, browse verified student talent, and request a ranked shortlist. Verified by an admin, paid in Ngultrum.",
   path: "/for-founders",
 });
 
-const valley = {
-  src: "/images/bhutanese-students.jpg",
-  alt: "Young Bhutanese people in gho and kira working together at computers",
-  fileUrl:
-    "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg",
-};
+/** One label per intent, repeated verbatim across the page. */
+const FOUNDER_ACCESS = "Ask for founder access";
 
-const dzong = {
-  src: "/images/bhutanese-community.jpg",
-  alt: "Bhutanese boys in traditional gho sitting together",
-  fileUrl:
-    "https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg",
-};
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B4D3E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F7F4EE]";
+const primaryCta = `inline-flex min-h-11 items-center justify-center rounded-full bg-[#E8A317] px-6 py-3 text-sm font-semibold text-[#0B1F1A] transition-colors duration-150 hover:bg-[#E8A317]/85 motion-reduce:transition-none ${focusRing}`;
+const quietLink = `inline-flex min-h-11 items-center text-sm font-semibold text-[#1B4D3E] underline decoration-[#1B4D3E]/30 underline-offset-4 transition-colors hover:text-[#0B1F1A] motion-reduce:transition-none ${focusRing}`;
+const pillClass =
+  "inline-flex items-center rounded-full border border-[#1B4D3E]/15 bg-[#E8E4DB]/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1B4D3E]";
+const headingClass =
+  "text-balance text-center text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]";
 
-const textLink =
-  "inline-flex items-center gap-1.5 font-semibold text-[#b23c26] underline decoration-[#d84f37]/30 underline-offset-4 transition hover:decoration-[#d84f37] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37]";
-
-const heroPrimary =
-  "pressable inline-flex min-h-12 items-center rounded-md bg-cta px-6 py-3 text-sm font-medium text-cta-foreground hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17352b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
-const heroSecondary =
-  "inline-flex min-h-11 items-center text-sm font-medium text-[#17352b] transition-colors hover:text-[#b23c26] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d84f37] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f2ea]";
-
-const outcomes = [
-  {
-    icon: FileText,
-    title: "Start with a scoped brief",
-    body: "List the skills, budget, duration and deadline so students know what the work involves.",
-  },
-  {
-    icon: MagnifyingGlass,
-    title: "Meet the people behind the CVs",
-    body: "Browse completed profiles by skill and availability; CV links open under defined access rules.",
-  },
-  {
-    icon: CheckCircle,
-    title: "Get a shortlist checked by a person",
-    body: "Optional and paid. An admin ranks and releases every shortlist; founders cannot confirm their own orders.",
-  },
-  {
-    icon: Receipt,
-    title: "Agree the terms directly",
-    body: "You and the student settle scope, budget and deadlines before work starts.",
-  },
-];
-
-const sections: StickySection[] = [
-  { id: "brief-heading", label: "Brief" },
-  { id: "profiles-heading", label: "Profiles" },
-  { id: "shortlist-heading", label: "Shortlist" },
-  { id: "compare-heading", label: "Compare" },
-];
-
-function StickySectionIntro({
-  id,
-  title,
-  lead,
-}: {
-  id: string;
-  title: ReactNode;
-  lead?: ReactNode;
-}) {
+/** Saffron marker behind a phrase, with ink text kept readable. */
+function Highlight({ children }: { children: ReactNode }) {
   return (
-    <Reveal className="max-w-3xl">
-      <h2
-        id={id}
-        data-sticky-section
-        className="mt-3 text-balance text-4xl font-medium leading-[1.04] tracking-normal text-[#17352b] sm:text-6xl sm:tracking-[-0.02em]"
-      >
-        {title}
-      </h2>
-      {lead ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-[#5e554a] sm:text-base">
-          {lead}
-        </p>
-      ) : null}
-    </Reveal>
+    <span className="box-decoration-clone rounded-[4px] bg-[#E8A317] px-1 text-[#0B1F1A]">
+      {children}
+    </span>
   );
 }
 
-const accessSteps = [
+function SectionCard({
+  id,
+  className,
+  children,
+}: {
+  id?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section id={id} className={cn("px-5 py-10 sm:px-8 lg:px-12", className)}>
+      <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/** Prices come from the payment config; no other amounts are hard-coded. */
+function nuAmount(amount: number) {
+  return `Nu ${amount.toLocaleString("en-US")}`;
+}
+
+const basicPrice = nuAmount(PACKAGES.basic.defaultAmount);
+const fullPrice = nuAmount(PACKAGES.full.defaultAmount);
+
+const pains = [
   {
-    number: "01",
-    title: "Ask for access",
-    text: "Tell us your name and organisation; an admin sets up your account.",
+    pain: 'Vague "anyone free?" messages',
+    solution:
+      "A scoped brief with skills, budget, deadline and remote or onsite work",
   },
   {
-    number: "02",
-    title: "Log in and post a brief",
-    text: (
-      <>
-        <Link href="/login" className={textLink}>
-          Log in
-        </Link>{" "}
-        and describe the work, skills, budget, duration and deadline.
-      </>
-    ),
+    pain: "Unknown quality",
+    solution: "Admin-verified profiles and CVs",
   },
   {
-    number: "03",
-    title: "Meet the students",
-    text: "Browse profiles, review applicants, and request a shortlist.",
+    pain: "No shortlist discipline",
+    solution: "Ranked shortlist packages with payment proof",
   },
 ];
 
-const briefFields = [
+const steps = [
   {
-    icon: CheckCircle,
-    label: "Skills",
-    text: "The abilities the project needs.",
+    number: "01",
+    title: "Post a project",
+    body: "Add a title, scope, skills, budget in Nu, duration and an apply-by date.",
+    hint: "Brief, in Nu, with a date",
+  },
+  {
+    number: "02",
+    title: "Get applications",
+    body: "Students apply with a profile and CV.",
+    hint: "Profile + CV",
+  },
+  {
+    number: "03",
+    title: "Browse talent",
+    body: "Filter by skill, college and availability.",
+    hint: "Skill · college · availability",
+  },
+  {
+    number: "04",
+    title: "Order a shortlist — optional",
+    body: "Choose Basic or Full Support and upload a payment screenshot. An admin confirms payment, ranks the students and releases the shortlist.",
+    hint: "Payment proof → admin ranking",
+  },
+];
+
+const controls = [
+  {
+    icon: ClipboardText,
+    title: "Clear scope",
+    body: "Skills, budget, deadline and where the work happens.",
+  },
+  {
+    icon: UsersThree,
+    title: "Visible applicants",
+    body: "See who applied and compare their profiles.",
+  },
+  {
+    icon: LockKey,
+    title: "Private CVs",
+    body: "CVs open only under defined access rules.",
   },
   {
     icon: Wallet,
-    label: "Budget",
-    text: "A range you are comfortable paying.",
-  },
-  {
-    icon: Clock,
-    label: "Duration",
-    text: "How long the work should take.",
-  },
-  {
-    icon: CalendarBlank,
-    label: "Deadline",
-    text: "A clear date to work toward.",
-  },
-];
-
-const profileViews = [
-  {
-    icon: FileText,
-    label: "CV links",
-    text: "CV links open for admins, founders with an application to their project, and founders whose confirmed shortlist includes the student.",
-  },
-  {
-    icon: MagnifyingGlass,
-    label: "Search and filters",
-    text: "Find students by skill and availability.",
-  },
-  {
-    icon: CheckCircle,
-    label: "Completed profiles",
-    text: "Founders see profiles that students have finished.",
-  },
-];
-
-const paymentSteps = [
-  {
-    number: "01",
-    title: "Transfer",
-    text: "Pay by bank transfer or mBoB using the details shared with your founder account.",
-  },
-  {
-    number: "02",
-    title: "Upload proof",
-    text: "Upload a screenshot of the payment in the shortlists area.",
-  },
-  {
-    number: "03",
-    title: "Confirmation",
-    text: "An admin confirms payment, finalizes and ranks the shortlist, then releases it. Founders cannot confirm their own orders.",
-  },
-];
-
-const packageComparison = [
-  {
-    question: "How many students are in each shortlist",
-    answer: (
-      <p>
-        {PACKAGES.basic.name}: {PACKAGES.basic.features[0]}.{" "}
-        {PACKAGES.full.name}: {PACKAGES.full.features[1]}. Both ranges are
-        advertised; an admin curates every shortlist.
-      </p>
-    ),
-  },
-  {
-    question: "What details come with the shortlist",
-    answer: (
-      <p>
-        {PACKAGES.basic.features[1]} and {PACKAGES.basic.features[2]}.{" "}
-        {PACKAGES.full.name} includes everything in {PACKAGES.basic.name}.
-      </p>
-    ),
-  },
-  {
-    question: "Availability, introductions, and a replacement",
-    answer: (
-      <p>
-        {PACKAGES.full.name} includes {PACKAGES.full.features[2].toLowerCase()},{" "}
-        {PACKAGES.full.features[3].toLowerCase()}, and{" "}
-        {PACKAGES.full.features[4].toLowerCase()}. These are listed under Full
-        Support only.
-      </p>
-    ),
+    title: "Nu payments",
+    body: "Bank transfer or mBoB, confirmed by an admin.",
   },
 ];
 
 export default function ForFoundersPage() {
-  const basicFeatures = PAYMENT_CONFIGURED
-    ? PACKAGES.basic.features
-    : PACKAGES.basic.features.filter(
-        (feature) => feature !== "Delivered within 2 working days",
-      );
-
   return (
-    <div className="min-h-[100dvh] bg-[#f5f2ea] text-[#18251f]">
+    <div className="min-h-[100dvh] bg-[#F7F4EE] text-[#0B1F1A]">
       <SiteHeader />
 
-      <main id="main-content" className="overflow-x-clip">
-        <section className="px-5 pb-20 pt-12 sm:px-8 sm:pb-24 sm:pt-16 lg:px-12 lg:pb-28 lg:pt-20">
-          <div className="mx-auto max-w-[1440px]">
+      <main id="main-content">
+        {/* Hero */}
+        <section className="px-5 pt-10 sm:px-8 lg:px-12 lg:pt-14">
+          <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
             <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-              <HeroCopyEntrance>
-                <h1 className="max-w-[22ch] text-balance text-[clamp(2rem,6vw,3rem)] font-semibold leading-[1.03] tracking-[-0.045em] text-[#17352b] sm:text-[clamp(2.5rem,4.4vw,4rem)]">
-                  Post a paid brief for{" "}
-                  <span className="text-[#b23c26]">Bhutanese students</span>
+              <div>
+                <p className={pillClass}>For founders</p>
+                <h1 className="mt-3 max-w-[24ch] text-balance text-[clamp(2rem,5.5vw,3rem)] font-semibold leading-[1.06] tracking-[-0.035em] sm:text-[clamp(2.5rem,4vw,3.5rem)]">
+                  Hire <Highlight>verified student talent</Highlight> for scoped
+                  work.
                 </h1>
-                <p className="mt-6 max-w-xl text-base leading-7 text-[#5e554a] sm:text-lg sm:leading-8">
-                  Describe the work, meet students, and agree terms directly,
-                  with an admin-curated shortlist when you need one.
+                <p className="mt-6 max-w-[60ch] text-base leading-7 text-[#0B1F1A]/75">
+                  Post a clear brief and budget. Browse students by skill and
+                  availability. Or buy a ranked shortlist when you need a short
+                  list fast — verified by an admin, paid in Ngultrum.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  <Link href="/contact" className={heroPrimary}>
-                    Ask for founder access
+                  <Link href={CTA_HREFS.contact} className={primaryCta}>
+                    {FOUNDER_ACCESS}
                   </Link>
-                  <Link href="/how-it-works" className={heroSecondary}>
-                    See how it works
+                  <Link href="#pricing" className={quietLink}>
+                    See pricing
                   </Link>
                 </div>
-              </HeroCopyEntrance>
+              </div>
 
-              <HeroPhotoEntrance>
-                <figure className="relative isolate aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-[#fffefa]">
-                  <Image
-                    src={valley.src}
-                    alt={valley.alt}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    className="object-cover object-[45%_55%]"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-[#101d17]/55 to-transparent"
-                  />
-                  <figcaption className="absolute inset-x-5 bottom-4 sm:inset-x-7 sm:bottom-5">
-                    <PhotoCredit
-                      fileUrl={valley.fileUrl}
-                      className="text-[#fffefa]/80"
-                    />
-                  </figcaption>
-                </figure>
-              </HeroPhotoEntrance>
-            </div>
-
-            <div className="mt-16 border-t border-[#18251f]/15 pt-10 sm:mt-20">
-              <p className="max-w-xl text-sm font-medium text-[#56645c]">
-                What the platform gives a founder
-              </p>
-              <ol className="mt-6 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-                {outcomes.map((outcome) => {
-                  const OutcomeIcon = outcome.icon;
-                  return (
-                    <li
-                      key={outcome.title}
-                      className="border-t border-[#18251f]/15 pt-5"
-                    >
-                      <OutcomeIcon
+              {/* Sample product panel — visibly a sample, no interactive action. */}
+              <div className="relative">
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-5 rounded-[36px] bg-gradient-to-br from-[#E8A317]/25 via-[#E8E4DB]/70 to-[#1B4D3E]/15 blur-2xl"
+                />
+                <div
+                  role="group"
+                  aria-label="Sample shortlist order panel"
+                  className="relative isolate rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-8"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="inline-flex items-center gap-2 rounded-full bg-[#1B4D3E]/10 px-3 py-1 text-xs font-semibold text-[#1B4D3E]">
+                      <span
                         aria-hidden="true"
-                        weight="light"
-                        size={24}
-                        strokeWidth={1.5}
-                        className="text-[#b23c26]"
+                        className="h-1.5 w-1.5 rounded-full bg-[#1B4D3E]"
                       />
-                      <h2 className="mt-4 text-lg font-semibold tracking-tight text-[#17352b]">
-                        {outcome.title}
-                      </h2>
-                      <p className="mt-2 text-sm leading-6 text-[#56645c]">
-                        {outcome.body}
-                      </p>
-                    </li>
-                  );
-                })}
-              </ol>
+                      Sample
+                    </span>
+                    <span className="text-xs text-[#0B1F1A]/55">Example order</span>
+                  </div>
+                  <h2 className="mt-6 text-2xl font-semibold tracking-[-0.02em] text-[#0B1F1A]">
+                    Basic shortlist · {basicPrice}
+                  </h2>
+                  <p className="mt-2 text-sm text-[#0B1F1A]/65">
+                    Ranked, verified students for your brief
+                  </p>
+                  <p className="mt-7 border-t border-[#E8E4DB] pt-5 text-sm font-medium text-[#1B4D3E]">
+                    Status: Payment confirmed → Admin ranking
+                  </p>
+                  <div className="mt-6 flex items-center justify-between gap-4 border-t border-[#E8E4DB] pt-5">
+                    <span className="text-xs text-[#0B1F1A]/55">
+                      Sample view · not a live order
+                    </span>
+                    <span className="inline-flex min-h-9 items-center rounded-lg border border-[#1B4D3E]/30 px-4 text-xs font-semibold text-[#1B4D3E]/65">
+                      Order shortlist
+                    </span>
+                  </div>
+                  {!PAYMENT_CONFIGURED ? (
+                    <p className="mt-4 text-xs leading-5 text-[#0B1F1A]/65">
+                      Orders are unavailable until the bank and mBoB details are
+                      published.
+                    </p>
+                  ) : null}
+                </div>
+              </div>
             </div>
-
-            <dl className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-t border-[#18251f]/15 pt-6 text-xs leading-5 text-[#56645c]">
-              <div className="flex gap-2">
-                <dt className="font-semibold text-[#17352b]">Access</dt>
-                <dd>Assigned by an admin</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="font-semibold text-[#17352b]">Payment</dt>
-                <dd>Bank transfer or mBoB, confirmed by a person</dd>
-              </div>
-              <div className="flex gap-2">
-                <dt className="font-semibold text-[#17352b]">Photos</dt>
-                <dd>Community settings, not platform listings or members</dd>
-              </div>
-            </dl>
           </div>
         </section>
 
-        <section
-          aria-labelledby="access-heading"
-          className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <PinnedHeadingSection
-              className="gap-10 lg:gap-20"
-              split="lg:grid-cols-[1fr_1.25fr]"
-              heading={
-                <div>
-                  <Signpost
+        {/* Pain → solution */}
+        <SectionCard>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className={pillClass}>The problem</p>
+            <h2 className={cn(headingClass, "mt-1")}>
+              Stop hiring from <Highlight>chat groups</Highlight>
+            </h2>
+          </div>
+          <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
+            {pains.map((row) => (
+              <div
+                key={row.pain}
+                className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6"
+              >
+                <p className="text-base font-medium text-[#0B1F1A]/65">
+                  {row.pain}
+                </p>
+                <p className="mt-4 flex items-start gap-3 text-base font-medium text-[#1B4D3E]">
+                  <CheckCircle
                     aria-hidden="true"
                     weight="light"
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-[#b23c26]"
+                    size={20}
+                    strokeWidth={1.6}
+                    className="mt-0.5 shrink-0"
                   />
-                  <SectionIntro
-                    headingId="access-heading"
-                    title="Three steps to get going"
-                    className="mt-3"
-                  />
-                </div>
-              }
-            >
-              <Reveal direction="right" delay={0.08}>
-                <p className="max-w-xl text-balance text-3xl font-medium leading-[1.15] tracking-[-0.02em] text-[#17352b] sm:text-4xl">
-                  Access is assigned by an admin.
+                  {row.solution}
                 </p>
-                <AnimatedDisclosureList
-                  label="Founder access steps"
-                  defaultValue={accessSteps[0].number}
-                  className="mt-8"
-                  items={accessSteps.map((step) => ({
-                    id: step.number,
-                    trigger: (
-                      <span className="grid gap-1 py-1 sm:grid-cols-[2.5rem_1fr] sm:gap-4">
-                        <span className="font-semibold tabular-nums text-[#b23c26]">
-                          {step.number}
-                        </span>
-                        <span className="font-semibold text-[#17352b]">
-                          {step.title}.
-                        </span>
-                      </span>
-                    ),
-                    children: (
-                      <p className="max-w-xl text-sm leading-7 text-body-secondary sm:text-base">
-                        {step.text}
-                      </p>
-                    ),
-                  }))}
-                />
-                <figure className="mt-10">
-                  <div className="relative isolate aspect-[4/1] overflow-hidden rounded-lg border border-[#18251f]/15 bg-[#fffefa]">
-                    <Image
-                      src="/images/founder-briefing.jpg"
-                      alt="Team members planning around a wall of sticky notes in a meeting room"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 55vw"
-                      className="object-cover object-center"
-                    />
-                  </div>
-                  <figcaption className="mt-2 text-xs leading-5 text-[#56645c]">
-                    Planning a brief with the team.
-                  </figcaption>
-                </figure>
-              </Reveal>
-            </PinnedHeadingSection>
-            <Reveal className="mt-9 border-t border-[#18251f]/15 pt-7">
-              <Link href="/contact" className={textLink}>
-                Ask for founder access
-              </Link>
-            </Reveal>
-          </div>
-        </section>
-
-        <StickySectionHeadings
-          title="For founders"
-          eyebrow="Founder guide"
-          sections={sections}
-          navLabel="For founders sections"
-        >
-        <section
-          aria-labelledby="brief-heading"
-          className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <StickySectionIntro
-              id="brief-heading"
-              title={<TextReveal text="Start with a clear, scoped brief" />}
-              lead="A clear brief helps both sides begin."
-            />
-            <div className="mt-10 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-              <PhotoFeature
-                image={dzong}
-                caption="Young people in gho"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="sm:aspect-[1.5]"
-              />
-              <Reveal direction="right" delay={0.08}>
-                <dl className="grid gap-0">
-                  {briefFields.map((field) => {
-                    const Icon = field.icon;
-                    return (
-                      <div
-                        key={field.label}
-                        className="flex gap-5 border-t border-[#18251f]/15 py-6 first:border-t-0 first:pt-0 sm:py-7"
-                      >
-                        <Icon
-                          aria-hidden="true"
-                          weight="light"
-                          strokeWidth={1.5}
-                          className="mt-0.5 h-6 w-6 shrink-0 text-[#d84f37]"
-                        />
-                        <div>
-                          <dt className="text-lg font-semibold tracking-tight text-[#17352b] sm:text-xl">
-                            {field.label}
-                          </dt>
-                          <dd className="mt-1 text-sm leading-6 text-body-secondary">
-                            {field.text}
-                          </dd>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </dl>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-
-        <section
-          aria-labelledby="profiles-heading"
-          className="bg-[#eae5d9] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <StickySectionIntro
-              id="profiles-heading"
-              title="Meet the people behind the CVs"
-            />
-            <Reveal className="mt-10 rounded-[1.75rem] bg-[#fffefa] p-6 sm:p-9 lg:p-12">
-              <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
-                <p className="max-w-2xl text-lg leading-8 text-[#17352b] sm:text-xl sm:leading-9">
-                  Search by skill. CVs open through short-lived links for admins,
-                  founders with an application to their project, and founders
-                  whose confirmed shortlist includes the student.
-                </p>
-                <ul className="grid gap-0">
-                  {profileViews.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <li
-                        key={item.label}
-                        className="flex gap-4 border-t border-[#18251f]/15 py-4 last:border-b"
-                      >
-                        <Icon
-                          aria-hidden="true"
-                          weight="light"
-                          strokeWidth={1.5}
-                          className="mt-0.5 h-5 w-5 shrink-0 text-[#17352b]/55"
-                        />
-                        <div>
-                          <span className="block text-sm font-semibold text-[#17352b]">
-                            {item.label}
-                          </span>
-                          <span className="mt-0.5 block text-sm leading-6 text-body-secondary">
-                            {item.text}
-                          </span>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
               </div>
-            </Reveal>
+            ))}
           </div>
-        </section>
+        </SectionCard>
 
-        <section
-          aria-labelledby="shortlist-heading"
-          className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-28"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <StickySectionIntro
-              id="shortlist-heading"
-              title="A ranked shortlist, prepared by an admin"
-              lead="Optional, paid, hand-curated."
-            />
-            {!PAYMENT_CONFIGURED ? (
-              <div
-                role="alert"
-                className="mt-4 max-w-2xl rounded-xl border border-[#b23c26]/25 bg-[#b23c26]/8 px-4 py-3 text-sm leading-6 text-[#b23c26]"
+        {/* From brief to shortlist */}
+        <SectionCard>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className={pillClass}>Process</p>
+            <h2 className={cn(headingClass, "mt-1")}>
+              From brief to <Highlight>shortlist</Highlight>
+            </h2>
+          </div>
+          <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step) => (
+              <li
+                key={step.number}
+                className="rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6"
               >
-                Shortlist orders are paused until the bank and mBoB details are
-                published. Prices below are indicative.
-              </div>
-            ) : null}
-            <div className="mt-10 grid gap-5 lg:grid-cols-[0.85fr_1.15fr] lg:gap-6">
-              <Reveal>
-                <SpotlightCard className="flex h-full flex-col rounded-[1.5rem] border border-[#18251f]/15 bg-[#fffefa] p-6 sm:p-8">
-                  <h3 className="text-2xl font-semibold tracking-tight text-[#17352b]">
-                    {PACKAGES.basic.name}
+                <span className="inline-flex rounded-full bg-[#E8A317]/20 px-2.5 py-1 text-sm font-semibold tabular-nums text-[#0B1F1A]">
+                  {step.number}
+                </span>
+                <h3 className="mt-5 text-lg font-semibold tracking-[-0.01em] text-[#0B1F1A]">
+                  {step.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-[#0B1F1A]/70">
+                  {step.body}
+                </p>
+                <p className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#E8E4DB]/60 px-3 py-2 text-xs font-medium text-[#1B4D3E]">
+                  <FileText aria-hidden="true" weight="light" size={14} />
+                  {step.hint}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </SectionCard>
+
+        {/* Shortlist packages */}
+        <section
+          id="pricing"
+          className="scroll-mt-24 px-5 py-10 sm:px-8 lg:px-12"
+        >
+          <div className="mx-auto max-w-[1120px] rounded-[24px] border border-[#E8E4DB] bg-white p-6 sm:p-10 lg:p-14">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className={pillClass}>Shortlist packages</p>
+              <h2 className={cn(headingClass, "mt-1")}>
+                Premium <Highlight>shortlists</Highlight>
+              </h2>
+              <p className="mx-auto mt-4 max-w-[62ch] text-base leading-7 text-[#0B1F1A]/70">
+                When you want a ranked list instead of sorting applicants
+                yourself.
+              </p>
+            </div>
+
+            <div
+              role="region"
+              aria-label="Shortlist packages"
+              tabIndex={0}
+              className={`mt-10 grid gap-5 md:grid-cols-2 ${focusRing}`}
+            >
+              <p className="sr-only">
+                Premium shortlist packages, prices and what each includes
+              </p>
+
+              {/* Basic — quiet card. */}
+              <article className="flex h-full flex-col rounded-[24px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6 sm:p-8">
+                <h3 className="text-xl font-semibold tracking-[-0.01em] text-[#0B1F1A]">
+                  {PACKAGES.basic.name}
+                </h3>
+                <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#1B4D3E]">
+                  {basicPrice}
+                </p>
+                <p className="mt-1 text-xs text-[#0B1F1A]/60">
+                  Suggested range: {PACKAGES.basic.priceRange}
+                </p>
+                <p className="mt-6 text-sm leading-6 text-[#0B1F1A]/70">
+                  Ranked shortlist from verified students matching the brief
+                </p>
+                <ul className="mt-6 space-y-3 border-t border-[#1B4D3E]/15 pt-6">
+                  {PACKAGES.basic.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-start gap-3 text-sm leading-6 text-[#0B1F1A]/75"
+                    >
+                      <CheckCircle
+                        aria-hidden="true"
+                        weight="light"
+                        size={18}
+                        strokeWidth={1.6}
+                        className="mt-0.5 shrink-0 text-[#1B4D3E]"
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+
+              {/* Full Support — the one featured card, with a gradient hairline. */}
+              <div className="rounded-[24px] bg-gradient-to-br from-[#E8A317] via-[#E8E4DB] to-[#1B4D3E] p-px">
+                <article className="flex h-full flex-col rounded-[23px] bg-[#1B4D3E] p-6 text-[#F7F4EE] sm:p-8">
+                  <h3 className="text-xl font-semibold tracking-[-0.01em]">
+                    {PACKAGES.full.name}
                   </h3>
-                  <p className="mt-3 text-sm font-semibold text-[#b23c26]">
-                    {PACKAGES.basic.priceRange}
+                  <p className="mt-4 text-3xl font-semibold tabular-nums tracking-[-0.03em] text-[#E8A317]">
+                    {fullPrice}
                   </p>
-                  <ul className="mt-7 grid gap-3 border-t border-[#18251f]/15 pt-6">
-                    {basicFeatures.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex gap-3 text-sm leading-6 text-[#18251f]/70"
-                      >
-                        <CheckCircle
-                          aria-hidden="true"
-                          weight="light"
-                          strokeWidth={1.5}
-                          className="mt-1 h-4 w-4 shrink-0 text-[#17352b]/50"
-                        />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </SpotlightCard>
-              </Reveal>
-              <Reveal delay={0.08} direction="right">
-                <SpotlightCard className="relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[#18251f]/15 bg-[#fffefa] p-6 before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-[#d84f37] sm:p-8 lg:p-10">
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-                    <h3 className="text-2xl font-semibold tracking-tight text-[#17352b] sm:text-3xl">
-                      {PACKAGES.full.name}
-                    </h3>
-                    <p className="text-sm font-semibold text-[#b23c26]">
-                      {PACKAGES.full.priceRange}
-                    </p>
-                  </div>
-                  <ul className="mt-7 grid gap-3 border-t border-[#18251f]/15 pt-6 sm:grid-cols-2 sm:gap-x-8">
+                  <p className="mt-1 text-xs text-[#F7F4EE]/70">
+                    Suggested range: {PACKAGES.full.priceRange}
+                  </p>
+                  <p className="mt-6 text-sm leading-6 text-[#F7F4EE]/85">
+                    Ranked shortlist + admin help refining scope and fit
+                  </p>
+                  <ul className="mt-6 space-y-3 border-t border-[#F7F4EE]/25 pt-6">
                     {PACKAGES.full.features.map((feature) => (
                       <li
                         key={feature}
-                        className="flex gap-3 text-sm leading-6 text-[#18251f]/70"
+                        className="flex items-start gap-3 text-sm leading-6 text-[#F7F4EE]/90"
                       >
                         <CheckCircle
                           aria-hidden="true"
                           weight="light"
-                          strokeWidth={1.5}
-                          className="mt-1 h-4 w-4 shrink-0 text-[#d84f37]"
+                          size={18}
+                          strokeWidth={1.6}
+                          className="mt-0.5 shrink-0 text-[#E8A317]"
                         />
                         {feature}
                       </li>
                     ))}
                   </ul>
-                </SpotlightCard>
-              </Reveal>
+                </article>
+              </div>
             </div>
-            <Reveal className="mt-6 border-t border-[#18251f]/15 pt-6">
-              <p className="max-w-2xl text-sm leading-6 text-body-secondary">
-                Prices are advertised ranges; an admin curates every
-                shortlist.
-              </p>
-            </Reveal>
-          </div>
-        </section>
 
-        <section
-          aria-labelledby="compare-heading"
-          className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <StickySectionIntro
-              id="compare-heading"
-              title="Compare what each package includes"
-              lead="Both shortlists are prepared by an admin."
-            />
-            <Accordion items={packageComparison} className="mt-10 max-w-3xl" />
-          </div>
-        </section>
-        </StickySectionHeadings>
-
-        <ShortlistPreview />
-
-        <section
-          aria-labelledby="payment-heading"
-          className="border-y border-[#18251f]/15 bg-[#fffefa] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
-        >
-          <div className="mx-auto max-w-[1440px]">
-            <PinnedHeadingSection
-              split="lg:grid-cols-[0.34fr_0.66fr]"
-              heading={
-                <div>
-                  <Receipt
-                    aria-hidden="true"
-                    weight="light"
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-[#b23c26]"
-                  />
-                  <SectionIntro
-                    headingId="payment-heading"
-                    title="Payment is manual"
-                    lead="No card checkout; every order is checked by a person."
-                    className="mt-3"
-                  />
-                </div>
-              }
-            >
-              <StackedCards
-                className="mt-2 border-t border-[#18251f]/15 pt-8 lg:mt-0"
-                label="Payment steps"
-                items={paymentSteps.map((step) => ({
-                  key: step.number,
-                  number: step.number,
-                  title: step.title,
-                  body: step.text,
-                }))}
-              />
-            </PinnedHeadingSection>
-          </div>
-        </section>
-
-        <section className="px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-          <Reveal className="mx-auto max-w-[1440px] rounded-[1.75rem] bg-[#eae5d9] px-6 py-8 sm:px-10 sm:py-10">
-            <h2 className="max-w-xl text-2xl font-semibold leading-tight text-[#17352b] sm:text-3xl">
-              Put the terms in writing
-            </h2>
-            <p className="mt-3 max-w-xl text-sm leading-6 text-[#56645c]">
-              Founders and students agree scope, budget, and deadlines directly
-              before work starts. The agreement template is available inside
-              the founder workspace.
+            <p className="mx-auto mt-8 max-w-[70ch] text-center text-sm leading-6 text-[#0B1F1A]/70">
+              Pay by bank transfer or mBoB. Upload the screenshot. An admin
+              confirms payment before the shortlist is released.
             </p>
-          </Reveal>
+            {!PAYMENT_CONFIGURED ? (
+              <div
+                role="note"
+                className="mx-auto mt-5 max-w-[70ch] rounded-[16px] border border-[#1B4D3E]/20 bg-[#E8E4DB]/50 px-4 py-3 text-sm leading-6 text-[#1B4D3E]"
+              >
+                Shortlist orders are unavailable right now. Bank and mBoB
+                details have not been published yet. The amounts above are the
+                intended prices.
+              </div>
+            ) : null}
+            <div className="mt-9 text-center">
+              <Link href={CTA_HREFS.contact} className={primaryCta}>
+                {FOUNDER_ACCESS}
+              </Link>
+            </div>
+          </div>
         </section>
 
-        <CtaBand
-          title="Ready to post your first project?"
-          primaryCta={{ href: "/contact", label: "Ask for founder access" }}
-        />
+        {/* What you control */}
+        <SectionCard>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className={pillClass}>Your workspace</p>
+            <h2 className={cn(headingClass, "mt-1")}>
+              What you <Highlight>control</Highlight>
+            </h2>
+          </div>
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+            {controls.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li
+                  key={item.title}
+                  className="flex gap-4 rounded-[20px] border border-[#E8E4DB] bg-[#F7F4EE]/50 p-6"
+                >
+                  <span className="mt-0.5 shrink-0 text-[#1B4D3E]">
+                    <Icon
+                      aria-hidden="true"
+                      weight="light"
+                      size={24}
+                      strokeWidth={1.6}
+                    />
+                  </span>
+                  <div>
+                    <h3 className="text-sm font-semibold text-[#0B1F1A]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-6 text-[#0B1F1A]/70">
+                      {item.body}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </SectionCard>
+
+        {/* Final CTA */}
+        <section className="px-5 pb-16 sm:px-8 lg:px-12">
+          <div className="relative isolate mx-auto max-w-[1120px] overflow-hidden rounded-[24px] border border-[#E8E4DB] bg-gradient-to-br from-[#E8E4DB] via-white to-[#E8A317]/25 px-6 py-14 text-center sm:px-12">
+            <p className={pillClass}>Next step</p>
+            <h2 className="mt-4 text-balance text-[clamp(1.9rem,4vw,3rem)] font-semibold leading-[1.08] tracking-[-0.035em] text-[#0B1F1A]">
+              Post your <Highlight>first brief</Highlight>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm text-[#0B1F1A]/75 sm:text-base">
+              Scoped work, verified students, payments in Ngultrum.
+            </p>
+            <div className="mt-8">
+              <Link href={CTA_HREFS.contact} className={primaryCta}>
+                {FOUNDER_ACCESS}
+              </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+              <Link href={CTA_HREFS.howItWorks} className={quietLink}>
+                How it works
+              </Link>
+              <Link href={CTA_HREFS.contact} className={quietLink}>
+                Contact
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
 
       <SiteFooter />

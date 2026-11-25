@@ -6,7 +6,8 @@
  * by the server, and the only actions are the real Apply action and the real
  * project-detail link. No reactions, counters or invented social proof.
  */
-import { useEffect, useState, startTransition } from 'react';
+import { useEffect, useState, startTransition, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { applyToProject } from '@/features/projects/actions';
@@ -59,6 +60,24 @@ function statusLabel(status: string): string {
 function founderInitial(name: string | null): string {
   const value = (name ?? '').trim();
   return value ? value.charAt(0).toUpperCase() : 'F';
+}
+
+/** Mirrors the --ease-out token in app/globals.css. */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/** One gentle entrance for the apply result under a card, not for the feed. */
+function ResultEntrance({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div>{children}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 type ParsedDeadline = { date: Date; dateOnly: boolean };
@@ -262,6 +281,7 @@ export function ProjectCard({
       </div>
 
       {status && (
+        <ResultEntrance>
         <p
           role={status.ok ? 'status' : 'alert'}
           className={`break-words px-4 pb-3 text-xs leading-5 sm:px-5 ${
@@ -270,6 +290,7 @@ export function ProjectCard({
         >
           {status.ok ? 'Applied successfully!' : status.message}
         </p>
+        </ResultEntrance>
       )}
     </article>
   );

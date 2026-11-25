@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { createRealtimeClient, type SealedLiveQuery } from '@neon/realtime/client';
 import { RealtimeProvider, useLiveQuery } from '@neon/realtime-react';
@@ -51,6 +52,41 @@ const SHORTLIST_STEPS = ORDER_STEPS.map((step) => {
   if (step.value === 'rejected') return { ...step, next: ORDER_COPY.rejectedTimeline };
   return step;
 });
+
+/** Mirrors the --ease-out token in app/globals.css. */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Local entrance for a panel that appears after an action — never for a list
+ * or a stat. One 160ms opacity + small scale, so a step change does not
+ * teleport. Reduced motion gets the panel with no animation attached.
+ */
+function PanelEntrance({
+  children,
+  className,
+  id,
+  skipInitial = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  id?: string;
+  /** Suppress the entrance when the panel is already present on first render. */
+  skipInitial?: boolean;
+}) {
+  const reduce = useReducedMotion();
+  if (reduce) return <section id={id} className={className}>{children}</section>;
+  return (
+    <motion.section
+      id={id}
+      className={className}
+      initial={skipInitial ? false : { opacity: 0, scale: 0.97 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.16, ease: EASE_OUT }}
+    >
+      {children}
+    </motion.section>
+  );
+}
 
 /**
  * The shared live pill updates independently of the server-rendered page.
@@ -151,6 +187,14 @@ export function ShortlistsClient({
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [creating, startCreate] = useTransition();
   const [uploading, startUpload] = useTransition();
+
+  // A pending order can put the pay step on screen at first render. Panels
+  // already open on load must not animate; only later step changes do.
+  const [skipInitial, setSkipInitial] = useState(true);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setSkipInitial(false));
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   // A live confirmation can land while the founder is on the pay step. Derive
   // the visible step so a confirmed order never keeps an upload form open.
@@ -264,7 +308,7 @@ export function ShortlistsClient({
       )}
 
       {visibleStep === 'package' && (
-        <section id="order-form" className="space-y-3">
+        <PanelEntrance id="order-form" className="space-y-3" skipInitial={skipInitial}>
           <h2 className="text-base font-semibold text-[#17352b]">Choose a package</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {(Object.values(PACKAGES) as (typeof PACKAGES)[PackageId][]).map((pkg) => (
@@ -276,7 +320,7 @@ export function ShortlistsClient({
                   setAmount(String(pkg.defaultAmount));
                 }}
                 aria-pressed={chosenPackage === pkg.id}
-                className={`rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
+                className={`pressable rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b23c26] ${
                   chosenPackage === pkg.id
                     ? 'border-[#17352b] bg-[#17352b]/6'
                     : 'border-[#ded8cb] bg-[#fffefa] hover:bg-[#f5f2ea]'
@@ -336,11 +380,11 @@ export function ShortlistsClient({
               </Button>
             </div>
           )}
-        </section>
+        </PanelEntrance>
       )}
 
       {visibleStep === 'pay' && pendingOrder && (
-        <section className="space-y-4">
+        <PanelEntrance className="space-y-4" skipInitial={skipInitial}>
           <h2 className="text-base font-semibold text-[#17352b]">
             Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} -{' '}
             <span className="tabular-nums">{formatNuAmount(pendingOrder.amount)}</span>
@@ -402,7 +446,7 @@ export function ShortlistsClient({
               Start a different order
             </button>
           </form>
-        </section>
+        </PanelEntrance>
       )}
 
       {orders.length > 0 && (

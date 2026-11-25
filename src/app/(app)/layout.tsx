@@ -7,6 +7,26 @@ import type { ReactNode } from 'react';
  */
 export const dynamic = 'force-dynamic';
 
+/* Presentation only: one quiet entrance on first load. `backwards` leaves no
+   lingering transform, so sticky children keep their normal containing block. */
+const shellEntranceStyles = `
+@keyframes btc-workspace-shell-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.btc-workspace-shell {
+  animation: btc-workspace-shell-in 200ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btc-workspace-shell { animation: none; }
+}
+`;
+
 export default function AppLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <style>{shellEntranceStyles}</style>
+      <div className="btc-workspace-shell">{children}</div>
+    </>
+  );
 }
