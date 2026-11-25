@@ -19,7 +19,6 @@ import {
 } from "@/lib/neon-data";
 import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 import {
   AdminChartDefs,
   RoleDonut,
@@ -223,10 +222,7 @@ export default async function AdminDashboard() {
           </p>
         </div>
         <div className="relative z-10 mt-8 border-t border-primary-foreground/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
-          <PhotoCredit
-            fileUrl="https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg"
-            className="text-primary-foreground/70"
-          />
+          {/* Admin dashboard carries no photo credit; attribution lives on /about#photography. */}
         </div>
       </section>
 

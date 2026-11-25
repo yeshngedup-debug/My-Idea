@@ -18,7 +18,7 @@ import {
   focusRing,
   gutters,
 } from "@/components/marketing/editorial";
-import { CTA_HREFS, PHOTO_CREDITS } from "@/components/marketing/nav";
+import { CTA_HREFS } from "@/components/marketing/nav";
 import { StackedCards, type StackedCardItem } from "@/components/motion";
 import { InlineImageText } from "@/components/editorial";
 import { ScrubbedTextReveal } from "@/components/motion";
@@ -138,7 +138,7 @@ export default function ForFoundersPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <EditorialHero
           index="01"
           eyebrow="For founders"
@@ -154,9 +154,7 @@ export default function ForFoundersPage() {
           image={{
             src: "/images/bhutanese-team.jpg",
             alt: "Bhutanese students in kira performing in national dress",
-            fileUrl: PHOTO_CREDITS.market,
           }}
-          caption="Bhutanese students"
           imagePosition="object-center"
         />
 
@@ -258,7 +256,6 @@ export default function ForFoundersPage() {
                 before="What you"
                 imageSrc="/images/bhutanese-students.jpg"
                 imageAlt="Young Bhutanese people working in groups at a training day in Thimphu"
-                creditFileUrl={PHOTO_CREDITS.valley}
                 after="control"
                 accessibleLabel="What you control"
               />

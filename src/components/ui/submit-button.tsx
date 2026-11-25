@@ -22,7 +22,7 @@ export function SubmitButton({
         type="submit"
         disabled={pending}
         aria-busy={pending}
-        className="h-auto min-h-11 w-full rounded-lg bg-[#ff0063] py-3.5 font-medium text-[#000000] hover:bg-[#d40054]"
+        className="h-auto min-h-12 w-full rounded-[2px] bg-[#ff0063] py-3.5 text-[13px] font-semibold tracking-[-0.01em] text-[#000000] hover:bg-[#d40054]"
       >
         {pending ? (
           <span className="inline-flex items-center gap-2">

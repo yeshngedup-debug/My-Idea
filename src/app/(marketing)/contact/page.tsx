@@ -17,8 +17,6 @@ import { InlineImageText } from "@/components/editorial";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
-import { PhotoCredit } from "@/components/ui/photo-credit";
-import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { APP_CONTACT } from "@/config/app";
 import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
@@ -74,7 +72,7 @@ export default function ContactPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         {/* Split hero: the address is the action, one credited plate beside it. */}
         <section className="border-b border-[#0b2e2e]/10">
           <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 px-5 pb-12 pt-10 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-12 lg:pb-16 lg:pt-14">
@@ -124,15 +122,7 @@ export default function ContactPage() {
                       className="object-cover object-[45%_55%]"
                     />
                   </div>
-                  <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                      Bhutanese boys in gho
-                    </span>
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.dzong}
-                      className="text-[#356464]"
-                    />
-                  </figcaption>
+
                 </figure>
               </HeroPhotoEntrance>
             </div>
@@ -203,15 +193,6 @@ export default function ContactPage() {
                         className="object-cover object-center"
                       />
                     </div>
-                    <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                        Prayer flags, Bhutan
-                      </span>
-                      <PhotoCredit
-                        fileUrl={PHOTO_CREDITS.flags}
-                        className="text-[#356464]"
-                      />
-                    </figcaption>
                   </figure>
                 </GsapScaleFadeImage>
               </MarketingReveal>
@@ -306,7 +287,6 @@ export default function ContactPage() {
                 before="Helpful"
                 imageSrc="/images/bhutanese-community.jpg"
                 imageAlt="Bhutanese boys in traditional gho sitting together"
-                creditFileUrl={PHOTO_CREDITS.dzong}
                 accessibleLabel="Helpful pages"
                 after="pages"
               />
@@ -324,15 +304,6 @@ export default function ContactPage() {
                       className="object-cover object-center"
                     />
                   </div>
-                  <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                      Students building their profiles
-                    </span>
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.valley}
-                      className="text-[#356464]"
-                    />
-                  </figcaption>
                 </figure>
               </GsapScaleFadeImage>
             </MarketingReveal>

@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { gsap, ScrollTrigger, useGSAP } from "./_shared";
 
 /**
@@ -12,6 +13,14 @@ import { gsap, ScrollTrigger, useGSAP } from "./_shared";
  *
  * The pinned node is a column, never the page's h1. Callers pass an h2 with an
  * id so the section keeps its accessible name and the page keeps one h1.
+ *
+ * `pinOffset` is the distance from the viewport top where the title parks.
+ * The default clears the 64px site header. A page that also renders a sticky
+ * `ChapterProgress` bar must raise it past that bar, or the bar paints over
+ * the parked title.
+ *
+ * The section carries a scroll margin so an in-page link to it lands below
+ * the sticky header and any progress bar instead of under them.
  */
 export function PinnedScrollChapter({
   id,
@@ -19,12 +28,14 @@ export function PinnedScrollChapter({
   title,
   children,
   className,
+  pinOffset = 96,
 }: {
   id?: string;
   labelledBy?: string;
   title: ReactNode;
   children: ReactNode;
   className?: string;
+  pinOffset?: number;
 }) {
   const root = useRef<HTMLElement>(null);
   const titleColumn = useRef<HTMLDivElement>(null);
@@ -46,7 +57,7 @@ export function PinnedScrollChapter({
           const trigger = ScrollTrigger.create({
             id: "pinned-chapter-title",
             trigger: titleEl,
-            start: "top top+=96",
+            start: `top top+=${pinOffset}`,
             // Pin for exactly the extra height the scrolling column has over
             // the title column. Derived at refresh so it survives reflow.
             end: () =>
@@ -73,7 +84,7 @@ export function PinnedScrollChapter({
 
       return () => mm.revert();
     },
-    { scope: root },
+    { scope: root, dependencies: [pinOffset] },
   );
 
   return (
@@ -82,7 +93,7 @@ export function PinnedScrollChapter({
       id={id}
       aria-labelledby={labelledBy}
       data-pinned-chapter=""
-      className={className}
+      className={cn("scroll-mt-24", className)}
     >
       <div className="mx-auto max-w-[1440px]">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">

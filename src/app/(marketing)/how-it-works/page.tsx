@@ -13,8 +13,8 @@ import {
   gutters,
   quietClass,
 } from "@/components/marketing/editorial";
-import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { HorizontalAccordion } from "@/components/marketing/editorial-page-motion";
+import { PinnedScrollChapter } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion";
 import { ChapterProgress, type ChapterLink } from "@/components/motion";
 import { cn } from "@/lib/utils";
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <EditorialHero
           index="01"
           eyebrow="How it works"
@@ -127,9 +127,7 @@ export default function HowItWorksPage() {
           image={{
             src: "/images/bhutanese-students.jpg",
             alt: "Young Bhutanese people in gho and kira working together at computers",
-            fileUrl: PHOTO_CREDITS.valley,
           }}
-          caption="Students at work"
           imagePosition="object-center"
         />
 
@@ -169,62 +167,47 @@ export default function HowItWorksPage() {
           </div>
         </Band>
 
-        {/* The brief — two ruled columns and a wide plate. */}
-        <Band
+        {/* Two-column brief: title pins on desktop, content scrolls beneath.
+            The pin clears the sticky ChapterProgress bar above it. */}
+        <PinnedScrollChapter
           id="brief"
-          tone="mist"
           labelledBy="brief-heading"
-          className="border-y border-[#0b2e2e]/10"
-        >
-          <div className={cn(container, gutters, "py-20 md:py-28")}>
-            <MarketingReveal>
-              <SectionHead
-                index="03"
-                eyebrow="The brief"
+          pinOffset={152}
+          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
+              <p className="index-label">The brief</p>
+              <h2
                 id="brief-heading"
-                title="Founders set the brief. Students apply to the projects."
-                lead="Scope and budget are written before work begins. Skills and a deadline can be added."
-              />
-            </MarketingReveal>
-
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2">
-              {briefColumns.map((column, index) => (
-                <MarketingReveal key={column.heading} delay={index * 0.08}>
-                  <h3 className="flex items-baseline gap-3 border-b border-[#0b2e2e]/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b5c5c]">
-                    <span
-                      aria-hidden="true"
-                      className="tabular-nums text-[#c2004b]"
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    {column.heading}
-                  </h3>
-                  <ul className="mt-2">
-                    {column.items.map((item) => (
-                      <li
-                        key={item}
-                        className="border-b border-[#0b2e2e]/10 py-4 text-[1.05rem] font-medium leading-7 tracking-[-0.015em] text-[#0b2e2e] sm:text-[1.15rem]"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </MarketingReveal>
-              ))}
+                className="display-lg mt-6 max-w-[14ch] text-[#0b2e2e]"
+              >
+                Founders set the brief. Students apply to the projects.
+              </h2>
+              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
+                Two columns, side by side: what the founder writes, and what the
+                student sees.
+              </p>
             </div>
-
-            <MarketingReveal className="mt-14">
-              <Figure
-                src="/images/bhutanese-community.jpg"
-                alt="Bhutanese boys in traditional gho sitting together"
-                credit={PHOTO_CREDITS.dzong}
-                caption="The people the work is built around"
-                ratio="aspect-[16/10] sm:aspect-[21/9]"
-                sizes="(max-width: 1024px) 100vw, 90vw"
-              />
+          }
+        >
+          {briefColumns.map((column, index) => (
+            <MarketingReveal delay={index * 0.08} key={column.heading}>
+              <h3 className="flex items-baseline gap-3 border-b border-[#0b2e2e]/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b5c5c]">
+                {String(index + 1).padStart(2, "0")} {column.heading}
+              </h3>
+              <ul className="mt-2">
+                {column.items.map((item) => (
+                  <li
+                    key={item}
+                    className="border-b border-[#0b2e2e]/10 py-4 text-[1.05rem] font-medium leading-7 tracking-[-0.015em] text-[#0b2e2e] sm:text-[1.15rem]"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </MarketingReveal>
-          </div>
-        </Band>
+          ))}
+        </PinnedScrollChapter>
 
         {/* The place. */}
         <Band id="place" labelledBy="place-heading">
@@ -234,10 +217,8 @@ export default function HowItWorksPage() {
                 <Figure
                   src="/images/thimphu-city.jpg"
                   alt="View across central Thimphu, the capital of Bhutan"
-                  credit={PHOTO_CREDITS.thimphu}
-                  caption="Thimphu, the capital"
-                  ratio="aspect-[16/10]"
-                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  ratio="aspect-[4/3]"
+                  sizes="(max-width: 1024px) 100vw, 90vw"
                 />
               </MarketingReveal>
               <MarketingReveal

@@ -14,9 +14,9 @@ import {
 } from "@/components/marketing/editorial";
 import { InlineImageText } from "@/components/editorial";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
-import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { LiveContext } from "@/components/data/live-context";
 import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
+import { PHOTO_CREDIT_LIST } from "@/lib/photo-credits";
 import {
   LOCAL_BRIDGE_DIFFERENCES,
   LOCAL_BRIDGE_HEADLINE,
@@ -60,7 +60,7 @@ export default async function AboutPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <EditorialHero
           index="01"
           eyebrow="Why this exists"
@@ -76,9 +76,7 @@ export default async function AboutPage() {
           image={{
             src: "/images/bhutanese-community.jpg",
             alt: "Bhutanese boys in traditional gho sitting together",
-            fileUrl: PHOTO_CREDITS.dzong,
           }}
-          caption="Bhutanese boys in gho"
           imagePosition="object-center"
         />
 
@@ -203,9 +201,9 @@ export default async function AboutPage() {
                       className="object-cover object-center"
                     />
                   </div>
-                  <figcaption className="mt-3 border-t border-[#0b2e2e]/10 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                    A market stall in Thimphu
-                  </figcaption>
+                  
+
+                  
                 </figure>
               </GsapScaleFadeImage>
             </MarketingReveal>
@@ -241,7 +239,6 @@ export default async function AboutPage() {
                 before="A practical local"
                 imageSrc="/images/bhutanese-community.jpg"
                 imageAlt="Bhutanese students working together"
-                creditFileUrl={PHOTO_CREDITS.dzong}
                 accessibleLabel="A practical local bridge: Bhutanese students working together"
                 after="bridge"
               />
@@ -263,8 +260,6 @@ export default async function AboutPage() {
                 <Figure
                   src="/images/bhutanese-students.jpg"
                   alt="Young Bhutanese people in gho and kira working together at computers"
-                  credit={PHOTO_CREDITS.valley}
-                  caption="Built around real work"
                   ratio="aspect-[16/10]"
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />
@@ -381,7 +376,7 @@ export default async function AboutPage() {
                     <span className="text-[#0b5c5c]">places, not members</span>
                   </>
                 }
-                lead="Every photograph on this site is a credited Wikimedia Commons file."
+                lead="Every photograph on this site is a Wikimedia Commons file, used under its author&apos;s licence — credits are listed below."
               />
             </MarketingReveal>
 
@@ -390,8 +385,6 @@ export default async function AboutPage() {
                 <Figure
                   src="/images/bhutanese-team.jpg"
                   alt="Bhutanese students in kira performing in national dress"
-                  credit={PHOTO_CREDITS.market}
-                  caption="Bhutanese students in kira"
                   ratio="aspect-[16/10] sm:aspect-[21/9]"
                   sizes="(max-width: 1024px) 100vw, 90vw"
                 />
@@ -399,11 +392,26 @@ export default async function AboutPage() {
             </MarketingReveal>
 
             <p className="mt-6 max-w-[62ch] text-xs leading-5 text-[#356464]">
-              The credited Wikimedia Commons photographs are by Doctor 17, Keith
-              Mason, Christopher J. Fynn, Bernard Gagnon and Glacierfanclub,
-              under CC BY-SA 4.0 and CC BY-SA 3.0. Each photo credit links to the
-              original file.
+              The photographs on this page are Wikimedia Commons files, used
+              under the author&apos;s licence. Full credits:
             </p>
+            <ul className="mt-4 grid gap-3 text-xs leading-5 text-[#356464] sm:max-w-[62ch]">
+              {PHOTO_CREDIT_LIST.map((credit) => (
+                <li key={credit.fileUrl} className="flex items-baseline gap-2">
+                  <a
+                    href={credit.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold underline underline-offset-2 hover:text-[#0b5c5c] transition-colors"
+                  >
+                    {credit.author} / Wikimedia Commons
+                  </a>
+                  <span className="text-[#356464]/70">
+                    · {credit.subject}, {credit.licence}
+                  </span>
+                </li>
+              ))}
+            </ul>
           </div>
         </Band>
 

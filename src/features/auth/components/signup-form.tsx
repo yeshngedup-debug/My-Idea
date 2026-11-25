@@ -38,14 +38,13 @@ const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
 
 const labelClassName = "mb-2 block text-sm font-semibold text-[#0b5c5c]";
 
-/** Local: identical accessible markup for every inline error. The fade comes
- *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+/** Local: identical accessible markup for every inline error. The message is
+ *  static text, so there is no per-keystroke state to manage. */
 function FieldError({ id, children }: { id: string; children: string }) {
   return (
     <p
       id={id}
       role="alert"
-      data-auth-message
       className="mt-1.5 text-xs font-medium text-red-700"
     >
       {children}
@@ -169,8 +168,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
           id={serverErrorId}
           role="alert"
           tabIndex={-1}
-          data-auth-message
-          className="mb-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
+          className="mb-5 rounded-[2px] border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700"
         >
           {serverError}
         </div>
@@ -284,7 +282,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               aria-pressed={showPassword}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setShowPassword((prev) => !prev)}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-xl border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] hover:bg-[#eaf6f6] hover:border-[#66bfbf] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66bfbf]/25"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-[2px] border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] hover:bg-[#eaf6f6] hover:border-[#66bfbf] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66bfbf]/25"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>

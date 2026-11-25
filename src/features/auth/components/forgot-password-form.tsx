@@ -15,14 +15,13 @@ import { SubmitButton } from "@/components/ui/submit-button";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Local: identical accessible markup for every inline error. The fade comes
- *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+/** Local: identical accessible markup for every inline error. The message is
+ *  static text, so there is no per-keystroke state to manage. */
 function FieldError({ id, children }: { id: string; children: string }) {
   return (
     <p
       id={id}
       role="alert"
-      data-auth-message
       className="mt-1.5 text-xs font-medium text-red-700"
     >
       {children}
@@ -82,8 +81,7 @@ export function ForgotPasswordForm({
           id={statusId}
           role={serverError ? "alert" : "status"}
           tabIndex={-1}
-          data-auth-message
-          className={`mb-5 rounded-2xl border px-4 py-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] ${
+          className={`mb-5 rounded-[2px] border px-4 py-3 text-sm ${
             serverError
               ? "border-red-200/80 bg-red-50/80 text-red-700"
               : "border-[#b9dede]/80 bg-[#eaf6f6]/80 text-[#0b5c5c]"

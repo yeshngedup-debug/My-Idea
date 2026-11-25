@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 import { cn } from "@/lib/utils";
 
 /**
@@ -180,35 +179,24 @@ export function SectionHead({
 }
 
 /**
- * A photograph on a teal mat with a ruled caption line holding the real
- * Commons credit. `inverse` switches the caption rules for dark bands.
+ * A photograph on a teal mat. No caption strip: photos stand on their own,
+ * and their attribution lives on the /about photography credits list.
  */
 export function Figure({
   src,
   alt,
-  credit,
-  caption,
   className,
   ratio = "aspect-[4/3]",
   sizes = "(max-width: 640px) 100vw, 50vw",
   priority = false,
-  inverse = false,
-  position,
 }: {
   src: string;
   alt: string;
-  credit: string;
-  caption?: string;
   className?: string;
   ratio?: string;
   sizes?: string;
   priority?: boolean;
-  inverse?: boolean;
-  position?: string;
 }) {
-  const rule = inverse ? hairlineInverse : "border-[#0b2e2e]/10";
-  const captionColour = inverse ? "text-[#eaf6f6]/70" : "text-[#356464]";
-
   return (
     <figure className={className}>
       <div className={cn("plate relative overflow-hidden", ratio)}>
@@ -218,29 +206,9 @@ export function Figure({
           fill
           priority={priority}
           sizes={sizes}
-          className={cn("object-cover", position ?? "object-center")}
+          className="object-cover"
         />
       </div>
-      <figcaption
-        className={cn(
-          "mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t pt-2",
-          rule,
-        )}
-      >
-        {caption ? (
-          <span
-            className={cn(
-              "text-[10px] font-semibold uppercase tracking-[0.18em]",
-              captionColour,
-            )}
-          >
-            {caption}
-          </span>
-        ) : (
-          <span />
-        )}
-        <PhotoCredit fileUrl={credit} className={captionColour} />
-      </figcaption>
     </figure>
   );
 }

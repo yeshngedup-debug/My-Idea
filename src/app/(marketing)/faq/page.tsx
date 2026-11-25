@@ -18,9 +18,7 @@ import {
   gutters,
 } from "@/components/marketing/editorial";
 import { InlineImageText } from "@/components/editorial";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
-import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { ChapterProgress, type ChapterLink } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion";
 import { pageMetadata } from "@/lib/metadata";
@@ -256,7 +254,7 @@ export default async function FaqPage() {
       />
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <EditorialHero
           index="01"
           eyebrow="Answers, plainly"
@@ -272,9 +270,7 @@ export default async function FaqPage() {
           image={{
             src: "/images/bhutanese-team.jpg",
             alt: "Bhutanese students in kira performing in national dress",
-            fileUrl: PHOTO_CREDITS.market,
           }}
-          caption="Built for the people and places here"
           imagePosition="object-center"
         />
 
@@ -364,7 +360,6 @@ export default async function FaqPage() {
                 before="Answers built around"
                 imageSrc="/images/bhutanese-students.jpg"
                 imageAlt="Bhutanese students working together"
-                creditFileUrl={PHOTO_CREDITS.valley}
                 accessibleLabel="Answers built around real work: Bhutanese students working together"
                 after="real work"
               />
@@ -382,15 +377,6 @@ export default async function FaqPage() {
                       className="object-cover object-center"
                     />
                   </div>
-                  <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                      Thimphu, Bhutan
-                    </span>
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.thimphu}
-                      className="text-[#356464]"
-                    />
-                  </figcaption>
                 </figure>
               </GsapScaleFadeImage>
             </MarketingReveal>

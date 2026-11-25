@@ -54,7 +54,7 @@ export default function TermsPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <Band className="border-b border-[#0b2e2e]/10">
           <div className={cn(container, gutters, "py-12 md:py-16")}>
             <p className="index-label">Legal · Terms</p>

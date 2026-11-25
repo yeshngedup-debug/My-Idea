@@ -12,7 +12,6 @@ import {
   gutters,
   quietClass,
 } from "@/components/marketing/editorial";
-import { PHOTO_CREDITS } from "@/components/marketing/nav";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { InlineImageText } from "@/components/editorial";
 import { ScrubbedTextReveal } from "@/components/motion";
@@ -80,7 +79,7 @@ export default function ForStudentsPage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         <EditorialHero
           index="01"
           eyebrow="For students"
@@ -96,9 +95,7 @@ export default function ForStudentsPage() {
           image={{
             src: "/images/bhutanese-students.jpg",
             alt: "Young Bhutanese people working in groups at a training day in Thimphu",
-            fileUrl: PHOTO_CREDITS.valley,
           }}
-          caption="Students at work"
           imagePosition="object-center"
         />
 
@@ -239,7 +236,6 @@ export default function ForStudentsPage() {
                 before="Start close to"
                 imageSrc="/images/bhutanese-community.jpg"
                 imageAlt="Bhutanese boys in traditional gho sitting together"
-                creditFileUrl={PHOTO_CREDITS.dzong}
                 after="home"
                 accessibleLabel="Start close to home"
               />
@@ -263,8 +259,6 @@ export default function ForStudentsPage() {
                 <Figure
                   src="/images/bhutanese-community.jpg"
                   alt="Bhutanese boys in traditional gho sitting together"
-                  credit={PHOTO_CREDITS.dzong}
-                  caption="Work grounded in the local community"
                   ratio="aspect-[16/10] sm:aspect-[21/9]"
                   sizes="(max-width: 1024px) 100vw, 90vw"
                 />
@@ -327,8 +321,6 @@ export default function ForStudentsPage() {
                 <Figure
                   src="/images/bhutanese-team.jpg"
                   alt="Bhutanese students in kira performing in national dress"
-                  credit={PHOTO_CREDITS.market}
-                  caption="Work grounded in the local community"
                   ratio="aspect-[16/10]"
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />

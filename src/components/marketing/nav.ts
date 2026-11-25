@@ -66,25 +66,23 @@ export const CTA_HREFS = {
 } as const;
 
 /** Wikimedia Commons file URLs for every photograph used in marketing. The
- *  author and licence for each live in `components/ui/photo-credit.tsx`. */
+ *  author and licence for each live in `lib/photo-credits.ts`. */
+import { PHOTO_ATTRIBUTIONS } from "@/lib/photo-credits";
+
 export const PHOTO_CREDITS = {
-  valley: "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg",
-  dzong: "https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg",
-  market:
-    "https://commons.wikimedia.org/wiki/File:Bhutanese_Girls_in_National_Dress.jpg",
-  thimphu:
-    "https://commons.wikimedia.org/wiki/File:View_of_central_Thimphu_2019-07-21.jpg",
-  flags: "https://commons.wikimedia.org/wiki/File:Prayer_flags,_Sopsokha,_Bhutan.jpg",
-  archery:
-    "https://commons.wikimedia.org/wiki/File:Students_practice_archery_in_Bhutan.jpg",
-  textile:
-    "https://commons.wikimedia.org/wiki/File:Bhutanese_woollen_textile_01.jpg",
+  valley: PHOTO_ATTRIBUTIONS.valley.fileUrl,
+  dzong: PHOTO_ATTRIBUTIONS.dzong.fileUrl,
+  market: PHOTO_ATTRIBUTIONS.market.fileUrl,
+  thimphu: PHOTO_ATTRIBUTIONS.thimphu.fileUrl,
+  flags: PHOTO_ATTRIBUTIONS.flags.fileUrl,
+  archery: PHOTO_ATTRIBUTIONS.archery.fileUrl,
+  textile: PHOTO_ATTRIBUTIONS.textile.fileUrl,
 } as const;
 
 export type MarketingImage = {
   src: string;
   alt: string;
-  fileUrl: string;
+  fileUrl?: string;
 };
 
 export type Cta = {

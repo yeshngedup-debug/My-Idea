@@ -2,14 +2,12 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 import { HeroCopyEntrance } from "./hero-motion";
 import { HeroPhotoEntrance } from "./hero-photo";
 import { cn } from "@/lib/utils";
 import {
   CTA_HREFS,
   CTA_LABELS,
-  PHOTO_CREDITS,
   type Cta,
   type MarketingImage,
 } from "./nav";
@@ -24,11 +22,8 @@ export type EditorialHeroProps = {
   secondary?: Cta;
   image: MarketingImage | string;
   imageAlt?: string;
-  creditFileUrl?: string;
   /** Tailwind object-position class. Defaults to centre. */
   imagePosition?: string;
-  /** Small caption printed above the credit. */
-  caption?: string;
 };
 
 const focusRing =
@@ -52,9 +47,7 @@ export function EditorialHero({
   secondary,
   image,
   imageAlt,
-  creditFileUrl,
   imagePosition,
-  caption,
 }: EditorialHeroProps) {
   const action = primaryCta ?? {
     href: CTA_HREFS.signup,
@@ -65,7 +58,6 @@ export function EditorialHero({
       ? {
           src: image,
           alt: imageAlt ?? "",
-          fileUrl: creditFileUrl ?? PHOTO_CREDITS.valley,
         }
       : image;
 
@@ -112,19 +104,6 @@ export function EditorialHero({
                   )}
                 />
               </div>
-              <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                {caption ? (
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                    {caption}
-                  </span>
-                ) : (
-                  <span />
-                )}
-                <PhotoCredit
-                  fileUrl={heroImage.fileUrl}
-                  className="text-[#356464]"
-                />
-              </figcaption>
             </figure>
           </HeroPhotoEntrance>
         </div>

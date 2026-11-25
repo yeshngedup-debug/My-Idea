@@ -10,10 +10,9 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import {
   CTA_HREFS,
   CTA_LABELS,
-  PHOTO_CREDITS,
   SITE,
 } from "@/components/marketing/nav";
-import { PhotoCredit } from "@/components/ui/photo-credit";
+import { ChapterProgress, PinnedScrollChapter, type ChapterLink } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion/scrubbed-text-reveal";
 import { cn } from "@/lib/utils";
 import { pageMetadata } from "@/lib/metadata";
@@ -37,6 +36,19 @@ const ruleLinkClass = `group inline-flex min-h-11 items-center gap-1.5 text-[13p
 
 const sectionPad = "px-5 sm:px-8 lg:px-12";
 const container = "mx-auto w-full max-w-[1440px]";
+
+/**
+ * Wayfinding for the five pinned chapters on the homepage. Each entry points
+ * at a real section id, so the bar works as plain links before any script
+ * runs.
+ */
+const homeChapters: ChapterLink[] = [
+  { id: "audience", label: "Who it is for" },
+  { id: "steps", label: "From brief to paid" },
+  { id: "context", label: "Local context" },
+  { id: "place", label: "The place" },
+  { id: "trust", label: "Checked by people" },
+];
 
 function Action({
   href,
@@ -90,7 +102,6 @@ const paths = [
     href: CTA_HREFS.signup,
     src: "/images/bhutanese-students.jpg",
     alt: "Young Bhutanese people in gho and kira working together at computers",
-    credit: PHOTO_CREDITS.valley,
   },
   {
     index: "02",
@@ -100,7 +111,6 @@ const paths = [
     href: CTA_HREFS.contact,
     src: "/images/bhutanese-team.jpg",
     alt: "Bhutanese students in kira performing in national dress",
-    credit: PHOTO_CREDITS.market,
   },
 ] as const;
 
@@ -143,32 +153,24 @@ const gallery = [
   {
     src: "/images/kira-textile.jpg",
     alt: "A folded Bhutanese woollen textile in natural dyes",
-    credit: PHOTO_CREDITS.textile,
-    caption: "Textile craft, Thimphu",
     span: "sm:col-span-7",
     ratio: "aspect-[4/3]",
   },
   {
     src: "/images/thimphu-market.webp",
     alt: "A market street in Thimphu, Bhutan",
-    credit: PHOTO_CREDITS.market,
-    caption: "Market day",
     span: "sm:col-span-5",
     ratio: "aspect-[4/5]",
   },
   {
     src: "/images/bhutanese-community.jpg",
     alt: "Bhutanese boys in traditional gho sitting together",
-    credit: PHOTO_CREDITS.dzong,
-    caption: "Gho, national dress",
     span: "sm:col-span-5",
     ratio: "aspect-[4/5]",
   },
   {
     src: "/images/punakha-dzong.webp",
     alt: "Punakha Dzong fortress beside a river in Bhutan",
-    credit: PHOTO_CREDITS.valley,
-    caption: "Punakha Dzong",
     span: "sm:col-span-7",
     ratio: "aspect-[4/3]",
   },
@@ -177,8 +179,6 @@ const gallery = [
 function Figure({
   src,
   alt,
-  credit,
-  caption,
   className,
   ratio = "aspect-[4/3]",
   sizes = "(max-width: 640px) 100vw, 50vw",
@@ -186,8 +186,6 @@ function Figure({
 }: {
   src: string;
   alt: string;
-  credit: string;
-  caption?: string;
   className?: string;
   ratio?: string;
   sizes?: string;
@@ -205,16 +203,6 @@ function Figure({
           className="object-cover"
         />
       </div>
-      <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-        {caption ? (
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-            {caption}
-          </span>
-        ) : (
-          <span />
-        )}
-        <PhotoCredit fileUrl={credit} className="text-[#356464]" />
-      </figcaption>
     </figure>
   );
 }
@@ -229,7 +217,7 @@ export default async function PublicHomePage() {
     <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
       <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
         {/* Hero — asymmetric ledger: copy left on paper, one photograph plate
             right that reaches the edge of the grid. No centred wash. */}
         <section className="border-b border-[#0b2e2e]/10">
@@ -300,15 +288,6 @@ export default async function PublicHomePage() {
                       Thimphu · 27.47° N
                     </p>
                   </div>
-                  <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-[#0b2e2e]/10 pt-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#356464]">
-                      The capital, from above
-                    </span>
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.thimphu}
-                      className="text-[#356464]"
-                    />
-                  </figcaption>
                 </figure>
               </MarketingReveal>
             </div>
@@ -342,49 +321,46 @@ export default async function PublicHomePage() {
           </div>
         </section>
 
-        {/* Two sides — one split ledger, no cards, no double bezels. */}
-        <section
-          aria-labelledby="audience-heading"
-          className={cn(container, sectionPad, "py-20 md:py-28")}
-        >
-          <MarketingReveal className="grid grid-cols-1 gap-6 border-t border-[#0b2e2e]/12 pt-6 lg:grid-cols-12">
-            <p className="index-label lg:col-span-3">Who it is for</p>
-            <h2
-              id="audience-heading"
-              className="display-lg lg:col-span-6 lg:col-start-4"
-            >
-              Built for both sides of the table
-            </h2>
-            <p className="max-w-[34ch] text-[15px] leading-7 text-[#356464] lg:col-span-3">
-              A student needs paid work that fits a term. A founder needs a
-              scoped brief done, verified, and paid in Ngultrum.
-            </p>
-          </MarketingReveal>
+        {/* Chapter wayfinding — the same bar the long guide pages use. It
+            sticks under the header, so the pinned titles below park at 152px
+            to clear it. */}
+        <ChapterProgress
+          chapters={homeChapters}
+          className="sticky top-16 z-30 border-[#0b2e2e]/12 bg-white [&_a]:text-[#0b2e2e] [&_a:hover]:text-[#0b5c5c] [&_a:focus-visible:ring-[#0b5c5c] [&_a:focus-visible]:ring-offset-white [&_a[aria-current]]:text-[#0b5c5c] [&_a[aria-current]]:decoration-[#ff0063] [&_a[aria-current]]:decoration-1 [&_a[aria-current]]:underline-offset-[10px] [&_[data-chapter-bar]]:bg-[#ff0063]"
+        />
 
-          <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
-            {paths.map((path, index) => (
-              <MarketingReveal
-                key={path.title}
-                delay={index * 0.08}
-                className={cn(
-                  "flex flex-col",
-                  index === 1 &&
-                    "lg:border-l lg:border-[#0b2e2e]/12 lg:pl-12",
-                  index === 0 && "lg:pr-12",
-                )}
+        {/* Two sides — one split ledger, no cards, no double bezels.
+            Title column pins on desktop; content column scrolls beneath. */}
+        <PinnedScrollChapter
+          id="audience"
+          labelledBy="audience-heading"
+          pinOffset={152}
+          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
+              <p className="index-label">Who it is for</p>
+              <h2
+                id="audience-heading"
+                className="display-lg mt-6 max-w-[13ch] text-[#0b2e2e]"
               >
-                <div className="flex items-baseline justify-between border-t border-[#0b2e2e]/12 pt-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#c2004b]">
-                    {path.index}
-                  </p>
-                  <h3 className="text-[1.65rem] font-semibold tracking-[-0.035em] text-[#0b2e2e]">
-                    {path.title}
-                  </h3>
-                </div>
+                Built for both sides of the table
+              </h2>
+              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
+                A student needs paid work that fits a term. A founder needs a
+                scoped brief done, verified, and paid in Ngultrum.
+              </p>
+            </div>
+          }
+        >
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
+            {paths.map((path, index) => (
+              <MarketingReveal delay={index * 0.08} key={path.title}>
+                <h3 className="flex items-baseline gap-3 border-b border-[#0b2e2e]/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b5c5c]">
+                  {String(index + 1).padStart(2, "0")} {path.title}
+                </h3>
                 <Figure
                   src={path.src}
                   alt={path.alt}
-                  credit={path.credit}
                   ratio="aspect-[5/4]"
                   className="mt-6"
                   sizes="(max-width: 1024px) 100vw, 46vw"
@@ -402,68 +378,70 @@ export default async function PublicHomePage() {
               </MarketingReveal>
             ))}
           </div>
-        </section>
+        </PinnedScrollChapter>
 
         {/* How it works — a three-row ledger. Numbers in magenta, hints on the
             right, hairlines between every row. */}
-        <section
-          aria-labelledby="steps-heading"
-          className="border-y border-[#0b2e2e]/10 bg-[#eaf6f6]"
-        >
-          <div className={cn(container, sectionPad, "py-20 md:py-28")}>
-            <MarketingReveal className="grid grid-cols-1 gap-6 border-t border-[#0b2e2e]/12 pt-6 lg:grid-cols-12">
-              <p className="index-label lg:col-span-3">From brief to paid</p>
+        <PinnedScrollChapter
+          id="steps"
+          labelledBy="steps-heading"
+          pinOffset={152}
+          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
+              <p className="index-label">From brief to paid</p>
               <h2
                 id="steps-heading"
-                className="display-lg lg:col-span-6 lg:col-start-4"
+                className="display-lg mt-6 max-w-[13ch] text-[#0b2e2e]"
               >
                 From brief to paid work
               </h2>
-              <p className="max-w-[30ch] text-[15px] leading-7 text-[#356464] lg:col-span-3">
+              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
                 Three steps. No bidding war, no unverified profiles.
               </p>
-            </MarketingReveal>
-
-            <ol className="mt-12 border-t border-[#0b2e2e]/15">
-              {steps.map((step) => (
-                <li
-                  key={step.number}
-                  className="grid grid-cols-1 gap-3 border-b border-[#0b2e2e]/15 py-7 sm:grid-cols-12 sm:gap-6 sm:py-8"
-                >
-                  <p className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b] sm:col-span-1">
-                    {step.number}
-                  </p>
-                  <h3 className="text-[1.4rem] font-semibold leading-tight tracking-[-0.03em] text-[#0b2e2e] sm:col-span-4">
-                    {step.title}
-                  </h3>
-                  <p className="max-w-[46ch] text-[15px] leading-7 text-[#356464] sm:col-span-5">
-                    {step.body}
-                  </p>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#356464] sm:col-span-2 sm:text-right">
-                    {step.hint}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
+            </div>
+          }
+        >
+          <ol className="border-t border-[#0b2e2e]/15">
+            {steps.map((step) => (
+              <li
+                key={step.number}
+                className="grid grid-cols-1 gap-3 border-b border-[#0b2e2e]/15 py-7 sm:grid-cols-12 sm:gap-6 sm:py-8"
+              >
+                <p className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b] sm:col-span-1">
+                  {step.number}
+                </p>
+                <h3 className="text-[1.4rem] font-semibold leading-tight tracking-[-0.03em] text-[#0b2e2e] sm:col-span-4">
+                  {step.title}
+                </h3>
+                <p className="max-w-[46ch] text-[15px] leading-7 text-[#356464] sm:col-span-5">
+                  {step.body}
+                </p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#356464] sm:col-span-2 sm:text-right">
+                  {step.hint}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </PinnedScrollChapter>
 
         {/* Local context — deep teal, one statement, one national figure. */}
-        <section className="bg-[#0b2e2e] text-[#eaf6f6]">
-          <div
-            className={cn(
-              container,
-              sectionPad,
-              "grid grid-cols-1 gap-12 py-20 md:py-28 lg:grid-cols-12 lg:gap-10",
-            )}
-          >
-            <div className="lg:col-span-5">
+        <PinnedScrollChapter
+          id="context"
+          labelledBy="context-heading"
+          pinOffset={152}
+          className="bg-[#0b2e2e] px-5 py-20 text-[#eaf6f6] sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
               <p className="index-label text-[#66bfbf]">Local context</p>
-              <h2 className="display-lg mt-6 max-w-[12ch] text-white">
+              <h2
+                id="context-heading"
+                className="display-lg mt-6 max-w-[12ch] text-white"
+              >
                 A local bridge for young people
               </h2>
 
-              <dl className="mt-10 grid grid-cols-2 gap-x-6 border-t border-white/20 pt-6">
+              <dl className="mt-10 grid grid-cols-1 gap-6 border-t border-white/20 pt-6">
                 <div>
                   <dt className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#66bfbf]">
                     Youth unemployment · Bhutan
@@ -494,74 +472,63 @@ export default async function PublicHomePage() {
                 Indicators. This is context, not a platform result.
               </p>
             </div>
-
-            <div className="lg:col-span-6 lg:col-start-7">
-              <ScrubbedTextReveal
-                as="p"
-                text={localContext}
-                className="max-w-[38ch] text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.45] tracking-[-0.015em] text-[#eaf6f6]"
-              />
-              <div className="mt-12 grid grid-cols-2 gap-4">
-                <figure>
-                  <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
-                    <Image
-                      src="/images/prayer-flags.jpg"
-                      alt="Prayer flags strung across a hillside in Sopsokha, Bhutan"
-                      fill
-                      sizes="(max-width: 1024px) 45vw, 24vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <figcaption className="mt-2.5 border-t border-white/20 pt-2">
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.flags}
-                      className="text-[#eaf6f6]/70"
-                    />
-                  </figcaption>
-                </figure>
-                <figure className="mt-8">
-                  <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
-                    <Image
-                      src="/images/bhutan-archery.jpg"
-                      alt="Students practice archery on a field in Bhutan"
-                      fill
-                      sizes="(max-width: 1024px) 45vw, 24vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <figcaption className="mt-2.5 border-t border-white/20 pt-2">
-                    <PhotoCredit
-                      fileUrl={PHOTO_CREDITS.archery}
-                      className="text-[#eaf6f6]/70"
-                    />
-                  </figcaption>
-                </figure>
+          }
+        >
+          <ScrubbedTextReveal
+            as="p"
+            text={localContext}
+            className="max-w-[38ch] text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.45] tracking-[-0.015em] text-[#eaf6f6]"
+          />
+          <div className="mt-12 grid grid-cols-2 gap-4">
+            <figure>
+              <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
+                <Image
+                  src="/images/prayer-flags.jpg"
+                  alt="Prayer flags strung across a hillside in Sopsokha, Bhutan"
+                  fill
+                  sizes="(max-width: 1024px) 45vw, 24vw"
+                  className="object-cover"
+                />
               </div>
-            </div>
+            </figure>
+            <figure className="mt-8">
+              <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
+                <Image
+                  src="/images/bhutan-archery.jpg"
+                  alt="Students practice archery on a field in Bhutan"
+                  fill
+                  sizes="(max-width: 1024px) 45vw, 24vw"
+                  className="object-cover"
+                />
+              </div>
+            </figure>
           </div>
-        </section>
+        </PinnedScrollChapter>
 
         {/* Gallery — four plates in an asymmetric mosaic, each with a real
             caption and a real credit. */}
-        <section
-          aria-labelledby="place-heading"
-          className={cn(container, sectionPad, "py-20 md:py-28")}
+        <PinnedScrollChapter
+          id="place"
+          labelledBy="place-heading"
+          pinOffset={152}
+          className="px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
+              <p className="index-label">The place</p>
+              <h2
+                id="place-heading"
+                className="display-lg mt-6 max-w-[13ch] text-[#0b2e2e]"
+              >
+                The work happens here
+              </h2>
+              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
+                Bhutanese classrooms, workshops and market streets. The talent
+                is already local.
+              </p>
+            </div>
+          }
         >
-          <MarketingReveal className="grid grid-cols-1 gap-6 border-t border-[#0b2e2e]/12 pt-6 lg:grid-cols-12">
-            <p className="index-label lg:col-span-3">The place</p>
-            <h2
-              id="place-heading"
-              className="display-lg lg:col-span-6 lg:col-start-4"
-            >
-              The work happens here
-            </h2>
-            <p className="max-w-[30ch] text-[15px] leading-7 text-[#356464] lg:col-span-3">
-              Bhutanese classrooms, workshops and market streets. The talent is
-              already local.
-            </p>
-          </MarketingReveal>
-
-          <div className="mt-12 grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-12">
+          <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-12">
             {gallery.map((item, index) => (
               <MarketingReveal
                 key={item.src}
@@ -571,59 +538,58 @@ export default async function PublicHomePage() {
                 <Figure
                   src={item.src}
                   alt={item.alt}
-                  credit={item.credit}
-                  caption={item.caption}
                   ratio={item.ratio}
                   sizes="(max-width: 640px) 100vw, 55vw"
                 />
               </MarketingReveal>
             ))}
           </div>
-        </section>
+        </PinnedScrollChapter>
 
         {/* Verified facts — a four-column ledger, no carousel. */}
-        <section
-          aria-labelledby="trust-heading"
-          className="border-t border-[#0b2e2e]/12 bg-[#eaf6f6]"
-        >
-          <div className={cn(container, sectionPad, "py-20 md:py-28")}>
-            <MarketingReveal className="grid grid-cols-1 gap-6 border-t border-[#0b2e2e]/12 pt-6 lg:grid-cols-12">
-              <p className="index-label lg:col-span-3">Checked by people</p>
+        <PinnedScrollChapter
+          id="trust"
+          labelledBy="trust-heading"
+          pinOffset={152}
+          className="border-t border-[#0b2e2e]/12 bg-[#eaf6f6] px-5 py-20 sm:px-8 md:py-28 lg:px-12"
+          title={
+            <div>
+              <p className="index-label">Checked by people</p>
               <h2
                 id="trust-heading"
-                className="display-lg lg:col-span-6 lg:col-start-4"
+                className="display-lg mt-6 max-w-[13ch] text-[#0b2e2e]"
               >
                 What is verified, every time
               </h2>
-              <p className="max-w-[30ch] text-[15px] leading-7 text-[#356464] lg:col-span-3">
+              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
                 No algorithmic approval. An admin reads the profile, the college
                 and the CV.
               </p>
-            </MarketingReveal>
-
-            <ul className="mt-12 grid grid-cols-1 gap-x-8 gap-y-0 border-t border-[#0b2e2e]/15 sm:grid-cols-2 lg:grid-cols-4">
-              {trust.map((item) => (
-                <li
-                  key={item.number}
-                  className="border-b border-[#0b2e2e]/15 py-7 sm:border-b-0 sm:py-8"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
-                      {item.number}
-                    </span>
-                    <span aria-hidden="true" className="h-px flex-1 bg-[#0b2e2e]/15" />
-                  </div>
-                  <h3 className="mt-4 text-[1.15rem] font-semibold tracking-[-0.025em] text-[#0b2e2e]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 max-w-[28ch] text-sm leading-6 text-[#356464]">
-                    {item.body}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
+            </div>
+          }
+        >
+          <ul className="grid grid-cols-1 gap-x-8 border-t border-[#0b2e2e]/15 sm:grid-cols-2">
+            {trust.map((item) => (
+              <li
+                key={item.number}
+                className="border-b border-[#0b2e2e]/15 py-7 sm:py-8"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
+                    {item.number}
+                  </span>
+                  <span aria-hidden="true" className="h-px flex-1 bg-[#0b2e2e]/15" />
+                </div>
+                <h3 className="mt-4 text-[1.15rem] font-semibold tracking-[-0.025em] text-[#0b2e2e]">
+                  {item.title}
+                </h3>
+                <p className="mt-2 max-w-[28ch] text-sm leading-6 text-[#356464]">
+                  {item.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </PinnedScrollChapter>
 
         {/* Closing band — one action, one sentence, full teal. */}
         <section className="bg-[#66bfbf] text-[#0b2e2e]">

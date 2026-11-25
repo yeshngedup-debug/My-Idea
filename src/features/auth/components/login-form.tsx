@@ -23,14 +23,13 @@ type FieldErrors = Partial<Record<FieldName, string>>;
 const FIELD_ORDER: FieldName[] = ["email", "password"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/** Local: identical accessible markup for every inline error. The fade comes
- *  from `data-auth-message` in the shell CSS, with no per-keystroke state. */
+/** Local: identical accessible markup for every inline error. The message is
+ *  static text, so there is no per-keystroke state to manage. */
 function FieldError({ id, children }: { id: string; children: string }) {
   return (
     <p
       id={id}
       role="alert"
-      data-auth-message
       className="mt-1.5 text-xs font-medium text-red-700"
     >
       {children}
@@ -111,8 +110,7 @@ export function LoginForm({
           id={serverErrorId}
           role="alert"
           tabIndex={-1}
-          data-auth-message
-          className="mb-5 rounded-2xl border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]"
+          className="mb-5 rounded-[2px] border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700"
         >
           {serverError}
         </div>
@@ -120,8 +118,7 @@ export function LoginForm({
       {serverMessage && (
         <p
           role="status"
-          data-auth-message
-          className="mb-5 rounded-2xl border border-[#b9dede]/80 bg-[#eaf6f6]/80 px-4 py-3 text-sm text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
+          className="mb-5 rounded-[2px] border border-[#b9dede]/80 bg-[#eaf6f6]/80 px-4 py-3 text-sm text-[#0b5c5c]"
         >
           {serverMessage}
         </p>

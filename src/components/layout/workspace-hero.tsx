@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 
 /**
  * Primary page actions are links supplied by the caller. Their single magenta
@@ -94,10 +93,8 @@ export function WorkspaceHero({
           )}
         </div>
         <div className="relative z-10 mt-6 border-t border-[#b9dede]/80 pt-3">
-          <PhotoCredit
-            fileUrl="https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg"
-            className="text-[#356464]"
-          />
+          {/* Dashboard hero carries no photo credit; the photography
+              attribution lives on /about#photography. */}
         </div>
       </div>
     </section>

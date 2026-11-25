@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PhotoCredit } from "@/components/ui/photo-credit";
 import { cn } from "@/lib/utils";
 
 export type InlineImageTextProps = {
@@ -9,8 +8,6 @@ export type InlineImageTextProps = {
   imageSrc: string;
   /** Spoken in the heading's accessible name, never as a duplicate alt. */
   imageAlt: string;
-  /** Wikimedia Commons file URL for the mandatory credit line. */
-  creditFileUrl: string;
   /** Words after the embedded photograph. */
   after: string;
   /** Override the composed accessible name when the pill sits mid-sentence. */
@@ -33,7 +30,6 @@ export function InlineImageText({
   before,
   imageSrc,
   imageAlt,
-  creditFileUrl,
   after,
   accessibleLabel,
   as = "h2",
@@ -71,9 +67,6 @@ export function InlineImageText({
         </span>{" "}
         <span aria-hidden="true">{tail}</span>
       </Heading>
-      <span className="mt-3 block text-[11px] leading-5 text-[#356464] sm:mt-4">
-        <PhotoCredit fileUrl={creditFileUrl} />
-      </span>
     </div>
   );
 }

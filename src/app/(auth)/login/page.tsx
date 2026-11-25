@@ -1,17 +1,21 @@
-import Link from "next/link";
 import { AuthShell } from "@/features/auth/components/auth-shell";
 import { LoginForm } from "@/features/auth/components/login-form";
-import { displayFont, focusRing } from "@/features/auth/components/styles";
+import {
+  Band,
+  RuleLink,
+  container,
+  gutters,
+} from "@/components/marketing/editorial";
 import { APP_CONTACT } from "@/config/app";
+import { pageMetadata } from "@/lib/metadata";
+import { cn } from "@/lib/utils";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Log in",
   description:
     "Log in to your Bhutan Tech Connect account to access your dashboard and manage projects or applications.",
-  alternates: {
-    canonical: "https://bhutantech.bt/login",
-  },
-};
+  path: "/login",
+});
 
 const ERRORS: Record<string, string> = {
   missing: "Enter your email and password.",
@@ -43,30 +47,85 @@ export default async function LoginPage({
 
   return (
     <AuthShell>
-      <h1
-        style={displayFont}
-        className="text-[clamp(1.875rem,2.6vw,2.375rem)] font-semibold leading-[1.08] tracking-[-0.045em] text-[#0b5c5c] text-balance"
-      >
-        Log in
-      </h1>
-
-      <div className="mt-6">
-        <LoginForm
-          serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
-          serverMessage={message ? MESSAGES[message] : undefined}
-          passwordHelpContactHref={passwordHelpContactHref}
-        />
-      </div>
-
-      <p className="mt-7 text-center text-sm leading-6 text-[#356464]">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/signup"
-          className={`pressable inline-flex min-h-11 items-center rounded-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
+      {/* The ledger opening: what this page is, then the form that acts on it. */}
+      <Band className="border-b border-[#0b2e2e]/10">
+        <div
+          className={cn(
+            container,
+            gutters,
+            "grid grid-cols-1 gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-12",
+          )}
         >
-          Create a student account
-        </Link>
-      </p>
+          <div className="lg:col-span-6 lg:pr-8">
+            <p className="index-label">Account · Log in</p>
+            <h1 className="display-lg mt-7 max-w-[12ch] text-[#0b2e2e]">
+              Log in
+            </h1>
+            <p className="mt-6 max-w-[42ch] text-lg leading-8 text-[#356464]">
+              Your student workspace, your applications and your shortlist sit
+              behind one sign-in.
+            </p>
+
+            <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
+              <p className="index-label">New here</p>
+              <p className="mt-4 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
+                A student account needs a name, an email and a password. You
+                build the profile after you sign in.
+              </p>
+              <RuleLink href="/signup" className="mt-5">
+                Create a student account
+              </RuleLink>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 lg:col-start-8">
+            <div className="border-t border-[#0b2e2e]/15 pt-6">
+              <p className="index-label">Sign in</p>
+              <div className="mt-6">
+                <LoginForm
+                  serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
+                  serverMessage={message ? MESSAGES[message] : undefined}
+                  passwordHelpContactHref={passwordHelpContactHref}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Band>
+
+      {/* The other way in, and the way out when the reset email does not land. */}
+      <Band tone="mist" className="border-b border-[#0b2e2e]/10">
+        <div
+          className={cn(
+            container,
+            gutters,
+            "grid grid-cols-1 gap-10 py-10 md:py-12 lg:grid-cols-12 lg:gap-12",
+          )}
+        >
+          <div className="lg:col-span-7">
+            <p className="index-label">Account help</p>
+            <p className="mt-4 max-w-[52ch] text-[15px] leading-7 text-[#356464]">
+              Questions about student signup, founder access, or a project?{" "}
+              <a
+                href={`mailto:${APP_CONTACT.email}`}
+                className="font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+              >
+                {APP_CONTACT.email}
+              </a>
+              . We read every message and reply as soon as we can.
+            </p>
+          </div>
+          <div className="lg:col-span-4 lg:col-start-9">
+            <p className="index-label">Founder access</p>
+            <p className="mt-4 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
+              Founder accounts are not created through public signup.
+            </p>
+            <RuleLink href="/contact" className="mt-5">
+              Ask for founder access
+            </RuleLink>
+          </div>
+        </div>
+      </Band>
     </AuthShell>
   );
 }
