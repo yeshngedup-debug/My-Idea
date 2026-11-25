@@ -105,13 +105,13 @@ export async function login(formData: FormData) {
     redirect('/login?error=rate-limited');
   }
 
-  const { error } = await auth.signIn.email({ email, password });
-  if (error) {
+  const { data, error } = await auth.signIn.email({ email, password });
+  // Use the user from the sign-in response directly. A second getSession()
+  // read in the same Server Action is not reliable once cookies are written.
+  const user = data?.user;
+  if (error || !user) {
     redirect('/login?error=invalid');
   }
-
-  const user = await getUser();
-  if (!user) redirect('/login');
 
   // Neon is the source of truth for roles. A failed or missing role lookup
   // fails closed: end the session instead of rendering a stale dashboard.
@@ -172,7 +172,7 @@ export async function signup(formData: FormData) {
       // lookups fail closed until then. Surface the failure in server logs.
       console.error('[auth] Could not mirror the new profile into Neon', error);
     }
-    redirect(await dashboardPathForCurrentUser());
+    redirect(await dashboardPathForCurrentUser(data.user.id));
   }
 
   redirect('/login?message=check-email');
@@ -254,13 +254,10 @@ export async function logout() {
 }
 
 /** Resolve the correct dashboard path without guessing a role on failure. */
-async function dashboardPathForCurrentUser(): Promise<string> {
-  const user = await getUser();
-  if (!user) return '/login';
-
+async function dashboardPathForCurrentUser(userId: string): Promise<string> {
   let role: Role | null = null;
   try {
-    role = await getProfileRole(user.id);
+    role = await getProfileRole(userId);
   } catch (error) {
     console.error('[auth] Could not resolve the dashboard role', error);
   }
