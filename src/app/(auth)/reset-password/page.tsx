@@ -2,14 +2,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AuthShell } from "@/features/auth/components/auth-shell";
+import { AuthHelpBand } from "@/features/auth/components/auth-help-band";
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
 import {
   Band,
-  RuleLink,
   container,
   gutters,
 } from "@/components/marketing/editorial";
-import { APP_CONTACT } from "@/config/app";
 import { pageMetadata } from "@/lib/metadata";
 import { RESET_TOKEN_COOKIE } from "@/app/auth/callback/route";
 import { cn } from "@/lib/utils";
@@ -26,6 +25,9 @@ const ERROR_MESSAGES: Record<string, string> = {
   "rate-limited": "Too many attempts. Try again in a moment.",
 };
 
+/** Unknown codes must still surface a message; a silent reset failure reads as a dead button. */
+const GENERIC_ERROR = "We couldn't save your new password. Try again.";
+
 export default async function ResetPasswordPage({
   searchParams,
 }: {
@@ -39,7 +41,7 @@ export default async function ResetPasswordPage({
   }
 
   const { error } = await searchParams;
-  const serverError = error ? ERROR_MESSAGES[error] : undefined;
+  const serverError = error ? ERROR_MESSAGES[error] ?? GENERIC_ERROR : undefined;
 
   return (
     <AuthShell>
@@ -61,23 +63,6 @@ export default async function ResetPasswordPage({
               Use 6 to 128 characters. You&apos;ll sign in again after saving.
             </p>
 
-            <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
-              <p className="index-label">Account help</p>
-              <p className="mt-4 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
-                If the link has expired, request a new one. If it still does not
-                arrive, write to{" "}
-                <a
-                  href={`mailto:${APP_CONTACT.email}`}
-                  className="font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                >
-                  {APP_CONTACT.email}
-                </a>
-                .
-              </p>
-              <RuleLink href="/forgot-password" className="mt-5">
-                Request a new link
-              </RuleLink>
-            </div>
           </div>
 
           <div className="lg:col-span-5 lg:col-start-8">
@@ -90,6 +75,12 @@ export default async function ResetPasswordPage({
           </div>
         </div>
       </Band>
+
+      {/* The reset path keeps its own next step inside the shared help band. */}
+      <AuthHelpBand
+        variant="white"
+        newLink={{ label: "Request a new link", href: "/forgot-password" }}
+      />
     </AuthShell>
   );
 }

@@ -10,7 +10,7 @@ import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading
 import { ProfileClient } from './profile-client';
 import { ProfileDetails, type ProjectCount } from './profile-details';
 
-export const metadata = { title: 'My Profile | Bhutan Tech Connect' };
+export const metadata = { title: 'My Profile' };
 
 const STATUSES = [
   { value: 'open', label: 'Open' },

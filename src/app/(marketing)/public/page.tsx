@@ -1,16 +1,20 @@
-import type { ReactNode } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import {
   MarketingReveal,
   SiteHeader,
 } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import {
-  CTA_HREFS,
+  Action,
+  Figure,
+  RuleLink,
+  container,
+  gutters,
+} from "@/components/marketing/editorial";
+import {
   CTA_LABELS,
   SITE,
+  resolveAction,
 } from "@/components/marketing/nav";
 import { ChapterProgress, PinnedScrollChapter, type ChapterLink } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion/scrubbed-text-reveal";
@@ -25,17 +29,9 @@ export const metadata = pageMetadata({
   path: "/public",
 });
 
-const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
-
-/** The single filled action: a squared magenta plate with a rule-weight mark. */
-const actionClass = `group inline-flex min-h-12 items-center gap-3 rounded-[2px] bg-[#ff0063] px-6 text-[13px] font-semibold tracking-[-0.01em] text-black transition-[transform,background-color] duration-200 hover:bg-[#d40054] active:scale-[0.985] motion-reduce:transition-none motion-reduce:active:scale-100 ${focusRing}`;
-
-/** Quiet peer action: a rule that shortens under the pointer. */
-const ruleLinkClass = `group inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 decoration-1 underline-offset-[6px] transition-colors hover:decoration-[#ff0063] ${focusRing}`;
-
-const sectionPad = "px-5 sm:px-8 lg:px-12";
-const container = "mx-auto w-full max-w-[1440px]";
+const studentCta = resolveAction(SITE.homeHref, "student");
+const learnCta = resolveAction(SITE.homeHref, "learn");
+const founderCta = resolveAction(SITE.homeHref, "founder");
 
 /**
  * Wayfinding for the five pinned chapters on the homepage. Each entry points
@@ -49,28 +45,6 @@ const homeChapters: ChapterLink[] = [
   { id: "place", label: "The place" },
   { id: "trust", label: "Checked by people" },
 ];
-
-function Action({
-  href,
-  children,
-  className,
-}: {
-  href: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <Link href={href} className={cn(actionClass, className)}>
-      <span>{children}</span>
-      <ArrowUpRight
-        size={16}
-        weight="bold"
-        aria-hidden="true"
-        className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-      />
-    </Link>
-  );
-}
 
 const steps = [
   {
@@ -98,17 +72,17 @@ const paths = [
     index: "01",
     title: "Students",
     body: "Build a profile, upload a CV, apply to paid projects.",
-    cta: CTA_LABELS.signup,
-    href: CTA_HREFS.signup,
+    cta: studentCta.label,
+    href: studentCta.href,
     src: "/images/bhutanese-students.jpg",
-    alt: "Young Bhutanese people in gho and kira working together at computers",
+    alt: "Two young Bhutanese women tending a water supply",
   },
   {
     index: "02",
     title: "Founders",
     body: "Post a brief, browse verified students, buy a ranked shortlist when you need one fast.",
-    cta: "Ask for founder access",
-    href: CTA_HREFS.contact,
+    cta: founderCta.label,
+    href: founderCta.href,
     src: "/images/thimphu-bank.jpg",
     alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
   },
@@ -169,37 +143,6 @@ const gallery = [
   },
 ] as const;
 
-function Figure({
-  src,
-  alt,
-  className,
-  ratio = "aspect-[4/3]",
-  sizes = "(max-width: 640px) 100vw, 50vw",
-  priority = false,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  ratio?: string;
-  sizes?: string;
-  priority?: boolean;
-}) {
-  return (
-    <figure className={className}>
-      <div className={cn("plate relative overflow-hidden", ratio)}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          priority={priority}
-          sizes={sizes}
-          className="object-cover"
-        />
-      </div>
-    </figure>
-  );
-}
-
 export default async function PublicHomePage() {
   const liveContext = await getLiveContext();
   const youth = liveContext.indicators.find(
@@ -217,7 +160,7 @@ export default async function PublicHomePage() {
           <div
             className={cn(
               container,
-              sectionPad,
+              gutters,
               "grid grid-cols-1 gap-10 pb-12 pt-12 lg:grid-cols-12 lg:gap-10 lg:pb-16 lg:pt-16",
             )}
           >
@@ -234,11 +177,8 @@ export default async function PublicHomePage() {
                   algorithm.
                 </p>
                 <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3">
-                  <Action href={CTA_HREFS.signup}>{CTA_LABELS.signup}</Action>
-                  <Link href={CTA_HREFS.howItWorks} className={ruleLinkClass}>
-                    {CTA_LABELS.seeHow}
-                    <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
-                  </Link>
+                  <Action href={studentCta.href}>{studentCta.label}</Action>
+                  <RuleLink href={learnCta.href}>{learnCta.label}</RuleLink>
                 </div>
               </div>
 
@@ -266,7 +206,7 @@ export default async function PublicHomePage() {
                   <div className="plate relative aspect-[4/5] overflow-hidden sm:aspect-[5/6] lg:aspect-[4/5] lg:min-h-[540px]">
                     <Image
                       src="/images/thimphu-city.jpg"
-                      alt="View across central Thimphu, the capital of Bhutan"
+                      alt="Handicraft shops along Norzin Lam road in Thimphu"
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 42vw"
@@ -361,13 +301,9 @@ export default async function PublicHomePage() {
                 <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#356464]">
                   {path.body}
                 </p>
-                <Link
-                  href={path.href}
-                  className={cn(ruleLinkClass, "mt-6 self-start")}
-                >
+                <RuleLink href={path.href} className="mt-6 self-start">
                   {path.cta}
-                  <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
-                </Link>
+                </RuleLink>
               </MarketingReveal>
             ))}
           </div>
@@ -477,7 +413,7 @@ export default async function PublicHomePage() {
               <div className="plate relative aspect-[4/3] overflow-hidden bg-[#0b5c5c]">
                 <Image
                   src="/images/bhutanese-students.jpg"
-                  alt="Young Bhutanese people in gho and kira working together at computers"
+                  alt="Two young Bhutanese women tending a water supply"
                   fill
                   sizes="(max-width: 1024px) 45vw, 24vw"
                   className="object-cover"
@@ -585,7 +521,7 @@ export default async function PublicHomePage() {
           <div
             className={cn(
               container,
-              sectionPad,
+              gutters,
               "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
             )}
           >
@@ -604,17 +540,13 @@ export default async function PublicHomePage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href={CTA_HREFS.signup}>{CTA_LABELS.signup}</Action>
-              <Link
-                href={CTA_HREFS.contact}
-                className={cn(
-                  ruleLinkClass,
-                  "decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]",
-                )}
+              <Action href={studentCta.href}>{studentCta.label}</Action>
+              <RuleLink
+                href={founderCta.href}
+                className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Ask for founder access
-                <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
-              </Link>
+                {founderCta.label}
+              </RuleLink>
             </MarketingReveal>
           </div>
         </section>

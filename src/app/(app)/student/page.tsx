@@ -19,8 +19,9 @@ import {
   type Role,
 } from "@/lib/neon-data";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState, ErrorState } from "@/components/ui/empty-state";
 
-export const metadata = { title: "Student Dashboard | Bhutan Tech Connect" };
+export const metadata = { title: "Student Dashboard" };
 
 const BHUTAN_TIME_ZONE = "Asia/Thimphu";
 
@@ -92,7 +93,7 @@ type NextAction = {
   progress: string | null;
 };
 
-function WorkspaceNotice({
+function RetryNotice({
   title,
   description,
 }: {
@@ -100,35 +101,20 @@ function WorkspaceNotice({
   description: string;
 }) {
   return (
-    <section
-      aria-labelledby="student-notice-title"
-      className="rounded-2xl border border-border bg-card px-6 py-10 sm:px-9"
-    >
-      <h1
-        id="student-notice-title"
-        className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-primary text-balance"
-      >
-        {title}
-      </h1>
-      <p className="mt-3 max-w-xl text-sm leading-6 text-body-secondary sm:text-base">
-        {description}
-      </p>
-      <div className="mt-6 flex flex-wrap items-center gap-3">
-        {/* A full reload, not a cached client transition, retries this server render. */}
+    <ErrorState
+      headingLevel="h1"
+      title={title}
+      description={description}
+      action={
+        /* A full reload retries this server render instead of a cached transition. */
         <a
           href="/student"
           className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
         >
           Try again
         </a>
-        <Link
-          href="/"
-          className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-        >
-          Go to home
-        </Link>
-      </div>
-    </section>
+      }
+    />
   );
 }
 
@@ -204,7 +190,7 @@ export default async function StudentDashboard() {
     role = await getProfileRole(user.id);
   } catch {
     return (
-      <WorkspaceNotice
+      <RetryNotice
         title="We could not check your account"
         description="Your account details are not available right now. Try again in a moment."
       />
@@ -217,9 +203,18 @@ export default async function StudentDashboard() {
 
   if (!role) {
     return (
-      <WorkspaceNotice
+      <EmptyState
+        headingLevel="h1"
         title="Finish setting up your account"
         description="Your account is not linked to a student profile yet. Try again after your profile is ready."
+        action={
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+          >
+            Go to home
+          </Link>
+        }
       />
     );
   }
@@ -240,7 +235,7 @@ export default async function StudentDashboard() {
     }));
   } catch {
     return (
-      <WorkspaceNotice
+      <RetryNotice
         title="We could not load your applications"
         description="Your applications are not available right now. Try again in a moment."
       />
@@ -406,14 +401,15 @@ export default async function StudentDashboard() {
             </Link>
           </div>
           {applications.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-10">
-              <p className="text-base font-semibold text-primary">
-                No applications yet.
-              </p>
-              <Link href="/student/projects" className={`mt-2 ${QUIET_LINK}`}>
-                Browse open projects
-              </Link>
-            </div>
+            <EmptyState
+              title="No applications yet."
+              description="Browse open projects when you are ready to apply."
+              action={
+                <Link href="/student/projects" className={QUIET_LINK}>
+                  Browse open projects
+                </Link>
+              }
+            />
           ) : (
             <table className="w-full border-collapse text-left">
               <caption className="sr-only">Your most recent applications</caption>

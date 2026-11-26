@@ -2,12 +2,13 @@
 
 /**
  * Admin project list with a status filter. The page itself was read-only; the
- * filter narrows real stored rows and announces the visible count. Both the
- * mobile list and the desktop table stay in the DOM, as before.
+ * filter narrows real stored rows and shows the visible count. Both the mobile
+ * list and the desktop table stay in the DOM, as before.
  */
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState, ErrorState } from "@/components/ui/empty-state";
 import { SegmentedControl } from "@/components/interactive/segmented-control";
 
 export interface ProjectRow {
@@ -68,28 +69,24 @@ export function ProjectsClient({
       <div className="space-y-4">
         <h2 className="sr-only">Project list</h2>
         {loadError ? (
-          <div role="alert" className="rounded-2xl border border-[#c2004b]/25 bg-[#ff0063]/8 p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#c2004b]">
-              Projects unavailable
-            </h3>
-            <p className="mb-5 text-sm text-[#356464]">{loadError}</p>
-            <button
-              type="button"
-              onClick={() => router.refresh()}
-              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
-            >
-              Try again
-            </button>
-          </div>
+          <ErrorState
+            title="Could not load projects"
+            description={loadError}
+            action={
+              <button
+                type="button"
+                onClick={() => router.refresh()}
+                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+              >
+                Try again
+              </button>
+            }
+          />
         ) : (
-          <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-              No projects yet
-            </h3>
-            <p className="text-sm text-[#356464]">
-              Projects appear here as soon as founders post them.
-            </p>
-          </div>
+          <EmptyState
+            title="No projects yet"
+            description="Projects appear here as soon as founders post them."
+          />
         )}
       </div>
     );
@@ -117,29 +114,26 @@ export function ProjectsClient({
         value={filter}
         onChange={setFilter}
         ariaLabel="Filter projects by status"
-        selectOnArrow
       />
 
-      <p role="status" aria-live="polite" className="text-xs text-[#356464]">
+      <p className="text-xs text-[#356464]">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} projects
-          </h3>
-          <p className="mb-6 text-sm text-[#356464]">
-            No stored project is at this stage right now.
-          </p>
-          <button
-            type="button"
-            onClick={() => setFilter("all")}
-            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
-          >
-            Show all projects
-          </button>
-        </div>
+        <EmptyState
+          title={`No ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} projects`}
+          description="No stored project is at this stage right now."
+          action={
+            <button
+              type="button"
+              onClick={() => setFilter("all")}
+              className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+            >
+              Show all projects
+            </button>
+          }
+        />
       ) : (
         <>
           <ul className="space-y-2.5 sm:hidden">

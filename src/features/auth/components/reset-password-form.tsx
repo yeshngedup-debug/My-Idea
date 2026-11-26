@@ -10,29 +10,19 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent, RefObject } from "react";
 import { resetPassword } from "@/features/auth/actions";
+import { FieldError } from "@/features/auth/components/field-error";
 import { authInputClassName } from "@/features/auth/components/styles";
+import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
+import {
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from "@/features/auth/schemas";
 
 type FieldName = "password" | "confirmPassword";
 type FieldErrors = Partial<Record<FieldName, string>>;
 
 const FIELD_ORDER: FieldName[] = ["password", "confirmPassword"];
-const MIN_PASSWORD_LENGTH = 6;
-const MAX_PASSWORD_LENGTH = 128;
-
-/** Local: identical accessible markup for every inline error. The message is
- *  static text, so there is no per-keystroke state to manage. */
-function FieldError({ id, children }: { id: string; children: string }) {
-  return (
-    <p
-      id={id}
-      role="alert"
-      className="mt-1.5 text-xs font-medium text-red-700"
-    >
-      {children}
-    </p>
-  );
-}
 
 export function ResetPasswordForm({ serverError }: { serverError?: string }) {
   const rawId = useId();
@@ -43,7 +33,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
 
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
-  const serverErrorRef = useRef<HTMLDivElement>(null);
+  const serverErrorRef = useRef<HTMLParagraphElement>(null);
   const [errors, setErrors] = useState<FieldErrors>({});
 
   useEffect(() => {
@@ -86,15 +76,15 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
   return (
     <>
       {serverError && (
-        <div
+        <StatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
-          role="alert"
           tabIndex={-1}
-          className="mb-5 rounded-[2px] border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700"
+          tone="error"
+          className="mb-5 rounded-[2px] focus-visible:outline-none"
         >
           {serverError}
-        </div>
+        </StatusMessage>
       )}
 
       <form

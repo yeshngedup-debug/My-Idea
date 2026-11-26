@@ -4,6 +4,8 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { updateProjectStatus, updateApplicationStatus } from '@/features/projects/actions';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
+import { StatusMessage } from '@/components/ui/status-message';
 import {
   StatusTimeline,
   FOUNDER_APPLICATION_STEPS,
@@ -155,13 +157,12 @@ export function ProjectDetailClient({
       </Link>
 
       {status && (
-        <p role={status.ok ? 'status' : 'alert'} className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
-          status.ok
-            ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-            : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-        }`}>
+        <StatusMessage
+          key={`${status.ok ? 'success' : 'error'}:${status.msg}`}
+          tone={status.ok ? 'success' : 'error'}
+        >
           {status.msg}
-        </p>
+        </StatusMessage>
       )}
 
       <section className="flex flex-wrap items-start justify-between gap-3">
@@ -220,12 +221,10 @@ export function ProjectDetailClient({
           </h2>
 
           {applicants.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-              <p className="text-sm text-[#356464]">
-                No applications yet. When a student applies, you can review their
-                details here.
-              </p>
-            </div>
+            <EmptyState
+              title="No applications yet"
+              description="When a student applies, you can review their details here."
+            />
           ) : (
             <ul className="space-y-3">
               {applicants.map((a) => {

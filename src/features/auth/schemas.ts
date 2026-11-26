@@ -1,11 +1,9 @@
 /**
- * Zod schemas for the auth forms.
+ * Shared auth validation values and Zod schemas.
  *
- * The server actions currently validate inline (FormData is read with
- * String(...) and checked directly). These schemas mirror those exact rules
- * so Client Components can validate before dispatch without importing a
- * server action. They intentionally do NOT accept a `role` field: signup
- * assigns 'student' on the server only.
+ * Client forms and server actions import the same constants, so the visible
+ * rules and the checked rules cannot drift. The schemas intentionally do NOT
+ * accept a `role` field: signup assigns 'student' on the server only.
  */
 import { z } from 'zod';
 
@@ -13,7 +11,7 @@ import { z } from 'zod';
 export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const MAX_EMAIL_LENGTH = 254;
 export const MIN_PASSWORD_LENGTH = 6;
-/** Reset-password action enforces the upper bound; signup only enforces the minimum. */
+/** Upper bound enforced by both the client forms and the server actions. */
 export const MAX_PASSWORD_LENGTH = 128;
 export const MAX_FULL_NAME_LENGTH = 80;
 export const MAX_NAME_PART_LENGTH = 80;
@@ -24,10 +22,11 @@ export const emailSchema = z
   .max(MAX_EMAIL_LENGTH, 'Email is too long.')
   .regex(EMAIL_PATTERN, 'Enter a valid email address.');
 
-/** Signup rule: minimum length, no upper bound in the action. */
+/** Signup rule: the same 6–128 bound the server action checks. */
 export const signupPasswordSchema = z
   .string()
-  .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
+  .min(MIN_PASSWORD_LENGTH, `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`)
+  .max(MAX_PASSWORD_LENGTH, `Password must be ${MAX_PASSWORD_LENGTH} characters or fewer.`);
 
 /** Reset-password rule: the action rejects both shorter and longer values. */
 export const passwordSchema = z

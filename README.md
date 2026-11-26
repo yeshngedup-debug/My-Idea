@@ -94,8 +94,8 @@ neon neon-auth status  # confirm Managed Auth is enabled; read the branch auth U
 ```
 
 `neon env pull` writes to `.env`; Next.js also reads that file. Keep manual
-overrides (E2E credentials, payment placeholders, Mesurer flag) in `.env.local`,
-which takes precedence.
+overrides (E2E credentials, payment placeholders) in `.env.local`, which takes
+precedence.
 
 ### Deploying to Vercel
 
@@ -134,7 +134,7 @@ neon neon-auth domain list
 Without this step, credentials are valid but the login form reports
 "Check your email and password and try again."
 | `NEON_BRANCH_ID`, `NEON_FUNCTION_HOST_SUFFIX` | `/api/neon` status endpoint | No (runtime) |
-| `CONTACT_EMAIL`, `NEXT_PUBLIC_MESURER_ENABLED` | Contact link, dev inspector | `MESURER` yes; `CONTACT_EMAIL` no |
+| `CONTACT_EMAIL` | Contact link | No |
 
 ## 3. Set up the database (Neon)
 
@@ -222,36 +222,6 @@ docker compose up --build
 
 `docker-compose.yml` passes the Neon variables through to the app and has no
 service dependency on a local database stack.
-
-### Frontend inspection with Mesurer
-
-Mesurer is an open-source UI inspector for precise visual feedback. It is
-mounted in `src/app/layout.tsx` through `components/dev/mesurer-panel.tsx`, but
-only in development and only when `NEXT_PUBLIC_MESURER_ENABLED=1`. Production
-builds and normal visitors never load it.
-
-```bash
-# .env.local
-NEXT_PUBLIC_MESURER_ENABLED=1   # on (default for local work)
-NEXT_PUBLIC_MESURER_ENABLED=0   # off
-```
-
-It starts minimized to a toolbar button in the top-left. Useful shortcuts:
-
-| Key | Action |
-| --- | --- |
-| `I` | Inspect element bounds and spacing |
-| `G` | Pixel guides; `H` horizontal, `V` vertical |
-| `R` | Pixel rulers; hold `Alt` for distance overlays |
-| `D` / `N` / `T` | Arrows, freehand pen, text notes |
-| `M` | Comments pinned to live elements |
-| `X` / `B` | X-ray structure / responsive preview |
-| `C` / `V` | Region screenshot / short video capture |
-| `Cmd/Ctrl + K` | Copy comments as structured feedback for a coding agent |
-| `Esc` | Cancel the current tool, then minimize |
-
-Workspace state persists per page in local storage under
-`bhutan-tech-connect-mesurer`.
 
 ---
 

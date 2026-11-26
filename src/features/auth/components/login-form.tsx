@@ -14,7 +14,9 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent, RefObject } from "react";
 import Link from "next/link";
 import { login } from "@/features/auth/actions";
+import { FieldError } from "@/features/auth/components/field-error";
 import { authInputClassName, focusRing } from "@/features/auth/components/styles";
+import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 type FieldName = "email" | "password";
@@ -22,20 +24,6 @@ type FieldErrors = Partial<Record<FieldName, string>>;
 
 const FIELD_ORDER: FieldName[] = ["email", "password"];
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Local: identical accessible markup for every inline error. The message is
- *  static text, so there is no per-keystroke state to manage. */
-function FieldError({ id, children }: { id: string; children: string }) {
-  return (
-    <p
-      id={id}
-      role="alert"
-      className="mt-1.5 text-xs font-medium text-red-700"
-    >
-      {children}
-    </p>
-  );
-}
 
 export function LoginForm({
   serverError,
@@ -55,16 +43,21 @@ export function LoginForm({
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const serverErrorRef = useRef<HTMLDivElement>(null);
+  const serverErrorRef = useRef<HTMLParagraphElement>(null);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  // One server-result surface, so a redirect can never leave two live regions
+  // competing for the same outcome. Errors interrupt; confirmations are polite.
+  const serverStatus = serverError ?? serverMessage;
+  const serverStatusTone = serverError ? "error" : "success";
+
   // Server actions redirect back to this route with ?error=..., which can be a
-  // client-side navigation. Focus the alert whenever the message changes, not
+  // client-side navigation. Focus the status whenever the message changes, not
   // only on mount, so repeat failures are announced to keyboard and screen
   // reader users.
   useEffect(() => {
-    if (serverError) serverErrorRef.current?.focus();
-  }, [serverError]);
+    if (serverStatus) serverErrorRef.current?.focus();
+  }, [serverStatus]);
 
   function clearError(field: FieldName) {
     setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
@@ -104,31 +97,23 @@ export function LoginForm({
 
   return (
     <>
-      {serverError && (
-        <div
+      {serverStatus && (
+        <StatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
-          role="alert"
           tabIndex={-1}
-          className="mb-5 rounded-[2px] border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700"
+          tone={serverStatusTone}
+          className="mb-5 rounded-[2px] focus-visible:outline-none"
         >
-          {serverError}
-        </div>
-      )}
-      {serverMessage && (
-        <p
-          role="status"
-          className="mb-5 rounded-[2px] border border-[#b9dede]/80 bg-[#eaf6f6]/80 px-4 py-3 text-sm text-[#0b5c5c]"
-        >
-          {serverMessage}
-        </p>
+          {serverStatus}
+        </StatusMessage>
       )}
 
       <form
         action={login}
         onSubmit={handleSubmit}
         noValidate
-        aria-describedby={serverError ? serverErrorId : undefined}
+        aria-describedby={serverStatus ? serverErrorId : undefined}
         className="space-y-5"
       >
         <div>

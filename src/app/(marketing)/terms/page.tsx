@@ -4,7 +4,6 @@
  * Same editorial document layout as the privacy page: ruled contents column,
  * one measure of copy, hairlines between chapters.
  */
-import Link from "next/link";
 import { APP_CONTACT } from "@/config/app";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
@@ -16,6 +15,7 @@ import {
   gutters,
   hairline,
 } from "@/components/marketing/editorial";
+import { resolveAction } from "@/components/marketing/nav";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -46,6 +46,10 @@ const chapterHeading =
   "text-[clamp(1.6rem,2.6vw,2.15rem)] font-semibold leading-[1.12] tracking-[-0.035em] text-[#0b2e2e]";
 
 const mailLink = `inline-flex min-h-6 items-center font-semibold text-[#0b5c5c] underline decoration-[#ff0063] decoration-1 underline-offset-4 transition-colors hover:text-[#0b2e2e] ${focusRing}`;
+
+const privacyCta = resolveAction(null, "privacyPolicy");
+const contactCta = resolveAction(null, "contactTeam");
+const homeCta = resolveAction(null, "backHome");
 
 const chapter = cn("scroll-mt-24 border-t py-12 sm:py-14", hairline);
 
@@ -225,17 +229,13 @@ export default function TermsPage() {
                     </a>
                   </p>
                   <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
-                    <RuleLink href="/privacy">Read the privacy policy</RuleLink>
-                    <RuleLink href="/contact">Contact the team</RuleLink>
-                    <Link
-                      href="/public"
-                      className={cn(
-                        "inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-[#356464] transition-colors hover:text-[#0b2e2e]",
-                        focusRing,
-                      )}
-                    >
-                      Back to the homepage
-                    </Link>
+                    <RuleLink href={privacyCta.href}>
+                      {privacyCta.label}
+                    </RuleLink>
+                    <RuleLink href={contactCta.href}>
+                      {contactCta.label}
+                    </RuleLink>
+                    <RuleLink href={homeCta.href}>{homeCta.label}</RuleLink>
                   </div>
                 </section>
               </div>

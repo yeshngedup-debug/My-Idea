@@ -3,7 +3,7 @@
 /**
  * Post a Project form — light theme, simple layout.
  */
-import { useRef, useState, useTransition } from 'react';
+import { useRef, useState, useTransition, type KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { createProject } from '@/features/projects/actions';
 import { Button } from '@/components/ui/button';
@@ -12,11 +12,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/shadcn/progress';
+import { StatusMessage } from '@/components/ui/status-message';
 import { X } from '@phosphor-icons/react';
 
 const DURATIONS = ['1 week', '2 weeks', '1 month', '2 months', '3 months'];
-const WORK_MODES = ['remote', 'onsite'] as const;
-type WorkMode = (typeof WORK_MODES)[number];
+const WORK_MODE_OPTIONS = [
+  { value: 'remote', label: 'Remote' },
+  { value: 'onsite', label: 'On-site' },
+] as const;
+type WorkMode = (typeof WORK_MODE_OPTIONS)[number]['value'];
 /** Matches numeric(10,2) in neon/schema.sql; the Zod schema still needs this bound. */
 const MAX_BUDGET = 99999999.99;
 /** number inputs accept values the column would round; check precision in the UI too. */
@@ -46,6 +50,39 @@ export function PostProjectForm() {
     onsite: null,
   });
 
+  function handleWorkModeKeyDown(
+    event: KeyboardEvent<HTMLButtonElement>,
+    mode: WorkMode,
+  ) {
+    const index = WORK_MODE_OPTIONS.findIndex((option) => option.value === mode);
+    if (index < 0) return;
+
+    let next: number;
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        next = (index + 1) % WORK_MODE_OPTIONS.length;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        next = (index - 1 + WORK_MODE_OPTIONS.length) % WORK_MODE_OPTIONS.length;
+        break;
+      case 'Home':
+        next = 0;
+        break;
+      case 'End':
+        next = WORK_MODE_OPTIONS.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    const nextMode = WORK_MODE_OPTIONS[next].value;
+    setWorkMode(nextMode);
+    workModeRefs.current[nextMode]?.focus();
+  }
+
   // One badge must equal one stored skill: the server splits this comma list.
   function addSkill() {
     const additions = skillInput
@@ -62,36 +99,6 @@ export function PostProjectForm() {
       });
     }
     setSkillInput('');
-  }
-
-  function handleWorkModeKeyDown(
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    mode: WorkMode
-  ) {
-    const index = WORK_MODES.indexOf(mode);
-    let next: number;
-    switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        next = (index + 1) % WORK_MODES.length;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        next = (index - 1 + WORK_MODES.length) % WORK_MODES.length;
-        break;
-      case 'Home':
-        next = 0;
-        break;
-      case 'End':
-        next = WORK_MODES.length - 1;
-        break;
-      default:
-        return;
-    }
-    e.preventDefault();
-    const nextMode = WORK_MODES[next];
-    setWorkMode(nextMode);
-    workModeRefs.current[nextMode]?.focus();
   }
 
   // Mirrors createProjectSchema and the numeric(10,2) column, so a completed
@@ -201,11 +208,7 @@ export function PostProjectForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
-      {status && !status.ok && (
-        <p role="alert" className="flex items-center gap-2 rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-3 text-sm text-[#c2004b]">
-          {status.msg}
-        </p>
-      )}
+      {status && !status.ok && <StatusMessage tone="error">{status.msg}</StatusMessage>}
 
       <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4">
         <Progress
@@ -214,7 +217,7 @@ export function PostProjectForm() {
           label="Ready to post"
           valueLabel={`${ready} of ${requirements.length} details ready`}
         />
-        <p id="post-form-missing" aria-live="polite" className="mt-2 text-xs leading-5 text-[#356464]">
+        <p id="post-form-missing" className="mt-2 text-xs leading-5 text-[#356464]">
           {missing.length === 0
             ? 'All required details are ready. You can post the project.'
             : `Still needed: ${missing.join('; ')}.`}
@@ -380,25 +383,25 @@ export function PostProjectForm() {
             Work mode
           </legend>
           <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Work mode">
-            {WORK_MODES.map((mode) => (
+            {WORK_MODE_OPTIONS.map(({ value, label }) => (
               <button
-                key={mode}
+                key={value}
                 ref={(node) => {
-                  workModeRefs.current[mode] = node;
+                  workModeRefs.current[value] = node;
                 }}
                 type="button"
                 role="radio"
-                aria-checked={workMode === mode}
-                tabIndex={workMode === mode ? 0 : -1}
-                onKeyDown={(e) => handleWorkModeKeyDown(e, mode)}
-                onClick={() => setWorkMode(mode)}
+                aria-checked={workMode === value}
+                tabIndex={workMode === value ? 0 : -1}
+                onKeyDown={(event) => handleWorkModeKeyDown(event, value)}
+                onClick={() => setWorkMode(value)}
                 className={`pressable min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
-                  workMode === mode
+                  workMode === value
                     ? 'bg-[#66bfbf] text-[#0b2e2e]'
                     : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
                 }`}
               >
-                {mode === 'remote' ? 'Remote' : 'On-site'}
+                {label}
               </button>
             ))}
           </div>

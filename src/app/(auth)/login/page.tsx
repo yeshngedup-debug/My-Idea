@@ -1,4 +1,5 @@
 import { AuthShell } from "@/features/auth/components/auth-shell";
+import { AuthHelpBand } from "@/features/auth/components/auth-help-band";
 import { LoginForm } from "@/features/auth/components/login-form";
 import {
   Band,
@@ -7,6 +8,7 @@ import {
   gutters,
 } from "@/components/marketing/editorial";
 import { APP_CONTACT } from "@/config/app";
+import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
@@ -72,8 +74,8 @@ export default async function LoginPage({
                 A student account needs a name, an email and a password. You
                 build the profile after you sign in.
               </p>
-              <RuleLink href="/signup" className="mt-5">
-                Create a student account
+              <RuleLink href={CTA_HREFS.signup} className="mt-5">
+                {CTA_LABELS.signup}
               </RuleLink>
             </div>
           </div>
@@ -93,39 +95,8 @@ export default async function LoginPage({
         </div>
       </Band>
 
-      {/* The other way in, and the way out when the reset email does not land. */}
-      <Band tone="mist" className="border-b border-[#0b2e2e]/10">
-        <div
-          className={cn(
-            container,
-            gutters,
-            "grid grid-cols-1 gap-10 py-8 md:py-10 lg:grid-cols-12 lg:gap-12",
-          )}
-        >
-          <div className="lg:col-span-7">
-            <p className="index-label">Account help</p>
-            <p className="mt-4 max-w-[52ch] text-[15px] leading-7 text-[#356464]">
-              Questions about student signup, founder access, or a project?{" "}
-              <a
-                href={`mailto:${APP_CONTACT.email}`}
-                className="font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
-              >
-                {APP_CONTACT.email}
-              </a>
-              . We read every message and reply as soon as we can.
-            </p>
-          </div>
-          <div className="lg:col-span-4 lg:col-start-9">
-            <p className="index-label">Founder access</p>
-            <p className="mt-4 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
-              Founder accounts are not created through public signup.
-            </p>
-            <RuleLink href="/contact" className="mt-5">
-              Ask for founder access
-            </RuleLink>
-          </div>
-        </div>
-      </Band>
+      {/* Help and the other way in. */}
+      <AuthHelpBand />
     </AuthShell>
   );
 }

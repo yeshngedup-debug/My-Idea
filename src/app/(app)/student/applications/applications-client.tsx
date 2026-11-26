@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { SegmentedControl } from "@/components/interactive/segmented-control";
 import {
   StatusTimeline,
@@ -85,20 +86,19 @@ export function ApplicationsClient({
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-          You haven&apos;t applied to any projects yet
-        </h2>
-        <p className="mb-6 text-sm text-[#356464]">
-          Browse open projects and apply to ones that match your skills.
-        </p>
-        <Link
-          href="/student/projects"
-          className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors motion-reduce:transition-none! hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
-        >
-          Browse projects
-        </Link>
-      </div>
+      <EmptyState
+        headingLevel="h2"
+        title="You haven’t applied to any projects yet"
+        description="Browse open projects and apply to ones that match your skills."
+        action={
+          <Link
+            href="/student/projects"
+            className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors motion-reduce:transition-none! hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+          >
+            Browse projects
+          </Link>
+        }
+      />
     );
   }
 
@@ -117,26 +117,25 @@ export function ApplicationsClient({
         ariaLabel="Filter applications by status"
       />
 
-      <p role="status" aria-live="polite" className="text-xs text-[#356464]">
+      <p className="text-xs text-[#356464]">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            No {STATUS_LABEL[filter]?.toLowerCase() ?? filter} applications
-          </h2>
-          <p className="mb-6 text-sm text-[#356464]">
-            None of your applications are at this stage right now.
-          </p>
-          <button
-            type="button"
-            onClick={() => handleFilterChange("all")}
-            className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
-          >
-            Show all applications
-          </button>
-        </div>
+        <EmptyState
+          headingLevel="h2"
+          title={`No ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} applications`}
+          description="None of your applications are at this stage right now."
+          action={
+            <button
+              type="button"
+              onClick={() => handleFilterChange("all")}
+              className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+            >
+              Show all applications
+            </button>
+          }
+        />
       ) : (
         <ul className="space-y-3">
           {filtered.map((item) => (

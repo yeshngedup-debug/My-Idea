@@ -37,6 +37,8 @@ export function StatusTimeline({
   const currentIndex = steps.findIndex((s) => s.value === status);
   const current = currentIndex >= 0 ? steps[currentIndex] : steps[0];
   const flowsOffPath = current?.terminal === true;
+  // Terminal and final steps describe an outcome, not a next action.
+  const showNextPrefix = !flowsOffPath && currentIndex < steps.length - 1;
 
   return (
     <div
@@ -106,7 +108,11 @@ export function StatusTimeline({
                       compact ? 'sm:max-w-[12rem]' : ''
                     }`}
                   >
-                    <span className="font-medium text-[#0b5c5c]">Next: </span>
+                    {showNextPrefix ? (
+                      <span className="font-medium text-[#0b5c5c]">
+                        Next:{" "}
+                      </span>
+                    ) : null}
                     {step.next}
                   </p>
                 )}

@@ -20,7 +20,7 @@ import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { PaymentsClient, type AdminOrder } from './payments-client';
 
-export const metadata = { title: 'Payments | Admin | Bhutan Tech Connect' };
+export const metadata = { title: 'Payments | Admin' };
 
 export default async function AdminPaymentsPage() {
   // Defense in depth: proxy.ts protects /admin/*, the page re-verifies the

@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/shadcn/progress';
+import { StatusMessage } from '@/components/ui/status-message';
 
 const YEARS = ['1st', '2nd', '3rd', '4th', 'Graduate'];
 const AVAILABILITY = [
@@ -139,7 +140,13 @@ export function ProfileForm({
     ? { tone: 'pending' as const, msg: 'Saving profile…' }
     : uploading
       ? { tone: 'pending' as const, msg: 'Uploading CV…' }
-      : banner;
+      : banner ??
+        (hasCv && !cvUrl && cvPreviewUnavailable
+          ? {
+              tone: 'error' as const,
+              msg: 'Preview is unavailable right now. The uploaded CV is saved.',
+            }
+          : null);
 
   function addSkill() {
     const incoming = skillInput.split(',').map((s) => s.trim()).filter(Boolean);
@@ -343,25 +350,26 @@ export function ProfileForm({
 
       {visibleBanner && (
         <BannerEntrance>
-        <p
-          role={visibleBanner.tone === 'error' ? 'alert' : 'status'}
-          className={`flex min-w-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm leading-6 ${
-            visibleBanner.tone === 'success'
-              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-              : visibleBanner.tone === 'error'
-                ? 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-                : 'border-[#b9dede] bg-[#eaf6f6] text-[#356464]'
-          }`}
-        >
-          {visibleBanner.tone === 'success' ? (
-            <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          ) : visibleBanner.tone === 'error' ? (
-            <Warning className="h-4 w-4 shrink-0" aria-hidden="true" />
-          ) : (
-            <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-current" />
-          )}
-          <span>{visibleBanner.msg}</span>
-        </p>
+          <StatusMessage
+            key={`${visibleBanner.tone}:${visibleBanner.msg}`}
+            tone={
+              visibleBanner.tone === 'error'
+                ? 'error'
+                : visibleBanner.tone === 'success'
+                  ? 'success'
+                  : 'info'
+            }
+            className="min-w-0"
+          >
+            {visibleBanner.tone === 'success' ? (
+              <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+            ) : visibleBanner.tone === 'error' ? (
+              <Warning className="h-4 w-4 shrink-0" aria-hidden="true" />
+            ) : (
+              <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-current" />
+            )}
+            <span>{visibleBanner.msg}</span>
+          </StatusMessage>
         </BannerEntrance>
       )}
 
@@ -400,12 +408,6 @@ export function ProfileForm({
             )}
           </div>
         )}
-        {hasCv && !cvUrl && cvPreviewUnavailable && (
-          <p role="alert" className="mt-2 text-xs leading-5 text-[#c2004b]">
-            Preview is unavailable right now. The uploaded CV is saved.
-          </p>
-        )}
-
         <div className="mt-4">
           <input
             ref={fileInputRef}

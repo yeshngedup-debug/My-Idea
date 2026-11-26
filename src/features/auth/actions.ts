@@ -20,12 +20,15 @@ import { getProfileRole, ensureProfile } from '@/lib/neon-data';
 import { rateLimit } from '@/lib/rate-limit';
 import { APP_URL } from '@/config/app';
 import { RESET_TOKEN_COOKIE } from '@/app/auth/callback/route';
+import {
+  EMAIL_PATTERN,
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  signupSchema,
+} from '@/features/auth/schemas';
 
 type Role = 'student' | 'founder' | 'admin';
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 6;
-const MAX_PASSWORD_LENGTH = 128;
 
 /** The auth provider reports duplicate signups and weak passwords differently across versions. */
 function signupErrorToken(error: { code?: string; message?: string }): string {
@@ -74,7 +77,7 @@ async function rateLimitKey(action: string, email: string): Promise<string> {
 }
 
 function isValidEmail(email: string): boolean {
-  return email.length <= 254 && EMAIL_PATTERN.test(email);
+  return email.length <= MAX_EMAIL_LENGTH && EMAIL_PATTERN.test(email);
 }
 
 function isValidPassword(password: string): boolean {
@@ -140,22 +143,30 @@ export async function signup(formData: FormData) {
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
 
-  const fullName = [firstName, lastName].filter(Boolean).join(' ');
-  if (!email || !password || password.length < 6 || fullName.length > 80) {
+  const parsed = signupSchema.safeParse({ firstName, lastName, email, password });
+  if (!parsed.success) {
     redirect('/signup?error=invalid');
   }
 
+  const {
+    firstName: validFirstName,
+    lastName: validLastName,
+    email: validEmail,
+    password: validPassword,
+  } = parsed.data;
+  const fullName = [validFirstName, validLastName].filter(Boolean).join(' ');
+
   // Rate limit signup attempts per IP + email (abuse protection).
-  const { ok } = rateLimit(await rateLimitKey('signup', email), { limit: 3, windowMs: 60 * 1000 });
+  const { ok } = rateLimit(await rateLimitKey('signup', validEmail), { limit: 3, windowMs: 60 * 1000 });
   if (!ok) {
     redirect('/signup?error=rate-limited');
   }
 
   // No 'role' is ever read from FormData: every new account is a student.
   const { data, error } = await auth.signUp.email({
-    email,
+    email: validEmail,
     name: fullName,
-    password,
+    password: validPassword,
   });
 
   if (error) {

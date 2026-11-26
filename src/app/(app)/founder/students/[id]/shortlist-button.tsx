@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition, type ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { requestShortlist } from '@/features/shortlist/actions';
-import { colors } from '@/lib/design-tokens';
+import { StatusMessage } from '@/components/ui/status-message';
 
 /** Mirrors the --ease-out token in app/globals.css. */
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -88,6 +88,7 @@ export function ShortlistButton({
       : pending
         ? 'Sending...'
         : 'Request shortlist';
+  const notice = feedback?.message ?? (pending ? 'Sending shortlist request...' : '');
 
   return (
     <div className="flex flex-col items-start gap-2 sm:items-end">
@@ -130,24 +131,21 @@ export function ShortlistButton({
           </Link>
         </p>
       )}
-      {/* One stable live region for pending, success and error text. */}
-      <p
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className={
-          feedback
-            ? `text-xs leading-5 ${feedback.ok ? 'text-primary' : ''}`
-            : 'sr-only'
-        }
-        style={
-          feedback && !feedback.ok
-            ? { color: colors.smallTextAccent }
-            : undefined
-        }
-      >
-        {feedback?.message ?? (pending ? 'Sending shortlist request...' : '')}
-      </p>
+      {notice && (
+        <StatusMessage
+          key={notice}
+          tone={
+            feedback?.ok === false
+              ? 'error'
+              : feedback?.ok
+                ? 'success'
+                : 'info'
+          }
+          className="text-xs"
+        >
+          {notice}
+        </StatusMessage>
+      )}
     </div>
   );
 }

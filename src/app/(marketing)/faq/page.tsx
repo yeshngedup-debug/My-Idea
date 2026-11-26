@@ -18,6 +18,7 @@ import {
   gutters,
 } from "@/components/marketing/editorial";
 import { InlineImageText } from "@/components/editorial";
+import { CTA_HREFS, resolveAction } from "@/components/marketing/nav";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { ChapterProgress, type ChapterLink } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion";
@@ -43,6 +44,11 @@ type Cluster = {
 /** Inline link inside body copy: a hairline underline that turns magenta. */
 const INLINE_LINK_CLASS =
   "font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 decoration-1 underline-offset-[5px] transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+
+const seeHowCta = resolveAction("/faq", "seeHow");
+const askCta = resolveAction("/faq", "askUs");
+const contactCta = resolveAction("/faq", "contactTeam");
+const processCta = resolveAction("/faq", "readProcess");
 
 const chapters: ChapterLink[] = [
   { id: "getting-started", label: "The basics" },
@@ -72,7 +78,7 @@ const clusters: Cluster[] = [
         a: (
           <>
             Yes. Create a student account at{" "}
-            <Link href="/signup" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.signup} className={INLINE_LINK_CLASS}>
               /signup
             </Link>{" "}
             with no payment step; building your profile, browsing projects, and
@@ -87,11 +93,11 @@ const clusters: Cluster[] = [
           <>
             Founder accounts are assigned by an admin, not through public
             signup; email us through the{" "}
-            <Link href="/contact" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
               contact page
             </Link>{" "}
             with your name and organisation, and we will arrange access; then{" "}
-            <Link href="/login" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.login} className={INLINE_LINK_CLASS}>
               log in
             </Link>
             .
@@ -122,7 +128,7 @@ const clusters: Cluster[] = [
             An admin sets the rank and verified badge by hand in the admin
             workspace. The platform does not calculate either value; questions
             can go to the{" "}
-            <Link href="/contact" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
               contact page
             </Link>
             .
@@ -134,11 +140,11 @@ const clusters: Cluster[] = [
         a: (
           <>
             Browse and apply through{" "}
-            <Link href="/student/projects" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.studentProjects} className={INLINE_LINK_CLASS}>
               your projects
             </Link>
             , track{" "}
-            <Link href="/student/applications" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.studentApplications} className={INLINE_LINK_CLASS}>
               your applications
             </Link>
             , and note that founders can update an applicant&apos;s status on
@@ -171,7 +177,7 @@ const clusters: Cluster[] = [
         a: (
           <>
             On{" "}
-            <Link href="/founder/shortlists" className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.founderShortlists} className={INLINE_LINK_CLASS}>
               the shortlist page
             </Link>
             , choose a package. New orders pause until the bank and mBoB details
@@ -202,12 +208,16 @@ const clusters: Cluster[] = [
         ),
       },
       {
-        q: "What happens to demo accounts before launch?",
+        q: "Can I use a demo account?",
         a: (
           <>
-            Demo accounts are for local and E2E testing only. Legacy
-            @btc-test.com users are deleted by a hardening migration; current
-            seeded users use @btc-e2e.test and must be removed before launch.
+            Student accounts are open through public signup. Founder access is
+            assigned by an admin through the{" "}
+            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
+              contact page
+            </Link>
+            . Demo and test accounts are not part of the public workspace;
+            contact the team if you need access.
           </>
         ),
       },
@@ -265,8 +275,8 @@ export default async function FaqPage() {
             </>
           }
           lead="Bhutanese students and startup founders, covered across accounts, projects, applications and paid shortlists."
-          primaryCta={{ href: "/how-it-works", label: "See how it works" }}
-          secondary={{ href: "/contact", label: "Ask us something" }}
+          primaryCta={seeHowCta}
+          secondary={askCta}
           image={{
             src: "/images/thimphu-hills.jpg",
             alt: "Thimphu's main road with the valley hills behind",
@@ -331,12 +341,19 @@ export default async function FaqPage() {
                         <span className="max-w-[46ch] text-[1.05rem] font-semibold leading-snug tracking-[-0.02em] text-[#0b2e2e] transition-colors group-hover:text-[#0b5c5c] sm:text-[1.15rem]">
                           {question.q}
                         </span>
-                        <Plus
+                        <span
                           aria-hidden="true"
-                          weight="light"
-                          strokeWidth={1.6}
-                          className="mt-0.5 h-5 w-5 shrink-0 text-[#c2004b] transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
-                        />
+                          className="flex items-center gap-2 pt-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#356464]"
+                        >
+                          <span className="group-open:hidden">Read</span>
+                          <span className="hidden group-open:inline">Close</span>
+                          <Plus
+                            aria-hidden="true"
+                            weight="light"
+                            strokeWidth={1.6}
+                            className="h-5 w-5 shrink-0 text-[#c2004b] transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
+                          />
+                        </span>
                       </summary>
                       <div className="pb-7 pl-0 pr-8 text-[15px] leading-7 text-[#356464] sm:pl-[3.5rem]">
                         <div className="max-w-[62ch]">{question.a}</div>
@@ -358,8 +375,8 @@ export default async function FaqPage() {
                 id="faq-themes-heading"
                 before="Answers built around"
                 imageSrc="/images/bhutanese-students.jpg"
-                imageAlt="Bhutanese students working together"
-                accessibleLabel="Answers built around real work: Bhutanese students working together"
+                imageAlt="Two young Bhutanese women tending a water supply"
+                accessibleLabel="Answers built around real work in Bhutan"
                 after="real work"
               />
             </MarketingReveal>
@@ -370,7 +387,7 @@ export default async function FaqPage() {
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
                     <Image
                       src="/images/thimphu-city.jpg"
-                      alt="Thimphu, the capital of Bhutan, seen across the valley"
+                      alt="Handicraft shops along Norzin Lam road in Thimphu"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
                       className="object-cover object-center"
@@ -404,12 +421,12 @@ export default async function FaqPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href="/contact">Contact the team</Action>
+              <Action href={contactCta.href}>{contactCta.label}</Action>
               <RuleLink
-                href="/how-it-works"
+                href={processCta.href}
                 className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Read the process
+                {processCta.label}
               </RuleLink>
             </MarketingReveal>
           </div>

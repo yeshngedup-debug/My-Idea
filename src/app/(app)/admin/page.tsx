@@ -19,6 +19,7 @@ import {
 } from "@/lib/neon-data";
 import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState, ErrorState } from "@/components/ui/empty-state";
 import {
   AdminChartDefs,
   RoleDonut,
@@ -121,22 +122,24 @@ export default async function AdminDashboard() {
     // Logged on the server; the admin gets a retryable message, not a stack.
     console.error("[admin] Failed to load platform overview", overview.error);
     return (
-      <section
-        aria-label="Platform overview unavailable"
-        className="rounded-2xl border border-destructive/25 bg-destructive/10 px-6 py-10"
-      >
+      <section aria-label="Platform overview unavailable">
         <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-primary text-balance">
           Platform overview
         </h1>
-        <p role="alert" className="mt-3 max-w-lg text-sm leading-6 text-ink-soft">
-          Could not load platform overview. Try again in a moment.
-        </p>
-        <a
-          href="/admin"
-          className="mt-4 inline-flex min-h-9 items-center rounded border border-border px-4 text-sm font-semibold text-primary hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-        >
-          Try again
-        </a>
+        <ErrorState
+          className="mt-6"
+          headingLevel="h2"
+          title="Could not load platform overview"
+          description="Try again in a moment."
+          action={
+            <Link
+              href="/admin"
+              className="inline-flex min-h-11 items-center rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-primary hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+            >
+              Try again
+            </Link>
+          }
+        />
       </section>
     );
   }
@@ -242,10 +245,7 @@ export default async function AdminDashboard() {
       </section>
 
       {nextOrder ? (
-        <section
-          role="status"
-          className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-xl border border-accent-deep/30 bg-accent-deep/10 px-5 py-4"
-        >
+        <section className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-xl border border-accent-deep/30 bg-accent-deep/10 px-5 py-4">
           <div className="min-w-0">
             <p className="text-xs font-semibold text-accent-deep">
               Next payment to review
@@ -267,10 +267,7 @@ export default async function AdminDashboard() {
           </Link>
         </section>
       ) : (
-        <p
-          role="status"
-          className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm text-body-secondary"
-        >
+        <p className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm text-body-secondary">
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" />
           All caught up — no payments are waiting for review.
         </p>
@@ -290,21 +287,18 @@ export default async function AdminDashboard() {
             </Link>
           </div>
           {orders.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-10">
-              <h3 className="text-base font-semibold text-primary">
-                No orders to review yet
-              </h3>
-              <p className="mt-2 max-w-md text-sm leading-6 text-body-secondary">
-                Founder shortlist payments will appear here once they submit a
-                screenshot for checking.
-              </p>
-              <Link
-                href="/admin/payments"
-                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
-              >
-                Open payments
-              </Link>
-            </div>
+            <EmptyState
+              title="No orders to review yet"
+              description="Founder shortlist payments will appear here once they submit a screenshot for checking."
+              action={
+                <Link
+                  href="/admin/payments"
+                  className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+                >
+                  Open payments
+                </Link>
+              }
+            />
           ) : (
             <div className="border-y border-border">
               {orders.slice(0, 5).map((order) => {

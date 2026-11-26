@@ -61,7 +61,7 @@ Verified passing:
   section heading in view.
 - No horizontal overflow at 1440×900 (`scrollWidth == clientWidth == 1425`) or
   375×812 (`scrollWidth == clientWidth == 360`). The only off-viewport elements
-  belonged to the dev Mesurer toolbar/Next portal and were excluded.
+  belonged to the dev Next portal and were excluded.
 - Tab order was skip link → back-home → five nav anchors → mailto. Every stop
   matched `:focus-visible` and showed the same visible ring: 2px cream offset plus
   4px `#b23c26`. The mailto target measured 32px high on desktop and 28px high on
@@ -147,8 +147,8 @@ None required for `/terms`.
   clicked, so no mail client was opened.
 - No physical screen reader was used; structure and focus statements are DOM,
   ARIA, and computed-style based.
-- Dev-only Next portal and Mesurer toolbar nodes were excluded from overflow and
-  tab-order checks because they are not part of the page under audit.
+- Dev-only Next portal nodes were excluded from overflow and tab-order checks
+  because they are not part of the page under audit.
 - `app/terms/page.tsx:40` uses an inline `<style>`; `proxy.ts:42` permits it, and
   no CSP console error appeared. This is noted for completeness, not as a defect.
 - Read-only constraint held: only `reports/page-audits/terms.md` was written;

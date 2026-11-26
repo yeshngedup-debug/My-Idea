@@ -4,7 +4,9 @@ import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { requestShortlist } from '@/features/shortlist/actions';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
+import { StatusMessage } from '@/components/ui/status-message';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 
 export interface StudentCard {
@@ -124,41 +126,43 @@ export function BrowseClient({
       />
 
       <h2 className="sr-only">Student profiles</h2>
-      <p className="text-xs tabular-nums text-[#356464]" role="status" aria-live="polite">
+      <p className="text-xs tabular-nums text-[#356464]">
         {filtered.length} {filtered.length === 1 ? 'student' : 'students'}
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
 
-      {/* The live region stays in the DOM so assistive tech announces the
-          result even when this message is inserted after a server action. */}
-      <p
-        role={status && !status.ok ? 'alert' : 'status'}
-        aria-live={status && !status.ok ? 'assertive' : 'polite'}
-        aria-atomic="true"
-        className={
-          status
-            ? `flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
-                status.ok
-                  ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-                  : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-              }`
-            : 'sr-only'
-        }
-      >
-        {status?.msg ?? ''}
-      </p>
+      {status && (
+        <StatusMessage
+          key={status.id}
+          tone={status.ok ? 'success' : 'error'}
+        >
+          {status.msg}
+        </StatusMessage>
+      )}
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            {students.length === 0 ? 'No students yet' : 'No students match'}
-          </h3>
-          <p className="text-sm text-[#356464]">
-            {students.length === 0
+        <EmptyState
+          title={students.length === 0 ? 'No students yet' : 'No students match'}
+          description={
+            students.length === 0
               ? 'Students are still signing up and completing their profiles. Check back soon.'
-              : 'Try a different skill, college, or availability filter.'}
-          </p>
-        </div>
+              : 'Try a different skill, college, or availability filter.'
+          }
+          action={
+            students.length === 0 ? undefined : (
+              <button
+                type="button"
+                onClick={() => {
+                  setQuery('');
+                  setAvailability('');
+                }}
+                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+              >
+                Clear filters
+              </button>
+            )
+          }
+        />
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2">
           {filtered.map((s) => {

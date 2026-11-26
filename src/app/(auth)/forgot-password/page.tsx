@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthShell } from "@/features/auth/components/auth-shell";
+import { AuthHelpBand } from "@/features/auth/components/auth-help-band";
 import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
 import {
   Band,
@@ -7,7 +8,7 @@ import {
   container,
   gutters,
 } from "@/components/marketing/editorial";
-import { APP_CONTACT } from "@/config/app";
+import { LOGIN_LINK } from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
@@ -24,13 +25,16 @@ const ERROR_MESSAGES: Record<string, string> = {
   session: "That reset link has expired. Request a new one.",
 };
 
+/** Unknown codes must still surface a message; a silent reset request reads as a dead button. */
+const GENERIC_ERROR = "We couldn't send a reset link. Try again.";
+
 export default async function ForgotPasswordPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; sent?: string }>;
 }) {
   const query = await searchParams;
-  const error = query.error ? ERROR_MESSAGES[query.error] : undefined;
+  const error = query.error ? ERROR_MESSAGES[query.error] ?? GENERIC_ERROR : undefined;
   const sent =
     query.sent === "1"
       ? "If an account exists for that email, a reset link is on its way. Check your inbox and spam folder."
@@ -62,7 +66,7 @@ export default async function ForgotPasswordPage({
               <p className="mt-4 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
                 If your password is still working, go straight back to sign in.
               </p>
-              <RuleLink href="/login" className="mt-5">
+              <RuleLink href={LOGIN_LINK.href} className="mt-5">
                 Back to sign in
               </RuleLink>
             </div>
@@ -82,39 +86,8 @@ export default async function ForgotPasswordPage({
         </div>
       </Band>
 
-      {/* The other way in, and the way out when the reset email does not land. */}
-      <Band tone="mist" className="border-b border-[#0b2e2e]/10">
-        <div
-          className={cn(
-            container,
-            gutters,
-            "grid grid-cols-1 gap-10 py-8 md:py-10 lg:grid-cols-12 lg:gap-12",
-          )}
-        >
-          <div className="lg:col-span-7">
-            <p className="index-label">Account help</p>
-            <p className="mt-4 max-w-[52ch] text-[15px] leading-7 text-[#356464]">
-              Questions about student signup, founder access, or a project?{" "}
-              <a
-                href={`mailto:${APP_CONTACT.email}`}
-                className="font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
-              >
-                {APP_CONTACT.email}
-              </a>
-              . We read every message and reply as soon as we can.
-            </p>
-          </div>
-          <div className="lg:col-span-4 lg:col-start-9">
-            <p className="index-label">Founder access</p>
-            <p className="mt-4 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
-              Founder accounts are not created through public signup.
-            </p>
-            <RuleLink href="/contact" className="mt-5">
-              Ask for founder access
-            </RuleLink>
-          </div>
-        </div>
-      </Band>
+      {/* Help and the other way in. */}
+      <AuthHelpBand />
     </AuthShell>
   );
 }

@@ -17,16 +17,15 @@ export type SegmentedControlProps = {
   /** Optional accessible name for the control group. */
   ariaLabel?: string;
   /**
-   * Opt in to selection following arrow/Home/End focus. Default false keeps the
-   * focus-only behaviour; Enter/Space always selects.
+   * Selection follows arrow/Home/End focus by default. Set false only when a
+   * caller needs focus-only movement; Enter/Space always selects.
    */
   selectOnArrow?: boolean;
 };
 
 /**
  * Tab-like selector built from real toggle buttons. Every button stays in the
- * natural Tab order; arrow/Home/End move focus, and also select only when
- * `selectOnArrow` is set.
+ * natural Tab order; arrow/Home/End move focus and selection together.
  */
 export function SegmentedControl({
   options,
@@ -34,7 +33,7 @@ export function SegmentedControl({
   onChange,
   className,
   ariaLabel,
-  selectOnArrow = false,
+  selectOnArrow = true,
 }: SegmentedControlProps) {
   const buttonsRef = React.useRef<(HTMLButtonElement | null)[]>([]);
 

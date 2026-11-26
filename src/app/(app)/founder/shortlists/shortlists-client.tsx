@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { StatusTimeline, ORDER_STEPS } from '@/components/ui/status-timeline';
+import { StatusMessage } from '@/components/ui/status-message';
 
 export interface OrderRow {
   id: string;
@@ -271,30 +272,21 @@ export function ShortlistsClient({
     });
   }
 
+  const paymentNotice = !PAYMENT_CONFIGURED
+    ? 'Payments are not configured yet. Shortlist orders are paused until the bank and mBoB details are published.'
+    : null;
+  const noticeText = [status?.msg, paymentNotice].filter(Boolean).join(' ');
+  const noticeTone = status?.ok === false || paymentNotice ? 'error' : 'success';
+
   return (
     <div className="space-y-5 pb-10">
-      {/* Always-mounted live region: server-action results are announced. */}
-      <p
-        role={status && !status.ok ? 'alert' : 'status'}
-        aria-live={status && !status.ok ? 'assertive' : 'polite'}
-        aria-atomic="true"
-        className={
-          status
-            ? `flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
-                status.ok
-                  ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-                  : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-              }`
-            : 'sr-only'
-        }
-      >
-        {status?.msg ?? ''}
-      </p>
-
-      {!PAYMENT_CONFIGURED && (
-        <p role="alert" className="rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-3 text-sm text-[#c2004b]">
-          Payments are not configured yet. Shortlist orders are paused until the bank and mBoB details are published.
-        </p>
+      {noticeText && (
+        <StatusMessage
+          key={`${noticeTone}:${noticeText}`}
+          tone={noticeTone}
+        >
+          {noticeText}
+        </StatusMessage>
       )}
 
       <p className="text-xs text-[#356464]">

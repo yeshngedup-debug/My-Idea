@@ -17,6 +17,7 @@ import {
 import { WorkspaceHero } from "@/components/layout/workspace-hero";
 import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export const metadata = { title: "Founder Dashboard" };
 
@@ -180,21 +181,18 @@ export default async function FounderDashboard() {
             )}
           </div>
           {projects.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-10">
-              <h3 className="text-base font-semibold text-primary">
-                Post a brief to meet students
-              </h3>
-              <p className="mt-2 max-w-md text-sm leading-6 text-body-secondary">
-                A clear scope and budget help students understand where they
-                can contribute. Applicants will show up on the project page.
-              </p>
-              <Link
-                href="/founder/projects/post"
-                className="mt-5 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
-              >
-                Create your first project
-              </Link>
-            </div>
+            <EmptyState
+              title="Post a brief to meet students"
+              description="A clear scope and budget help students understand where they can contribute. Applicants will show up on the project page."
+              action={
+                <Link
+                  href="/founder/projects/post"
+                  className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+                >
+                  Create your first project
+                </Link>
+              }
+            />
           ) : (
             <div className="divide-y divide-border border-y border-border">
               {projects.slice(0, 5).map((project) => {

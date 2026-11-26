@@ -15,6 +15,8 @@ import { CheckCircle, WarningCircle, X, FileImage, Clock } from '@phosphor-icons
 import { confirmOrder, rejectOrder } from '@/features/payments/actions';
 import { formatEnGbUtcDateTime, formatNuAmount } from '@/lib/format';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
+import { EmptyState } from '@/components/ui/empty-state';
+import { StatusMessage } from '@/components/ui/status-message';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/shadcn/alert';
 
@@ -145,36 +147,27 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
     return (
       <div className="space-y-4">
         <h2 className="sr-only">Payment orders</h2>
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">No orders yet</h3>
-          <p className="text-sm text-[#356464]">
-            When a founder buys a Premium Shortlist, the payment shows up here for verification.
-          </p>
-        </div>
+        <EmptyState
+          title="No orders yet"
+          description="When a founder buys a Premium Shortlist, the payment shows up here for verification."
+        />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {/* Action result: the only role=status on this page (E2E contract). */}
+      {/* One action-result region; failures interrupt, success waits politely. */}
       {status && (
         <PanelEntrance>
-        <p
-          role="status"
-          className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
-            status.ok
-              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-              : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-          }`}
-        >
-          {status.ok ? (
-            <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          ) : (
-            <X className="h-4 w-4 shrink-0" aria-hidden="true" />
-          )}
-          {status.msg}
-        </p>
+          <StatusMessage tone={status.ok ? 'success' : 'error'}>
+            {status.ok ? (
+              <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+            ) : (
+              <X className="h-4 w-4 shrink-0" aria-hidden="true" />
+            )}
+            {status.msg}
+          </StatusMessage>
         </PanelEntrance>
       )}
 
@@ -186,7 +179,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
           onChange={setFilter}
           ariaLabel="Filter payment orders by status"
         />
-        <p aria-live="polite" className="text-sm text-[#356464]">
+        <p className="text-sm text-[#356464]">
           {awaitingCount === 1
             ? '1 order awaiting review'
             : `${awaitingCount} orders awaiting review`}{' · '}
@@ -195,21 +188,19 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
       </div>
 
       {visibleItems.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            No orders in this view
-          </h3>
-          <p className="mb-5 text-sm text-[#356464]">
-            Choose All to see the full payment queue.
-          </p>
-          <button
-            type="button"
-            onClick={() => setFilter('all')}
-            className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
-          >
-            Show all orders
-          </button>
-        </div>
+        <EmptyState
+          title="No orders in this view"
+          description="Choose All to see the full payment queue."
+          action={
+            <button
+              type="button"
+              onClick={() => setFilter('all')}
+              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+            >
+              Show all orders
+            </button>
+          }
+        />
       ) : (
       <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
         {visibleItems.map((o) => {
@@ -274,11 +265,15 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                 </div>
               ) : actionable && o.screenshot_path && !proofReady ? (
                 <div className="mb-3 space-y-2">
-                  <p id={`proof-unavailable-${o.id}`} className="text-sm leading-6 text-[#c2004b]">
+                  <StatusMessage
+                    id={`proof-unavailable-${o.id}`}
+                    tone="error"
+                    className="text-sm leading-6"
+                  >
                     {o.screenshotError
                       ? 'Storage could not create a proof link. Refresh the proof link before confirming.'
                       : 'Proof is stored, but its link is no longer available. Refresh the proof link before confirming.'}
-                  </p>
+                  </StatusMessage>
                   <button
                     type="button"
                     onClick={() => router.refresh()}

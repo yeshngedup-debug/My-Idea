@@ -1,21 +1,43 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { usePathname } from "next/navigation";
+import { ArrowRight } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import {
+  CTA_HREFS,
+  CTA_LABELS,
+  FOUNDER_ACCESS,
   LOGIN_LINK,
   NAV_LINKS,
   SITE,
   UTILITY_LINKS,
+  resolvePrimaryCta,
+  type NavLink,
 } from "./nav";
 
 const linkClass =
   "inline-flex min-h-6 items-center text-sm text-[#356464] transition-colors duration-150 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
 
+const startLinkClass =
+  "group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+
+const arrowClass =
+  "transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0";
+
 const columnHeading =
   "text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]";
 
 export function SiteFooter({ compact = false }: { compact?: boolean }) {
+  const pathname = usePathname();
+  const primaryCta = resolvePrimaryCta(pathname);
+  const utilityLinks: NavLink[] = [...UTILITY_LINKS, LOGIN_LINK];
+  const startLinks: NavLink[] = [
+    { href: CTA_HREFS.signup, label: CTA_LABELS.signup },
+    FOUNDER_ACCESS,
+  ];
+
   return (
     <footer className="border-t border-[#0b2e2e]/12 bg-white px-5 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-[1440px]">
@@ -69,35 +91,42 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
               aria-label="Utility navigation"
               className="mt-4 flex flex-col items-start gap-2.5"
             >
-              {UTILITY_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} className={linkClass}>
-                  {link.label}
-                </Link>
-              ))}
-              <Link href={LOGIN_LINK.href} className={linkClass}>
-                {LOGIN_LINK.label}
-              </Link>
+              {utilityLinks
+                .filter((link) => link.href !== pathname)
+                .map((link) => (
+                  <Link key={link.href} href={link.href} className={linkClass}>
+                    {link.label}
+                  </Link>
+                ))}
             </nav>
           </div>
 
           <div>
             <p className={columnHeading}>Start</p>
             <div className="mt-4 flex flex-col items-start gap-2.5">
-              <Link
-                href="/signup"
-                className="group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                Create student account
-                <ArrowUpRight
-                  size={14}
-                  weight="bold"
-                  aria-hidden="true"
-                  className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-                />
-              </Link>
-              <Link href="/contact" className={linkClass}>
-                Ask for founder access
-              </Link>
+              {startLinks
+                .filter((link) => link.href !== pathname)
+                .map((link) => {
+                  const primary = link.href === primaryCta.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        primary ? startLinkClass : linkClass,
+                        "gap-1.5",
+                      )}
+                    >
+                      <span>{link.label}</span>
+                      <ArrowRight
+                        size={14}
+                        weight="bold"
+                        aria-hidden="true"
+                        className={arrowClass}
+                      />
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         </div>

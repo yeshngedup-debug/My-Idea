@@ -14,6 +14,7 @@ import { sealFounderOrders, type LiveOrderRow } from "@/lib/neon-realtime";
 import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section";
 import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { LiveOrderStatus } from "@/features/payments/components/live-order-status";
+import { ErrorState } from "@/components/ui/empty-state";
 import {
   LiveShortlistRefresh,
   ShortlistsClient,
@@ -21,7 +22,7 @@ import {
   type ShortlistStudent,
 } from "./shortlists-client";
 
-export const metadata = { title: "Premium Shortlist | Bhutan Tech Connect" };
+export const metadata = { title: "Premium Shortlist" };
 
 /** Server-rendered time only: this text is not hydrated on the client. */
 function formatLastUpdated(): string {
@@ -151,19 +152,20 @@ export default async function FounderShortlistsPage() {
           split="lg:grid-cols-[0.2fr_0.8fr]"
         >
           {liveUnavailable && (
-            <div className="mb-6 flex flex-wrap items-center gap-x-3 text-xs text-body-secondary">
-              {/* Kept as a status region so the degraded state is still announced. */}
-              <span role="status">
-                Last updated {formatLastUpdated()} · live status unavailable
-              </span>
-              {/* Full reload, matching the other retry controls in the workspace. */}
-              <a
-                href="/founder/shortlists"
-                className="inline-flex min-h-11 items-center rounded font-semibold text-accent-deep underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-              >
-                Refresh
-              </a>
-            </div>
+            <ErrorState
+              className="mb-6"
+              title="Live status unavailable"
+              description={`Last updated ${formatLastUpdated()} · server-loaded order status is still shown.`}
+              action={
+                // Full reload, matching the other retry controls in the workspace.
+                <a
+                  href="/founder/shortlists"
+                  className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+                >
+                  Refresh
+                </a>
+              }
+            />
           )}
 
           {live ? (

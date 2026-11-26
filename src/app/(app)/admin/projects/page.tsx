@@ -15,7 +15,7 @@ import { PinnedHeadingSection } from "@/components/layout/pinned-heading-section
 import { WorkspacePageHeading } from "@/components/layout/workspace-page-heading";
 import { ProjectsClient, type ProjectRow } from "./projects-client";
 
-export const metadata = { title: "Projects | Admin | Bhutan Tech Connect" };
+export const metadata = { title: "Projects | Admin" };
 
 // Reads the session via cookies(), so it can only be rendered on demand.
 export const dynamic = "force-dynamic";

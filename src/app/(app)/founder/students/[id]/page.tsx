@@ -17,7 +17,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { ShortlistButton } from './shortlist-button';
 
-export const metadata = { title: 'Student Profile | Bhutan Tech Connect' };
+export const metadata = { title: 'Student Profile' };
 
 const AVAILABILITY_LABEL: Record<string, string> = {
   weekdays: 'Weekdays',

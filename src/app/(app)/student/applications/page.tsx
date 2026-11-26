@@ -12,7 +12,7 @@ import {
   type ApplicationRow,
 } from "./applications-client";
 
-export const metadata = { title: "My Applications | Bhutan Tech Connect" };
+export const metadata = { title: "My Applications" };
 
 const FILTER_VALUES = new Set([
   "all",

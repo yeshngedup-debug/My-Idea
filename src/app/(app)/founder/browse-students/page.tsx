@@ -17,7 +17,7 @@ import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { BrowseClient, type StudentCard } from './browse-client';
 
-export const metadata = { title: 'Browse Students | Bhutan Tech Connect' };
+export const metadata = { title: 'Browse Students' };
 
 export default async function BrowseStudentsPage() {
   const user = await getUser();

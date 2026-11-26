@@ -40,7 +40,7 @@ export default function GlobalError({
             Something went wrong
           </h1>
           <p style={{ lineHeight: 1.6 }}>
-            The page could not load. Try again, or return to the home page.
+            The page could not load. Try again to reload it.
           </p>
           <button
             type="button"

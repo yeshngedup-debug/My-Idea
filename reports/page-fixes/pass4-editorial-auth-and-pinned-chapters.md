@@ -29,7 +29,7 @@ Complete visual and functional overhaul of all marketing pages and authenticatio
 - `PinnedScrollChapter` - New component for two-column layouts with pinned titles
 - `ChapterProgress` - Sticky chapter navigation bar (desktop), measures its own height for anchor offsets
 - `SiteHeader` - Now used by both marketing and auth pages
-- `SiteFooter` - Holds photo attribution for non-auth pages
+- `SiteFooter` - Holds no photo attribution; see Pass 8 for the removal
 - `Band` - Now carries `.scroll-mt-chapter` utility class
 
 ### CSS/Globals
@@ -39,7 +39,7 @@ Complete visual and functional overhaul of all marketing pages and authenticatio
 ### Photo Credits Removal
 - Per-image photo credit strips removed from all pages
 - `src/components/ui/photo-credit.tsx` deleted
-- Attribution now lives in `src/lib/photo-credits.ts` and rendered in site footer
+- Attribution now lives in `src/lib/photo-credits.ts` as an unrendered source record
 
 ---
 
@@ -326,3 +326,128 @@ Screenshots: `reports/artifacts/image-pass/{1440,390}-{public-paths,public-conte
 - `npm run lint` ✅
 - `npm test` ✅ 279/279
 - `npm run build` ✅ 22 static/route entries generated
+
+---
+
+# Pass 10: Final Refinement, Dev Inspector Removal, and Verification
+
+## Scope
+This pass completes the work left after the image commit `278de8d`. It is a
+consolidation and verification pass: shared behaviour is centralised, repeated
+copy is removed, accessibility contracts are made explicit, and the unused dev
+inspector is deleted from the project.
+
+## Navigation and CTAs
+- `resolvePrimaryCta` in `src/components/marketing/nav.ts` is the single
+  audience/intent resolver used by the header, footer, heroes and closing CTAs.
+- `isInternalHref` distinguishes `#...` and `/...` anchors from `mailto:` and
+  external URLs. Internal anchors use `ArrowRight`; only external links use
+  `ArrowUpRight`.
+- Locked labels remain exact: “Create student account”, “Log in”, “See how it
+  works”, “Ask for founder access”, “Make your next move”.
+- `FOUNDER_ACCESS` is shared rather than duplicated. Header and footer use
+  `isActivePath` for the active marker.
+- The mobile header traps focus, marks the page inert and locks body scroll
+  while open; Escape closes it and returns focus to the trigger.
+- Root layout uses `%s | Bhutan Tech Connect`; no page title repeats the brand.
+
+## Auth and Shared UI
+- Repeated auth help is rendered once by `AuthHelpBand`.
+- `FieldError` and `StatusMessage` are shared across login, signup,
+  forgot-password and reset-password. Each form has one focusable status
+  region; errors use `role="alert"` / `aria-live="assertive"`, other statuses
+  use `role="status"` / `aria-live="polite"`.
+- Dashboards use one shared `EmptyState`. Error states use `retry()` and the
+  global error page no longer promises a home link that may not exist.
+- `StatusTimeline` copy no longer invents status beyond the stored application
+  state. Founder navigation label is “My projects”.
+
+## Password and Email Boundary
+- Shared auth constants remain authoritative. Signup password length is
+  6–128 on client and server; `isValidPassword` still backs reset-password
+  validation.
+- `signup()` now validates the whole `signupSchema` with `safeParse` before
+  calling Neon Auth.
+- Client signup also checks `MAX_EMAIL_LENGTH` (254 characters).
+- Two regression tests cover malformed and oversized emails; both assert that
+  Neon Auth is never called.
+
+## Keyboard and Selection
+- `SegmentedControl` implements arrow/Home/End selection that follows focus,
+  with `aria-pressed` buttons in a labelled `role="group"`.
+- The post-project work-mode picker is a local `role="radiogroup"` with real
+  `role="radio"` buttons; `SegmentedControl` remains authoritative elsewhere.
+
+## Preserved Design Contracts
+- Palette remains `#66bfbf`, `#eaf6f6`, `#ffffff`, `#ff0063`, dark teal
+  `#0b5c5c` / `#0b2e2e` and deep accent `#c2004b`; Geist remains the font.
+- `.scroll-mt-chapter` and `--chapter-bar-height` remain in place. Measured
+  sticky heights are 79px desktop and 131px mobile; the header is 64px.
+- Public-page steps stay unnumbered so chapter numbering remains `01 → 06`.
+- `src/lib/photo-credits.ts` and `PHOTO_CREDIT_LIST` remain unrendered. No
+  credit text or attribution links appear on any page.
+- No invented metrics, names or quotes were introduced. World Bank indicator
+  `SL.UEM.1524.ZS` remains live.
+
+## Dev Inspector Removal
+The development-only visual inspector is fully removed from active code and
+project configuration:
+
+| Surface | Removal |
+|---|---|
+| Runtime | Inspector import/render deleted from `src/app/layout.tsx` |
+| Component | Dedicated dev panel component deleted |
+| Feature flag | Inspector flag removed from env schema and feature flags |
+| Config | Inspector flag removed from `.env.example`, `Dockerfile`, `docker-compose.yml`, `playwright.config.ts` |
+| Docs | Inspector documentation removed from `README.md` and `reports/page-audits/terms.md` |
+| Dependencies | Inspector package and its two lockfile entries removed with `npm uninstall` |
+
+A tracked-file grep finds no remaining reference to the removed package or its
+flag. Stale strings in gitignored `.reticle`, `test-results` and `.next`
+artifacts are not part of the commit. The unrelated untracked
+`llm-explainer.html` stays excluded.
+
+## Screenshots
+Final refinement captures are in `reports/artifacts/pass4-refinement/`:
+
+- `desktop-public-hero.png`
+- `desktop-public-chapter.png`
+- `desktop-faq-open.png`
+- `desktop-founders-cta.png`
+- `mobile-public-menu.png`
+- `mobile-public-chapter.png`
+- `mobile-faq-open.png`
+
+`impeccable.json` and `impeccable-stderr.txt` are also stored there. The stderr
+file contains only npm's one-time `impeccable@4.11.1` install notice.
+
+## Final Verification and Gates
+The corrected browser pass completed 23/23 checks with `pageErrors: []` and
+`checkErrors: []`. The source of truth is the local, gitignored artifact
+`reports/artifacts/pass4-refinement/final-browser-checks.json`.
+
+- Desktop and mobile `/public`: 9 images each, with no failed decode, no
+  missing `alt`, and no credit text. All five in-page chapter anchors landed at
+  or below the sticky header/ChapterProgress obstacle (0–16px clearance). The
+  FAQ has 11 disclosures and the first opens from closed on both viewports.
+- Mobile menu: opens with `aria-expanded="true"`, body scroll locked and the
+  page marked inert; Escape restores `aria-expanded="false"` and returns focus
+  to the trigger.
+- Additional image audits on `/about`, `/contact`, `/for-students`,
+  `/for-founders` and `/how-it-works` found no failed decode, no missing `alt`
+  and no credit text. Decorative images with an intentionally empty `alt` are
+  the only empty-alt entries.
+- Logins landed correctly for student, admin and founder. Student projects,
+  student applications, admin projects and admin payments segmented controls
+  matched their expected labels, and ArrowRight/Home/End moved focus and
+  selection together in every case.
+- Empty states rendered in student projects (no-match search), admin projects
+  (Completed filter) and admin payments (Rejected filter), each with a working
+  “Show all” action. The founder post-project work-mode control passed as a
+  real `radiogroup` with ArrowRight/Home/End selection following focus.
+- `npx tsc --noEmit` ✅
+- `npm run lint` ✅
+- `npm test` ✅ 23 files / 281 tests
+- `npm run build` ✅ compiled successfully and generated 22 static/route entries
+- `git diff --check` ✅ clean apart from normal LF/CRLF warnings
+- Tracked-file grep for the removed inspector name and flag: no matches.

@@ -12,7 +12,9 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { applyToProject } from '@/features/projects/actions';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
+import { StatusMessage } from '@/components/ui/status-message';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 
 export interface OpenProject {
@@ -282,14 +284,12 @@ export function ProjectCard({
 
       {status && (
         <ResultEntrance>
-        <p
-          role={status.ok ? 'status' : 'alert'}
-          className={`break-words px-4 pb-3 text-xs leading-5 sm:px-5 ${
-            status.ok ? 'text-primary' : 'text-destructive'
-          }`}
-        >
-          {status.ok ? 'Applied successfully!' : status.message}
-        </p>
+          <StatusMessage
+            tone={status.ok ? 'success' : 'error'}
+            className="mx-4 mb-3 break-words text-xs sm:mx-5"
+          >
+            {status.ok ? 'Applied successfully!' : status.message}
+          </StatusMessage>
         </ResultEntrance>
       )}
     </article>
@@ -453,11 +453,7 @@ export function ProjectsClient({
           ariaLabel="Filter by work mode"
         />
         <div className="flex flex-wrap items-center gap-3">
-          <p
-            role="status"
-            aria-live="polite"
-            className="text-xs text-muted-foreground"
-          >
+          <p className="text-xs text-muted-foreground">
             Showing {filteredProjects.length} of {projects.length}{' '}
             {projects.length === 1 ? 'project brief' : 'project briefs'}
           </p>
@@ -474,30 +470,29 @@ export function ProjectsClient({
       </div>
 
       {filteredProjects.length === 0 ? (
-        <div
-          role="status"
-          className="rounded-xl border border-dashed border-border bg-card px-6 py-8 text-sm text-muted-foreground"
-        >
-          <p className="font-semibold text-primary">
-            {projects.length === 0
+        <EmptyState
+          title={
+            projects.length === 0
               ? 'No current project briefs yet.'
-              : 'No briefs match these filters.'}
-          </p>
-          <p className="mt-2">
-            {projects.length === 0
+              : 'No briefs match these filters.'
+          }
+          description={
+            projects.length === 0
               ? 'Check back soon for new briefs.'
-              : 'Try a different search or clear the filters to see every brief.'}
-          </p>
-          {hasFilters && projects.length > 0 && (
-            <button
-              type="button"
-              onClick={clearFilters}
-              className="pressable mt-4 inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground transition-colors motion-reduce:transition-none! hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            >
-              Show all briefs
-            </button>
-          )}
-        </div>
+              : 'Try a different search or clear the filters to see every brief.'
+          }
+          action={
+            hasFilters && projects.length > 0 ? (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground transition-colors motion-reduce:transition-none! hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                Show all briefs
+              </button>
+            ) : undefined
+          }
+        />
       ) : (
         filteredProjects.map((project) => (
           <ProjectCard

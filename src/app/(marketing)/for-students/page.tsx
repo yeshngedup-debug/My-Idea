@@ -10,9 +10,9 @@ import {
   SectionHead,
   container,
   gutters,
-  quietClass,
 } from "@/components/marketing/editorial";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
+import { resolveAction } from "@/components/marketing/nav";
 import { InlineImageText } from "@/components/editorial";
 import { ScrubbedTextReveal } from "@/components/motion";
 import { ChapterProgress, type ChapterLink } from "@/components/motion";
@@ -25,6 +25,12 @@ export const metadata = pageMetadata({
     "Build a profile, browse paid projects, apply to projects that fit, and track every application in one place.",
   path: "/for-students",
 });
+
+const studentCta = resolveAction("/for-students", "student");
+const seeHowCta = resolveAction("/for-students", "seeHow");
+const aboutCta = resolveAction("/for-students", "about");
+const faqPayCta = resolveAction("/for-students", "faqPay");
+const founderPathCta = resolveAction("/for-students", "founderPath");
 
 const chapters: ChapterLink[] = [
   { id: "who", label: "Who it's for" },
@@ -90,11 +96,11 @@ export default function ForStudentsPage() {
             </>
           }
           lead="Build a profile, find a focused project, and get paid for the work you do."
-          primaryCta={{ href: "/signup", label: "Create student account" }}
-          secondary={{ href: "/how-it-works", label: "See how it works" }}
+          primaryCta={studentCta}
+          secondary={seeHowCta}
           image={{
             src: "/images/bhutanese-students.jpg",
-            alt: "Young Bhutanese people working in groups at a training day in Thimphu",
+            alt: "Two young Bhutanese women tending a water supply",
           }}
           imagePosition="object-center"
         />
@@ -131,12 +137,11 @@ export default function ForStudentsPage() {
 
             <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
               {fits.map((fit, index) => (
-                <MarketingReveal
+                <li
                   key={fit.title}
-                  delay={index * 0.06}
                   className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
-                  <li>
+                  <MarketingReveal delay={index * 0.06}>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                         {String(index + 1).padStart(2, "0")}
@@ -152,8 +157,8 @@ export default function ForStudentsPage() {
                     <p className="mt-2 max-w-[30ch] text-sm leading-6 text-[#356464]">
                       {fit.body}
                     </p>
-                  </li>
-                </MarketingReveal>
+                  </MarketingReveal>
+                </li>
               ))}
             </ul>
           </div>
@@ -178,7 +183,7 @@ export default function ForStudentsPage() {
                   you can, and leave the rest until you are ready.
                 </p>
                 <div className="mt-9">
-                  <Action href="/signup">Start your profile</Action>
+                  <Action href={studentCta.href}>{studentCta.label}</Action>
                 </div>
               </MarketingReveal>
 
@@ -230,6 +235,7 @@ export default function ForStudentsPage() {
         <Band id="rooted" labelledBy="rooted-heading">
           <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
+              <p className="index-label">04 · Close to home</p>
               <InlineImageText
                 as="h2"
                 id="rooted-heading"
@@ -238,6 +244,7 @@ export default function ForStudentsPage() {
                 imageAlt="Public housing in Thimphu"
                 after="home"
                 accessibleLabel="Start close to home"
+                className="mt-6"
               />
             </MarketingReveal>
 
@@ -250,7 +257,7 @@ export default function ForStudentsPage() {
                 </p>
               </MarketingReveal>
               <MarketingReveal delay={0.08} className="lg:col-span-7">
-                <RuleLink href="/about">More about the platform</RuleLink>
+                <RuleLink href={aboutCta.href}>{aboutCta.label}</RuleLink>
               </MarketingReveal>
             </div>
 
@@ -258,7 +265,7 @@ export default function ForStudentsPage() {
               <GsapScaleFadeImage>
                 <Figure
                   src="/images/thimphu-city.jpg"
-                  alt="View across central Thimphu, the capital of Bhutan"
+                  alt="Handicraft shops along Norzin Lam road in Thimphu"
                   ratio="aspect-[16/10] sm:aspect-[21/9]"
                   sizes="(max-width: 1024px) 100vw, 90vw"
                 />
@@ -314,7 +321,7 @@ export default function ForStudentsPage() {
                   progresses.
                 </p>
                 <div className="mt-9 border-t border-[#0b2e2e]/12 pt-6">
-                  <RuleLink href="/faq">Read the FAQ about pay</RuleLink>
+                  <RuleLink href={faqPayCta.href}>{faqPayCta.label}</RuleLink>
                 </div>
               </MarketingReveal>
               <MarketingReveal delay={0.08} className="lg:col-span-7">
@@ -351,12 +358,12 @@ export default function ForStudentsPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href="/signup">Create student account</Action>
+              <Action href={studentCta.href}>{studentCta.label}</Action>
               <RuleLink
-                href="/for-founders"
-                className={cn(quietClass, "decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]")}
+                href={founderPathCta.href}
+                className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                See the founder path
+                {founderPathCta.label}
               </RuleLink>
             </MarketingReveal>
           </div>

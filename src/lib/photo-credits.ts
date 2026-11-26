@@ -1,8 +1,7 @@
 /**
  * Source record for the photographs currently used on the site.
  *
- * The two older images are Wikimedia Commons files under CC BY-SA 4.0. The
- * four Thimphu street/building images are CC0 public-domain dedications.
+ * Every active image is a Wikimedia Commons file dedicated under CC0.
  * Credit strips were removed from the pages and the footer, so this module is
  * intentionally not rendered anywhere. Keep it as the project's record of
  * author, source file and licence for each active image.
@@ -21,19 +20,20 @@ export type PhotoAttribution = {
 
 export const PHOTO_ATTRIBUTIONS = {
   students: {
-    subject: "Bhutanese youth at work in Thimphu",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg",
-    author: "Doctor 17",
-    licence: "CC BY-SA 4.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+    subject: "Two young Bhutanese women tending a water supply",
+    fileUrl:
+      "https://commons.wikimedia.org/wiki/File:Two_Bhutanese_girls_take_care_of_the_water_supply.jpg",
+    author: "Mussi Katz",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
   thimphu: {
-    subject: "View across central Thimphu",
+    subject: "Handicraft shops on Norzin Lam road in Thimphu",
     fileUrl:
-      "https://commons.wikimedia.org/wiki/File:View_of_central_Thimphu_2019-07-21.jpg",
-    author: "Christopher J. Fynn",
-    licence: "CC BY-SA 4.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+      "https://commons.wikimedia.org/wiki/File:%27Handicrafts_Bazaar%27_in_Thimphu..JPG",
+    author: "Rudolph.A.furtado",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
   street: {
     subject: "A main road in Thimphu",

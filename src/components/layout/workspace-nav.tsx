@@ -52,7 +52,7 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
 
   return (
     <nav
-      aria-label="Workspace navigation"
+      aria-label="Mobile workspace navigation"
       className="-mx-4 flex gap-2 overflow-x-auto border-b border-[#b9dede] px-4 pb-3 pt-1 lg:hidden"
     >
       {links.map((item) => {

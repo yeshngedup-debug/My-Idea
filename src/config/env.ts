@@ -24,7 +24,6 @@ export const envSchema = z.object({
   DATABASE_URL: requiredText,
   NEXT_PUBLIC_APP_URL: z.url().optional(),
   CONTACT_EMAIL: optionalEmail,
-  NEXT_PUBLIC_MESURER_ENABLED: z.enum(['0', '1']).optional(),
   NEXT_PUBLIC_NEON_REALTIME_URL: z.url().optional(),
   NEON_REALTIME_SECRET: requiredText.optional(),
   NEON_BRANCH_ID: requiredText.optional(),

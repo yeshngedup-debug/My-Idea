@@ -17,10 +17,10 @@ const mountFade = `
 `;
 
 export default function ErrorPage({
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   const pathname = usePathname();
   const area = pathname?.match(/^\/(founder|student|admin)(?:\/|$)/)?.[1];
@@ -44,7 +44,7 @@ export default function ErrorPage({
             <div className="mt-10 flex flex-wrap gap-3">
               <button
                 type="button"
-                onClick={reset}
+                onClick={retry}
                 className="pressable inline-flex min-h-12 items-center rounded-lg bg-[#ff0063] px-7 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
                 Try again

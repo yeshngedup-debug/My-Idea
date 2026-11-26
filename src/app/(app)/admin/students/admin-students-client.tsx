@@ -25,6 +25,8 @@ import {
   setStudentVerified,
   generateShortlist,
 } from '@/features/admin/actions';
+import { EmptyState, ErrorState } from '@/components/ui/empty-state';
+import { StatusMessage } from '@/components/ui/status-message';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -322,7 +324,7 @@ export function AdminStudentsClient({
       <h2 className="sr-only">Student profiles</h2>
 
       {!loadError && filtered.length > 0 && (
-        <p className="text-xs text-[#356464]" role="status" aria-live="polite">
+        <p className="text-xs text-[#356464]">
           {`Showing ${(currentPage - 1) * STUDENTS_PER_PAGE + 1}–${Math.min(
             currentPage * STUDENTS_PER_PAGE,
             filtered.length
@@ -330,19 +332,16 @@ export function AdminStudentsClient({
         </p>
       )}
 
-      {/* Status banner */}
+      {/* One action-result region; failures interrupt, success waits politely. */}
       {status && (
-        <p
-          role={status.ok ? 'status' : 'alert'}
-          className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm border ${
-            status.ok
-              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-              : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-          }`}
-        >
-          {status.ok ? <CheckCircle className="w-4 h-4 shrink-0" /> : <Warning className="w-4 h-4 shrink-0" />}
+        <StatusMessage tone={status.ok ? 'success' : 'error'}>
+          {status.ok ? (
+            <CheckCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <Warning className="w-4 h-4 shrink-0" aria-hidden="true" />
+          )}
           {status.msg}
-        </p>
+        </StatusMessage>
       )}
 
       {/* Select all */}
@@ -364,43 +363,43 @@ export function AdminStudentsClient({
       {/* Student cards */}
       {filtered.length === 0 ? (
         loadError ? (
-          <div role="alert" className="rounded-2xl border border-[#c2004b]/25 bg-[#ff0063]/8 p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#c2004b]">
-              Students unavailable
-            </h3>
-            <p className="mb-5 text-sm text-[#356464]">{loadError}</p>
-            <button
-              type="button"
-              onClick={() => router.refresh()}
-              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
-            >
-              Try again
-            </button>
-          </div>
-        ) : (
-          <div className="bg-[#ffffff] border border-[#b9dede] rounded-2xl p-10 text-center">
-            <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-              {students.length === 0 ? 'No students yet' : 'No students match'}
-            </h3>
-            <p className="text-[#356464] text-sm">
-              {students.length === 0
-                ? 'Students appear here once they sign up and save a profile.'
-                : 'Adjust the search or filters.'}
-            </p>
-            {(query || verifiedFilter) && (
+          <ErrorState
+            title="Could not load students"
+            description={loadError}
+            action={
               <button
                 type="button"
-                onClick={() => {
-                  setQuery('');
-                  setVerifiedFilter('');
-                  setPage(1);
-                }}
-                className="pressable mt-5 inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                onClick={() => router.refresh()}
+                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
-                Clear filters
+                Try again
               </button>
-            )}
-          </div>
+            }
+          />
+        ) : (
+          <EmptyState
+            title={students.length === 0 ? 'No students yet' : 'No students match'}
+            description={
+              students.length === 0
+                ? 'Students appear here once they sign up and save a profile.'
+                : 'Adjust the search or filters.'
+            }
+            action={
+              query || verifiedFilter ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setQuery('');
+                    setVerifiedFilter('');
+                    setPage(1);
+                  }}
+                  className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                >
+                  Clear filters
+                </button>
+              ) : undefined
+            }
+          />
         )
       ) : (
         <ul id="student-profiles-list" className="space-y-3">
@@ -517,7 +516,7 @@ export function AdminStudentsClient({
                     className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
                       isVerified
                         ? 'border border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c] hover:bg-[#0b5c5c]/12'
-                        : 'bg-[#eaf6f6] border border-[#b9dede] text-[#356464] hover:bg-[#0b5c5c]/10'
+                        : 'border border-[#ff0063] bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
                     }`}
                   >
                     {isVerified ? (

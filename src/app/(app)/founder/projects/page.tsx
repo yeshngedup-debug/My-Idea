@@ -11,7 +11,7 @@ import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
 import { ProjectsClient, type FounderProjectRow } from './projects-client';
 
-export const metadata = { title: 'My Projects | Bhutan Tech Connect' };
+export const metadata = { title: 'My Projects' };
 
 const PRIMARY_LINK =
   'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';

@@ -6,12 +6,13 @@
  * The filter narrows only rows already loaded for the signed-in founder; it
  * never fetches or invents data. `initialFilter` comes from an allow-listed
  * `?status=` value on the server page. SegmentedControl keeps every segment in
- * the Tab order; `selectOnArrow` makes arrow/Home/End move focus and selection
- * together through the shared handler.
+ * the Tab order; arrow/Home/End move focus and selection together through the
+ * shared handler.
  */
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 
 export interface FounderProjectRow {
@@ -82,34 +83,31 @@ export function ProjectsClient({
 
   if (!signedIn) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-          Sign in to see your projects
-        </h2>
-        <p className="mb-6 text-sm text-[#356464]">
-          Your posted projects and their applicants live in your founder
-          workspace.
-        </p>
-        <Link href="/login" className={PRIMARY_LINK}>
-          Log in
-        </Link>
-      </div>
+      <EmptyState
+        headingLevel="h2"
+        title="Sign in to see your projects"
+        description="Your posted projects and their applicants live in your founder workspace."
+        action={
+          <Link href="/login" className={PRIMARY_LINK}>
+            Log in
+          </Link>
+        }
+      />
     );
   }
 
   if (projects.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-        <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-          No projects yet
-        </h2>
-        <p className="mb-6 text-sm text-[#356464]">
-          Post your first short paid project and students can apply right away.
-        </p>
-        <Link href="/founder/projects/post" className={`${PRIMARY_LINK} w-full`}>
-          Post your first project
-        </Link>
-      </div>
+      <EmptyState
+        headingLevel="h2"
+        title="No projects yet"
+        description="Post your first short paid project and students can apply right away."
+        action={
+          <Link href="/founder/projects/post" className={`${PRIMARY_LINK} w-full`}>
+            Post your first project
+          </Link>
+        }
+      />
     );
   }
 
@@ -128,33 +126,27 @@ export function ProjectsClient({
         onChange={setFilter}
         ariaLabel="Filter projects by status"
         className="w-full justify-start sm:w-auto"
-        selectOnArrow
       />
 
-      <p
-        role="status"
-        aria-live="polite"
-        className="text-xs tabular-nums text-[#356464]"
-      >
+      <p className="text-xs tabular-nums text-[#356464]">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            No {statusLabel(filter).toLowerCase()} projects
-          </h3>
-          <p className="mb-6 text-sm text-[#356464]">
-            None of your projects are at this stage right now.
-          </p>
-          <button
-            type="button"
-            onClick={() => setFilter('all')}
-            className="pressable inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
-          >
-            Show all projects
-          </button>
-        </div>
+        <EmptyState
+          headingLevel="h3"
+          title={`No ${statusLabel(filter).toLowerCase()} projects`}
+          description="None of your projects are at this stage right now."
+          action={
+            <button
+              type="button"
+              onClick={() => setFilter('all')}
+              className="pressable inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+            >
+              Show all projects
+            </button>
+          }
+        />
       ) : (
         <>
           <ul className="space-y-2.5 sm:hidden">

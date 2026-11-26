@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -10,17 +10,16 @@ import {
   motion,
   useReducedMotion,
 } from "motion/react";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowRight } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import pressStyles from "@/styles/pressable.module.css";
 import {
-  CTA_HREFS,
-  CTA_LABELS,
   LOGIN_LINK,
   NAV_LINKS,
   SITE,
   isActivePath,
+  resolvePrimaryCta,
 } from "./nav";
 
 const focusRing =
@@ -75,21 +74,16 @@ export function MarketingReveal({
  */
 export function SiteHeader() {
   const pathname = usePathname();
-  // Founder pages must not offer a student signup as the primary action.
-  // `/contact` already is the founder destination, so its header CTA is hidden
-  // instead of self-linking back to the page the reader is on.
-  const onContact = pathname === "/contact";
-  const founderContext =
-    onContact ||
-    pathname?.startsWith("/for-founders") ||
-    pathname?.startsWith("/founder");
-  const primaryHref = founderContext ? CTA_HREFS.contact : CTA_HREFS.signup;
-  const primaryLabel = founderContext
-    ? "Ask for founder access"
-    : CTA_LABELS.signup;
+  const primaryCta = resolvePrimaryCta(pathname);
+  const hidePrimary = primaryCta.href === pathname;
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
+  const headerRef = useRef<HTMLElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   // Only the threshold crossing changes state, so scrolling does not re-render.
   useEffect(() => {
@@ -98,6 +92,79 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // The overlay owns focus while it is open: move focus in, trap Tab inside,
+  // close on Escape, lock scrolling, and make the rest of the page inert.
+  useEffect(() => {
+    if (!open) return;
+
+    const menuButton = menuButtonRef.current;
+    returnFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : menuButton;
+    const returnFocus = returnFocusRef.current;
+
+    const header = headerRef.current;
+    const previousInert = new Map<HTMLElement, boolean>();
+    const setInert = (element: HTMLElement | null, value: boolean) => {
+      if (!element) return;
+      previousInert.set(element, element.hasAttribute("inert"));
+      element.toggleAttribute("inert", value);
+    };
+
+    Array.from(document.body.children).forEach((child) => {
+      if (child instanceof HTMLElement && child !== header) {
+        setInert(child, true);
+      }
+    });
+    setInert(barRef.current, true);
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const focusableSelector =
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = () =>
+      Array.from(
+        overlayRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ??
+          [],
+      );
+
+    focusables()[0]?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousInert.forEach((wasInert, element) => {
+        element.toggleAttribute("inert", wasInert);
+      });
+      (returnFocus ?? menuButton)?.focus();
+    };
+  }, [open]);
 
   // A short menu rise: opacity plus a 6px lift, no scale and no spring.
   const menuHidden = reduce ? { opacity: 0 } : { opacity: 0, y: 8 };
@@ -115,8 +182,9 @@ export function SiteHeader() {
   });
 
   return (
-    <header className="sticky top-0 z-50 bg-white">
+    <header ref={headerRef} className="sticky top-0 z-50 bg-white">
       <div
+        ref={barRef}
         data-scrolled={scrolled}
         className={cn(
           "border-b transition-colors duration-200 motion-reduce:transition-none",
@@ -188,24 +256,25 @@ export function SiteHeader() {
             >
               {LOGIN_LINK.label}
             </Link>
-            {onContact ? null : (
+            {hidePrimary ? null : (
               <Link
-                href={primaryHref}
+                href={primaryCta.href}
                 className={cn(
                   "pressable hidden min-h-11 items-center gap-2 rounded-[2px] bg-[#ff0063] px-4 text-[12px] font-semibold tracking-[-0.01em] text-black transition-[transform,background-color] duration-200 hover:bg-[#d40054] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 md:inline-flex",
                   pressStyles.press,
                   focusRing,
                 )}
               >
-                {primaryLabel}
-                <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+                {primaryCta.label}
+                <ArrowRight size={14} weight="bold" aria-hidden="true" />
               </Link>
             )}
             <button
+              ref={menuButtonRef}
               type="button"
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
-              aria-controls={open ? "marketing-mobile-nav" : undefined}
+              aria-controls="marketing-mobile-nav"
               aria-label={open ? "Close menu" : "Open menu"}
               className={cn(
                 "pressable inline-flex min-h-11 items-center gap-2 rounded-[2px] px-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#0b2e2e] lg:hidden",
@@ -237,6 +306,7 @@ export function SiteHeader() {
       <AnimatePresence initial={false}>
         {open ? (
           <motion.div
+            ref={overlayRef}
             key="mobile-nav"
             id="marketing-mobile-nav"
             initial={menuHidden}
@@ -270,7 +340,13 @@ export function SiteHeader() {
                         active ? "text-[#0b2e2e]" : "text-[#356464]",
                       )}
                     >
-                      <span className="text-[10px] font-semibold tabular-nums tracking-[0.2em] text-[#c2004b]">
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "text-[10px] font-semibold tabular-nums tracking-[0.2em]",
+                          active ? "text-[#ff0063]" : "text-[#356464]",
+                        )}
+                      >
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       {link.label}
@@ -296,9 +372,9 @@ export function SiteHeader() {
                 >
                   {LOGIN_LINK.label}
                 </Link>
-                {onContact ? null : (
+                {hidePrimary ? null : (
                   <Link
-                    href={primaryHref}
+                    href={primaryCta.href}
                     onClick={() => setOpen(false)}
                     className={cn(
                       "pressable inline-flex min-h-12 items-center justify-center gap-2 rounded-[2px] bg-[#ff0063] px-4 text-sm font-semibold text-black",
@@ -306,8 +382,8 @@ export function SiteHeader() {
                       focusRing,
                     )}
                   >
-                    {primaryLabel}
-                    <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
+                    {primaryCta.label}
+                    <ArrowRight size={16} weight="bold" aria-hidden="true" />
                   </Link>
                 )}
               </motion.div>

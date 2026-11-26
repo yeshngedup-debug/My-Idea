@@ -5,6 +5,8 @@
  * Inline SVG + CSS only: no chart package, no client JS, no animation that
  * hides values. Exact numbers remain available as text and in sr-only tables.
  */
+import Link from "next/link";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type RoleCount = { role: string; count: number };
 
@@ -356,11 +358,27 @@ export function ActivityTrend({
         Projects and orders created by month
       </figcaption>
       {activeMonths < 2 ? (
-        <p className="mt-2 text-sm leading-6 text-[#356464]">
-          {activeMonths === 0
-            ? "No dated projects or orders are available for the last six months, so the trend is not shown yet."
-            : "Only one month of dated activity is available so far, so the six-month trend is not shown yet."}
-        </p>
+        <EmptyState
+          className="mt-3"
+          title={
+            activeMonths === 0
+              ? "No dated activity yet"
+              : "Not enough dated activity for a trend"
+          }
+          description={
+            activeMonths === 0
+              ? "Projects and orders will appear here once dated rows are available."
+              : "One month of dated activity is available. The six-month trend appears when a second month has activity."
+          }
+          action={
+            <Link
+              href="/admin/projects"
+              className="inline-flex min-h-11 items-center rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+            >
+              Open projects
+            </Link>
+          }
+        />
       ) : (
         <>
           <div className="mt-3 hidden sm:block">

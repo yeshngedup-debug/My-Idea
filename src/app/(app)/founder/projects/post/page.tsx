@@ -8,9 +8,10 @@ import Link from 'next/link';
 import { getUser } from '@/lib/auth';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
+import { EmptyState } from '@/components/ui/empty-state';
 import { PostProjectForm } from './post-project-form';
 
-export const metadata = { title: 'Post a Project | Bhutan Tech Connect' };
+export const metadata = { title: 'Post a Project' };
 
 const LOGIN_LINK =
   'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
@@ -37,14 +38,16 @@ export default async function PostProjectPage() {
           {user ? (
             <PostProjectForm />
           ) : (
-            <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-              <p className="text-sm text-[#356464]">
-                Only signed-in founders can publish a brief.
-              </p>
-              <Link href="/login" className={`${LOGIN_LINK} mt-6`}>
-                Log in
-              </Link>
-            </div>
+            <EmptyState
+              headingLevel="h2"
+              title="Sign in to post a project"
+              description="Only signed-in founders can publish a brief."
+              action={
+                <Link href="/login" className={LOGIN_LINK}>
+                  Log in
+                </Link>
+              }
+            />
           )}
         </PinnedHeadingSection>
       </div>

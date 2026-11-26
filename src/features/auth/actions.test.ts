@@ -120,6 +120,22 @@ describe('signup', () => {
     );
     expect(auth.signUp.email).not.toHaveBeenCalled();
   });
+
+  it('rejects a malformed email before calling Neon Auth', async () => {
+    await expectRedirect(
+      () => signup(signupForm('not-an-email')),
+      '/signup?error=invalid'
+    );
+    expect(auth.signUp.email).not.toHaveBeenCalled();
+  });
+
+  it('rejects an email longer than 254 characters before calling Neon Auth', async () => {
+    await expectRedirect(
+      () => signup(signupForm(`${'a'.repeat(250)}@b.co`)),
+      '/signup?error=invalid'
+    );
+    expect(auth.signUp.email).not.toHaveBeenCalled();
+  });
 });
 
 describe('requestPasswordReset', () => {

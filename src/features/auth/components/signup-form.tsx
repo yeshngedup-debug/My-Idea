@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Signup form with authoritative client-side validation.
+ * Signup form with first-pass client-side validation using the shared auth rules.
  *
  * Validation runs inside the form action (`useActionState`), so the server
  * action is never called for an invalid submission. Values are held in state
@@ -13,8 +13,18 @@
 import { useActionState, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
 import { signup } from "@/features/auth/actions";
+import { FieldError } from "@/features/auth/components/field-error";
 import { authInputClassName } from "@/features/auth/components/styles";
+import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
+import {
+  EMAIL_PATTERN,
+  MAX_EMAIL_LENGTH,
+  MAX_FULL_NAME_LENGTH,
+  MAX_NAME_PART_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from "@/features/auth/schemas";
 
 type FieldName = "firstName" | "lastName" | "email" | "password";
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -22,10 +32,6 @@ type FieldValues = Record<FieldName, string>;
 type SubmitState = { errors: FieldErrors; submitCount: number };
 
 const FIELD_ORDER: FieldName[] = ["firstName", "lastName", "email", "password"];
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 6;
-const MAX_NAME_LENGTH = 80;
-const MAX_FULL_NAME_LENGTH = 80;
 
 const EMPTY_VALUES: FieldValues = {
   firstName: "",
@@ -38,20 +44,6 @@ const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
 
 const labelClassName = "mb-2 block text-sm font-semibold text-[#0b5c5c]";
 
-/** Local: identical accessible markup for every inline error. The message is
- *  static text, so there is no per-keystroke state to manage. */
-function FieldError({ id, children }: { id: string; children: string }) {
-  return (
-    <p
-      id={id}
-      role="alert"
-      className="mt-1.5 text-xs font-medium text-red-700"
-    >
-      {children}
-    </p>
-  );
-}
-
 function validate(values: FieldValues): FieldErrors {
   const next: FieldErrors = {};
   const firstName = values.firstName.trim();
@@ -61,21 +53,24 @@ function validate(values: FieldValues): FieldErrors {
   const password = values.password;
 
   if (!firstName) next.firstName = "First name is required.";
-  else if (firstName.length > MAX_NAME_LENGTH)
-    next.firstName = `First name must be ${MAX_NAME_LENGTH} characters or fewer.`;
+  else if (firstName.length > MAX_NAME_PART_LENGTH)
+    next.firstName = `First name must be ${MAX_NAME_PART_LENGTH} characters or fewer.`;
 
   if (!lastName) next.lastName = "Last name is required.";
-  else if (lastName.length > MAX_NAME_LENGTH)
-    next.lastName = `Last name must be ${MAX_NAME_LENGTH} characters or fewer.`;
+  else if (lastName.length > MAX_NAME_PART_LENGTH)
+    next.lastName = `Last name must be ${MAX_NAME_PART_LENGTH} characters or fewer.`;
   else if (!next.firstName && fullName.length > MAX_FULL_NAME_LENGTH)
     next.lastName = `First and last names together must be ${MAX_FULL_NAME_LENGTH} characters or fewer.`;
 
   if (!email) next.email = "Email is required.";
+  else if (email.length > MAX_EMAIL_LENGTH) next.email = "Email is too long.";
   else if (!EMAIL_PATTERN.test(email)) next.email = "Enter a valid email address.";
 
   if (!password) next.password = "Password is required.";
   else if (password.length < MIN_PASSWORD_LENGTH)
     next.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+  else if (password.length > MAX_PASSWORD_LENGTH)
+    next.password = `Password must be ${MAX_PASSWORD_LENGTH} characters or fewer.`;
 
   return next;
 }
@@ -94,7 +89,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
   const lastNameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const serverErrorRef = useRef<HTMLDivElement>(null);
+  const serverErrorRef = useRef<HTMLParagraphElement>(null);
 
   const fieldRefs = useMemo(
     () => ({
@@ -163,15 +158,15 @@ export function SignupForm({ serverError }: { serverError?: string }) {
   return (
     <>
       {serverError && (
-        <div
+        <StatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
-          role="alert"
           tabIndex={-1}
-          className="mb-5 rounded-[2px] border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-700"
+          tone="error"
+          className="mb-5 rounded-[2px] focus-visible:outline-none"
         >
           {serverError}
-        </div>
+        </StatusMessage>
       )}
 
       <form
@@ -273,7 +268,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               }
               onChange={(event) => setField("password", event.target.value)}
               autoComplete="new-password"
-              placeholder="At least 6 characters"
+              placeholder="Use 6 to 128 characters"
               className={authInputClassName}
             />
             <button
@@ -288,7 +283,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             </button>
           </div>
           <p id={passwordHintId} className="mt-1.5 text-xs text-[#356464]">
-            Minimum 6 characters.
+            Use 6 to 128 characters.
           </p>
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>

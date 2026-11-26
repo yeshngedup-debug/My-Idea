@@ -10,56 +10,15 @@ import { getUser } from '@/lib/auth';
 import { signCv } from '@/lib/storage';
 import { getProfileRole, getStudentProfile, type Role } from '@/lib/neon-data';
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
+import { EmptyState, ErrorState } from '@/components/ui/empty-state';
 import { ProfileForm, type StudentProfileData } from './profile-form';
 
-export const metadata = { title: 'My Profile | Bhutan Tech Connect' };
+export const metadata = { title: 'My Profile' };
 
 const ROLE_HOME: Partial<Record<Role, string>> = {
   founder: '/founder',
   admin: '/admin',
 };
-
-/** Fail-closed notice: no profile form or zeroed stats render behind it. */
-function ProfileNotice({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <section
-      aria-labelledby="profile-notice-title"
-      className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12"
-    >
-      <div className="mx-auto max-w-3xl rounded-xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-7">
-        <h1
-          id="profile-notice-title"
-          className="text-[clamp(1.5rem,4vw,2rem)] font-semibold leading-tight tracking-[-0.02em] text-[#0b5c5c] text-balance"
-        >
-          {title}
-        </h1>
-        <p className="mt-3 max-w-xl text-sm leading-6 text-[#356464]">
-          {description}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Link
-            href="/student/profile"
-            className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
-          >
-            Try again
-          </Link>
-          <Link
-            href="/"
-            className="inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] px-5 py-3 text-sm font-medium text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
-          >
-            Go to home
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default async function StudentProfilePage() {
   const user = await getUser();
@@ -74,10 +33,22 @@ export default async function StudentProfilePage() {
     role = await getProfileRole(user.id);
   } catch {
     return (
-      <ProfileNotice
-        title="We could not check your account"
-        description="Your account details are not available right now. Try again in a moment."
-      />
+      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+        <ErrorState
+          className="mx-auto max-w-3xl"
+          headingLevel="h1"
+          title="We could not check your account"
+          description="Your account details are not available right now. Try again in a moment."
+          action={
+            <a
+              href="/student/profile"
+              className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+            >
+              Try again
+            </a>
+          }
+        />
+      </section>
     );
   }
 
@@ -85,10 +56,22 @@ export default async function StudentProfilePage() {
 
   if (!role) {
     return (
-      <ProfileNotice
-        title="Finish setting up your account"
-        description="Your account is not linked to a student profile yet. Try again after your profile is ready."
-      />
+      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+        <EmptyState
+          className="mx-auto max-w-3xl"
+          headingLevel="h1"
+          title="Finish setting up your account"
+          description="Your account is not linked to a student profile yet. Try again after your profile is ready."
+          action={
+            <Link
+              href="/"
+              className="inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] px-5 py-3 text-sm font-medium text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+            >
+              Go to home
+            </Link>
+          }
+        />
+      </section>
     );
   }
 
@@ -111,10 +94,22 @@ export default async function StudentProfilePage() {
     data = await getStudentProfile(user.id);
   } catch {
     return (
-      <ProfileNotice
-        title="We could not load your profile"
-        description="Your details are not available right now. Try again in a moment."
-      />
+      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+        <ErrorState
+          className="mx-auto max-w-3xl"
+          headingLevel="h1"
+          title="We could not load your profile"
+          description="Your details are not available right now. Try again in a moment."
+          action={
+            <a
+              href="/student/profile"
+              className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+            >
+              Try again
+            </a>
+          }
+        />
+      </section>
     );
   }
 

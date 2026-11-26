@@ -38,7 +38,7 @@ export default async function SimpleLayout({
             { href: "/founder", label: "Overview" },
             { href: "/founder/browse-students", label: "Find talent" },
             { href: "/founder/browse-projects", label: "Browse projects" },
-            { href: "/founder/projects", label: "Projects" },
+            { href: "/founder/projects", label: "My projects" },
             { href: "/founder/shortlists", label: "Shortlists" },
             { href: "/founder/profile", label: "Profile" },
           ]
@@ -73,9 +73,12 @@ export default async function SimpleLayout({
                 </span>
               </Link>
               {roleLabel && (
-                <span className="hidden shrink-0 items-center rounded-full border border-[#b9dede]/90 bg-[#eaf6f6]/80 px-3 py-1 text-xs font-medium tracking-tight text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:inline-flex">
-                  {roleLabel}
-                </span>
+                <>
+                  <span className="sr-only sm:hidden">{roleLabel} workspace</span>
+                  <span className="hidden shrink-0 items-center rounded-full border border-[#b9dede]/90 bg-[#eaf6f6]/80 px-3 py-1 text-xs font-medium tracking-tight text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:inline-flex">
+                    {roleLabel}
+                  </span>
+                </>
               )}
             </div>
 

@@ -22,7 +22,7 @@ import {
   type AdminStudent,
 } from './admin-students-client';
 
-export const metadata = { title: 'Students | Admin | Bhutan Tech Connect' };
+export const metadata = { title: 'Students | Admin' };
 
 // Reads the session via cookies(), so it can only be rendered on demand.
 export const dynamic = 'force-dynamic';

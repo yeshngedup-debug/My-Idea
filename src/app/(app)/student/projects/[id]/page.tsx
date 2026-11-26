@@ -17,7 +17,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { SubmitButton } from '@/components/ui/submit-button';
 
-export const metadata = { title: 'Project Details | Bhutan Tech Connect' };
+export const metadata = { title: 'Project Details' };
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

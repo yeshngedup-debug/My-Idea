@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { HeroCopyEntrance } from "./hero-motion";
 import { HeroPhotoEntrance } from "./hero-photo";
+import { actionClass, LinkArrow, quietClass } from "./editorial";
 import { cn } from "@/lib/utils";
 import {
-  CTA_HREFS,
-  CTA_LABELS,
+  resolveAction,
   type Cta,
+  type CtaIntent,
   type MarketingImage,
 } from "./nav";
 
@@ -20,18 +20,13 @@ export type EditorialHeroProps = {
   lead: string;
   primaryCta?: Cta;
   secondary?: Cta;
+  /** Intent used when no explicit primary CTA is supplied. */
+  intent?: CtaIntent;
   image: MarketingImage | string;
   imageAlt?: string;
   /** Tailwind object-position class. Defaults to centre. */
   imagePosition?: string;
 };
-
-const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
-
-const actionClass = `group inline-flex min-h-12 items-center gap-3 rounded-[2px] bg-[#ff0063] px-6 text-[13px] font-semibold tracking-[-0.01em] text-black transition-[transform,background-color] duration-200 hover:bg-[#d40054] active:scale-[0.985] motion-reduce:transition-none motion-reduce:active:scale-100 ${focusRing}`;
-
-const quietClass = `group inline-flex min-h-11 items-center gap-1.5 text-[13px] font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 decoration-1 underline-offset-[6px] transition-colors hover:decoration-[#ff0063] ${focusRing}`;
 
 /**
  * The shared editorial hero for marketing subpages. Same ledger as the home
@@ -45,14 +40,12 @@ export function EditorialHero({
   lead,
   primaryCta,
   secondary,
+  intent,
   image,
   imageAlt,
   imagePosition,
 }: EditorialHeroProps) {
-  const action = primaryCta ?? {
-    href: CTA_HREFS.signup,
-    label: CTA_LABELS.signup,
-  };
+  const action = primaryCta ?? resolveAction(null, intent);
   const heroImage: MarketingImage =
     typeof image === "string"
       ? {
@@ -77,12 +70,12 @@ export function EditorialHero({
           <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3">
             <Link href={action.href} className={actionClass}>
               {action.label}
-              <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
+              <LinkArrow href={action.href} size={16} />
             </Link>
             {secondary ? (
               <Link href={secondary.href} className={quietClass}>
                 {secondary.label}
-                <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+                <LinkArrow href={secondary.href} />
               </Link>
             ) : null}
           </div>

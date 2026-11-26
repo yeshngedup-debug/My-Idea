@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Envelope } from "@phosphor-icons/react/dist/ssr";
+import { Envelope } from "@phosphor-icons/react/dist/ssr";
 import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import {
   Action,
   Band,
+  LinkArrow,
   RuleLink,
   SectionHead,
   container,
   focusRing,
   gutters,
 } from "@/components/marketing/editorial";
+import {
+  CTA_HREFS,
+  CTA_LABELS,
+  FOUNDER_ACCESS,
+} from "@/components/marketing/nav";
 import { InlineImageText } from "@/components/editorial";
 import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
@@ -50,13 +56,13 @@ const messageChecklist = [
 
 const helpfulLinks = [
   {
-    href: "/public",
+    href: CTA_HREFS.home,
     title: "The public home page",
     note: "A plain-language overview of the platform.",
   },
   {
-    href: "/how-it-works",
-    title: "How it works",
+    href: CTA_HREFS.howItWorks,
+    title: CTA_LABELS.howItWorks,
     note: "The three steps from brief to finished work.",
   },
 ] as const;
@@ -103,8 +109,10 @@ export default function ContactPage() {
                   </span>
                 </a>
                 <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3">
-                  <Action href={founderHref}>Ask for founder access</Action>
-                  <RuleLink href="/faq">Read the FAQ</RuleLink>
+                  <Action href={founderHref}>
+                    {FOUNDER_ACCESS.label}
+                  </Action>
+                  <RuleLink href={CTA_HREFS.faq}>{CTA_LABELS.faq}</RuleLink>
                 </div>
               </div>
             </HeroCopyEntrance>
@@ -115,7 +123,7 @@ export default function ContactPage() {
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[16/10] lg:aspect-[4/5] lg:min-h-[420px]">
                     <Image
                       src="/images/thimphu-city.jpg"
-                      alt="View across central Thimphu, the capital of Bhutan"
+                      alt="Handicraft shops along Norzin Lam road in Thimphu"
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 42vw"
@@ -227,7 +235,9 @@ export default function ContactPage() {
                     you have in mind. An admin will reply with the next step.
                   </p>
                   <div className="mt-8">
-                    <Action href={founderHref}>Request founder access</Action>
+                    <Action href={founderHref}>
+                      {FOUNDER_ACCESS.label}
+                    </Action>
                   </div>
                 </div>
               </MarketingReveal>
@@ -254,11 +264,7 @@ export default function ContactPage() {
                           <span>
                             <span className="flex items-center gap-1.5 text-[1.05rem] font-semibold text-[#0b2e2e] underline decoration-transparent decoration-1 underline-offset-[6px] transition-colors group-hover:decoration-[#ff0063] group-focus-visible:decoration-[#ff0063]">
                               {item.title}
-                              <ArrowUpRight
-                                size={14}
-                                weight="bold"
-                                aria-hidden="true"
-                              />
+                              <LinkArrow href={item.href} size={14} />
                             </span>
                             <span className="mt-1 block max-w-[42ch] text-sm leading-6 text-[#356464]">
                               {item.note}
@@ -286,7 +292,7 @@ export default function ContactPage() {
                 id="elsewhere-heading"
                 before="Helpful"
                 imageSrc="/images/bhutanese-students.jpg"
-                imageAlt="Young Bhutanese people working together at computers"
+                imageAlt="Two young Bhutanese women tending a water supply"
                 accessibleLabel="Helpful pages"
                 after="pages"
               />
@@ -332,12 +338,12 @@ export default function ContactPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href="/faq">Read the FAQ</Action>
+              <Action href={CTA_HREFS.faq}>{CTA_LABELS.faq}</Action>
               <RuleLink
-                href="/public"
+                href={CTA_HREFS.home}
                 className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Visit the public home
+                {CTA_LABELS.publicHome}
               </RuleLink>
             </MarketingReveal>
           </div>

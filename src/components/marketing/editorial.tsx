@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { isInternalHref } from "@/components/marketing/nav";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,6 +24,36 @@ export const focusRingInverse =
 
 export const container = "mx-auto w-full max-w-[1440px]";
 export const gutters = "px-5 sm:px-8 lg:px-12";
+
+/**
+ * One arrow for every editorial link. Internal routes point forward; only
+ * external destinations get the diagonal "leaves this page" mark.
+ */
+export function LinkArrow({
+  href,
+  size = 14,
+  className,
+}: {
+  href: string;
+  size?: number;
+  className?: string;
+}) {
+  const internal = isInternalHref(href);
+  const Icon = internal ? ArrowRight : ArrowUpRight;
+  return (
+    <Icon
+      size={size}
+      weight="bold"
+      aria-hidden="true"
+      className={cn(
+        "transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0",
+        !internal &&
+          "group-hover:-translate-y-0.5 motion-reduce:group-hover:-translate-y-0",
+        className,
+      )}
+    />
+  );
+}
 
 /** The single filled action: a squared magenta plate with a rule-weight mark. */
 export const actionClass = `group inline-flex min-h-12 items-center gap-3 rounded-[2px] bg-[#ff0063] px-6 text-[13px] font-semibold tracking-[-0.01em] text-black transition-[transform,background-color] duration-200 hover:bg-[#d40054] active:scale-[0.985] motion-reduce:transition-none motion-reduce:active:scale-100 ${focusRing}`;
@@ -48,12 +79,7 @@ export function Action({
   return (
     <Link href={href} className={cn(actionClass, className)}>
       <span>{children}</span>
-      <ArrowUpRight
-        size={16}
-        weight="bold"
-        aria-hidden="true"
-        className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0"
-      />
+      <LinkArrow href={href} size={16} />
     </Link>
   );
 }
@@ -75,7 +101,7 @@ export function RuleLink({
       className={cn(inverse ? quietClassInverse : quietClass, className)}
     >
       {children}
-      <ArrowUpRight size={14} weight="bold" aria-hidden="true" />
+      <LinkArrow href={href} />
     </Link>
   );
 }

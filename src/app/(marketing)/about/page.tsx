@@ -20,6 +20,11 @@ import {
   LOCAL_BRIDGE_DIFFERENCES,
   LOCAL_BRIDGE_HEADLINE,
 } from "@/components/brand/local-bridge-differences";
+import {
+  CTA_HREFS,
+  CTA_LABELS,
+  resolveAction,
+} from "@/components/marketing/nav";
 import { getLiveContext } from "@/lib/data/world-bank";
 import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
@@ -36,6 +41,11 @@ export const metadata: Metadata = pageMetadata({
     "Why Bhutan Tech Connect exists: a practical local bridge between Bhutanese students and startup founders, grounded in the national opportunity context.",
   path: "/about",
 });
+
+const exploreCta = resolveAction("/about", "explore");
+const seeHowCta = resolveAction("/about", "seeHow");
+const faqCta = resolveAction("/about", "faq");
+const processCta = resolveAction("/about", "readProcess");
 
 const verification = [
   {
@@ -70,11 +80,11 @@ export default async function AboutPage() {
             </>
           }
           lead="A local bridge between students and founders: paid project work, written down, checked by people."
-          primaryCta={{ href: "/public", label: "Explore the platform" }}
-          secondary={{ href: "/how-it-works", label: "See how it works" }}
+          intent="explore"
+          secondary={seeHowCta}
           image={{
             src: "/images/bhutanese-students.jpg",
-            alt: "Young Bhutanese people in gho and kira working together at computers",
+            alt: "Two young Bhutanese women tending a water supply",
           }}
           imagePosition="object-center"
         />
@@ -144,11 +154,7 @@ export default async function AboutPage() {
                         <span className="text-[1.75rem] font-semibold tabular-nums tracking-[-0.04em] text-[#0b2e2e] sm:text-[2rem]">
                           {fact.value}
                         </span>
-                        <span
-                          role="heading"
-                          aria-level={4}
-                          className="text-base font-semibold leading-snug text-[#0b2e2e]"
-                        >
+                        <span className="text-base font-semibold leading-snug text-[#0b2e2e]">
                           {fact.label}
                         </span>
                       </span>
@@ -193,7 +199,7 @@ export default async function AboutPage() {
                   <div className="plate relative aspect-[16/9] overflow-hidden sm:aspect-[21/9]">
                     <Image
                       src="/images/thimphu-city.jpg"
-                      alt="View across central Thimphu, the capital of Bhutan"
+                      alt="Handicraft shops along Norzin Lam road in Thimphu"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
                       className="object-cover object-center"
@@ -247,14 +253,14 @@ export default async function AboutPage() {
                   applications and the shortlist.
                 </p>
                 <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t border-[#0b2e2e]/12 pt-6">
-                  <RuleLink href="/how-it-works">See how it works</RuleLink>
-                  <RuleLink href="/faq">Read the FAQ</RuleLink>
+                  <RuleLink href={seeHowCta.href}>{seeHowCta.label}</RuleLink>
+                  <RuleLink href={faqCta.href}>{faqCta.label}</RuleLink>
                 </div>
               </MarketingReveal>
               <MarketingReveal delay={0.08} className="lg:col-span-7">
                 <Figure
                   src="/images/bhutanese-students.jpg"
-                  alt="Young Bhutanese people in gho and kira working together at computers"
+                  alt="Two young Bhutanese women tending a water supply"
                   ratio="aspect-[16/10]"
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />
@@ -318,12 +324,11 @@ export default async function AboutPage() {
 
             <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
               {verification.map((item, index) => (
-                <MarketingReveal
+                <li
                   key={item.title}
-                  delay={index * 0.06}
                   className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
-                  <li>
+                  <MarketingReveal delay={index * 0.06}>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                         {String(index + 1).padStart(2, "0")}
@@ -339,18 +344,18 @@ export default async function AboutPage() {
                     <p className="mt-2 max-w-[32ch] text-sm leading-6 text-[#356464]">
                       {item.body}
                     </p>
-                  </li>
-                </MarketingReveal>
+                  </MarketingReveal>
+                </li>
               ))}
             </ul>
 
             <p className="mt-10 border-t border-[#0b2e2e]/12 pt-4 text-xs leading-5 text-[#356464]">
               Questions?{" "}
               <a
-                href="/contact"
+                href={CTA_HREFS.contact}
                 className="font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
-                Contact us
+                {CTA_LABELS.contactUs}
               </a>
               .
             </p>
@@ -425,12 +430,12 @@ export default async function AboutPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href="/public">Explore the platform</Action>
+              <Action href={exploreCta.href}>{exploreCta.label}</Action>
               <RuleLink
-                href="/how-it-works"
+                href={processCta.href}
                 className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Read the process
+                {processCta.label}
               </RuleLink>
             </MarketingReveal>
           </div>

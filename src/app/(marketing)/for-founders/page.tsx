@@ -18,7 +18,11 @@ import {
   focusRing,
   gutters,
 } from "@/components/marketing/editorial";
-import { CTA_HREFS } from "@/components/marketing/nav";
+import {
+  CTA_HREFS,
+  CTA_LABELS,
+  FOUNDER_ACCESS,
+} from "@/components/marketing/nav";
 import { StackedCards, type StackedCardItem } from "@/components/motion";
 import { InlineImageText } from "@/components/editorial";
 import { ScrubbedTextReveal } from "@/components/motion";
@@ -33,9 +37,6 @@ export const metadata: Metadata = pageMetadata({
     "Post a scoped project brief, browse verified student talent, and request a ranked shortlist. Verified by an admin, paid in Ngultrum.",
   path: "/for-founders",
 });
-
-/** One label per intent, repeated verbatim across the page. */
-const FOUNDER_ACCESS = "Ask for founder access";
 
 const chapters: ChapterLink[] = [
   { id: "hiring", label: "Hiring" },
@@ -149,8 +150,8 @@ export default function ForFoundersPage() {
             </>
           }
           lead="Post a clear brief and budget. Browse students by skill and availability. Or buy a ranked shortlist when you need a short list fast — verified by an admin, paid in Ngultrum."
-          primaryCta={{ href: CTA_HREFS.contact, label: FOUNDER_ACCESS }}
-          secondary={{ href: "#pricing", label: "See pricing" }}
+          intent="founder"
+          secondary={{ href: CTA_HREFS.pricing, label: CTA_LABELS.pricing }}
           image={{
             src: "/images/thimphu-bank.jpg",
             alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
@@ -190,12 +191,11 @@ export default function ForFoundersPage() {
 
             <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
               {pains.map((row, index) => (
-                <MarketingReveal
+                <li
                   key={row.pain}
-                  delay={index * 0.06}
                   className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
-                  <li>
+                  <MarketingReveal delay={index * 0.06}>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                         {String(index + 1).padStart(2, "0")}
@@ -211,8 +211,8 @@ export default function ForFoundersPage() {
                     <h3 className="mt-3 text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
                       {row.solution}
                     </h3>
-                  </li>
-                </MarketingReveal>
+                  </MarketingReveal>
+                </li>
               ))}
             </ul>
           </div>
@@ -250,14 +250,16 @@ export default function ForFoundersPage() {
         <Band id="controls" labelledBy="controls-heading">
           <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
+              <p className="index-label">04 · Your controls</p>
               <InlineImageText
                 as="h2"
                 id="controls-heading"
                 before="What you"
                 imageSrc="/images/bhutanese-students.jpg"
-                imageAlt="Young Bhutanese people working in groups at a training day in Thimphu"
+                imageAlt="Two young Bhutanese women tending a water supply"
                 after="control"
                 accessibleLabel="What you control"
+                className="mt-6"
               />
             </MarketingReveal>
 
@@ -265,30 +267,31 @@ export default function ForFoundersPage() {
               {controls.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <MarketingReveal
+                  <li
                     key={item.title}
-                    delay={index * 0.06}
                     className="border-b border-[#0b2e2e]/15 py-7"
                   >
-                    <li className="grid grid-cols-[2rem_1fr] gap-4">
-                      <span className="mt-0.5 text-[#0b5c5c]">
-                        <Icon
-                          aria-hidden="true"
-                          weight="light"
-                          size={22}
-                          strokeWidth={1.6}
-                        />
-                      </span>
-                      <div>
-                        <h3 className="text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
-                          {item.title}
-                        </h3>
-                        <p className="mt-1.5 max-w-[34ch] text-sm leading-6 text-[#356464]">
-                          {item.body}
-                        </p>
+                    <MarketingReveal delay={index * 0.06}>
+                      <div className="grid grid-cols-[2rem_1fr] gap-4">
+                        <span className="mt-0.5 text-[#0b5c5c]">
+                          <Icon
+                            aria-hidden="true"
+                            weight="light"
+                            size={22}
+                            strokeWidth={1.6}
+                          />
+                        </span>
+                        <div>
+                          <h3 className="text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
+                            {item.title}
+                          </h3>
+                          <p className="mt-1.5 max-w-[34ch] text-sm leading-6 text-[#356464]">
+                            {item.body}
+                          </p>
+                        </div>
                       </div>
-                    </li>
-                  </MarketingReveal>
+                    </MarketingReveal>
+                  </li>
                 );
               })}
             </ul>
@@ -447,8 +450,10 @@ export default function ForFoundersPage() {
               </div>
             ) : null}
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3">
-              <Action href={CTA_HREFS.contact}>{FOUNDER_ACCESS}</Action>
-              <RuleLink href="/how-it-works">How it works</RuleLink>
+              <Action href={FOUNDER_ACCESS.href}>{FOUNDER_ACCESS.label}</Action>
+              <RuleLink href={CTA_HREFS.howItWorks}>
+                {CTA_LABELS.howItWorks}
+              </RuleLink>
             </div>
           </div>
         </Band>
@@ -475,12 +480,12 @@ export default function ForFoundersPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href={CTA_HREFS.contact}>{FOUNDER_ACCESS}</Action>
+              <Action href={FOUNDER_ACCESS.href}>{FOUNDER_ACCESS.label}</Action>
               <RuleLink
                 href={CTA_HREFS.howItWorks}
                 className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Read the process
+                {CTA_LABELS.readProcess}
               </RuleLink>
             </MarketingReveal>
           </div>

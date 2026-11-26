@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
 import { MotionProvider } from "@/components/ui/motion-provider";
-import { MesurerPanel } from "@/components/dev/mesurer-panel";
 import { OfflineStatus } from "@/components/network/offline-status";
 import { APP_URL } from "@/config/app";
 import "./globals.css";
@@ -164,8 +163,6 @@ export default async function RootLayout({
         <div id="global-status" aria-live="polite" className="sr-only" />
         <OfflineStatus />
         <MotionProvider>{children}</MotionProvider>
-        {process.env.NODE_ENV === "development" &&
-          process.env.NEXT_PUBLIC_MESURER_ENABLED === "1" && <MesurerPanel />}
       </body>
     </html>
   );

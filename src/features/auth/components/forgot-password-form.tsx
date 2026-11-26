@@ -10,24 +10,12 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { requestPasswordReset } from "@/features/auth/actions";
+import { FieldError } from "@/features/auth/components/field-error";
 import { authInputClassName } from "@/features/auth/components/styles";
+import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Local: identical accessible markup for every inline error. The message is
- *  static text, so there is no per-keystroke state to manage. */
-function FieldError({ id, children }: { id: string; children: string }) {
-  return (
-    <p
-      id={id}
-      role="alert"
-      className="mt-1.5 text-xs font-medium text-red-700"
-    >
-      {children}
-    </p>
-  );
-}
 
 export function ForgotPasswordForm({
   serverError,
@@ -42,7 +30,7 @@ export function ForgotPasswordForm({
   const statusId = `${uid}-status`;
 
   const emailRef = useRef<HTMLInputElement>(null);
-  const statusRef = useRef<HTMLDivElement>(null);
+  const statusRef = useRef<HTMLParagraphElement>(null);
   const [emailError, setEmailError] = useState<string>();
 
   const status = serverError ?? serverMessage;
@@ -76,19 +64,15 @@ export function ForgotPasswordForm({
   return (
     <>
       {status && (
-        <div
+        <StatusMessage
           ref={statusRef}
           id={statusId}
-          role={serverError ? "alert" : "status"}
           tabIndex={-1}
-          className={`mb-5 rounded-[2px] border px-4 py-3 text-sm ${
-            serverError
-              ? "border-red-200/80 bg-red-50/80 text-red-700"
-              : "border-[#b9dede]/80 bg-[#eaf6f6]/80 text-[#0b5c5c]"
-          }`}
+          tone={serverError ? "error" : "success"}
+          className="mb-5 rounded-[2px] focus-visible:outline-none"
         >
           {status}
-        </div>
+        </StatusMessage>
       )}
 
       <form

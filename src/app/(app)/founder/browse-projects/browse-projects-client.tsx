@@ -4,12 +4,7 @@
  * Read-only ledger of other founders' real project briefs.
  * Filtering is local over server-loaded rows; no engagement data is invented.
  */
-import {
-  useMemo,
-  useState,
-  type KeyboardEvent,
-  type SyntheticEvent,
-} from 'react';
+import { useMemo, useState } from 'react';
 import {
   CalendarBlank,
   Clock,
@@ -19,6 +14,7 @@ import {
 } from '@phosphor-icons/react';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 import { Badge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/empty-state';
 
 export interface OtherProject {
   id: string;
@@ -103,67 +99,10 @@ export function BrowseProjectsClient({
     [projects, status],
   );
 
-  function filterButtons(event: SyntheticEvent<HTMLDivElement>) {
-    return Array.from(
-      event.currentTarget.querySelectorAll<HTMLButtonElement>('button'),
-    );
-  }
-
-  /**
-   * The shared control moves focus with arrow keys but leaves selection to
-   * Enter/Space. On this filter, arrow/Home/End should also apply the filter
-   * that receives focus, so keyboard users get the same result as a click.
-   */
-  function handleFilterKeys(event: KeyboardEvent<HTMLDivElement>) {
-    const target = event.target as HTMLElement;
-    if (target.tagName !== 'BUTTON') return;
-    // Match the focused button by position so the label can change without
-    // breaking arrow/Home/End selection.
-    const buttons = filterButtons(event);
-    const current = buttons.indexOf(target as HTMLButtonElement);
-    if (current < 0 || current >= FILTERS.length) return;
-
-    let next: number;
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        next = (current + 1) % FILTERS.length;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        next = (current - 1 + FILTERS.length) % FILTERS.length;
-        break;
-      case 'Home':
-        next = 0;
-        break;
-      case 'End':
-        next = FILTERS.length - 1;
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
-    buttons[next]?.focus();
-    setStatus(FILTERS[next].value);
-  }
-
-  /** Keep selection local too while the shared control's hydration is investigated. */
-  function handleFilterClick(event: SyntheticEvent<HTMLDivElement>) {
-    const target = (event.target as HTMLElement).closest('button');
-    if (!target) return;
-    const index = filterButtons(event).indexOf(target as HTMLButtonElement);
-    if (index < 0 || index >= FILTERS.length) return;
-    setStatus(FILTERS[index].value);
-  }
-
   return (
     <div className="space-y-6 pb-10">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div
-          className="min-w-0"
-          onKeyDown={handleFilterKeys}
-          onClick={handleFilterClick}
-        >
+        <div className="min-w-0">
           <SegmentedControl
             options={FILTERS}
             value={status}
@@ -172,29 +111,36 @@ export function BrowseProjectsClient({
             className="max-w-full"
           />
         </div>
-        <p
-          role="status"
-          aria-live="polite"
-          className="text-xs tabular-nums text-[#356464]"
-        >
+        <p className="text-xs tabular-nums text-[#356464]">
           {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
           {status ? ` · ${STATUS_LABEL[status] ?? status}` : ''}
         </p>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#b9dede] bg-[#ffffff] p-10 text-center">
-          <h2 className="mb-2 text-lg font-semibold text-[#0b5c5c]">
-            {projects.length === 0
+        <EmptyState
+          title={
+            projects.length === 0
               ? 'No other projects yet'
-              : 'No projects with this status'}
-          </h2>
-          <p className="text-sm leading-6 text-[#356464]">
-            {projects.length === 0
+              : 'No projects with this status'
+          }
+          description={
+            projects.length === 0
               ? 'When other founders post briefs, they will appear here.'
-              : 'Try another status to see the remaining briefs.'}
-          </p>
-        </div>
+              : 'Try another status to see the remaining briefs.'
+          }
+          action={
+            projects.length === 0 ? undefined : (
+              <button
+                type="button"
+                onClick={() => setStatus('')}
+                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+              >
+                Show all projects
+              </button>
+            )
+          }
+        />
       ) : (
         <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
           {filtered.map((p) => (

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { EditorialHero } from "@/components/marketing/editorial-hero";
@@ -11,9 +10,9 @@ import {
   SectionHead,
   container,
   gutters,
-  quietClass,
 } from "@/components/marketing/editorial";
 import { HorizontalAccordion } from "@/components/marketing/editorial-page-motion";
+import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
 import { PinnedScrollChapter } from "@/components/motion";
 import { ScrubbedTextReveal } from "@/components/motion";
 import { ChapterProgress, type ChapterLink } from "@/components/motion";
@@ -122,11 +121,14 @@ export default function HowItWorksPage() {
             </>
           }
           lead="Three steps connect a founder's scoped project with a student ready to build. No bidding war, no unverified profiles."
-          primaryCta={{ href: "/signup", label: "Create student account" }}
-          secondary={{ href: "/for-students", label: "Explore the student guide" }}
+          intent="student"
+          secondary={{
+            href: CTA_HREFS.forStudents,
+            label: CTA_LABELS.studentGuide,
+          }}
           image={{
             src: "/images/bhutanese-students.jpg",
-            alt: "Young Bhutanese people in gho and kira working together at computers",
+            alt: "Two young Bhutanese women tending a water supply",
           }}
           imagePosition="object-center"
         />
@@ -176,7 +178,7 @@ export default function HowItWorksPage() {
           className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
           title={
             <div>
-              <p className="index-label">The brief</p>
+              <p className="index-label">03 · The brief</p>
               <h2
                 id="brief-heading"
                 className="display-lg mt-6 max-w-[14ch] text-[#0b2e2e]"
@@ -216,7 +218,7 @@ export default function HowItWorksPage() {
               <MarketingReveal className="lg:col-span-7">
                 <Figure
                   src="/images/thimphu-city.jpg"
-                  alt="View across central Thimphu, the capital of Bhutan"
+                  alt="Handicraft shops along Norzin Lam road in Thimphu"
                   ratio="aspect-[4/3]"
                   sizes="(max-width: 1024px) 100vw, 90vw"
                 />
@@ -240,7 +242,9 @@ export default function HowItWorksPage() {
                   </p>
                 </div>
                 <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
-                  <RuleLink href="/for-students">See the student path</RuleLink>
+                  <RuleLink href={CTA_HREFS.forStudents}>
+                    {CTA_LABELS.studentPath}
+                  </RuleLink>
                 </div>
               </MarketingReveal>
             </div>
@@ -267,12 +271,11 @@ export default function HowItWorksPage() {
 
             <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
               {protections.map((rule, index) => (
-                <MarketingReveal
+                <li
                   key={rule.title}
-                  delay={index * 0.06}
                   className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
                 >
-                  <li>
+                  <MarketingReveal delay={index * 0.06}>
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
                         {String(index + 1).padStart(2, "0")}
@@ -288,8 +291,8 @@ export default function HowItWorksPage() {
                     <p className="mt-2 max-w-[34ch] text-sm leading-6 text-[#356464]">
                       {rule.body}
                     </p>
-                  </li>
-                </MarketingReveal>
+                  </MarketingReveal>
+                </li>
               ))}
             </ul>
           </div>
@@ -321,15 +324,13 @@ export default function HowItWorksPage() {
             </ol>
 
             <div className="mt-12 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t border-[#0b2e2e]/12 pt-6">
-              <Link href="/faq" className={quietClass}>
-                Read the FAQ
-              </Link>
-              <Link href="/for-founders" className={quietClass}>
-                For founders
-              </Link>
-              <Link href="/for-students" className={quietClass}>
-                For students
-              </Link>
+              <RuleLink href={CTA_HREFS.faq}>{CTA_LABELS.faq}</RuleLink>
+              <RuleLink href={CTA_HREFS.forFounders}>
+                {CTA_LABELS.founders}
+              </RuleLink>
+              <RuleLink href={CTA_HREFS.forStudents}>
+                {CTA_LABELS.students}
+              </RuleLink>
             </div>
           </div>
         </Band>
@@ -344,7 +345,9 @@ export default function HowItWorksPage() {
             )}
           >
             <MarketingReveal className="lg:col-span-8">
-              <p className="index-label text-[#0b2e2e]">Make your next move</p>
+              <p className="index-label text-[#0b2e2e]">
+                {CTA_LABELS.closingEyebrow}
+              </p>
               <h2 className="display-xl mt-6 max-w-[15ch]">
                 Start with one paid project.
               </h2>
@@ -356,12 +359,12 @@ export default function HowItWorksPage() {
               delay={0.08}
               className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
             >
-              <Action href="/signup">Create student account</Action>
+              <Action href={CTA_HREFS.signup}>{CTA_LABELS.signup}</Action>
               <RuleLink
-                href="/contact"
+                href={CTA_HREFS.contact}
                 className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
               >
-                Ask for founder access
+                {CTA_LABELS.contact}
               </RuleLink>
             </MarketingReveal>
           </div>
