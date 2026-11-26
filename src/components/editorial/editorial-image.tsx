@@ -21,9 +21,9 @@ const RATIO_CLASS: Record<NonNullable<EditorialImageProps["ratio"]>, string> = {
 };
 
 /**
- * Server component. A locally hosted photograph with a fixed crop, a dark wash
- * for caption legibility, and mandatory attribution. The zoom is CSS only,
- * gated to fine pointers and disabled under prefers-reduced-motion.
+ * Server component. A locally hosted photograph with a fixed crop and a dark
+ * wash for caption legibility. The zoom is CSS only, gated to fine pointers
+ * and disabled under prefers-reduced-motion.
  *
  * @example
  * <EditorialImage

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export type InlineImageTextProps = {
   /** Words before the embedded photograph. */
   before: string;
-  /** Local asset path, for example "/images/bhutanese-community.jpg". */
+  /** Local asset path, for example "/images/bhutanese-students.jpg". */
   imageSrc: string;
   /** Spoken in the heading's accessible name, never as a duplicate alt. */
   imageAlt: string;

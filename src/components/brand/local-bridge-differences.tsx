@@ -38,7 +38,7 @@ export const LOCAL_BRIDGE_DIFFERENCES: readonly LocalBridgeDifference[] = [
   {
     label: "Photographs",
     sentence:
-      "We use photographs of people in gho and kira, credited to their Wikimedia Commons files.",
+      "We use photographs of Bhutanese people and places, not stock models or platform members.",
   },
   {
     label: "On a phone",

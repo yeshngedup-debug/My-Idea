@@ -1,11 +1,11 @@
 /**
- * Attribution record for every photograph used on the site.
+ * Source record for the photographs currently used on the site.
  *
- * All files are Wikimedia Commons images used under CC BY-SA 3.0 or
- * CC BY-SA 4.0, both of which require attribution of the author. The credit
- * strips were removed from the pages and from the footer, so this module is
+ * The two older images are Wikimedia Commons files under CC BY-SA 4.0. The
+ * four Thimphu street/building images are CC0 public-domain dedications.
+ * Credit strips were removed from the pages and the footer, so this module is
  * intentionally not rendered anywhere. Keep it as the project's record of
- * author, source file and licence for each image.
+ * author, source file and licence for each active image.
  */
 
 export type PhotoAttribution = {
@@ -20,54 +20,51 @@ export type PhotoAttribution = {
 };
 
 export const PHOTO_ATTRIBUTIONS = {
-  valley: {
+  students: {
     subject: "Bhutanese youth at work in Thimphu",
     fileUrl: "https://commons.wikimedia.org/wiki/File:Bhutanese_youth.jpg",
     author: "Doctor 17",
     licence: "CC BY-SA 4.0",
     licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
   },
-  dzong: {
-    subject: "Boys in Bhutanese national dress",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Boys_in_Bhutan_national_dress.jpg",
-    author: "Keith Mason",
-    licence: "CC BY-SA 3.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0/",
-  },
-  market: {
-    subject: "Bhutanese girls in national dress",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Bhutanese_Girls_in_National_Dress.jpg",
-    author: "Christopher J. Fynn",
-    licence: "CC BY-SA 3.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0/",
-  },
   thimphu: {
     subject: "View across central Thimphu",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:View_of_central_Thimphu_2019-07-21.jpg",
+    fileUrl:
+      "https://commons.wikimedia.org/wiki/File:View_of_central_Thimphu_2019-07-21.jpg",
     author: "Christopher J. Fynn",
     licence: "CC BY-SA 4.0",
     licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
   },
-  flags: {
-    subject: "Prayer flags across a hillside in Sopsokha",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Prayer_flags,_Sopsokha,_Bhutan.jpg",
-    author: "Bernard Gagnon",
-    licence: "CC BY-SA 4.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  street: {
+    subject: "A main road in Thimphu",
+    fileUrl: "https://commons.wikimedia.org/wiki/File:A_Main_Road_in_Thimphu.jpg",
+    author: "Veera.sj",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
-  archery: {
-    subject: "Students practising archery",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Students_practice_archery_in_Bhutan.jpg",
-    author: "Glacierfanclub",
-    licence: "CC BY-SA 4.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  hills: {
+    subject: "Main road with hill in the backdrop",
+    fileUrl:
+      "https://commons.wikimedia.org/wiki/File:Main_Road_with_Hill_in_the_backdrop.jpg",
+    author: "Veera.sj",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
-  textile: {
-    subject: "Bhutanese woollen textile",
-    fileUrl: "https://commons.wikimedia.org/wiki/File:Bhutanese_woollen_textile_01.jpg",
-    author: "Christopher J. Fynn",
-    licence: "CC BY-SA 4.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+  bank: {
+    subject: "Bhutan Post office and Bhutan Bank building",
+    fileUrl:
+      "https://commons.wikimedia.org/wiki/File:%27Bhutan_Post_office_%26_Bhutan_Bank%27_building..JPG",
+    author: "Rudolph.A.furtado",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+  },
+  housing: {
+    subject: "Common public housing in Thimphu",
+    fileUrl:
+      "https://commons.wikimedia.org/wiki/File:Common_public_housing_in_Thimphu..JPG",
+    author: "Rudolph.A.furtado",
+    licence: "CC0",
+    licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
   },
 } as const;
 

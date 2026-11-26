@@ -73,7 +73,7 @@ export default function ContactPage() {
       <SiteHeader />
 
       <main id="main-content" className="w-full max-w-full overflow-x-clip">
-        {/* Split hero: the address is the action, one credited plate beside it. */}
+        {/* Split hero: the address is the action, one plate beside it. */}
         <section className="border-b border-[#0b2e2e]/10">
           <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 px-5 pb-12 pt-10 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-12 lg:pb-16 lg:pt-14">
             <HeroCopyEntrance className="lg:col-span-7 lg:pr-8">
@@ -114,12 +114,12 @@ export default function ContactPage() {
                 <figure>
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[16/10] lg:aspect-[4/5] lg:min-h-[420px]">
                     <Image
-                      src="/images/bhutanese-community.jpg"
-                      alt="Bhutanese boys in traditional gho sitting together"
+                      src="/images/thimphu-city.jpg"
+                      alt="View across central Thimphu, the capital of Bhutan"
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 42vw"
-                      className="object-cover object-[45%_55%]"
+                      className="object-cover object-center"
                     />
                   </div>
 
@@ -186,8 +186,8 @@ export default function ContactPage() {
                   <figure>
                     <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[16/10]">
                       <Image
-                        src="/images/prayer-flags.jpg"
-                        alt="Prayer flags strung across a valley in Bhutan"
+                        src="/images/thimphu-street.jpg"
+                        alt="A main road in central Thimphu"
                         fill
                         sizes="(max-width: 1024px) 100vw, 58vw"
                         className="object-cover object-center"
@@ -285,8 +285,8 @@ export default function ContactPage() {
                 as="h2"
                 id="elsewhere-heading"
                 before="Helpful"
-                imageSrc="/images/bhutanese-community.jpg"
-                imageAlt="Bhutanese boys in traditional gho sitting together"
+                imageSrc="/images/bhutanese-students.jpg"
+                imageAlt="Young Bhutanese people working together at computers"
                 accessibleLabel="Helpful pages"
                 after="pages"
               />
@@ -297,8 +297,8 @@ export default function ContactPage() {
                 <figure>
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
                     <Image
-                      src="/images/bhutanese-students.jpg"
-                      alt="Young Bhutanese people working together at computers"
+                      src="/images/thimphu-hills.jpg"
+                      alt="Thimphu's main road with the valley hills behind"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
                       className="object-cover object-center"

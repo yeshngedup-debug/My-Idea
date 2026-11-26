@@ -73,8 +73,8 @@ export default async function AboutPage() {
           primaryCta={{ href: "/public", label: "Explore the platform" }}
           secondary={{ href: "/how-it-works", label: "See how it works" }}
           image={{
-            src: "/images/bhutanese-community.jpg",
-            alt: "Bhutanese boys in traditional gho sitting together",
+            src: "/images/bhutanese-students.jpg",
+            alt: "Young Bhutanese people in gho and kira working together at computers",
           }}
           imagePosition="object-center"
         />
@@ -191,18 +191,14 @@ export default async function AboutPage() {
               <GsapScaleFadeImage>
                 <figure>
                   <div className="plate relative aspect-[16/9] overflow-hidden sm:aspect-[21/9]">
-                    {/* Local crop kept from the previous page; caption only. */}
                     <Image
-                      src="/images/thimphu-market.webp"
-                      alt="Open sacks of spices and grain at a market stall in Thimphu"
+                      src="/images/thimphu-city.jpg"
+                      alt="View across central Thimphu, the capital of Bhutan"
                       fill
                       sizes="(max-width: 1024px) 100vw, 90vw"
                       className="object-cover object-center"
                     />
                   </div>
-                  
-
-                  
                 </figure>
               </GsapScaleFadeImage>
             </MarketingReveal>
@@ -236,9 +232,9 @@ export default async function AboutPage() {
                 as="h2"
                 id="bridge-heading"
                 before="A practical local"
-                imageSrc="/images/bhutanese-community.jpg"
-                imageAlt="Bhutanese students working together"
-                accessibleLabel="A practical local bridge: Bhutanese students working together"
+                imageSrc="/images/thimphu-street.jpg"
+                imageAlt="A main road in Thimphu"
+                accessibleLabel="A practical local bridge: a main road in Thimphu"
                 after="bridge"
               />
             </MarketingReveal>
@@ -361,7 +357,7 @@ export default async function AboutPage() {
           </div>
         </Band>
 
-        {/* Photographs of places, not members. */}
+        {/* Photographs of Bhutan, not members. */}
         <Band labelledBy="photos-heading">
           <div className={cn(container, gutters, "py-16 md:py-24")}>
             <MarketingReveal>
@@ -372,23 +368,38 @@ export default async function AboutPage() {
                 title={
                   <>
                     Photographs of{" "}
-                    <span className="text-[#0b5c5c]">places, not members</span>
+                    <span className="text-[#0b5c5c]">Bhutan, not members</span>
                   </>
                 }
-                lead="Every photograph on this site is a Wikimedia Commons file, used under its author&apos;s licence — credits are listed below."
+                lead="Every photograph on this site shows Bhutanese people and places. None are platform listings or members."
               />
             </MarketingReveal>
 
-            <MarketingReveal className="mt-12">
-              <GsapScaleFadeImage>
-                <Figure
-                  src="/images/bhutanese-team.jpg"
-                  alt="Bhutanese students in kira performing in national dress"
-                  ratio="aspect-[16/10] sm:aspect-[21/9]"
-                  sizes="(max-width: 1024px) 100vw, 90vw"
-                />
-              </GsapScaleFadeImage>
-            </MarketingReveal>
+            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {[
+                {
+                  src: "/images/thimphu-hills.jpg",
+                  alt: "Thimphu's main road with the valley hills behind",
+                },
+                {
+                  src: "/images/thimphu-bank.jpg",
+                  alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
+                },
+                {
+                  src: "/images/thimphu-housing.jpg",
+                  alt: "Public housing in Thimphu",
+                },
+              ].map((photo, index) => (
+                <MarketingReveal key={photo.src} delay={index * 0.06}>
+                  <Figure
+                    src={photo.src}
+                    alt={photo.alt}
+                    ratio="aspect-[4/3]"
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                  />
+                </MarketingReveal>
+              ))}
+            </div>
           </div>
         </Band>
 

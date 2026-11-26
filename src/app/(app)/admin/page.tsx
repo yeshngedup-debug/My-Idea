@@ -204,7 +204,7 @@ export default async function AdminDashboard() {
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-cover bg-center opacity-35 brightness-[0.65] saturate-110"
-          style={{ backgroundImage: "url('/images/bhutanese-community.jpg')" }}
+          style={{ backgroundImage: "url('/images/thimphu-city.jpg')" }}
         />
         <div
           aria-hidden="true"
@@ -222,8 +222,7 @@ export default async function AdminDashboard() {
           </p>
         </div>
         <div className="relative z-10 mt-8 border-t border-primary-foreground/15 pt-3 sm:absolute sm:bottom-5 sm:right-6 sm:mt-0 sm:border-0 sm:pt-0">
-          {/* Admin dashboard carries no photo credit; attribution lives in the
-              site footer. */}
+          {/* The admin dashboard carries no photograph. */}
         </div>
       </section>
 

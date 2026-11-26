@@ -152,8 +152,8 @@ export default function ForFoundersPage() {
           primaryCta={{ href: CTA_HREFS.contact, label: FOUNDER_ACCESS }}
           secondary={{ href: "#pricing", label: "See pricing" }}
           image={{
-            src: "/images/bhutanese-team.jpg",
-            alt: "Bhutanese students in kira performing in national dress",
+            src: "/images/thimphu-bank.jpg",
+            alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
           }}
           imagePosition="object-center"
         />

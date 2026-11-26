@@ -234,8 +234,8 @@ export default function ForStudentsPage() {
                 as="h2"
                 id="rooted-heading"
                 before="Start close to"
-                imageSrc="/images/bhutanese-community.jpg"
-                imageAlt="Bhutanese boys in traditional gho sitting together"
+                imageSrc="/images/thimphu-housing.jpg"
+                imageAlt="Public housing in Thimphu"
                 after="home"
                 accessibleLabel="Start close to home"
               />
@@ -245,8 +245,8 @@ export default function ForStudentsPage() {
               <MarketingReveal className="lg:col-span-5">
                 <p className="max-w-[38ch] text-[15px] leading-7 text-[#356464]">
                   Built around Bhutanese students and founders. These
-                  photographs show Bhutanese people in community settings, not
-                  platform listings or members.
+                  photographs show Bhutanese people and places, not platform
+                  listings or members.
                 </p>
               </MarketingReveal>
               <MarketingReveal delay={0.08} className="lg:col-span-7">
@@ -257,8 +257,8 @@ export default function ForStudentsPage() {
             <MarketingReveal className="mt-12">
               <GsapScaleFadeImage>
                 <Figure
-                  src="/images/bhutanese-community.jpg"
-                  alt="Bhutanese boys in traditional gho sitting together"
+                  src="/images/thimphu-city.jpg"
+                  alt="View across central Thimphu, the capital of Bhutan"
                   ratio="aspect-[16/10] sm:aspect-[21/9]"
                   sizes="(max-width: 1024px) 100vw, 90vw"
                 />
@@ -319,8 +319,8 @@ export default function ForStudentsPage() {
               </MarketingReveal>
               <MarketingReveal delay={0.08} className="lg:col-span-7">
                 <Figure
-                  src="/images/bhutanese-team.jpg"
-                  alt="Bhutanese students in kira performing in national dress"
+                  src="/images/thimphu-bank.jpg"
+                  alt="The Bhutan Post and Bhutan Bank building in central Thimphu"
                   ratio="aspect-[16/10]"
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />

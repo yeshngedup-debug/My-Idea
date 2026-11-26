@@ -109,8 +109,8 @@ const paths = [
     body: "Post a brief, browse verified students, buy a ranked shortlist when you need one fast.",
     cta: "Ask for founder access",
     href: CTA_HREFS.contact,
-    src: "/images/bhutanese-team.jpg",
-    alt: "Bhutanese students in kira performing in national dress",
+    src: "/images/thimphu-bank.jpg",
+    alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
   },
 ] as const;
 
@@ -149,30 +149,23 @@ const marqueeFacts = [
 const localContext =
   "Youth unemployment in Bhutan is high. Growth alone is not creating enough skilled work close to home. Bhutan Tech Connect is a practical matching layer — scoped projects, human verification, payments in Ngultrum.";
 
+/** Four plates, one crop: every photograph in the gallery is the same size. */
 const gallery = [
   {
-    src: "/images/kira-textile.jpg",
-    alt: "A folded Bhutanese woollen textile in natural dyes",
-    span: "sm:col-span-7",
-    ratio: "aspect-[4/3]",
+    src: "/images/thimphu-street.jpg",
+    alt: "A main road in central Thimphu",
   },
   {
-    src: "/images/thimphu-market.webp",
-    alt: "A market street in Thimphu, Bhutan",
-    span: "sm:col-span-5",
-    ratio: "aspect-[4/5]",
+    src: "/images/thimphu-hills.jpg",
+    alt: "Thimphu's main road with the valley hills behind",
   },
   {
-    src: "/images/bhutanese-community.jpg",
-    alt: "Bhutanese boys in traditional gho sitting together",
-    span: "sm:col-span-5",
-    ratio: "aspect-[4/5]",
+    src: "/images/thimphu-bank.jpg",
+    alt: "The Bhutan Post and Bhutan Bank building in central Thimphu",
   },
   {
-    src: "/images/punakha-dzong.webp",
-    alt: "Punakha Dzong fortress beside a river in Bhutan",
-    span: "sm:col-span-7",
-    ratio: "aspect-[4/3]",
+    src: "/images/thimphu-housing.jpg",
+    alt: "Public housing in Thimphu",
   },
 ] as const;
 
@@ -481,21 +474,21 @@ export default async function PublicHomePage() {
           />
           <div className="mt-12 grid grid-cols-2 gap-4">
             <figure>
-              <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
+              <div className="plate relative aspect-[4/3] overflow-hidden bg-[#0b5c5c]">
                 <Image
-                  src="/images/prayer-flags.jpg"
-                  alt="Prayer flags strung across a hillside in Sopsokha, Bhutan"
+                  src="/images/bhutanese-students.jpg"
+                  alt="Young Bhutanese people in gho and kira working together at computers"
                   fill
                   sizes="(max-width: 1024px) 45vw, 24vw"
                   className="object-cover"
                 />
               </div>
             </figure>
-            <figure className="mt-8">
-              <div className="plate relative aspect-[4/5] overflow-hidden bg-[#0b5c5c]">
+            <figure>
+              <div className="plate relative aspect-[4/3] overflow-hidden bg-[#0b5c5c]">
                 <Image
-                  src="/images/bhutan-archery.jpg"
-                  alt="Students practice archery on a field in Bhutan"
+                  src="/images/thimphu-housing.jpg"
+                  alt="Public housing in Thimphu"
                   fill
                   sizes="(max-width: 1024px) 45vw, 24vw"
                   className="object-cover"
@@ -505,8 +498,8 @@ export default async function PublicHomePage() {
           </div>
         </PinnedScrollChapter>
 
-        {/* Gallery — four plates in an asymmetric mosaic, each with a real
-            caption and a real credit. */}
+        {/* Gallery — four equal plates in a plain two-column grid, one crop
+            and one size, each with a real caption. */}
         <PinnedScrollChapter
           id="place"
           labelledBy="place-heading"
@@ -522,24 +515,20 @@ export default async function PublicHomePage() {
                 The work happens here
               </h2>
               <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
-                Bhutanese classrooms, workshops and market streets. The talent
-                is already local.
+                The capital, its streets and the neighbourhoods where students
+                live and work. The talent is already local.
               </p>
             </div>
           }
         >
-          <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-12">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {gallery.map((item, index) => (
-              <MarketingReveal
-                key={item.src}
-                delay={index * 0.05}
-                className={cn("col-span-1", item.span)}
-              >
+              <MarketingReveal key={item.src} delay={index * 0.05}>
                 <Figure
                   src={item.src}
                   alt={item.alt}
-                  ratio={item.ratio}
-                  sizes="(max-width: 640px) 100vw, 55vw"
+                  ratio="aspect-[4/3]"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                 />
               </MarketingReveal>
             ))}

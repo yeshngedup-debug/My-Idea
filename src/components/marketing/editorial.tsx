@@ -183,8 +183,7 @@ export function SectionHead({
 }
 
 /**
- * A photograph on a teal mat. No caption strip: photos stand on their own,
- * and their attribution lives in the site footer.
+ * A photograph on a teal mat. No caption strip: photos stand on their own.
  */
 export function Figure({
   src,

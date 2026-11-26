@@ -1,8 +1,8 @@
 /**
  * Shared constants for the public marketing pages.
  *
- * Every public page imports from here so labels, routes and photo credits stay
- * identical across the header, footer, heroes and CTA bands.
+ * Every public page imports from here so labels and routes stay identical
+ * across the header, footer, heroes and CTA bands.
  */
 
 export const SITE = {

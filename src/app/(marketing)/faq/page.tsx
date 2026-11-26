@@ -268,8 +268,8 @@ export default async function FaqPage() {
           primaryCta={{ href: "/how-it-works", label: "See how it works" }}
           secondary={{ href: "/contact", label: "Ask us something" }}
           image={{
-            src: "/images/bhutanese-team.jpg",
-            alt: "Bhutanese students in kira performing in national dress",
+            src: "/images/thimphu-hills.jpg",
+            alt: "Thimphu's main road with the valley hills behind",
           }}
           imagePosition="object-center"
         />

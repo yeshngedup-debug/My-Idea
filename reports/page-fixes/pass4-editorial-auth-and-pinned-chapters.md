@@ -233,3 +233,96 @@ Screenshot: `reports/artifacts/pinned-fix/footer-public-1440.png`.
 - `npm run lint` ✅
 - `npm test` ✅ 279/279
 - `npm run build` ✅ 22 routes
+
+---
+
+# Pass 9: Equal Image Grids + Relevant CC0 Thimphu Photography
+
+## Request
+"Add more images — these images aren't relevant with this website", with the
+earlier constraint: images in the same grid must be the same size; do not force
+one ratio across the whole site.
+
+## Decision
+Use one active set of six photographs, all about Bhutanese people, work and
+Thimphu:
+
+- `bhutanese-students.jpg`
+- `thimphu-city.jpg`
+- `thimphu-street.jpg`
+- `thimphu-hills.jpg`
+- `thimphu-bank.jpg`
+- `thimphu-housing.jpg`
+
+Retired from page/background references: `bhutanese-team.jpg` (national-dress
+performance), `bhutanese-community.jpg` (stone wall), and the older tourism
+files (`bhutan-archery.jpg`, `prayer-flags.jpg`, `kira-textile.jpg`,
+`founder-briefing.jpg`, `students-collaborating.jpg`, `team-project-work.jpg`).
+The unused files remain on disk under `public/images/`.
+
+## New CC0 photographs
+Downloaded from Wikimedia Commons via Openverse (`license=cc0,pdm`), cropped and
+normalised locally:
+
+| File | Source | Author | Local size |
+|---|---|---|---|
+| `thimphu-street.jpg` | [A Main Road in Thimphu](https://commons.wikimedia.org/wiki/File:A_Main_Road_in_Thimphu.jpg) | Veera.sj | 1800×1350 |
+| `thimphu-hills.jpg` | [Main Road with Hill in the backdrop](https://commons.wikimedia.org/wiki/File:Main_Road_with_Hill_in_the_backdrop.jpg) | Veera.sj | 1800×1350 |
+| `thimphu-bank.jpg` | [Bhutan Post office & Bhutan Bank building](https://commons.wikimedia.org/wiki/File:%27Bhutan_Post_office_%26_Bhutan_Bank%27_building..JPG) | Rudolph.A.furtado | 1600×1090 |
+| `thimphu-housing.jpg` | [Common public housing in Thimphu](https://commons.wikimedia.org/wiki/File:Common_public_housing_in_Thimphu..JPG) | Rudolph.A.furtado | 1600×810 |
+
+`thimphu-bank.jpg` was cropped to remove an embedded date stamp;
+`thimphu-housing.jpg` was cropped to remove unrelated shopfront signage.
+
+`src/lib/photo-credits.ts` records author, Commons file and licence for the six
+active images. It is still an unrendered source record; no credit strip or
+footer attribution was reintroduced.
+
+## Page rewiring
+| Page | Images now used |
+|---|---|
+| `/public` | students hero paths; students + housing context pair; four-photo Thimphu gallery; city hero plate |
+| `/about` | students hero; city wide plate; street inline pill; students bridge figure; hills + bank + housing 3-up band |
+| `/contact` | city hero; street reach plate; students inline pill; hills wide plate |
+| `/for-students` | students hero; housing inline pill; city wide plate; bank pay figure |
+| `/faq` | hills hero; students inline pill; city wide plate |
+| `/for-founders` | bank hero; students inline pill |
+| `/how-it-works` | students hero; city place figure |
+| `/admin` | city login/background plate |
+
+All multi-image grids keep one crop inside that grid:
+`/public` paths `aspect-[5/4]`, `/public` context and gallery `aspect-[4/3]`,
+`/about` photo band `aspect-[4/3]`. Single plates keep their existing ratio.
+
+## Playwright verification
+Checked at 1440×900 and 390×844. Every grid's images render at identical
+CSS pixel width and height:
+
+| Viewport | Grid | Images | Rendered size |
+|---|---|---:|---|
+| 1440×900 | `/public` paths | 2 | 370×296 each |
+| 1440×900 | `/public` context | 2 | 362×271 each |
+| 1440×900 | `/public` place gallery | 4 | 362×271 each |
+| 1440×900 | `/about` photo band | 3 | 432×324 each |
+| 390×844 | `/public` paths | 2 | 335×268 each |
+| 390×844 | `/public` context | 2 | 160×120 each |
+| 390×844 | `/public` place gallery | 4 | 335×251 each |
+| 390×844 | `/about` photo band | 3 | 335×251 each |
+
+Also checked across `/public`, `/about`, `/contact`, `/for-students`, `/faq`,
+`/for-founders` and `/how-it-works` at both viewports:
+
+| Check | Result |
+|---|---|
+| Retired source references in rendered `<img>` elements | 0 |
+| Tourism source references in rendered `<img>` elements | 0 |
+| Sources outside the six-image active set | 0 |
+| Images failing `decode()` after load | 0 |
+
+Screenshots: `reports/artifacts/image-pass/{1440,390}-{public-paths,public-context,public-gallery,about-photos,contact-reach,students-pay,faq-hero,founders-hero,hiw-place}.png` (18 files).
+
+## Gates
+- `npx tsc --noEmit` ✅
+- `npm run lint` ✅
+- `npm test` ✅ 279/279
+- `npm run build` ✅ 22 static/route entries generated
