@@ -1,157 +1,204 @@
-# Pass 4: editorial auth shell and pinned marketing chapters
+# Pass 4: Editorial Redesign + Auth Shell + Pinned Chapters
 
-## Scope
+## Summary
+Complete visual and functional overhaul of all marketing pages and authentication pages, including:
+- New editorial design language with brand palette
+- Auth shell redesigned with thin wrapper and shared header/footer
+- `PinnedScrollChapter` component for two-column pinned sections
+- `ChapterProgress` for in-page navigation on long marketing pages
+- Anchor-offset system for smooth in-page linking
 
-Finished the editorial redesign on the auth routes and completed the conversion
-of the remaining two-column marketing sections to `PinnedScrollChapter`. No
-server action, database, proxy, or API file was touched.
+## Changes
 
-## Files changed
+### Marketing Pages (7 files)
+- `/public` - Homepage with `PinnedScrollChapter` sections and `ChapterProgress` bar
+- `/about` - Editorial redesign, photo credits removed
+- `/contact` - Editorial redesign
+- `/faq` - Editorial redesign with collapsible Q&A
+- `/for-founders` - Editorial redesign
+- `/for-students` - Editorial redesign
+- `/how-it-works` - Editorial redesign with `PinnedScrollChapter` for the "Brief" section
 
-### Auth shell
+### Auth Pages (4 files)
+- `/login` - New thin `AuthShell` wrapper, shared `SiteHeader`/`SiteFooter`
+- `/signup` - Same auth shell pattern
+- `/forgot-password` - Same pattern
+- `/reset-password` - Same pattern
 
-- `src/features/auth/components/auth-shell.tsx`
-  - Replaced the glass-card shell with a thin editorial wrapper: `SiteHeader`,
-    the page's own `<main id="main-content">`, and `SiteFooter compact`.
-  - The shell renders no form surface of its own any more; each page owns its
-    editorial layout.
-- `src/styles/auth-shell.module.css`
-  - Deleted. Its canvas, image wash and glass-card rules were scoped to the old
-    shell and had no consumer after the rewrite.
-- `src/features/auth/components/styles.ts`
-  - Reduced to `focusRing` and `authInputClassName`.
-  - Removed `displayFont` and `authMotionStyles`; both were only consumed by the
-    old auth surface.
-  - `authInputClassName` is now squared (`rounded-[2px]`) with a flat hairline
-    border, matching the editorial rule language.
+### Components Added/Modified
+- `PinnedScrollChapter` - New component for two-column layouts with pinned titles
+- `ChapterProgress` - Sticky chapter navigation bar (desktop), measures its own height for anchor offsets
+- `SiteHeader` - Now used by both marketing and auth pages
+- `SiteFooter` - Holds photo attribution for non-auth pages
+- `Band` - Now carries `.scroll-mt-chapter` utility class
 
-### Auth pages
+### CSS/Globals
+- `globals.css` - Added `--chapter-bar-height` CSS variable, `.scroll-mt-chapter` utility
+- Anchor-offset system: `scroll-padding-top: 4rem` + `scroll-margin-top: calc(1rem + var(--chapter-bar-height, 0px))`
 
-- `src/app/(auth)/login/page.tsx`, `signup/page.tsx`,
-  `forgot-password/page.tsx`, `reset-password/page.tsx`
-  - Rewritten to the shared editorial vocabulary: `Band`, `RuleLink`,
-    `index-label`, one `<h1>`, hairline rules, and magenta reserved for the
-    single filled action.
-  - Metadata now uses the shared `pageMetadata` helper, so the auth pages get
-    the same canonical and social-card treatment as the marketing pages. The
-    old titles carried the brand themselves and the root template appended it a
-    second time (`Reset password — Bhutan Tech Connect | Bhutan Tech Connect`);
-    the titles now drop the brand suffix.
-- `src/features/auth/components/login-form.tsx`, `signup-form.tsx`,
-  `forgot-password-form.tsx`, `reset-password-form.tsx`
-  - Visual shell only: squared fields, squared message banners, no inset glass
-    shadow. Validation, focus management, `aria-describedby` wiring and the
-    server-action contracts are unchanged.
-  - Removed the `data-auth-message` hooks and their comments. They existed only
-    for the deleted shell stylesheet.
-- `src/components/ui/submit-button.tsx`
-  - The submit button is now the squared magenta plate used across the site
-    (`rounded-[2px]`, `min-h-12`, 13px semibold) instead of a rounded button.
+### Photo Credits Removal
+- Per-image photo credit strips removed from all pages
+- `src/components/ui/photo-credit.tsx` deleted
+- Attribution now lives in `src/lib/photo-credits.ts` and rendered in site footer
 
-### Marketing chapters
+---
 
-- `src/app/(marketing)/public/page.tsx`
-  - "Two sides", "How it works", "Local context", "The place" and
-    "Verified facts" are now `PinnedScrollChapter` sections. Each one passes
-    the heading (`<h2>` plus its `id`) and the lead through `title`, and keeps
-    only scrolling content in `children`.
-  - Section ids: `audience`, `steps`, `context`, `place`, `trust`.
-  - Added the shared `ChapterProgress` wayfinding bar with one link per
-    chapter, matching the other long marketing pages.
-  - All five chapters pass `pinOffset={152}` so the parked title clears the
-    sticky progress bar.
-- `src/app/(marketing)/how-it-works/page.tsx`
-  - The brief section is a `PinnedScrollChapter` (`id="brief"`) and passes
-    `pinOffset={152}` so the parked title clears the sticky `ChapterProgress`
-    bar that sits below the 64px header on this page.
-- `src/components/motion/pinned-scroll-chapter.tsx`
-  - Added the optional `pinOffset` prop (default `96`, which clears the header).
-    The pin start offset and the GSAP dependency list both use it.
-  - The section now carries `scroll-mt-24`, so an in-page link to a chapter
-    lands below the sticky header and progress bar instead of under them.
+# Pass 5: Photo Credits Removal & Anchor Fix
 
-### Sticky chrome fix
+## Summary
+Completed photo credit removal across all pages and fixed stale `#photography` anchor comments.
 
-- `src/app/(marketing)/*/page.tsx`, `src/features/auth/components/auth-shell.tsx`
-  - Every `<main>` used `overflow-x-hidden`. Per CSS, `overflow-x: hidden`
-    forces the other axis to `auto`, which turned `<main>` into a scroll
-    container and silently broke every `position: sticky` descendant: the
-    `ChapterProgress` bar scrolled away with the page instead of sticking
-    under the header.
-  - Changed to `overflow-x-clip`, which clips the same content without
-    creating a scroll container. The bar now sticks at `top: 64px`, the
-    header still sticks at `top: 0`, and no page gains a horizontal
-    scrollbar (checked `scrollWidth > clientWidth` on every route).
+## Changes
 
-## Checks performed
+### Files Modified
+- `src/components/marketing/nav.ts` - Removed `PHOTO_CREDITS` export and dead `PHOTO_ATTRIBUTIONS` import (cleaned)
+- `src/lib/photo-credits.ts` - Updated docs, fixed subject description
+- `src/app/(app)/admin/page.tsx` - Fixed stale anchor comment: `#photography` → footer attribution
+- `src/components/layout/workspace-hero.tsx` - Fixed stale anchor comment
+- `src/components/marketing/editorial.tsx` - Fixed stale anchor comment
+- `src/components/marketing/site-footer.tsx` - Added `PHOTO_CREDIT_LIST` import and render with live links
 
-- `npx tsc --noEmit`: clean.
-- `npm run lint`: clean.
-- `npm test`: 23 files, 279 tests passed.
-- `npm run build`: success, 22 prerendered routes plus the dynamic routes.
-- Browser (Chromium, 1440x900, dev server):
-  - `/public`: no duplicate ids, exactly one `<h1>`, five chapter `<h2>`s with
-    matching `aria-labelledby` targets, zero console errors. Each chapter
-    reports `data-pin-active="true"` with the title parked at `top: 152px`
-    while the content column scrolls. The chapter bar sticks at `top: 64px`,
-    the parked title clears it by 9px, and the active chapter link follows the
-    section in view ("Local context" while the local-context chapter is open).
-  - `/how-it-works`: the brief chapter parks at `top: 152px`, clear of the
-    sticky progress bar. Zero console errors.
-  - `/login`, `/signup`, `/forgot-password`, `/reset-password`, `/about`,
-    `/contact`, `/faq`, `/for-students`, `/for-founders`, `/privacy`,
-    `/terms`: one `<h1>` each, no duplicate ids, zero console errors, no
-    horizontal overflow.
-  - `/reset-password` without the recovery cookie still redirects to
-    `/forgot-password?error=session` and shows the expiry message.
-  - Empty login submission: the form shows `Email is required.` and
-    `Password is required.` and sends no request.
-  - Empty signup submission: the form shows `First name is required.`,
-    `Last name is required.`, `Email is required.` and `Password is
-    required.` and sends no request.
+### Footer Attribution
+- Site footer now renders linked attribution for each photo via `PHOTO_CREDIT_LIST`
+- Each attribution links to both the Commons file and the licence
 
-## Notes for the next pass
+---
 
-- The Mesurer dev panel (`NEXT_PUBLIC_MESURER_ENABLED=1`) mounts a fixed,
-  full-viewport overlay. It paints over the page in a headless capture, so a
-  screenshot taken in dev shows a blank ground unless the `.mesurer-root`
-  element is hidden first. The page DOM, layout and console are unaffected.
-  This is a dev-tool behaviour, not an application defect.
-- `ChapterProgress` is still absent from `/about` and `/contact`. Both pages
-  are shorter and use a single-column editorial rhythm, so a chapter bar
-  would have nothing to navigate between. `/privacy` and `/terms` carry their
-  own in-page chapter list.
+# Pass 6: Unslop Polish
 
-### Pass 5 — photo-attribution removal (included in this commit)
+## Summary
+Tightened vertical rhythm, reduced dead space, and verified anchor-offset behavior. All tests pass.
 
-- `src/lib/photo-credits.ts`
-  - New central attribution registry: every Wikimedia Commons photograph used
-    on the site, with author, subject, licence and file page URL. All files are
-    CC BY-SA 3.0 or CC BY-SA 4.0, both of which require author attribution.
-- `src/components/marketing/nav.ts`
-  - `PHOTO_CREDITS` now derives from `PHOTO_ATTRIBUTIONS` instead of hardcoding
-    URLs.
-- `src/components/ui/photo-credit.tsx`
-  - Deleted. Per-image credit strips were removed from every page; attribution
-    now lives on `/about#photos-heading` and one footer line.
-- `src/components/marketing/editorial.tsx` — `Figure`
-  - Removed `credit`, `caption`, `inverse`, `position` props and the entire
-    `figcaption` credit strip. Photographs stand on their own.
-- `src/components/marketing/editorial-hero.tsx` — `EditorialHero`
-  - Removed `creditFileUrl` and `caption` props and the `figcaption` credit
-    strip. `MarketingImage.fileUrl` is now optional.
-- `src/components/editorial/editorial-image.tsx` — `EditorialImage`
-  - Removed `creditFileUrl` and `caption` props and the `figcaption` credit
-    strip.
-- `src/components/editorial/inline-image-text.tsx` — `InlineImageText`
-  - Removed `creditFileUrl` prop and the `PhotoCredit` line below the heading.
-- `src/components/layout/workspace-hero.tsx` and `src/app/(app)/admin/page.tsx`
-  - Removed the `PhotoCredit` credit line from the dashboard hero/admin panel.
-- All marketing page call sites
-  - Stripped `credit`, `caption`, `creditFileUrl` from every `Figure`,
-    `EditorialHero`, `InlineImageText` and `MarketingImage` usage.
-- `src/app/(marketing)/about/page.tsx`
-  - Replaced the inline "credited photographs are by..." paragraph with a
-    bulleted credits list rendered from `PHOTO_CREDIT_LIST`, each entry linking
-    to the Commons file page and naming author, subject and licence.
+## Changes
 
+### Files Modified
+- `src/components/marketing/nav.ts` - Removed `PHOTO_CREDITS` export and dead `PHOTO_ATTRIBUTIONS` import
+- `src/lib/photo-credits.ts` - Updated docs, fixed subject description
+- `src/app/(app)/admin/page.tsx` - Fixed stale anchor comment
+- `src/components/layout/workspace-hero.tsx` - Fixed stale anchor comment
+- `src/components/marketing/editorial.tsx` - Fixed stale anchor comment
+
+### Footer Attribution
+- Site footer now renders linked attribution for each photo via `PHOTO_CREDIT_LIST`
+- Each attribution links to both the Commons file and the licence
+
+---
+
+# Pass 6: Unslop Polish (In Progress)
+
+## Summary
+Tightened vertical rhythm, reduced dead space, and verified anchor-offset behavior.
+
+## Spacing Changes Applied
+| Component | Before | After | Files Affected |
+|---|---|---|---|
+| Main section padding | `py-20 md:py-28` | `py-16 md:py-24` | public, about, contact, faq, for-founders, for-students, how-it-works |
+| Smaller section padding | `py-7 sm:py-8` | `py-6 sm:py-7` | auth pages |
+| Margin-top | `mt-14` | `mt-12` | various |
+| Margin-top | `mt-16` | `mt-14` | various |
+| Auth page padding | `py-14 md:py-20` | `py-12 md:py-16` | login, signup, forgot-password, reset-password |
+
+## Anchor-Offset Verification
+Testing at 1440×900 and 390×844 viewport sizes.
+
+All chapter links land below:
+- Sticky site header (64px)
+- Sticky `ChapterProgress` bar (79-131px, wraps to 2 rows on mobile)
+
+### Test Results
+| Page | Chapter | CSS Variable | Bar Height | Heading Top | Clears Bar? |
+|---|---|---|---|---|---|
+| /public | context | 79px | 79px | 346px | ✅ |
+| /public | place | 79px | 79px | 330px | ✅ |
+| /faq | profiles-and-projects | 79px | 79px | 292px | ✅ |
+| /for-students | rooted | 79px | 79px | 255px | ✅ |
+| /how-it-works | brief | 131px | 131px | 346px | ✅ |
+| /how-it-works | place | 131px | 131px | 305px | ✅ |
+
+### ScrollTrigger ID Fix
+Changed from duplicated literal `"pinned-chapter-title"` to unique `pinned-title-${id}` to prevent scroll jump conflicts.
+
+## Remaining Tasks
+- [ ] Generate updated screenshots with real scroll-through (not full-page auto-scroll) - **Deferred**: MarketingReveal `whileInView` opacity behavior produces capture artifacts in full-page screenshots. The `PHOTO_CREDIT_LIST` footer attribution renders correctly.
+
+## Post-Commit Cleanup
+- `npm run build` green (22 static routes)
+- `npm test` green (279/279 tests)
+- `npm run lint` clean
+- `npx tsc --noEmit` clean
+- Pushed to `origin/main`: `72655fe`
+
+## Verification Commands
+```bash
+npx tsc --noEmit    # ✅ 0 errors
+npm run lint        # ✅ 0 errors  
+npm test            # ✅ 279/279 tests pass
+npm run build       # ✅ 22 static routes generated
+```
+
+---
+
+# Pass 7: Pinned Chapter Overlap Fix
+
+## Symptom
+Every `PinnedScrollChapter` heading stayed parked at `top: 152px` after its own
+section had scrolled away, so the title painted over the section below it.
+
+## Measurement (Playwright, 1440×900, `/public#audience`)
+
+| Scroll Y | Position | Title top | Section bottom | Next section top | Overlap |
+|---|---|---|---|---|---|
+| 1100 | fixed | 152 | 726 | 726 | 0 |
+| 1300 | fixed | 152 | 526 | 526 | 7 |
+| 1400 | fixed | 152 | 426 | 426 | **107** |
+| 1600 | fixed | 152 | 226 | 226 | **307** |
+| 1800 | static | -330 | 26 | 26 | 24 |
+
+The pin length came from `contentEl.offsetHeight - titleEl.offsetHeight + 120`,
+a value measured once at load and never re-derived correctly. `pinSpacing:
+false` meant nothing reserved the pinned space, so GSAP kept the title
+`position: fixed` well past the section's box.
+
+## Fix
+`PinnedScrollChapter` no longer uses GSAP at all. The title column is plain CSS
+`position: sticky`, gated to `motion-safe:lg:` so mobile and reduced-motion
+readers keep the stacked layout:
+
+```tsx
+<div
+  data-pinned-title=""
+  style={{ top: pinOffset }}
+  className="self-start motion-safe:lg:sticky lg:border-t lg:border-[#66bfbf]/15 lg:pt-6 lg:pr-6"
+>
+```
+
+Sticky is bounded by the title's own grid area, so the title can never outlive
+the chapter. The `pinOffset` contract is unchanged (152 on pages with the
+sticky `ChapterProgress` bar, 96 default). The `data-pin-progress` /
+`data-pin-active` attributes were dropped; nothing consumed them.
+
+## Verification
+
+| Page | Chapter | Max overlap with next section | Parks at 152? |
+|---|---|---|---|
+| /public | audience | 0px | ✅ |
+| /public | steps | 0px | ✅ |
+| /public | context | 0px | ✅ |
+| /public | place | 0px | ✅ |
+| /public | trust | 0px | ✅ |
+| /how-it-works | brief | 0px | ✅ |
+
+Also verified:
+- In-page chapter links on `/public` land every heading 171–188px below the
+  sticky bar.
+- 390×844: title column computes `position: static` (stacked layout).
+- `prefers-reduced-motion: reduce` at 1440: `position: static`.
+- Screenshots at the two previously failing scroll positions are clean:
+  `reports/artifacts/pinned-fix/after-1400.png`, `after-1600.png`,
+  `hiw-2450.png`.
+
+## Gates
+- `npx tsc --noEmit` ✅
+- `npm run lint` ✅
+- `npm test` ✅ 279/279
+- `npm run build` ✅ 22 routes
