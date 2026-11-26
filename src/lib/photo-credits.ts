@@ -1,10 +1,11 @@
 /**
- * Every photograph used on the site, with the attribution its licence requires.
+ * Attribution record for every photograph used on the site.
  *
  * All files are Wikimedia Commons images used under CC BY-SA 3.0 or
- * CC BY-SA 4.0, both of which require attribution of the author. The
- * per-image credit strips were removed from every page; the attribution now
- * lives here and is rendered once in the site footer.
+ * CC BY-SA 4.0, both of which require attribution of the author. The credit
+ * strips were removed from the pages and from the footer, so this module is
+ * intentionally not rendered anywhere. Keep it as the project's record of
+ * author, source file and licence for each image.
  */
 
 export type PhotoAttribution = {

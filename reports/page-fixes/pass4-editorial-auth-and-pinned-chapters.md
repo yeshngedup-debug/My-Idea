@@ -202,3 +202,34 @@ Also verified:
 - `npm run lint` ✅
 - `npm test` ✅ 279/279
 - `npm run build` ✅ 22 routes
+
+---
+
+# Pass 8: Footer Attribution Removed
+
+## Change
+The Wikimedia/CC BY-SA credit paragraph was removed from `SiteFooter`, along
+with its `PHOTO_CREDIT_LIST` import. The footer now ends on the © row, which
+gained `pb-10` so the previous bottom spacing is preserved.
+
+`src/lib/photo-credits.ts` is kept as the project's attribution record (author,
+Commons file, licence per image) but is no longer rendered anywhere; its header
+comment says so.
+
+## Verification (Playwright, 1440×900)
+Checked `/public`, `/about`, `/how-it-works`, `/contact`, `/login`:
+
+| Check | Result |
+|---|---|
+| Credit text present in footer | false on all pages |
+| `commons.wikimedia.org` / `creativecommons.org` links in footer | 0 on all pages |
+| Marketing footer height | 702px (was 780px) |
+| Compact auth footer | unchanged, 379px |
+
+Screenshot: `reports/artifacts/pinned-fix/footer-public-1440.png`.
+
+## Gates
+- `npx tsc --noEmit` ✅
+- `npm run lint` ✅
+- `npm test` ✅ 279/279
+- `npm run build` ✅ 22 routes
