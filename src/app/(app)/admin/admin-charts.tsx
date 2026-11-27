@@ -20,17 +20,24 @@ type Series = {
 
 type Arc = Series & { count: number; length: number; offset: number };
 
+const SERIES_COLOR = {
+  accent: "var(--color-accent)",
+  secondary: "var(--color-body-secondary)",
+  muted: "var(--color-border-strong)",
+  neutral: "var(--color-foreground)",
+} as const;
+
 const ROLE_SERIES: Series[] = [
-  { key: "student", label: "Students", color: "#0b5c5c", pattern: "" },
-  { key: "founder", label: "Founders", color: "#66bfbf", pattern: "" },
-  { key: "admin", label: "Admins", color: "#356464", pattern: "dots" },
+  { key: "student", label: "Students", color: SERIES_COLOR.accent, pattern: "" },
+  { key: "founder", label: "Founders", color: SERIES_COLOR.secondary, pattern: "" },
+  { key: "admin", label: "Admins", color: SERIES_COLOR.muted, pattern: "dots" },
 ];
 
 const STAGE_SERIES: Series[] = [
-  { key: "open", label: PROJECT_STATUS_LABEL.open, color: "#66bfbf", pattern: "" },
-  { key: "in_progress", label: PROJECT_STATUS_LABEL.in_progress, color: "#0b5c5c", pattern: "" },
-  { key: "review", label: PROJECT_STATUS_LABEL.review, color: "#356464", pattern: "hatch" },
-  { key: "completed", label: PROJECT_STATUS_LABEL.completed, color: "#0b5c5c", pattern: "" },
+  { key: "open", label: PROJECT_STATUS_LABEL.open, color: SERIES_COLOR.muted, pattern: "" },
+  { key: "in_progress", label: PROJECT_STATUS_LABEL.in_progress, color: SERIES_COLOR.accent, pattern: "" },
+  { key: "review", label: PROJECT_STATUS_LABEL.review, color: SERIES_COLOR.secondary, pattern: "hatch" },
+  { key: "completed", label: PROJECT_STATUS_LABEL.completed, color: SERIES_COLOR.neutral, pattern: "" },
 ];
 
 function share(count: number, total: number): number {
@@ -47,7 +54,7 @@ function ChartDefs() {
     <svg aria-hidden="true" focusable="false" width="0" height="0" className="absolute">
       <defs>
         <pattern id="admin-chart-dots" width="6" height="6" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.2" fill="#ffffff" fillOpacity="0.9" />
+          <circle cx="2" cy="2" r="1.2" className="fill-background" fillOpacity="0.9" />
         </pattern>
         <pattern
           id="admin-chart-hatch"
@@ -56,7 +63,7 @@ function ChartDefs() {
           patternUnits="userSpaceOnUse"
           patternTransform="rotate(45)"
         >
-          <line x1="0" y1="0" x2="0" y2="6" stroke="#ffffff" strokeOpacity="0.85" strokeWidth="2" />
+          <line x1="0" y1="0" x2="0" y2="6" className="stroke-background" strokeOpacity="0.85" strokeWidth="2" />
         </pattern>
       </defs>
     </svg>
@@ -108,7 +115,7 @@ function SrTable({
 function Swatch({ series }: { series: Series }) {
   return (
     <svg width="12" height="12" aria-hidden="true" focusable="false" className="shrink-0">
-      <rect width="12" height="12" rx="2" fill={series.color} />
+      <rect width="12" height="12" rx="2" style={{ fill: series.color }} />
       {series.pattern ? (
         <rect width="12" height="12" rx="2" fill={`url(#admin-chart-${series.pattern})`} />
       ) : null}
@@ -127,7 +134,7 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
   const series: Series[] = otherCount > 0
     ? [
         ...ROLE_SERIES,
-        { key: "other", label: "Other roles", color: "#356464", pattern: "hatch" },
+        { key: "other", label: "Other roles", color: SERIES_COLOR.neutral, pattern: "hatch" },
       ]
     : ROLE_SERIES;
 
@@ -149,8 +156,8 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
     .join(", ");
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
-      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
+    <figure className="min-w-0 rounded-xl border border-border bg-card p-4">
+      <figcaption className="text-sm font-semibold text-accent">
         Members by role
       </figcaption>
       <div className="mt-3 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
@@ -163,7 +170,7 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
         >
           <title id="admin-role-title">Members by role</title>
           <desc id="admin-role-desc">{description}</desc>
-          <circle cx="60" cy="60" r="46" fill="none" stroke="#eaf6f6" strokeWidth="14" />
+          <circle cx="60" cy="60" r="46" fill="none" className="stroke-border" strokeWidth="14" />
           <g transform="rotate(-90 60 60)">
             {arcs.map((arc) => (
               <g key={arc.key}>
@@ -172,7 +179,7 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
                   cy="60"
                   r="46"
                   fill="none"
-                  stroke={arc.color}
+                  style={{ stroke: arc.color }}
                   strokeWidth="14"
                   pathLength="100"
                   strokeDasharray={`${arc.length} ${100 - arc.length}`}
@@ -198,11 +205,11 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
             x="60"
             y="58"
             textAnchor="middle"
-            className="fill-[#0b5c5c] text-[20px] font-semibold tabular-nums"
+            className="fill-accent text-[20px] font-semibold tabular-nums"
           >
             {total}
           </text>
-          <text x="60" y="72" textAnchor="middle" className="fill-[#356464] text-[8px]">
+          <text x="60" y="72" textAnchor="middle" className="fill-body-secondary text-[8px]">
             members
           </text>
         </svg>
@@ -216,11 +223,11 @@ export function RoleDonut({ counts }: { counts: RoleCount[] }) {
               >
                 <span className="flex min-w-0 items-center gap-2">
                   <Swatch series={item} />
-                  <span className="truncate text-[#356464]">{item.label}</span>
+                  <span className="truncate text-body-secondary">{item.label}</span>
                 </span>
-                <span className="shrink-0 tabular-nums text-[#0b5c5c]">
+                <span className="shrink-0 tabular-nums text-accent">
                   {count}{" "}
-                  <span className="text-[#356464]">
+                  <span className="text-body-secondary">
                     ({roundedShare(count, total)}%)
                   </span>
                 </span>
@@ -257,33 +264,33 @@ export function ProjectStageBars({ statuses }: { statuses: string[] }) {
     otherCount > 0
       ? [
           ...known,
-          { key: "other", label: "Other", color: "#356464", pattern: "hatch" as const, count: otherCount },
+          { key: "other", label: "Other", color: SERIES_COLOR.neutral, pattern: "hatch" as const, count: otherCount },
         ]
       : known;
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
-      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
+    <figure className="min-w-0 rounded-xl border border-border bg-card p-4">
+      <figcaption className="text-sm font-semibold text-accent">
         Projects by stage
       </figcaption>
-      <p className="mt-0.5 text-xs tabular-nums text-[#356464]">
+      <p className="mt-0.5 text-xs tabular-nums text-body-secondary">
         {total} {total === 1 ? "project" : "projects"} total
       </p>
       <ul className="mt-3 space-y-2.5">
         {rows.map((row) => (
           <li key={row.key}>
             <div className="flex items-baseline justify-between gap-3">
-              <span className="flex min-w-0 items-center gap-2 text-xs text-[#356464]">
+              <span className="flex min-w-0 items-center gap-2 text-xs text-body-secondary">
                 <Swatch series={row} />
                 <span className="truncate">{row.label}</span>
               </span>
-              <span className="shrink-0 text-xs tabular-nums text-[#0b5c5c]">
+              <span className="shrink-0 text-xs tabular-nums text-accent">
                 {row.count}
               </span>
             </div>
             <div
               aria-hidden="true"
-              className="mt-1 h-2 w-full rounded-full border border-[#b9dede] bg-[#eaf6f6]"
+              className="mt-1 h-2 w-full rounded-full border border-border bg-secondary"
             >
               <div
                 className="h-full rounded-full"
@@ -354,8 +361,8 @@ export function ActivityTrend({
   ).length;
 
   return (
-    <figure className="min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
-      <figcaption className="text-sm font-semibold text-[#0b5c5c]">
+    <figure className="min-w-0 rounded-xl border border-border bg-card p-4">
+      <figcaption className="text-sm font-semibold text-accent">
         Projects and orders created by month
       </figcaption>
       {activeMonths < 2 ? (
@@ -374,7 +381,7 @@ export function ActivityTrend({
           action={
             <Link
               href="/admin/projects"
-              className="inline-flex min-h-11 items-center rounded-md border border-border bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+              className="inline-flex min-h-11 items-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
             >
               Open projects
             </Link>
@@ -408,7 +415,7 @@ export function ActivityTrend({
                     x2="620"
                     y1={y}
                     y2={y}
-                    stroke="#b9dede"
+                    className="stroke-border"
                     strokeWidth="1"
                   />
                 );
@@ -421,22 +428,22 @@ export function ActivityTrend({
                   values.map((value, index) => `${pointX(index)},${pointY(value)}`).join(" ");
                 return (
                   <>
-                    <text x="34" y="16" textAnchor="end" className="fill-[#356464] text-[10px] tabular-nums">
+                    <text x="34" y="16" textAnchor="end" className="fill-body-secondary text-[10px] tabular-nums">
                       {max}
                     </text>
-                    <text x="34" y="115" textAnchor="end" className="fill-[#356464] text-[10px] tabular-nums">
+                    <text x="34" y="115" textAnchor="end" className="fill-body-secondary text-[10px] tabular-nums">
                       0
                     </text>
-                    <polyline points={linePoints(projects)} fill="none" stroke="#0b5c5c" strokeWidth="2" />
+                    <polyline points={linePoints(projects)} fill="none" className="stroke-accent" strokeWidth="2" />
                     <polyline
                       points={linePoints(orders)}
                       fill="none"
-                      stroke="#66bfbf"
+                      className="stroke-body-secondary"
                       strokeWidth="2"
                       strokeDasharray="5 4"
                     />
                     {projects.map((value, index) => (
-                      <circle key={`p-${index}`} cx={pointX(index)} cy={pointY(value)} r="2.5" fill="#0b5c5c" />
+                      <circle key={`p-${index}`} cx={pointX(index)} cy={pointY(value)} r="2.5" className="fill-accent" />
                     ))}
                     {orders.map((value, index) => (
                       <circle
@@ -444,8 +451,7 @@ export function ActivityTrend({
                         cx={pointX(index)}
                         cy={pointY(value)}
                         r="2.5"
-                        fill="#ffffff"
-                        stroke="#66bfbf"
+                        className="fill-background stroke-body-secondary"
                         strokeWidth="1.5"
                       />
                     ))}
@@ -455,7 +461,7 @@ export function ActivityTrend({
                         x={pointX(index)}
                         y="138"
                         textAnchor="middle"
-                        className="fill-[#356464] text-[10px]"
+                        className="fill-body-secondary text-[10px]"
                       >
                         {month.label}
                       </text>
@@ -464,16 +470,16 @@ export function ActivityTrend({
                 );
               })()}
             </svg>
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#356464]">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-body-secondary">
               <span className="inline-flex items-center gap-1.5">
                 <svg width="18" height="8" aria-hidden="true" focusable="false">
-                  <line x1="0" y1="4" x2="18" y2="4" stroke="#0b5c5c" strokeWidth="2" />
+                  <line x1="0" y1="4" x2="18" y2="4" className="stroke-accent" strokeWidth="2" />
                 </svg>
                 Projects
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <svg width="18" height="8" aria-hidden="true" focusable="false">
-                  <line x1="0" y1="4" x2="18" y2="4" stroke="#66bfbf" strokeWidth="2" strokeDasharray="5 4" />
+                  <line x1="0" y1="4" x2="18" y2="4" className="stroke-body-secondary" strokeWidth="2" strokeDasharray="5 4" />
                 </svg>
                 Orders
               </span>
@@ -483,10 +489,10 @@ export function ActivityTrend({
             {months.map((month, index) => (
               <li
                 key={month.key}
-                className="flex items-center justify-between gap-3 border-b border-[#b9dede] py-1.5 text-xs last:border-0"
+                className="flex items-center justify-between gap-3 border-b border-border py-1.5 text-xs last:border-0"
               >
-                <span className="text-[#356464]">{month.label}</span>
-                <span className="tabular-nums text-[#0b5c5c]">
+                <span className="text-body-secondary">{month.label}</span>
+                <span className="tabular-nums text-accent">
                   {projects[index]} projects · {orders[index]} orders
                 </span>
               </li>

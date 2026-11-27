@@ -45,10 +45,10 @@ export interface ProjectInfo {
 }
 
 const APP_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: APPLICATION_STATUS_LABEL.pending, cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
-  shortlisted: { label: APPLICATION_STATUS_LABEL.shortlisted, cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
-  accepted: { label: APPLICATION_STATUS_LABEL.accepted, cls: 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]' },
-  rejected: { label: APPLICATION_STATUS_LABEL.rejected, cls: 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]' },
+  pending: { label: APPLICATION_STATUS_LABEL.pending, cls: 'border-border bg-secondary text-accent' },
+  shortlisted: { label: APPLICATION_STATUS_LABEL.shortlisted, cls: 'border-border bg-secondary text-accent' },
+  accepted: { label: APPLICATION_STATUS_LABEL.accepted, cls: 'border-border/20 bg-cta/8 text-accent' },
+  rejected: { label: APPLICATION_STATUS_LABEL.rejected, cls: 'border-destructive/25 bg-cta/8 text-destructive' },
 };
 
 const APPLICATION_STATUSES = [
@@ -156,7 +156,7 @@ export function ProjectDetailClient({
     <div className="space-y-6" aria-busy={busy}>
       <Link
         href="/founder/projects"
-        className="inline-flex min-h-9 items-center gap-2 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded"
+        className="inline-flex min-h-9 items-center gap-2 text-sm text-body-secondary transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
       >
         Back to my projects
       </Link>
@@ -172,17 +172,17 @@ export function ProjectDetailClient({
 
       <section className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold tracking-tight text-[#0b5c5c] sm:text-2xl">{project.title}</h2>
-          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#356464]">
+          <h2 className="text-xl font-semibold text-accent sm:text-2xl">{project.title}</h2>
+          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-body-secondary">
             {project.duration && <span>{project.duration}</span>}
             <span className="inline-flex items-center gap-1">
               Work mode:{' '}
-              <span className="font-semibold text-[#0b5c5c]">
+              <span className="font-semibold text-accent">
                 {project.work_mode === 'onsite' ? 'On-site' : 'Remote'}
               </span>
             </span>
             {project.budget_min != null && (
-              <span className="font-semibold tabular-nums text-[#0b5c5c]">
+              <span className="font-semibold tabular-nums text-accent">
                 Nu {project.budget_min.toLocaleString('en-IN')}
                 {project.budget_max != null && project.budget_max !== project.budget_min ? ` - ${project.budget_max.toLocaleString('en-IN')}` : ''}
               </span>
@@ -201,10 +201,10 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
+              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 ${
                 projectStatus === s.value
-                  ? 'bg-[#0b5c5c] text-[#ffffff]'
-                  : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
+                  ? 'bg-cta text-cta-foreground'
+                  : 'border border-border bg-card text-body-secondary hover:bg-secondary'
               }`}
               >
                 {s.label}
@@ -221,8 +221,8 @@ export function ProjectDetailClient({
         />
 
         <section className="space-y-3">
-          <h2 className="text-base font-semibold text-[#0b5c5c]">
-            Applicants <span className="font-normal tabular-nums text-[#356464]">({applicants.length})</span>
+          <h2 className="text-base font-semibold text-accent">
+            Applicants <span className="font-normal tabular-nums text-body-secondary">({applicants.length})</span>
           </h2>
 
           {applicants.length === 0 ? (
@@ -231,7 +231,7 @@ export function ProjectDetailClient({
               description="When a student applies, you can review their details here."
             />
           ) : (
-            <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
+            <ul className="divide-y divide-border border-y border-border">
               {applicants.map((a) => {
                 const s = a.student;
                 const current = appStatus[a.id] ?? a.status;
@@ -241,10 +241,10 @@ export function ProjectDetailClient({
                   <li key={a.id} className="space-y-3 py-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <h3 className="truncate text-base font-semibold text-[#0b5c5c]">
+                        <h3 className="truncate text-base font-semibold text-accent">
                           {s?.full_name ?? 'Applicant'}
                         </h3>
-                        <p className="text-xs text-[#356464]">
+                        <p className="text-xs text-body-secondary">
                           {s?.college ?? 'College not set'}
                           {s?.course ? ` - ${s.course}` : ''}
                           {s?.year ? ` (${s.year} year)` : ''}
@@ -264,14 +264,14 @@ export function ProjectDetailClient({
                     {(s?.skills?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-1.5">
                         {(s?.skills ?? []).slice(0, 6).map((k) => (
-                          <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">{k}</Badge>
+                          <Badge key={k} variant="outline" className="border-border bg-secondary text-body-secondary">{k}</Badge>
                         ))}
                       </div>
                     )}
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                       {s?.cv_path && (
-                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
+                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 text-destructive transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                           View CV
                           <span className="sr-only">
                             {' '}for {s?.full_name ?? 'this applicant'} (opens in a new tab)
@@ -279,11 +279,11 @@ export function ProjectDetailClient({
                         </a>
                       )}
                       {s?.contact_email && (
-                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-11 items-center gap-1.5 break-all text-[#356464] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
+                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-11 items-center gap-1.5 break-all text-body-secondary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded">
                           {s.contact_email}
                         </a>
                       )}
-                      <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-[#356464]">
+                      <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-body-secondary">
                         Applied {formatBhutanDate(a.created_at)}
                       </span>
                     </div>
@@ -292,7 +292,7 @@ export function ProjectDetailClient({
                       role="group"
                       aria-label={`Applicant status for ${s?.full_name ?? 'applicant'}`}
                       aria-describedby={statusHelpId}
-                      className="space-y-2 border-t border-[#b9dede] pt-3"
+                      className="space-y-2 border-t border-border pt-3"
                     >
                       <div className="flex flex-wrap gap-2">
                         {APPLICATION_STATUSES.map((st) => {
@@ -305,10 +305,10 @@ export function ProjectDetailClient({
                               disabled={busy || isCurrent || !isAllowed}
                               onClick={() => setApplication(a.id, st, s?.full_name ?? 'this applicant')}
                               aria-pressed={isCurrent}
-                              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:cursor-not-allowed disabled:opacity-60 ${
+                              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-60 ${
                                 isCurrent
-                                  ? 'bg-[#0b5c5c] text-[#ffffff]'
-                                  : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
+                                  ? 'bg-cta text-cta-foreground'
+                                  : 'border border-border bg-card text-body-secondary hover:bg-secondary'
                               }`}
                             >
                               {applicantStatusLabel(st)}

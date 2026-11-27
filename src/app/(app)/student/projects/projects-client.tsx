@@ -139,7 +139,7 @@ export function ProjectCard({
     <article className="overflow-hidden rounded-xl border border-border bg-card">
       <header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-primary">
+          <p className="truncate text-sm font-semibold text-accent">
             {project.founderName ?? 'Founder'}
           </p>
           <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted-foreground">
@@ -150,17 +150,17 @@ export function ProjectCard({
             </time>
           </p>
         </div>
-        <Badge className="mt-0.5 shrink-0 gap-1.5 border-border bg-background text-primary">
+        <Badge className="mt-0.5 shrink-0 gap-1.5 border-border bg-background text-accent">
           <span
             aria-hidden="true"
-            className="h-1.5 w-1.5 rounded-full bg-primary"
+            className="h-1.5 w-1.5 rounded-full bg-accent"
           />
           {closed ? 'Closed' : statusLabel(project.status)}
         </Badge>
       </header>
 
       <div className="px-4 py-4 sm:px-5">
-        <h3 className="break-words text-base font-semibold leading-6 text-primary">
+        <h3 className="break-words text-base font-semibold leading-6 text-accent">
           {project.title}
         </h3>
         <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-body-secondary">
@@ -185,7 +185,7 @@ export function ProjectCard({
                   <Link
                     href={detailHref}
                     aria-label={`+${hiddenSkillCount} more required ${hiddenSkillCount === 1 ? 'skill' : 'skills'}`}
-                    className="inline-flex min-h-11 items-center rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                    className="inline-flex min-h-11 items-center rounded text-xs font-medium text-accent underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                   >
                     +{hiddenSkillCount} more
                   </Link>
@@ -195,25 +195,25 @@ export function ProjectCard({
           )}
           <div className="min-w-0">
             <dt className="text-muted-foreground">Budget</dt>
-            <dd className="mt-1 break-words font-medium tabular-nums text-primary">
+            <dd className="mt-1 break-words font-medium tabular-nums text-accent">
               {budget}
             </dd>
           </div>
           <div className="min-w-0">
             <dt className="text-muted-foreground">Duration</dt>
-            <dd className="mt-1 font-medium text-primary">
+            <dd className="mt-1 font-medium text-accent">
               {project.duration ?? 'Flexible'}
             </dd>
           </div>
           <div className="min-w-0">
             <dt className="text-muted-foreground">Work mode</dt>
-            <dd className="mt-1 font-medium text-primary">
+            <dd className="mt-1 font-medium text-accent">
               {project.work_mode === 'onsite' ? 'Onsite' : 'Remote'}
             </dd>
           </div>
           <div className="min-w-0">
             <dt className="text-muted-foreground">Apply by</dt>
-            <dd className="mt-1 font-medium tabular-nums text-primary">
+            <dd className="mt-1 font-medium tabular-nums text-accent">
               {deadline}
             </dd>
           </div>
@@ -235,7 +235,7 @@ export function ProjectCard({
           className={`pressable inline-flex min-h-11 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
             applied || closed
               ? 'cursor-not-allowed bg-muted text-muted-foreground'
-              : 'bg-[#0b5c5c] text-[#ffffff] hover:bg-[#0b2e2e]'
+              : 'bg-cta text-cta-foreground hover:bg-foreground'
           }`}
         >
           {applied
@@ -248,7 +248,7 @@ export function ProjectCard({
         </button>
         <Link
           href={detailHref}
-          className="inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline-offset-4 hover:text-destructive hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          className="inline-flex min-h-11 items-center rounded text-sm font-semibold text-accent underline-offset-4 hover:text-destructive hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
         >
           View details
         </Link>
@@ -394,7 +394,7 @@ export function ProjectsClient({
       <div className="rounded-xl border border-border bg-card p-4">
         <label
           htmlFor="project-search"
-          className="block text-sm font-semibold text-primary"
+          className="block text-sm font-semibold text-accent"
         >
           Search project briefs
         </label>
@@ -427,7 +427,7 @@ export function ProjectsClient({
             <button
               type="button"
               onClick={clearFilters}
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-background px-4 text-xs font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-background px-4 text-xs font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
               Clear filters
             </button>

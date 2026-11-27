@@ -9,7 +9,7 @@ type StateProps = {
   headingLevel?: "h1" | "h2" | "h3";
 };
 
-const bodyClass = "mt-1.5 max-w-[52ch] text-sm leading-6 text-[#356464]";
+const bodyClass = "mt-1.5 max-w-[52ch] text-sm leading-6 text-body-secondary";
 const actionClass = "mt-4";
 
 /**
@@ -27,11 +27,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "rounded-xl border border-dashed border-[#b9dede] bg-[#ffffff] px-5 py-6",
+        "rounded-xl border border-dashed border-border bg-card px-5 py-6",
         className,
       )}
     >
-      <Heading className="text-base font-semibold leading-6 text-[#0b5c5c]">
+      <Heading className="text-base font-semibold leading-6 text-accent">
         {title}
       </Heading>
       <p className={bodyClass}>{description}</p>
@@ -55,11 +55,11 @@ export function ErrorState({
     <div
       role="alert"
       className={cn(
-        "rounded-xl border border-[#c2004b]/30 bg-[#ff0063]/8 px-5 py-6",
+        "rounded-xl border border-destructive/30 bg-cta/8 px-5 py-6",
         className,
       )}
     >
-      <Heading className="text-base font-semibold leading-6 text-[#c2004b]">
+      <Heading className="text-base font-semibold leading-6 text-destructive">
         {title}
       </Heading>
       <p className={bodyClass}>{description}</p>

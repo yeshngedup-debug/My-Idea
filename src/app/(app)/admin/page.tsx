@@ -33,8 +33,8 @@ export const metadata = { title: "Admin Dashboard" };
 const PILL = {
   open: "border-border bg-secondary text-secondary-foreground",
   pending: "border-accent-deep/30 bg-accent-deep/10 text-accent-deep",
-  active: "border-primary/30 bg-primary/10 text-primary",
-  confirmed: "border-primary bg-primary text-primary-foreground",
+  active: "border-accent/30 bg-accent/10 text-accent",
+  confirmed: "border-accent bg-accent text-primary-foreground",
   danger: "border-destructive/30 bg-destructive/10 text-accent-deep",
   neutral: "border-border bg-muted text-muted-foreground",
 } as const;
@@ -42,7 +42,7 @@ const PILL = {
 const PILL_DOT = {
   open: "bg-accent-deep",
   pending: "bg-accent-deep",
-  active: "bg-primary",
+  active: "bg-accent",
   confirmed: "bg-primary-foreground",
   danger: "bg-accent-deep",
   neutral: "bg-muted-foreground",
@@ -123,7 +123,7 @@ export default async function AdminDashboard() {
     console.error("[admin] Failed to load platform overview", overview.error);
     return (
       <section aria-label="Platform overview unavailable">
-        <h1 className="text-[clamp(1.5rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-primary text-balance">
+        <h1 className="text-[clamp(1.5rem,3.5vw,2.25rem)] font-semibold leading-[1.15] text-accent text-balance">
           Platform overview
         </h1>
         <ErrorState
@@ -134,7 +134,7 @@ export default async function AdminDashboard() {
           action={
             <Link
               href="/admin"
-              className="inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+              className="inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
             >
               Try again
             </Link>
@@ -200,14 +200,14 @@ export default async function AdminDashboard() {
     <div className="space-y-8">
       {/* Header band: a heading and a purpose line, no decorative panel. */}
       <section aria-labelledby="admin-overview-title">
-        <p className="text-xs font-medium text-[#356464]">Platform operations</p>
+        <p className="text-xs font-medium text-body-secondary">Platform operations</p>
         <h1
           id="admin-overview-title"
-          className="mt-1.5 text-[clamp(1.5rem,3.5vw,2.25rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0b2e2e] text-balance"
+          className="mt-1.5 text-[clamp(1.5rem,3.5vw,2.25rem)] font-semibold leading-[1.15] text-foreground text-balance"
         >
           Platform overview
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-[#356464]">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-body-secondary">
           {nextOrder
             ? `${verifying} payment${verifying === 1 ? "" : "s"} waiting. Start with the longest-waiting order below.`
             : "Members, projects and payment reviews at a glance."}
@@ -218,32 +218,32 @@ export default async function AdminDashboard() {
       {nextOrder ? (
         <section
           aria-labelledby="admin-next-review-title"
-          className="rounded-xl border border-[#b9dede] bg-[#ffffff] px-5 py-4"
+          className="rounded-xl border border-border bg-card px-5 py-4"
         >
-          <p className="text-xs font-semibold text-[#c2004b]">
+          <p className="text-xs font-semibold text-destructive">
             Next payment to review
           </p>
           <h2
             id="admin-next-review-title"
-            className="mt-1 break-words text-sm font-medium text-[#0b5c5c]"
+            className="mt-1 break-words text-sm font-medium text-accent"
           >
             {orderSummary(nextOrder)}
           </h2>
           {verifying > 1 && (
-            <p className="mt-0.5 text-xs text-[#356464]">
+            <p className="mt-0.5 text-xs text-body-secondary">
               {verifying - 1} more waiting behind this one
             </p>
           )}
           <Link
             href="/admin/payments"
-            className="pressable mt-3 inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-4 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            className="pressable mt-3 inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-4 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             Review payment
           </Link>
         </section>
       ) : (
-        <p className="flex flex-wrap items-center gap-2 rounded-xl border border-[#b9dede] bg-[#ffffff] px-5 py-3 text-sm text-[#356464]">
-          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#0b5c5c]" />
+        <p className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm text-body-secondary">
+          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-cta" />
           All caught up — no payments are waiting for review.
         </p>
       )}
@@ -254,7 +254,7 @@ export default async function AdminDashboard() {
       <section aria-labelledby="admin-visuals-title" className="space-y-4">
         <h2
           id="admin-visuals-title"
-          className="text-lg font-semibold tracking-tight text-primary"
+          className="text-lg font-semibold text-accent"
         >
           Platform data
         </h2>
@@ -271,12 +271,12 @@ export default async function AdminDashboard() {
       <section className="grid grid-cols-12 gap-6 lg:gap-8">
         <div className="col-span-12 min-w-0 lg:col-span-8">
           <div className="mb-4 flex items-end justify-between gap-4">
-            <h2 className="text-lg font-semibold tracking-tight text-primary">
+            <h2 className="text-lg font-semibold text-accent">
               Recent payment orders
             </h2>
             <Link
               href="/admin/payments"
-              className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+              className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
             >
               All orders
             </Link>
@@ -288,7 +288,7 @@ export default async function AdminDashboard() {
               action={
                 <Link
                   href="/admin/payments"
-                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                 >
                   Open payments
                 </Link>
@@ -301,7 +301,7 @@ export default async function AdminDashboard() {
                 return (
                   <div key={order.id} className={ORDER_ROW}>
                     <div className="min-w-0">
-                      <p className="break-words text-sm font-medium tabular-nums text-primary">
+                      <p className="break-words text-sm font-medium tabular-nums text-accent">
                         {orderSummary(order)}
                       </p>
                     </div>
@@ -320,7 +320,7 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="col-span-12 min-w-0 lg:col-span-4">
-          <h2 className="mb-4 text-lg font-semibold tracking-tight text-primary">
+          <h2 className="mb-4 text-lg font-semibold text-accent">
             Go to
           </h2>
           <nav
@@ -347,7 +347,7 @@ export default async function AdminDashboard() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

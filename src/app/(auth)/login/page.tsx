@@ -49,7 +49,6 @@ export default async function LoginPage({
   return (
     <>
       <AuthCard
-        eyebrow="Welcome back"
         title="Log in"
         lead="Your student workspace, your applications and your shortlist sit behind one sign-in."
       >
@@ -59,7 +58,7 @@ export default async function LoginPage({
           passwordHelpContactHref={passwordHelpContactHref}
         />
 
-        <p className="mt-5 text-[14px] leading-6 text-[#356464]">
+        <p className="quiet-note mt-5">
           New to Bhutan Tech Connect?{" "}
           <Link
             href={CTA_HREFS.signup}

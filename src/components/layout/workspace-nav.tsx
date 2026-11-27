@@ -19,7 +19,7 @@ function useActiveHref(links: WorkspaceNavLink[]) {
 }
 
 const focusRing =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]';
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 const itemBase =
   'inline-flex min-h-11 items-center rounded-md px-3 py-2 text-sm font-medium transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none';
@@ -45,8 +45,8 @@ export function WorkspaceNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`${itemBase} ${focusRing} ${
               active
-                ? 'bg-[#0b5c5c] font-semibold text-[#ffffff]'
-                : 'text-[#356464] hover:bg-[#eaf6f6] hover:text-[#0b5c5c]'
+                ? 'bg-cta font-semibold text-cta-foreground'
+                : 'text-body-secondary hover:bg-secondary hover:text-accent'
             }`}
           >
             {item.label}
@@ -70,7 +70,7 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
   return (
     <nav
       aria-label="Mobile workspace navigation"
-      className="-mx-4 flex gap-1 overflow-x-auto border-t border-[#b9dede] px-4 pb-2 pt-2 lg:hidden"
+      className="-mx-4 flex gap-1 overflow-x-auto border-t border-border px-4 pb-2 pt-2 lg:hidden"
     >
       {links.map((item) => {
         const active = isActive(item.href);
@@ -81,8 +81,8 @@ export function WorkspaceMobileNav({ links }: { links: WorkspaceNavLink[] }) {
             aria-current={active ? 'page' : undefined}
             className={`${itemBase} shrink-0 ${focusRing} ${
               active
-                ? 'bg-[#0b5c5c] font-semibold text-[#ffffff]'
-                : 'text-[#356464] hover:bg-[#eaf6f6] hover:text-[#0b5c5c]'
+                ? 'bg-cta font-semibold text-cta-foreground'
+                : 'text-body-secondary hover:bg-secondary hover:text-accent'
             }`}
           >
             {item.label}

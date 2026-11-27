@@ -160,7 +160,7 @@ export default async function FounderShortlistsPage() {
                 // Full reload, matching the other retry controls in the workspace.
                 <a
                   href="/founder/shortlists"
-                  className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+                  className="inline-flex min-h-11 items-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Refresh
                 </a>

@@ -278,9 +278,9 @@ service dependency on a local database stack.
 
 ## Design and imagery
 
-The public experience uses an editorial, photo-led layout with oversized type, clear hierarchy, and responsive motion. The photographs in `public/images/` show Bhutanese people, streets and architecture, sourced from Wikimedia Commons under CC0; the per-image author, source file and licence are recorded in `src/lib/photo-credits.ts`.
+The public experience uses a calm, icon-led layout with oversized type, clear hierarchy, and restrained motion. Visual panels use Phosphor icons in the locked palette; the website does not render photography.
 
-The BTC brand palette is teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`. Derived legibility roles are ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b`, and black `#000000` for text on magenta. The auth screens use these roles: magenta carries the single filled action, and mist and white carry the quiet surfaces.
+The interface uses white `#FFFFFF`, mist `#F5F5F7`, ink `#1D1D1F`, secondary text `#6E6E73`, border `#D2D2D7`, and deep teal `#0B5C5C` as the only accent. Motion is limited to 150–250 ms opacity and fade changes, and respects reduced-motion preferences.
 
 ---
 

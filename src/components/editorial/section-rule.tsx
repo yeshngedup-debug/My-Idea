@@ -7,21 +7,15 @@ export type SectionRuleProps = {
 };
 
 /**
- * Server component. A quiet divider that can carry a short plain-language
- * label. It generates no numbers and no meta-labels of its own.
+ * Server component. A quiet, natural-case section cue. It does not generate a
+ * number, an eyebrow, or a decorative rule.
  */
 export function SectionRule({ label, className }: SectionRuleProps) {
+  if (!label) return null;
+
   return (
-    <div className={cn("flex items-center gap-3 sm:gap-4", className)}>
-      <span aria-hidden="true" className="h-px min-w-0 flex-1 bg-[#0b5c5c]/20" />
-      {label ? (
-        <>
-          <span className="shrink-0 whitespace-nowrap text-xs font-medium text-[#c2004b]">
-            {label}
-          </span>
-          <span aria-hidden="true" className="h-px min-w-0 flex-1 bg-[#0b5c5c]/20" />
-        </>
-      ) : null}
-    </div>
+    <p className={cn("text-sm font-medium text-muted-foreground", className)}>
+      {label}
+    </p>
   );
 }

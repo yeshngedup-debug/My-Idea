@@ -51,8 +51,8 @@ const ROLE_HOME: Partial<Record<Role, string>> = {
 const PILL = {
   open: "border-border bg-secondary text-secondary-foreground",
   pending: "border-accent-deep/30 bg-accent-deep/10 text-accent-deep",
-  active: "border-primary/30 bg-primary/10 text-primary",
-  confirmed: "border-primary bg-primary text-primary-foreground",
+  active: "border-accent/30 bg-accent/10 text-accent",
+  confirmed: "border-accent bg-accent text-primary-foreground",
   danger: "border-destructive/30 bg-destructive/10 text-accent-deep",
   neutral: "border-border bg-muted text-muted-foreground",
 } as const;
@@ -60,7 +60,7 @@ const PILL = {
 const PILL_DOT = {
   open: "bg-accent-deep",
   pending: "bg-accent-deep",
-  active: "bg-primary",
+  active: "bg-accent",
   confirmed: "bg-primary-foreground",
   danger: "bg-accent-deep",
   neutral: "bg-muted-foreground",
@@ -77,7 +77,7 @@ const APPLICATION_TONE: Record<string, PillTone> = {
 
 /* Quiet, shared link treatment: one filled CTA lives in the next action. */
 const QUIET_LINK =
-  "inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep hover:decoration-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
+  "inline-flex min-h-11 items-center rounded text-sm font-semibold text-accent underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep hover:decoration-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
 
 type ProfileRow = Awaited<ReturnType<typeof getStudentProfile>>;
 
@@ -104,7 +104,7 @@ function RetryNotice({
         /* A full reload retries this server render instead of a cached transition. */
         <a
           href="/student"
-          className="inline-flex min-h-11 items-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 items-center rounded-md bg-accent px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
         >
           Try again
         </a>
@@ -188,7 +188,7 @@ export default async function StudentDashboard() {
         action={
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center rounded-md border border-border px-5 py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+            className="inline-flex min-h-11 items-center rounded-md border border-border px-5 py-3 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
           >
             Go to home
           </Link>
@@ -296,7 +296,7 @@ export default async function StudentDashboard() {
         <div className="min-w-0">
           <h1
             id="student-overview-title"
-            className="text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.2] tracking-[-0.03em] text-primary text-balance"
+            className="text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.2] text-accent text-balance"
           >
             Overview
           </h1>
@@ -307,7 +307,7 @@ export default async function StudentDashboard() {
         </div>
         <Link
           href="/student/profile"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-border-strong bg-card px-4 py-2.5 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-border-strong bg-card px-4 py-2.5 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           Update profile
         </Link>
@@ -316,12 +316,12 @@ export default async function StudentDashboard() {
       {/* Block A — the single next action, ahead of the figures. */}
       <section
         aria-labelledby="student-next-action-title"
-        className="rounded-xl border border-primary/25 bg-card px-5 py-5 sm:px-6"
+        className="rounded-xl border border-accent/25 bg-card px-5 py-5 sm:px-6"
       >
         <p className="text-xs font-semibold text-accent-deep">Next action</p>
         <h2
           id="student-next-action-title"
-          className="mt-2 text-lg font-semibold tracking-tight text-primary"
+          className="mt-2 text-lg font-semibold text-accent"
         >
           {nextAction.title}
         </h2>
@@ -349,12 +349,12 @@ export default async function StudentDashboard() {
               <dt className="min-w-0">
                 <Link
                   href={stat.href}
-                  className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                  className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
                 >
                   {stat.label}
                 </Link>
               </dt>
-              <dd className="shrink-0 text-base font-medium tabular-nums text-primary">
+              <dd className="shrink-0 text-base font-medium tabular-nums text-accent">
                 {stat.value}
               </dd>
             </div>
@@ -366,7 +366,7 @@ export default async function StudentDashboard() {
         {/* Block C — dense rows, not cards. */}
         <div className="col-span-12 min-w-0 lg:col-span-8">
           <div className="mb-4 flex items-end justify-between gap-4">
-            <h2 className="min-w-0 text-lg font-semibold tracking-tight text-primary">
+            <h2 className="min-w-0 text-lg font-semibold text-accent">
               Recent applications
             </h2>
             <Link href="/student/applications" className={`shrink-0 ${QUIET_LINK}`}>
@@ -397,7 +397,7 @@ export default async function StudentDashboard() {
                     >
                       <Link
                         href={applicationHref(application)}
-                        className="inline-flex min-h-11 min-w-0 flex-1 items-center truncate rounded text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                        className="inline-flex min-h-11 min-w-0 flex-1 items-center truncate rounded text-sm font-medium text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
                       >
                         {application.project?.title ?? "Project"}
                       </Link>
@@ -443,7 +443,7 @@ export default async function StudentDashboard() {
                         <td className="py-2 pr-3">
                           <Link
                             href={applicationHref(application)}
-                            className="inline-flex min-h-11 max-w-full items-center rounded text-sm font-medium text-primary after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-inset"
+                            className="inline-flex min-h-11 max-w-full items-center rounded text-sm font-medium text-accent after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-inset"
                           >
                             <span
                               className="block max-w-full truncate"
@@ -476,7 +476,7 @@ export default async function StudentDashboard() {
 
         {/* Block D — quiet shortcuts. */}
         <div className="col-span-12 min-w-0 lg:col-span-4">
-          <h2 className="mb-4 text-lg font-semibold tracking-tight text-primary">
+          <h2 className="mb-4 text-lg font-semibold text-accent">
             Go to
           </h2>
           <nav
@@ -487,7 +487,7 @@ export default async function StudentDashboard() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

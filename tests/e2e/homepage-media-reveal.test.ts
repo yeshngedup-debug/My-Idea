@@ -8,30 +8,26 @@ import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
-test('homepage images load with real layout boxes', async ({ page }) => {
+test('homepage icon panels render with real layout boxes', async ({ page }) => {
   await page.goto('/public');
 
-  const images = page.locator('main img');
-  expect(await images.count()).toBeGreaterThan(0);
+  expect(await page.locator('main img').count()).toBe(0);
 
-  for (let index = 0; index < (await images.count()); index += 1) {
-    const image = images.nth(index);
-    // Scroll each lazy image into view instead of rewriting its `loading`
-    // attribute: changing the DOM before hydration makes React report a
-    // hydration mismatch that the app does not actually cause.
-    await image.scrollIntoViewIfNeeded();
+  const panels = page.locator('main [data-media-panel]');
+  expect(await panels.count()).toBeGreaterThan(0);
+
+  for (let index = 0; index < (await panels.count()); index += 1) {
+    const panel = panels.nth(index);
+    await panel.scrollIntoViewIfNeeded();
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveCSS('opacity', '1');
     await expect
-      .poll(() => image.evaluate((element) => (element as HTMLImageElement).complete))
-      .toBe(true);
-    await expect
-      .poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth))
+      .poll(() => panel.evaluate((element) => element.getBoundingClientRect().width))
       .toBeGreaterThan(0);
     await expect
-      .poll(() => image.evaluate((element) => element.getBoundingClientRect().width))
+      .poll(() => panel.evaluate((element) => element.getBoundingClientRect().height))
       .toBeGreaterThan(0);
-    await expect
-      .poll(() => image.evaluate((element) => element.getBoundingClientRect().height))
-      .toBeGreaterThan(0);
+    await expect(panel.locator('[data-media-icon]')).toHaveCount(1);
   }
 });
 

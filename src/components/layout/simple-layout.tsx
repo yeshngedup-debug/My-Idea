@@ -60,24 +60,24 @@ export default async function SimpleLayout({
     : null;
 
   return (
-    <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
+    <div className="min-h-[100dvh] bg-secondary text-foreground">
       {/* One quiet work bar: a hairline edge, a solid white field and no
           floating pill, blur stack or decorative chrome. */}
-      <header className="sticky top-0 z-30 border-b border-[#b9dede] bg-[#ffffff]">
+      <header className="sticky top-0 z-30 border-b border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex min-h-[56px] items-center justify-between gap-2 sm:gap-3">
             <div className="flex min-w-0 items-center gap-2 sm:gap-3">
               <Link
                 href="/"
-                className="pressable flex min-h-11 min-w-0 shrink items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+                className="pressable flex min-h-11 min-w-0 shrink items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <Logo size="h-6 w-6" />
-                <span className="truncate text-sm font-semibold tracking-tight text-[#0b2e2e] sm:text-base">
+                <span className="truncate text-sm font-semibold text-foreground sm:text-base">
                   Bhutan Tech Connect
                 </span>
               </Link>
               {roleLabel && (
-                <span className="shrink-0 rounded-md border border-[#66bfbf] bg-[#eaf6f6] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#0b5c5c]">
+                <span className="shrink-0 rounded-md border border-border bg-secondary px-2 py-0.5 text-[11px] font-semibold leading-4 text-accent">
                   {roleLabel}
                 </span>
               )}
@@ -86,13 +86,13 @@ export default async function SimpleLayout({
             <WorkspaceNav links={roleLinks} />
 
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-              <span className="hidden max-w-40 truncate text-sm text-[#356464] xl:inline">
+              <span className="hidden max-w-40 truncate text-sm text-body-secondary xl:inline">
                 {profile?.full_name ?? "Signed in"}
               </span>
               <form action={logout} className="inline">
                 <button
                   type="submit"
-                  className="pressable inline-flex min-h-11 items-center rounded-md border border-[#4d8c8c] bg-[#ffffff] px-3 py-2 text-sm font-medium text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:border-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+                  className="pressable inline-flex min-h-11 items-center rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:border-accent hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   Log out
                 </button>

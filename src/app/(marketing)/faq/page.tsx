@@ -1,27 +1,20 @@
+import { Question } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import Image from "next/image";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { isValidElement } from "react";
-import Link from "next/link";
-import { Plus } from "@phosphor-icons/react/dist/ssr";
-import { MarketingReveal } from "@/components/marketing/reveal";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { SiteFooter } from "@/components/marketing/site-footer";
-import { EditorialHero } from "@/components/marketing/editorial-hero";
 import {
-  Action,
-  Band,
-  RuleLink,
-  SectionHead,
-  container,
-  focusRing,
-  gutters,
-} from "@/components/marketing/editorial";
-import { InlineImageText } from "@/components/editorial";
-import { CTA_HREFS, resolveAction } from "@/components/marketing/nav";
+  MinimalActions,
+  MinimalClosingAction,
+  MinimalHero,
+  MinimalMedia,
+  MinimalSection,
+  PrimaryAction,
+  TextAction,
+} from "@/components/marketing/minimal-system";
+import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = pageMetadata({
   title: "Frequently asked questions",
@@ -39,22 +32,10 @@ type Cluster = {
   questions: Question[];
 };
 
-/** Inline link inside body copy: a hairline underline that turns magenta. */
-const INLINE_LINK_CLASS =
-  "font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 decoration-1 underline-offset-[5px] transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+const inlineLink =
+  "text-primary underline decoration-border underline-offset-4 transition-colors duration-150 hover:text-foreground";
 
-const seeHowCta = resolveAction("/faq", "seeHow");
-const askCta = resolveAction("/faq", "askUs");
-const contactCta = resolveAction("/faq", "contactTeam");
-const processCta = resolveAction("/faq", "readProcess");
-
-const chapters: { id: string; label: string }[] = [
-  { id: "getting-started", label: "The basics" },
-  { id: "profiles-and-projects", label: "Profiles and projects" },
-  { id: "shortlists-and-payments", label: "Shortlists and payments" },
-];
-
-const clusters: Cluster[] = [
+const clusters: readonly Cluster[] = [
   {
     id: "getting-started",
     title: "The basics",
@@ -64,9 +45,9 @@ const clusters: Cluster[] = [
         q: "Who is this for?",
         a: (
           <>
-            Bhutanese college students and startup founders: students build a
-            profile and CV, then apply to paid projects, while founders post
-            focused projects, browse student profiles, and can request a curated
+            Bhutanese college students and startup founders. Students build a
+            profile and CV, then apply to paid projects. Founders post focused
+            projects, browse student profiles, and can request a curated
             shortlist.
           </>
         ),
@@ -76,12 +57,12 @@ const clusters: Cluster[] = [
         a: (
           <>
             Yes. Create a student account at{" "}
-            <Link href={CTA_HREFS.signup} className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.signup} className={inlineLink}>
               /signup
             </Link>{" "}
-            with no payment step; building your profile, browsing projects, and
-            applying are free, and the Premium Shortlist is an optional paid
-            founder feature.
+            with no payment step. Building your profile, browsing projects, and
+            applying are free. The Premium Shortlist is an optional paid founder
+            feature.
           </>
         ),
       },
@@ -90,15 +71,15 @@ const clusters: Cluster[] = [
         a: (
           <>
             Founder accounts are assigned by an admin, not through public
-            signup; email us through the{" "}
-            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
+            signup. Email us through the{" "}
+            <Link href={CTA_HREFS.contact} className={inlineLink}>
               contact page
             </Link>{" "}
-            with your name and organisation, and we will arrange access; then{" "}
-            <Link href={CTA_HREFS.login} className={INLINE_LINK_CLASS}>
+            with your name and organisation, then{" "}
+            <Link href={CTA_HREFS.login} className={inlineLink}>
               log in
-            </Link>
-            .
+            </Link>{" "}
+            once access is arranged.
           </>
         ),
       },
@@ -124,9 +105,9 @@ const clusters: Cluster[] = [
         a: (
           <>
             An admin sets the rank and verified badge by hand in the admin
-            workspace. The platform does not calculate either value; questions
+            workspace. The platform does not calculate either value. Questions
             can go to the{" "}
-            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.contact} className={inlineLink}>
               contact page
             </Link>
             .
@@ -138,15 +119,15 @@ const clusters: Cluster[] = [
         a: (
           <>
             Browse and apply through{" "}
-            <Link href={CTA_HREFS.studentProjects} className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.studentProjects} className={inlineLink}>
               your projects
             </Link>
-            , track{" "}
-            <Link href={CTA_HREFS.studentApplications} className={INLINE_LINK_CLASS}>
+            , and track{" "}
+            <Link href={CTA_HREFS.studentApplications} className={inlineLink}>
               your applications
             </Link>
-            , and note that founders can update an applicant&apos;s status on
-            their own projects.
+            . Founders can update an applicant&apos;s status on their own
+            projects.
           </>
         ),
       },
@@ -154,7 +135,7 @@ const clusters: Cluster[] = [
         q: "Can anyone see a student's CV or contact details?",
         a: (
           <>
-            CVs are not public: they sit in a private bucket served through
+            CVs are not public. They sit in a private bucket served through
             role-checked links. Founders can open one when a student has applied
             to one of their projects, or for a student on their shortlist after
             an admin confirms a paid order. Admins can open any CV. Contact
@@ -175,11 +156,11 @@ const clusters: Cluster[] = [
         a: (
           <>
             On{" "}
-            <Link href={CTA_HREFS.founderShortlists} className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.founderShortlists} className={inlineLink}>
               the shortlist page
             </Link>
             , choose a package. New orders pause until the bank and mBoB details
-            are published; then pay by bank transfer or mBoB, upload a payment
+            are published. Then pay by bank transfer or mBoB, upload a payment
             screenshot, and wait for an admin to review it. Orders without a
             screenshot cannot be confirmed.
           </>
@@ -199,8 +180,8 @@ const clusters: Cluster[] = [
         q: "How are payments verified?",
         a: (
           <>
-            Manually: an admin opens the uploaded screenshot to confirm or
-            reject the order, a confirmation requires a screenshot, and founders
+            Manually. An admin opens the uploaded screenshot to confirm or
+            reject the order. A confirmation requires a screenshot, and founders
             cannot confirm their own payment.
           </>
         ),
@@ -211,7 +192,7 @@ const clusters: Cluster[] = [
           <>
             Student accounts are open through public signup. Founder access is
             assigned by an admin through the{" "}
-            <Link href={CTA_HREFS.contact} className={INLINE_LINK_CLASS}>
+            <Link href={CTA_HREFS.contact} className={inlineLink}>
               contact page
             </Link>
             . Demo and test accounts are not part of the public workspace;
@@ -251,7 +232,7 @@ export default async function FaqPage() {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
+    <>
       <script
         type="application/ld+json"
         nonce={nonce}
@@ -260,188 +241,65 @@ export default async function FaqPage() {
           __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <SiteHeader />
 
-      <main id="main-content" className="w-full max-w-full overflow-x-clip">
-        <EditorialHero
-          index="01"
-          eyebrow="Answers, plainly"
-          title={
-            <>
-              Frequently asked{" "}
-              <span className="text-[#0b5c5c]">questions.</span>
-            </>
-          }
-          lead="Bhutanese students and startup founders, covered across accounts, projects, applications and paid shortlists."
-          primaryCta={seeHowCta}
-          secondary={askCta}
-          image={{
-            src: "/images/thimphu-hills.jpg",
-            alt: "Thimphu's main road with the valley hills behind",
-          }}
-          imagePosition="object-center"
-        />
+      <MinimalHero
+        title="Frequently asked questions."
+        description="Accounts, projects, applications, and paid shortlists, answered plainly."
+        actions={
+          <MinimalActions>
+            <PrimaryAction href={CTA_HREFS.contact} label={CTA_LABELS.askUs} />
+            <TextAction
+              href={CTA_HREFS.howItWorks}
+              label={CTA_LABELS.seeHow}
+            />
+          </MinimalActions>
+        }
+        media={
+          <MinimalMedia
+            icon={Question}
+            label="Plain answers about accounts, applications and paid shortlists."
+          />
+        }
+      />
 
-        {/* One plain statement. */}
-        <Band tone="mist" className="border-b border-[#0b2e2e]/10">
-          <div className={cn(container, gutters, "py-14 md:py-20")}>
-            <p className="index-label">Eleven answers</p>
-            <p className="mt-6 max-w-[24ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[28ch]">
-              Every answer here is a rule the platform actually follows.
-            </p>
-          </div>
-        </Band>
-
-        <nav
-          aria-label="FAQ sections"
-          className="border-y border-[#0b2e2e]/12 bg-white"
+      {clusters.map((cluster) => (
+        <MinimalSection
+          key={cluster.id}
+          id={cluster.id}
+          titleId={`${cluster.id}-heading`}
+          title={cluster.title}
+          description={cluster.lead}
         >
-          <div className="mx-auto flex max-w-[1440px] flex-wrap gap-x-5 gap-y-1 px-4 py-3 sm:px-6 lg:px-10">
-            {chapters.map((chapter) => (
-              <a
-                key={chapter.id}
-                href={`#${chapter.id}`}
-                className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#0b2e2e] underline decoration-transparent decoration-1 underline-offset-4 transition-colors duration-150 hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none"
-              >
-                {chapter.label}
-              </a>
+          <div className="max-w-[54rem] border-t border-border">
+            {cluster.questions.map((question) => (
+              <details key={question.q} className="group border-b border-border">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 text-[1.125rem] font-medium leading-snug tracking-[-0.01em] transition-colors duration-150 hover:text-primary">
+                  <span className="max-w-[46rem]">{question.q}</span>
+                  <span
+                    aria-hidden="true"
+                    className="mt-0.5 shrink-0 text-muted-foreground"
+                  >
+                    <span className="group-open:hidden">+</span>
+                    <span className="hidden group-open:inline">−</span>
+                  </span>
+                </summary>
+                <div className="max-w-[52rem] pb-7 pr-8 text-[1.0625rem] leading-[1.6] text-muted-foreground">
+                  {question.a}
+                </div>
+              </details>
             ))}
           </div>
-        </nav>
+        </MinimalSection>
+      ))}
 
-        {clusters.map((cluster, clusterIndex) => (
-          <Band
-            key={cluster.id}
-            id={cluster.id}
-            tone={clusterIndex % 2 === 1 ? "mist" : "paper"}
-            labelledBy={`${cluster.id}-heading`}
-            className={cn(
-              clusterIndex % 2 === 1 && "border-y border-[#0b2e2e]/10",
-            )}
-          >
-            <div className={cn(container, gutters, "py-16 md:py-24")}>
-              <MarketingReveal>
-                <SectionHead
-                  index={String(clusterIndex + 2).padStart(2, "0")}
-                  eyebrow={cluster.title}
-                  id={`${cluster.id}-heading`}
-                  title={cluster.title}
-                  lead={cluster.lead}
-                />
-              </MarketingReveal>
-
-              <div className="mt-12 border-t border-[#0b2e2e]/15">
-                {cluster.questions.map((question, index) => (
-                  <MarketingReveal key={question.q} delay={index * 0.04}>
-                    <details className="group border-b border-[#0b2e2e]/15">
-                      <summary
-                        className={cn(
-                          "grid cursor-pointer list-none grid-cols-[2rem_1fr_auto] items-start gap-4 py-6 sm:gap-6 [&::-webkit-details-marker]:hidden",
-                          focusRing,
-                        )}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="pt-1 text-[11px] font-semibold tabular-nums tracking-[0.16em] text-[#c2004b]"
-                        >
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span className="max-w-[46ch] text-[1.05rem] font-semibold leading-snug tracking-[-0.02em] text-[#0b2e2e] transition-colors group-hover:text-[#0b5c5c] sm:text-[1.15rem]">
-                          {question.q}
-                        </span>
-                        <span
-                          aria-hidden="true"
-                          className="flex items-center gap-2 pt-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#356464]"
-                        >
-                          <span className="group-open:hidden">Read</span>
-                          <span className="hidden group-open:inline">Close</span>
-                          <Plus
-                            aria-hidden="true"
-                            weight="light"
-                            strokeWidth={1.6}
-                            className="h-5 w-5 shrink-0 text-[#c2004b] transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
-                          />
-                        </span>
-                      </summary>
-                      <div className="pb-7 pl-0 pr-8 text-[15px] leading-7 text-[#356464] sm:pl-[3.5rem]">
-                        <div className="max-w-[62ch]">{question.a}</div>
-                      </div>
-                    </details>
-                  </MarketingReveal>
-                ))}
-              </div>
-            </div>
-          </Band>
-        ))}
-
-        {/* Inline typography photograph: one intact accessible heading. */}
-        <Band labelledBy="faq-themes-heading" className="border-t border-[#0b2e2e]/10">
-          <div className={cn(container, gutters, "py-16 md:py-24")}>
-            <MarketingReveal>
-              <InlineImageText
-                as="h2"
-                id="faq-themes-heading"
-                before="Answers built around"
-                imageSrc="/images/bhutanese-students.jpg"
-                imageAlt="Two young Bhutanese women tending a water supply"
-                accessibleLabel="Answers built around real work in Bhutan"
-                after="real work"
-              />
-            </MarketingReveal>
-
-            <MarketingReveal className="mt-12">
-              <div className="w-full">
-                <figure>
-                  <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
-                    <Image
-                      src="/images/thimphu-city.jpg"
-                      alt="Handicraft shops along Norzin Lam road in Thimphu"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 90vw"
-                      className="object-cover object-center"
-                    />
-                  </div>
-                </figure>
-              </div>
-            </MarketingReveal>
-          </div>
-        </Band>
-
-        {/* Closing band. */}
-        <Band tone="teal">
-          <div
-            className={cn(
-              container,
-              gutters,
-              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
-            )}
-          >
-            <MarketingReveal className="lg:col-span-8">
-              <p className="index-label text-[#0b2e2e]">Next step</p>
-              <h2 className="display-xl mt-6 max-w-[14ch]">
-                Still have a question?
-              </h2>
-              <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#0b2e2e]">
-                Write to us and we will point you in the right direction.
-              </p>
-            </MarketingReveal>
-            <MarketingReveal
-              delay={0.08}
-              className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
-            >
-              <Action href={contactCta.href}>{contactCta.label}</Action>
-              <RuleLink
-                href={processCta.href}
-                className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
-              >
-                {processCta.label}
-              </RuleLink>
-            </MarketingReveal>
-          </div>
-        </Band>
-      </main>
-
-      <SiteFooter />
-    </div>
+      <MinimalClosingAction
+        title="Still have a question?"
+        description="Write to us and we will point you in the right direction."
+        primaryLabel={CTA_LABELS.contactTeam}
+        primaryHref={CTA_HREFS.contact}
+        secondaryLabel={CTA_LABELS.readProcess}
+        secondaryHref={CTA_HREFS.howItWorks}
+      />
+    </>
   );
 }

@@ -42,7 +42,6 @@ export default async function ForgotPasswordPage({
   return (
     <>
       <AuthCard
-        eyebrow="Account recovery"
         title="Reset your password"
         lead="Enter your email and we'll send a secure reset link if an account exists for that address."
       >
@@ -51,7 +50,7 @@ export default async function ForgotPasswordPage({
           serverMessage={sent}
         />
 
-        <p className="mt-5 text-[14px] leading-6 text-[#356464]">
+        <p className="quiet-note mt-5">
           Remembered your password?{" "}
           <Link
             href={LOGIN_LINK.href}

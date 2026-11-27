@@ -16,8 +16,8 @@ import {
   authInputErrorClassName,
   authLabelClassName,
 } from "@/features/auth/components/styles";
-import { StatusMessage } from "@/components/ui/status-message";
-import { SubmitButton } from "@/components/ui/submit-button";
+import { AuthStatusMessage } from "@/features/auth/components/auth-status-message";
+import { AuthSubmitButton } from "@/features/auth/components/auth-submit-button";
 import { cn } from "@/lib/utils";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,15 +69,15 @@ export function ForgotPasswordForm({
   return (
     <>
       {status && (
-        <StatusMessage
+        <AuthStatusMessage
           ref={statusRef}
           id={statusId}
           tabIndex={-1}
           tone={serverError ? "error" : "success"}
-          className="mb-5 rounded-[2px] focus-visible:outline-none"
+          className="mb-5 focus-visible:outline-none"
         >
           {status}
-        </StatusMessage>
+        </AuthStatusMessage>
       )}
 
       <form
@@ -112,7 +112,9 @@ export function ForgotPasswordForm({
           )}
         </div>
 
-        <SubmitButton pendingLabel="Sending reset link…">Send reset link</SubmitButton>
+        <AuthSubmitButton pendingLabel="Sending reset link…">
+          Send reset link
+        </AuthSubmitButton>
       </form>
     </>
   );

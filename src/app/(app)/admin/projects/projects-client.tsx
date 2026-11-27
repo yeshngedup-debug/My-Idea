@@ -34,17 +34,17 @@ const FILTERS = [
 ] as const;
 
 const STATUS_BADGE: Record<string, string> = {
-  open: "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]",
-  in_progress: "border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]",
-  review: "border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]",
-  completed: "border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]",
+  open: "border-border bg-secondary text-accent",
+  in_progress: "border-border/20 bg-cta/8 text-accent",
+  review: "border-destructive/25 bg-cta/8 text-destructive",
+  completed: "border-border/20 bg-cta/8 text-accent",
 };
 
 const STATUS_DOT: Record<string, string> = {
-  open: "bg-[#66bfbf]",
-  in_progress: "bg-[#0b5c5c]",
-  review: "bg-[#ff0063]",
-  completed: "bg-[#356464]",
+  open: "bg-secondary",
+  in_progress: "bg-cta",
+  review: "bg-cta",
+  completed: "bg-foreground",
 };
 
 export function ProjectsClient({
@@ -74,7 +74,7 @@ export function ProjectsClient({
               <button
                 type="button"
                 onClick={() => router.refresh()}
-                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Try again
               </button>
@@ -108,7 +108,7 @@ export function ProjectsClient({
         ariaLabel="Filter projects by status"
       />
 
-      <p className="text-xs text-[#356464]">
+      <p className="text-xs text-body-secondary">
         {countLabel}
       </p>
 
@@ -120,7 +120,7 @@ export function ProjectsClient({
             <button
               type="button"
               onClick={() => setFilter("all")}
-              className="pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+              className="pressable inline-flex min-h-11 items-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
               Show all projects
             </button>
@@ -128,16 +128,16 @@ export function ProjectsClient({
         />
       ) : (
         <>
-          <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede] sm:hidden">
+          <ul className="divide-y divide-border border-y border-border sm:hidden">
             {filtered.map((row) => (
               <li
                 key={row.id}
-                className="border-b border-[#b9dede] py-3 last:border-0"
+                className="border-b border-border py-3 last:border-0"
               >
                 <div className="flex items-start justify-between gap-3">
                   <h3
                     title={row.title}
-                    className="min-w-0 break-words text-sm font-semibold text-[#0b5c5c]"
+                    className="min-w-0 break-words text-sm font-semibold text-accent"
                   >
                     {row.title}
                   </h3>
@@ -148,7 +148,7 @@ export function ProjectsClient({
                     {statusLabel(row.status)}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs text-[#356464]">
+                <p className="mt-1 text-xs text-body-secondary">
                   {row.founderName ?? "Unknown founder"} · Posted{" "}
                   {date(row.created_at)}
                 </p>
@@ -156,9 +156,9 @@ export function ProjectsClient({
             ))}
           </ul>
 
-          <div className="hidden min-w-0 overflow-x-auto border-y border-[#b9dede] sm:block">
+          <div className="hidden min-w-0 overflow-x-auto border-y border-border sm:block">
             <table className="w-full text-left text-sm" aria-label="All projects by status">
-              <thead className="border-b border-[#b9dede] text-xs font-medium text-[#356464]">
+              <thead className="border-b border-border text-xs font-medium text-body-secondary">
                 <tr>
                   <th
                     scope="col"
@@ -180,19 +180,19 @@ export function ProjectsClient({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#b9dede]">
+              <tbody className="divide-y divide-border">
                 {filtered.map((row) => (
                   <tr
                     key={row.id}
-                    className="transition-colors duration-150 hover:bg-[#eaf6f6]"
+                    className="transition-colors duration-150 hover:bg-secondary"
                   >
                     <td
                       title={row.title}
-                      className="max-w-xs break-words px-4 py-3.5 font-semibold text-[#0b5c5c]"
+                      className="max-w-xs break-words px-4 py-3.5 font-semibold text-accent"
                     >
                       {row.title}
                     </td>
-                    <td className="px-4 py-3.5 text-[#356464]">
+                    <td className="px-4 py-3.5 text-body-secondary">
                       {row.founderName ?? "Unknown founder"}
                     </td>
                     <td className="px-4 py-3.5">
@@ -203,7 +203,7 @@ export function ProjectsClient({
                         {statusLabel(row.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#356464]">
+                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-body-secondary">
                       {date(row.created_at)}
                     </td>
                   </tr>

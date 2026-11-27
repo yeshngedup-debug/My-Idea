@@ -3,9 +3,9 @@
 /**
  * The shared chrome for every auth route.
  *
- * One calm product shell: a slim header that keeps the brand and the other
- * account route one tap away, a single narrow column for the work, and a
- * quiet footer that still reaches every public destination. The marketing
+ * One calm product shell: a slim white header that keeps the brand and the
+ * other account route one tap away, a single narrow column for the work, and
+ * a quiet footer that still reaches every public destination. The marketing
  * header and footer are deliberately not reused here — an account screen
  * should not look like a marketing page.
  *
@@ -38,13 +38,13 @@ export function AuthShell({ children }: { children: ReactNode }) {
         : { href: LOGIN_LINK.href, label: LOGIN_LINK.label };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#eaf6f6]">
-      <header className="border-b border-[#b9dede] bg-white">
-        <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-3 px-5 sm:px-8">
+    <div className="flex min-h-[100dvh] flex-col bg-background">
+      <header className="border-b border-border bg-background">
+        <div className="content-shell flex h-16 items-center justify-between gap-3">
           <Link
             href={SITE.homeHref}
             className={cn(
-              "pressable flex min-h-11 min-w-0 items-center gap-2.5 rounded-[2px]",
+              "pressable flex min-h-11 min-w-0 items-center gap-2.5 rounded-lg",
               focusRing,
             )}
           >
@@ -52,7 +52,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
             {/* The wordmark needs ~160px next to the account link, so it only
                 appears once the phone is wide enough to hold both without
                 wrapping. Below that the mark carries the brand. */}
-            <span className="hidden text-[15px] font-semibold tracking-[-0.02em] text-[#0b2e2e] sm:inline">
+            <span className="hidden text-sm font-medium text-foreground sm:inline">
               {SITE.name}
             </span>
             <span className="sr-only sm:hidden">{SITE.name}</span>
@@ -62,8 +62,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
             <Link
               href={switchLink.href}
               className={cn(
-                "pressable inline-flex min-h-11 items-center justify-center rounded-[2px] border border-[#0b5c5c]/35 px-3 text-[13px] font-semibold text-[#0b2e2e]",
-                "hover:border-[#0b5c5c] hover:bg-[#eaf6f6] motion-reduce:transition-none",
+                "pressable inline-flex min-h-11 items-center justify-center rounded-lg px-1 text-sm font-medium text-accent hover:text-foreground",
                 focusRing,
               )}
             >
@@ -76,7 +75,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
       {/* The root layout skip link targets this id, so it must exist exactly
           once on every auth page. */}
       <main id="main-content" className="flex-1">
-        <div className="mx-auto w-full max-w-[480px] px-4 pb-14 pt-6 sm:px-8 sm:pb-16 sm:pt-12">
+        <div className="mx-auto w-full max-w-[480px] px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-16">
           {children}
         </div>
       </main>

@@ -41,10 +41,10 @@ const FILTERS = [
 const FILTER_VALUES: readonly string[] = FILTERS.map((item) => item.value);
 
 const STATUS_DOT: Record<string, string> = {
-  pending: "bg-[#66bfbf]",
-  shortlisted: "bg-[#0b5c5c]",
-  accepted: "bg-[#0b5c5c]",
-  rejected: "bg-[#ff0063]",
+  pending: "bg-secondary",
+  shortlisted: "bg-cta",
+  accepted: "bg-cta",
+  rejected: "bg-cta",
 };
 
 export function ApplicationsClient({
@@ -115,7 +115,7 @@ export function ApplicationsClient({
         ariaLabel="Filter applications by status"
       />
 
-      <p className="text-xs text-[#356464]" aria-live="polite">
+      <p className="text-xs text-body-secondary" aria-live="polite">
         {countLabel}
       </p>
 
@@ -128,14 +128,14 @@ export function ApplicationsClient({
             <button
               type="button"
               onClick={() => handleFilterChange("all")}
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
               Show all applications
             </button>
           }
         />
       ) : (
-        <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
+        <ul className="divide-y divide-border border-y border-border">
           {filtered.map((item) => (
             <li key={item.id} className="py-4">
               <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
@@ -143,21 +143,21 @@ export function ApplicationsClient({
                   {item.project?.id ? (
                     <Link
                       href={`/student/projects/${item.project.id}`}
-                      className="inline-flex min-h-11 max-w-full items-center truncate rounded text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#d40054] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                      className="inline-flex min-h-11 max-w-full items-center truncate rounded text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                     >
                       {item.project.title}
                     </Link>
                   ) : (
-                    <p className="truncate text-sm font-semibold text-[#0b5c5c]">
+                    <p className="truncate text-sm font-semibold text-accent">
                       {item.project?.title ?? "Project"}
                     </p>
                   )}
-                  <p className="mt-1 text-xs tabular-nums text-[#356464]">
+                  <p className="mt-1 text-xs tabular-nums text-body-secondary">
                     Applied {formatBhutanDate(item.created_at)}
                   </p>
                 </div>
-                <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
-                  <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-[#356464]"}`} />
+                <Badge className="shrink-0 gap-1.5 border-border bg-secondary text-accent">
+                  <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-foreground"}`} />
                   {applicationStatusLabel(item.status)}
                 </Badge>
               </div>
@@ -171,7 +171,7 @@ export function ApplicationsClient({
               {item.status === "rejected" && (
                 <Link
                   href="/student/projects"
-                  className="mt-3 inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                  className="mt-3 inline-flex min-h-11 items-center rounded text-sm font-semibold text-destructive transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                 >
                   Browse open projects
                 </Link>

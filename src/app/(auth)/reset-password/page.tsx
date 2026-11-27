@@ -47,13 +47,12 @@ export default async function ResetPasswordPage({
   return (
     <>
       <AuthCard
-        eyebrow="Account recovery"
         title="Choose a new password"
         lead="Use 6 to 128 characters. You'll sign in again after saving."
       >
         <ResetPasswordForm serverError={serverError} />
 
-        <p className="mt-5 text-[14px] leading-6 text-[#356464]">
+        <p className="quiet-note mt-5">
           <Link
             href={LOGIN_LINK.href}
             className={cn(

@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/pressable.module.css";
 
 export type SegmentOption = {
   label: string;
@@ -77,7 +76,7 @@ export function SegmentedControl({
       aria-label={ariaLabel}
       onKeyDown={handleKeyDown}
       className={cn(
-        "inline-flex max-w-full flex-wrap gap-1 rounded-full border border-[#b9dede] bg-[#eaf6f6]/70 p-1",
+        "inline-flex max-w-full flex-wrap gap-1 rounded-full border border-border bg-muted p-1",
         className,
       )}
     >
@@ -93,10 +92,10 @@ export function SegmentedControl({
             aria-pressed={selected}
             onClick={() => onChange(option.value)}
             className={cn(
-              `inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold ${styles.press} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6] sm:px-5`,
+              "inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none sm:px-5",
               selected
-                ? "bg-[#66bfbf] text-[#0b2e2e] ring-1 ring-[#66bfbf] ring-offset-2 ring-offset-[#eaf6f6]/70 hover:bg-[#0b5c5c] hover:text-[#ffffff]"
-                : "text-[#0b5c5c] hover:bg-[#ffffff]",
+                ? "bg-cta text-cta-foreground hover:bg-cta-hover"
+                : "text-muted-foreground hover:bg-card hover:text-foreground",
             )}
           >
             {option.label}

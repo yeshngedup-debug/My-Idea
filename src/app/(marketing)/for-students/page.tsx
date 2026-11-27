@@ -1,16 +1,19 @@
-import { SiteHeader } from "@/components/marketing/site-header";
-import { SiteFooter } from "@/components/marketing/site-footer";
+import { Bank, IdentificationCard, Student } from "@phosphor-icons/react/dist/ssr";
 import {
-  CheckList,
-  FactRow,
-  MarketButton,
-  Photo,
-  Section,
-  SectionHeading,
-  StepCards,
-  TrustBar,
-} from "@/components/marketing/marketplace";
-import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
+  MinimalActions,
+  MinimalCheckList,
+  MinimalClosingAction,
+  MinimalEditorialSection,
+  MinimalFacts,
+  MinimalHero,
+  MinimalMedia,
+  MinimalSection,
+  MinimalSteps,
+  PrimaryAction,
+  TextAction,
+  TrustLine,
+} from "@/components/marketing/minimal-system";
+import { CTA_HREFS, CTA_LABELS, SITE } from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -81,204 +84,100 @@ const payFacts = [
 
 export default function ForStudentsPage() {
   return (
-    <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
-      <SiteHeader />
-
-      <main id="main-content" className="w-full max-w-full overflow-x-clip">
-        {/* Hero — the two student actions are above the fold. */}
-        <section className="bg-white">
-          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-            <div className="grid gap-8 py-7 lg:grid-cols-12 lg:gap-10 lg:py-10">
-              <div className="lg:col-span-7">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0b5c5c]">
-                  For students
-                </p>
-                <h1 className="mt-2 text-[clamp(1.9rem,7.6vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.04em] text-[#0b2e2e]">
-                  Turn your skills into paid project work.
-                </h1>
-                <p className="mt-3 max-w-[46ch] text-[14px] leading-6 text-[#356464] sm:text-[15px] sm:leading-7">
-                  Build a profile once, upload your CV, then browse the open
-                  projects and apply to the ones that fit your course and your
-                  free time.
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <MarketButton href={CTA_HREFS.signup} variant="primary">
-                    {CTA_LABELS.signup}
-                  </MarketButton>
-                  <MarketButton href={CTA_HREFS.studentProjects} variant="outline">
-                    {CTA_LABELS.browseProjects}
-                  </MarketButton>
-                </div>
-                <p className="mt-2.5 text-[12px] leading-5 text-[#356464]">
-                  Browsing open projects needs a student account. You can log in
-                  at any time to continue an application.
-                </p>
-              </div>
-
-              <div className="lg:col-span-5">
-                <Photo
-                  src="/images/bhutanese-students.jpg"
-                  alt="Two young Bhutanese girls tending a water supply"
-                  ratio="aspect-[16/10] lg:aspect-[4/5]"
-                  sizes="(max-width: 1024px) 100vw, 40vw"
-                  preload
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <TrustBar>
-          {"Human verification · Paid in Ngultrum · No bidding wars · Built in Bhutan"}
-        </TrustBar>
-
-        {/* The concrete path. */}
-        <Section labelledBy="students-path-heading">
-          <SectionHeading
-            id="students-path-heading"
-            eyebrow="Your path"
-            title="Five steps from sign-up to a tracked application"
-            lead="Everything happens in the student workspace, and you can see where each application stands."
+    <>
+      <MinimalHero
+        title="Turn your skills into paid project work."
+        description="Build a profile once, upload your CV, then browse projects that fit your course and your free time."
+        actions={
+          <MinimalActions>
+            <PrimaryAction href={CTA_HREFS.signup} label={CTA_LABELS.signup} />
+            <TextAction href={CTA_HREFS.studentProjects} label={CTA_LABELS.browseProjects} />
+          </MinimalActions>
+        }
+        note="Browsing projects needs a student account. You can log in at any time to continue an application."
+        media={
+          <MinimalMedia
+            icon={Student}
+            label="Your profile, CV and applications in one student workspace."
           />
-          <div className="mt-5">
-            <StepCards steps={studentPath} columns={2} />
+        }
+      />
+
+      <div className="content-shell">
+        <TrustLine>{SITE.trustLine}</TrustLine>
+      </div>
+
+      <MinimalEditorialSection
+        id="path"
+        titleId="students-path-heading"
+        title="Five steps from sign-up to a tracked application"
+        description="Everything happens in the student workspace, and you can see where each application stands."
+      >
+        <MinimalSteps steps={studentPath} />
+      </MinimalEditorialSection>
+
+      <MinimalSection
+        id="profile"
+        titleId="students-profile-heading"
+        title="What a complete profile holds"
+        description="A complete profile and CV help founders decide. Fill in what you can and finish it later."
+      >
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <div>
+            <MinimalFacts items={profileFields} />
+            <p className="quiet-note mt-6">
+              Your CV is shared only through short-lived signed links, and only with the people
+              the access rules allow.
+            </p>
           </div>
-        </Section>
+          <MinimalMedia
+            icon={IdentificationCard}
+            label="A complete profile tells founders how you fit the brief."
+          />
+        </div>
+        <MinimalActions className="mt-8">
+          <PrimaryAction href={CTA_HREFS.signup} label={CTA_LABELS.signup} />
+        </MinimalActions>
+      </MinimalSection>
 
-        {/* Profile fields. */}
-        <Section tone="mist" labelledBy="students-profile-heading">
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-            <div className="lg:col-span-5">
-              <SectionHeading
-                id="students-profile-heading"
-                eyebrow="Your profile"
-                title="What a complete profile holds"
-                lead="A complete profile and CV help founders decide. Fill in what you can and finish it later."
-              />
-              <div className="mt-5">
-                <MarketButton href={CTA_HREFS.signup} variant="outline">
-                  {CTA_LABELS.signup}
-                </MarketButton>
-              </div>
-            </div>
+      <MinimalEditorialSection
+        id="applications"
+        titleId="students-status-heading"
+        title="You always know where an application stands"
+        description="Founders update applicant status as they review. You see the same status in your workspace."
+      >
+        <MinimalFacts items={statusRows} />
+        <MinimalActions className="mt-8">
+          <TextAction
+            href={CTA_HREFS.studentApplications}
+            label={CTA_LABELS.myApplications}
+          />
+        </MinimalActions>
+      </MinimalEditorialSection>
 
-            <div className="lg:col-span-7">
-              <div className="rounded-[4px] border border-[#b9dede] bg-white p-4 sm:p-5">
-                <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0b5c5c]">
-                  Student profile
-                </h3>
-                <dl className="mt-2">
-                  {profileFields.map((field) => (
-                    <FactRow
-                      key={field.term}
-                      term={field.term}
-                      detail={field.detail}
-                    />
-                  ))}
-                </dl>
-                <p className="mt-3 text-[12px] leading-5 text-[#356464]">
-                  Your CV is shared only through short-lived signed links, and
-                  only with the people the access rules allow.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Section>
+      <MinimalSection
+        id="pay"
+        titleId="students-pay-heading"
+        title="The budget is on the brief before you apply"
+        description="You can see what a project pays and how long it should take before you send anything."
+      >
+        <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
+          <MinimalCheckList items={payFacts} />
+          <MinimalMedia
+            icon={Bank}
+            label="The budget and payment route are shown before you apply."
+          />
+        </div>
+      </MinimalSection>
 
-        {/* Application statuses. */}
-        <Section labelledBy="students-status-heading">
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-            <div className="lg:col-span-5">
-              <SectionHeading
-                id="students-status-heading"
-                eyebrow="Track your applications"
-                title="You always know where an application stands"
-                lead="Founders update applicant status as they review. You see the same status in your workspace."
-              />
-              <div className="mt-5">
-                <MarketButton
-                  href={CTA_HREFS.studentApplications}
-                  variant="outline"
-                >
-                  {CTA_LABELS.myApplications}
-                </MarketButton>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7">
-              <div className="rounded-[4px] border border-[#b9dede] bg-white p-4 sm:p-5">
-                <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0b5c5c]">
-                  Application status
-                </h3>
-                <dl className="mt-2">
-                  {statusRows.map((row) => (
-                    <FactRow
-                      key={row.term}
-                      term={row.term}
-                      detail={row.detail}
-                    />
-                  ))}
-                </dl>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        {/* Pay. */}
-        <Section tone="mist" labelledBy="students-pay-heading">
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-            <div className="lg:col-span-6">
-              <SectionHeading
-                id="students-pay-heading"
-                eyebrow="Pay"
-                title="The budget is on the brief before you apply"
-                lead="You can see what a project pays and how long it should take before you send anything."
-              />
-              <div className="mt-4">
-                <CheckList items={payFacts} />
-              </div>
-            </div>
-            <div className="lg:col-span-6">
-              <Photo
-                src="/images/thimphu-bank-clean.webp"
-                alt="The Bhutan Post and Bhutan Bank building in central Thimphu"
-                ratio="aspect-[4/3]"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <p className="mt-3 text-[12px] leading-5 text-[#356464]">
-                Bhutanese banking, local payment routes, and work that can be
-                done from a classroom, a hostel or a co-working desk.
-              </p>
-            </div>
-          </div>
-        </Section>
-
-        {/* Closing. */}
-        <Section tone="deep">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-[clamp(1.35rem,3.6vw,1.9rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-white">
-                Your profile is the first step.
-              </h2>
-              <p className="mt-2 max-w-[52ch] text-[14px] leading-6 text-[#eaf6f6]/80">
-                Create the account, complete the profile, then apply to the
-                projects that fit.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <MarketButton href={CTA_HREFS.signup} variant="onDeepSolid">
-                {CTA_LABELS.signup}
-              </MarketButton>
-              <MarketButton href={CTA_HREFS.howItWorks} variant="onDeep">
-                {CTA_LABELS.howItWorks}
-              </MarketButton>
-            </div>
-          </div>
-        </Section>
-      </main>
-
-      <SiteFooter />
-    </div>
+      <MinimalClosingAction
+        title="Your profile is the first step."
+        description="Create the account, complete the profile, then apply to the projects that fit."
+        primaryLabel={CTA_LABELS.signup}
+        primaryHref={CTA_HREFS.signup}
+        secondaryLabel={CTA_LABELS.howItWorks}
+        secondaryHref={CTA_HREFS.howItWorks}
+      />
+    </>
   );
 }

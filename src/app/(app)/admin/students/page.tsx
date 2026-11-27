@@ -94,7 +94,7 @@ export default async function AdminStudentsPage() {
             />
           }
         >
-          <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-5">
+          <div className="rounded-xl border border-border bg-secondary p-4 sm:p-5">
             <AdminStudentsClient
               students={students}
               founders={founders}

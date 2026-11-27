@@ -1,9 +1,8 @@
 /**
  * Shared Bhutan Tech Connect logo symbol.
  *
- * Canonical mark: two equal dots joined by one bridge, capped by one amber
- * arch. Brand text `#0b5c5c` and in-app teal `#66bfbf` come from
- * `lib/design-tokens.ts` (`colors.forest` / `colors.amberLogo`).
+ * Canonical mark: two equal dots joined by one bridge, capped by one deep
+ * teal arch. Brand text and in-app accent use the shared semantic color tokens.
  *
  * All current call sites place the mark next to a visible wordmark, so it is
  * decorative by default. Pass `label` when the mark is used on its own (for
@@ -31,19 +30,19 @@ export function Logo({ size = "w-5 h-5", label }: LogoProps) {
       aria-hidden={decorative ? true : undefined}
       focusable="false"
     >
-      <circle cx="68" cy="145" r="11" className="fill-[#0b5c5c]" />
-      <circle cx="188" cy="145" r="11" className="fill-[#0b5c5c]" />
+      <circle cx="68" cy="145" r="11" className="fill-accent" />
+      <circle cx="188" cy="145" r="11" className="fill-accent" />
       <rect
         x="79"
         y="139"
         width="98"
         height="16"
         rx="8"
-        className="fill-[#0b5c5c]"
+        className="fill-accent"
       />
       <path
         d="M 79 139 A 52 52 0 0 1 177 139 L 177 147 A 52 52 0 0 0 79 147 Z"
-        className="fill-[#66bfbf]"
+        className="fill-accent"
       />
     </svg>
   );

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import styles from '@/styles/pressable.module.css';
 
 /**
- * Two real weights: one filled yellow CTA and one quiet outline action.
+ * Two real weights: one filled accent CTA and one quiet outline action.
  * `default` and `outline` remain as aliases so existing call sites keep
  * compiling without editing them; they now map onto those two weights instead
  * of offering a second forest-filled button that fought the CTA for attention.
@@ -38,12 +38,12 @@ const baseStyles = [
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-cta text-cta-foreground hover:bg-cta-hover',
   secondary:
-    'border border-border-strong bg-card text-primary hover:bg-secondary',
+    'border border-border-strong bg-card text-accent hover:bg-secondary',
   // Backwards-compatible aliases. `default` is the CTA, `outline` the peer.
   default: 'bg-cta text-cta-foreground hover:bg-cta-hover',
-  outline: 'border border-border-strong bg-card text-primary hover:bg-secondary',
-  ghost: 'text-primary hover:bg-secondary',
-  destructive: 'bg-[#ff0063] text-[#000000] hover:bg-[#c2004b]',
+  outline: 'border border-border-strong bg-card text-accent hover:bg-secondary',
+  ghost: 'text-accent hover:bg-secondary',
+  destructive: 'bg-cta text-cta-foreground hover:bg-destructive',
 };
 
 export function Button({

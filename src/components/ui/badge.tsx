@@ -18,15 +18,15 @@ export function Badge({
   variant?: BadgeVariant
 }) {
   const variantStyles: Record<BadgeVariant, string> = {
-    default: "border-border-strong bg-secondary text-primary",
+    default: "border-border-strong bg-secondary text-accent",
     outline: "border-border-strong bg-card text-body-secondary",
-    secondary: "border-primary bg-primary text-primary-foreground",
+    secondary: "border-accent bg-accent text-primary-foreground",
   }
 
   return (
     <span
       className={cn(
-        "inline-flex items-center whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-normal leading-normal tracking-normal",
+        "inline-flex items-center whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-normal leading-normal",
         variantStyles[variant],
         className,
       )}

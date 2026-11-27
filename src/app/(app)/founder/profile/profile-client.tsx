@@ -72,10 +72,10 @@ export function ProfileClient({ fullName }: { fullName: string }) {
   }
 
   return (
-    <section className="space-y-4 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
+    <section className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5">
       <div>
-        <h2 className="text-base font-semibold text-[#0b5c5c]">Display name</h2>
-        <p className="mt-1 text-sm leading-6 text-[#356464]">
+        <h2 className="text-base font-semibold text-accent">Display name</h2>
+        <p className="mt-1 text-sm leading-6 text-body-secondary">
           Shown on your projects and wherever your profile appears.
         </p>
       </div>
@@ -105,20 +105,20 @@ export function ProfileClient({ fullName }: { fullName: string }) {
                 ? 'founder-name-result'
                 : undefined
             }
-            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c]"
+            className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent"
           />
         </div>
 
         <Button
           type="submit"
           disabled={saving || draft.trim() === name}
-          className="pressable inline-flex min-h-11 bg-[#ff0063] px-5 py-3 font-semibold text-[#000000] hover:bg-[#d40054]"
+          className="pressable inline-flex min-h-11 bg-cta px-5 py-3 font-semibold text-cta-foreground hover:bg-cta-hover"
         >
           {saving ? 'Saving...' : 'Save name'}
         </Button>
       </form>
 
-      <p className="text-xs text-[#356464]">Current name: {name}</p>
+      <p className="text-xs text-body-secondary">Current name: {name}</p>
 
       {result && (
         <StatusMessage

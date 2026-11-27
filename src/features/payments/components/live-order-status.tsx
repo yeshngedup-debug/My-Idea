@@ -34,6 +34,11 @@ function LiveStatus({
   const { data, status } = useLiveQuery(sealedQuery, { refreshQuery, initialData });
   const latest = data?.[0];
   const confirmed = latest?.status === "confirmed";
+  const statusDotClass = confirmed
+    ? "bg-cta"
+    : latest?.status === "rejected"
+      ? "bg-destructive"
+      : "bg-border-strong";
 
   const onConfirmedRef = useRef(onConfirmed);
   useEffect(() => {
@@ -46,16 +51,11 @@ function LiveStatus({
   return (
     <p
       role="status"
-      className="inline-flex min-h-8 items-center gap-2 rounded-lg border border-[#66bfbf]/15 bg-[#ffffff] px-3 py-1 text-xs font-medium text-[#0b5c5c]"
+      className="inline-flex min-h-8 items-center gap-2 rounded-lg border border-border bg-card px-3 py-1 text-xs font-medium text-foreground"
     >
-      <span
-        aria-hidden="true"
-        className={`h-1.5 w-1.5 rounded-full ${
-          confirmed ? "bg-[#0b5c5c]" : "bg-[#ff0063]"
-        }`}
-      />
+      <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${statusDotClass}`} />
       {latest ? (LABELS[latest.status] ?? latest.status) : "No orders yet"}
-      {status === "stale" ? <span className="text-[#356464]">Updating</span> : null}
+      {status === "stale" ? <span className="text-muted-foreground">Updating</span> : null}
     </p>
   );
 }

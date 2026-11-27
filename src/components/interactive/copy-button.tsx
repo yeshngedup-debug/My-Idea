@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Check, Copy, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/pressable.module.css";
 
 type CopyStatus = "idle" | "copied" | "error";
 
@@ -65,7 +64,7 @@ export function CopyButton({
         type="button"
         onClick={handleClick}
         className={cn(
-          `inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#b9dede] bg-[#ffffff] px-5 py-2 text-sm font-semibold text-[#0b5c5c] ${styles.press} hover:border-[#66bfbf] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]`,
+          "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border bg-card px-5 py-2 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-border-strong hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
           className,
         )}
       >
@@ -74,8 +73,9 @@ export function CopyButton({
           weight="bold"
           className={cn(
             "h-4 w-4 shrink-0",
-            status === "copied" && "text-[#0b5c5c]",
-            status === "error" && "text-[#c2004b]",
+            status === "idle" && "text-muted-foreground",
+            status === "copied" && "text-cta",
+            status === "error" && "text-destructive",
           )}
         />
         {label}

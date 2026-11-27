@@ -260,7 +260,7 @@ export default async function StudentProjectDetailPage({
       <div className="mx-auto max-w-3xl">
         <Link
           href="/student/projects"
-          className="mb-6 inline-flex min-h-11 items-center gap-2 rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none! hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="mb-6 inline-flex min-h-11 items-center gap-2 rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none! hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           Back to open projects
         </Link>
@@ -268,17 +268,17 @@ export default async function StudentProjectDetailPage({
         <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <h1 className="break-words text-xl font-semibold tracking-tight text-primary sm:text-2xl">
+              <h1 className="break-words text-xl font-semibold text-accent sm:text-2xl">
                 {project.title}
               </h1>
               <p className="mt-1 text-xs text-body-secondary">
                 Posted by {founder?.full_name ?? 'Founder'}
               </p>
             </div>
-            <Badge className="shrink-0 gap-1.5 border-border bg-background text-primary">
+            <Badge className="shrink-0 gap-1.5 border-border bg-background text-accent">
               <span
                 aria-hidden="true"
-                className="h-1.5 w-1.5 rounded-full bg-primary"
+                className="h-1.5 w-1.5 rounded-full bg-accent"
               />
               {badgeLabel}
             </Badge>
@@ -296,7 +296,7 @@ export default async function StudentProjectDetailPage({
                 <dt className="text-xs font-medium text-muted-foreground">
                   {field.label}
                 </dt>
-                <dd className="mt-1 break-words text-sm font-semibold tabular-nums text-primary">
+                <dd className="mt-1 break-words text-sm font-semibold tabular-nums text-accent">
                   {field.value}
                 </dd>
               </div>
@@ -332,7 +332,7 @@ export default async function StudentProjectDetailPage({
                 role={notice.role}
                 className={`mb-4 break-words rounded-md border px-4 py-3 text-sm leading-6 ${
                   notice.role === 'status'
-                    ? 'border-border bg-background text-primary'
+                    ? 'border-border bg-background text-accent'
                     : 'border-border bg-background text-destructive'
                 }`}
               >
@@ -374,7 +374,7 @@ export default async function StudentProjectDetailPage({
                       : `This brief is now ${statusLabel(project.status)}. `}
                   <Link
                     href="/student/applications"
-                    className="inline-block rounded py-0.5 font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="inline-block rounded py-0.5 font-semibold text-accent underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     Track applications
                   </Link>

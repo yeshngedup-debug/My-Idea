@@ -37,7 +37,6 @@ export default async function SignupPage({
   return (
     <>
       <AuthCard
-        eyebrow="Student account"
         title="Create a student account"
         lead="A student account needs a name, an email and a password. The profile you build afterwards is what an admin checks and a founder reads."
       >
@@ -45,7 +44,7 @@ export default async function SignupPage({
           serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
         />
 
-        <p className="mt-5 text-[14px] leading-6 text-[#356464]">
+        <p className="quiet-note mt-5">
           Already have an account?{" "}
           <Link
             href={LOGIN_LINK.href}

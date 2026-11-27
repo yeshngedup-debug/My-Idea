@@ -8,7 +8,7 @@ export function FieldError({ id, children }: { id: string; children: string }) {
     <p
       id={id}
       role="alert"
-      className="mt-1.5 text-sm font-medium leading-5 text-[#c2004b]"
+      className="mt-1.5 text-sm font-semibold leading-5 text-foreground"
     >
       {children}
     </p>

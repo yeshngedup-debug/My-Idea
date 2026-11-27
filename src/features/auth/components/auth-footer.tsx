@@ -10,7 +10,7 @@ import {
   UTILITY_LINKS,
 } from "@/components/marketing/nav";
 import { cn } from "@/lib/utils";
-import { focusRingOnDark } from "@/features/auth/components/styles";
+import { focusRing } from "@/features/auth/components/styles";
 
 type FooterLink = { href: string; label: string };
 
@@ -30,7 +30,7 @@ const MORE_LINKS: readonly FooterLink[] = [
 ];
 
 const linkClass =
-  "inline-flex min-h-11 items-center text-[13px] text-[#eaf6f6]/80 transition-colors duration-150 ease-[var(--ease-out)] hover:text-white motion-reduce:transition-none";
+  "inline-flex min-h-11 items-center text-sm text-muted-foreground transition-colors duration-200 ease-[var(--ease-out)] hover:text-foreground motion-reduce:transition-none";
 
 function FooterColumn({
   title,
@@ -41,12 +41,12 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b9dede]">
+      <h2 className="text-sm font-medium tracking-normal text-foreground">
         {title}
       </h2>
       <nav aria-label={`${title} navigation`} className="mt-1 flex flex-col items-start">
         {links.map((link) => (
-          <Link key={link.href} href={link.href} className={cn(linkClass, focusRingOnDark)}>
+          <Link key={link.href} href={link.href} className={cn(linkClass, focusRing)}>
             {link.label}
           </Link>
         ))}
@@ -58,35 +58,30 @@ function FooterColumn({
 /**
  * The footer for the auth routes.
  *
- * It closes the page in deep teal and keeps every public destination the
- * marketing footer offered: the public home, the guide pages, pricing,
+ * It closes the page with a quiet hairline and keeps every public destination
+ * the marketing footer offered: the public home, the guide pages, pricing,
  * contact, privacy and terms. There is no filled action here — the account
- * screen owns the single magenta submit.
+ * screen owns the single filled submit.
  */
 export function AuthFooter() {
   return (
-    <footer className="border-t border-[#0b2e2e] bg-[#0b2e2e]">
-      <div className="mx-auto w-full max-w-[1200px] px-5 py-10 sm:px-8">
+    <footer className="border-t border-border bg-background">
+      <div className="content-shell py-10">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link
               href={SITE.homeHref}
               className={cn(
-                "inline-flex min-h-11 items-center gap-2.5 rounded-[2px]",
-                focusRingOnDark,
+                "inline-flex min-h-11 items-center gap-2.5 rounded-lg",
+                focusRing,
               )}
             >
-              {/* The mark is teal on teal, so it sits on a paper chip. */}
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-[2px] bg-white p-1.5">
-                <Logo size="h-6 w-6" />
-              </span>
-              <span className="text-[15px] font-semibold tracking-[-0.02em] text-white">
+              <Logo size="h-6 w-6" />
+              <span className="text-sm font-medium text-foreground">
                 {SITE.name}
               </span>
             </Link>
-            <p className="mt-3 max-w-[28ch] text-[13px] leading-6 text-[#eaf6f6]/75">
-              {SITE.tagline}
-            </p>
+            <p className="quiet-note mt-3 max-w-[28ch]">{SITE.tagline}</p>
           </div>
 
           <FooterColumn title="Account" links={ACCOUNT_LINKS} />
@@ -94,9 +89,7 @@ export function AuthFooter() {
           <FooterColumn title="More" links={MORE_LINKS} />
         </div>
 
-        <p className="mt-8 text-[12px] text-[#eaf6f6]/70">
-          © 2026 {SITE.name}
-        </p>
+        <p className="quiet-note mt-8">© 2026 {SITE.name}</p>
       </div>
     </footer>
   );

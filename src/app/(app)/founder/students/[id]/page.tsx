@@ -91,11 +91,11 @@ export default async function StudentProfileDetailPage({
     <section>
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between gap-4">
-          <Link href="/founder/browse-students" className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <Link href="/founder/browse-students" className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
             Browse students
           </Link>
           <div className="min-w-0 text-right">
-            <h1 className="break-words text-xl font-semibold tracking-tight text-primary sm:text-2xl">{sp.full_name}</h1>
+            <h1 className="break-words text-xl font-semibold text-accent sm:text-2xl">{sp.full_name}</h1>
           </div>
         </div>
 
@@ -112,7 +112,7 @@ export default async function StudentProfileDetailPage({
               <span>Latest application to your project</span>
               <Link
                 href={`/founder/projects/${encodeURIComponent(founderApplication.project.id)}`}
-                className="inline-flex min-h-11 items-center rounded font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex min-h-11 items-center rounded font-semibold text-accent underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {founderApplication.project.title}
               </Link>
@@ -131,15 +131,15 @@ export default async function StudentProfileDetailPage({
 
           {sp.bio && (
             <div className="mt-6 border-t border-border pt-6">
-              <h2 className="mb-1 text-sm font-semibold text-primary">Bio</h2>
+              <h2 className="mb-1 text-sm font-semibold text-accent">Bio</h2>
               <p className="whitespace-pre-line text-sm leading-6 text-body-secondary">{sp.bio}</p>
             </div>
           )}
 
           <div className="mt-6 border-t border-border pt-6">
-            <h2 className="mb-2 text-sm font-semibold text-primary">CV</h2>
+            <h2 className="mb-2 text-sm font-semibold text-accent">CV</h2>
             {canViewCv ? (
-              <a href={`/api/cv/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <a href={`/api/cv/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 View CV (PDF)
               </a>
             ) : (

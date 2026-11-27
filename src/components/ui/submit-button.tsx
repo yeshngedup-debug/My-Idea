@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Submit button with a pending state — shows a spinner label while the
+ * Submit button with a pending state — shows a plain pending label while the
  * server action is in flight so slow logins never look frozen.
  */
 import { useFormStatus } from "react-dom";
@@ -22,19 +22,9 @@ export function SubmitButton({
         type="submit"
         disabled={pending}
         aria-busy={pending}
-        className="h-auto min-h-12 w-full rounded-[2px] bg-[#ff0063] py-3.5 text-[13px] font-semibold tracking-[-0.01em] text-[#000000] hover:bg-[#d40054]"
+        className="h-auto min-h-12 w-full rounded-[2px] bg-cta py-3.5 text-[13px] font-semibold text-cta-foreground hover:bg-cta-hover"
       >
-        {pending ? (
-          <span className="inline-flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="h-4 w-4 rounded-full border-2 border-[#ffffff]/40 border-t-[#ffffff] animate-spin motion-reduce:animate-none"
-            />
-            {pendingLabel}
-          </span>
-        ) : (
-          children
-        )}
+        {pending ? pendingLabel : children}
       </Button>
       {/* Disabling the button during submit can drop focus, so its changed
           label may never be announced. A stable live region fills that gap. */}

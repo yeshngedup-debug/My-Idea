@@ -64,8 +64,8 @@ export function ShortlistButton({
         onClick={handleClick}
         className={`pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md px-5 py-2.5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-80 ${
           shortlisted || !canRequest
-            ? 'cursor-default border border-primary/20 bg-primary/10 text-primary'
-            : 'bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
+            ? 'cursor-default border border-accent/20 bg-accent/10 text-accent'
+            : 'bg-cta text-cta-foreground hover:bg-cta-hover'
         }`}
       >
         {label}
@@ -75,7 +75,7 @@ export function ShortlistButton({
           Next:{' '}
           <Link
             href="/founder/shortlists"
-            className="inline-block rounded py-0.5 font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-block rounded py-0.5 font-semibold text-accent underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             View Premium Shortlist
           </Link>
@@ -87,7 +87,7 @@ export function ShortlistButton({
           premium shortlist.{' '}
           <Link
             href="/founder/shortlists"
-            className="inline-block rounded py-0.5 font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-block rounded py-0.5 font-semibold text-accent underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             View shortlists
           </Link>

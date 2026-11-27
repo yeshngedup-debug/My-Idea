@@ -34,6 +34,8 @@ Audit date: 2026-11-24. Source of truth: current working tree (branch `main`, ba
 
 > **Brand note (2026-11-25):** the auth screens and their documentation now use the BTC palette — teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063` — with derived roles ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b` and black `#000000` on magenta. This is presentation only: validation, redirects, cookie checks, action names, ARIA, focus management, pending labels and copy are unchanged.
 
+> **Current brand note (2026-11-27):** the active interface has since moved to the locked palette — white `#FFFFFF`, quiet gray `#F5F5F7`, ink `#1D1D1F`, secondary text `#6E6E73`, border `#D2D2D7` and deep teal `#0B5C5C` as the only accent. Website photography is removed in favour of neutral icon panels. The 2026-11-25 note above records an earlier state and is not current design guidance.
+
 ---
 
 ## 0. Remediation applied (same day)

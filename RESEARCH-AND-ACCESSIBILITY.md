@@ -24,7 +24,7 @@ Review date: 2026-11-24. Sources: live pages fetched with browser/web tools, plu
 
 ## 3. Limitations we can overcome
 
-High pay-to-compete costs, credits gamification, algorithmic ranking and boosted proposals, paywalled filters and contact details, slow verification, card-first payments, desktop-first layouts, sponsored/unverifiable reviews, and no wrap-up after a project ends. Our answers: free baseline browsing, Nu.-denominated bank/mBoB transfers with admin confirmation, an admin-curated shortlist that can be explained, mobile-first layouts, and real local photography with attribution.
+High pay-to-compete costs, credits gamification, algorithmic ranking and boosted proposals, paywalled filters and contact details, slow verification, card-first payments, desktop-first layouts, sponsored/unverifiable reviews, and no wrap-up after a project ends. Our answers: free baseline browsing, Nu.-denominated bank/mBoB transfers with admin confirmation, an admin-curated shortlist that can be explained, mobile-first layouts, and neutral icon-based visual panels.
 
 Bad fits for this MVP: real escrow, Toptal-style screening, credits, paywalled filters, employer-of-record/payroll automation, public rating economies, and algorithmic matching.
 
@@ -47,11 +47,11 @@ Full audit was run with browser DOM/accessibility-tree inspection, keyboard trav
 
 - **Validation errors not announced** (3.3.1, 4.1.3): native bubbles only. Now mitigated by the global `role="status"` live region; field-level `aria-invalid`/`aria-describedby` is still to do.
 - **404 had no main landmark and a broken skip-link target** (2.4.1, 1.3.1): fixed by the new `app/not-found.tsx`.
-- **320px reflow failure on the header CTA** (1.4.10): addressed by the new shared `SiteHeader` mobile collapse; needs re-verification after the design pages land.
-- **Contrast** (1.4.3): `#d84f37` at 14px bold and `#b44532` at 12px bold fall below 4.5:1. Small-text accents should use `#b23c26` (about 4.9:1); the brighter accent is fine only for large text.
-- **Target size** (2.5.8) and **focus appearance on text links** (2.4.11): give inline links `min-height: 24px` and apply `focus-visible:ring-2` consistently.
+- **320px reflow failure on the header CTA** (1.4.10): addressed by the shared `MinimalSiteHeader` mobile collapse. Re-verified at 390×844 in the final design pass: the menu button is named `Open menu`, focuses the first mobile-nav link, makes `<main>` inert, and restores focus on Escape.
+- **Contrast** (1.4.3): historical `#d84f37` / `#b44532` accents are retired. The active palette uses `#1D1D1F` body text, `#6E6E73` secondary text and `#0B5C5C` for focus and the primary action.
+- **Target size** (2.5.8) and **focus appearance on text links** (2.4.11): controls keep at least a 44px minimum target and use a visible deep-teal focus outline.
 
-Verified passing: `lang="en"`, unique titles, one h1 per page with no skipped levels, landmarks on `/public`, working skip link on five pages, full keyboard reachability, 4px focus ring on CTAs, real labels and autocomplete on auth forms, descriptive image alt text and photo credits, reduced-motion via `MotionConfig`, and body text at 11.88:1.
+Verified passing: `lang="en"`, unique titles, one h1 per page with no skipped levels, landmarks on `/public`, working skip link on five pages, full keyboard reachability, visible deep-teal focus treatment, real labels and autocomplete on auth forms, neutral icon panels in place of website photography, and reduced motion throughout.
 
 The newly added marketing pages (`/how-it-works`, `/for-students`, `/for-founders`, `/about`, `/faq`, `/contact`) were still being built during the audit and need a dedicated re-audit, ideally with a real screen reader.
 

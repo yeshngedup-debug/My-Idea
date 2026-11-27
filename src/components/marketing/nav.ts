@@ -9,12 +9,14 @@ export const SITE = {
   name: "Bhutan Tech Connect",
   tagline: "Local talent. Real projects. Built in Bhutan.",
   homeHref: "/public",
+  trustLine:
+    "Human verification · Paid in Ngultrum · No bidding wars · Built in Bhutan",
 } as const;
 
 import { colors } from "@/lib/design-tokens";
 
-/** Locked palette from the marketing design contract. Use the literal Tailwind
- * arbitrary values in class names; this map is for reference and inline styles. */
+/** Locked palette for the minimal design system. Prefer semantic token classes
+ * in markup; this map is for reference and inline styles. */
 export const PALETTE = {
   page: colors.page,
   surface: colors.surface,
@@ -123,11 +125,6 @@ export const FOOTER_UTILITY_LINKS: readonly NavLink[] = [
   ...UTILITY_LINKS,
   LOGIN_LINK,
 ];
-
-export type MarketingImage = {
-  src: string;
-  alt: string;
-};
 
 export type Cta = {
   href: string;

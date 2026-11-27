@@ -20,8 +20,8 @@ import {
   authInputErrorClassName,
   authLabelClassName,
 } from "@/features/auth/components/styles";
-import { StatusMessage } from "@/components/ui/status-message";
-import { SubmitButton } from "@/components/ui/submit-button";
+import { AuthStatusMessage } from "@/features/auth/components/auth-status-message";
+import { AuthSubmitButton } from "@/features/auth/components/auth-submit-button";
 import {
   EMAIL_PATTERN,
   MAX_EMAIL_LENGTH,
@@ -164,15 +164,15 @@ export function SignupForm({ serverError }: { serverError?: string }) {
   return (
     <>
       {serverError && (
-        <StatusMessage
+        <AuthStatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
           tabIndex={-1}
           tone="error"
-          className="mb-5 rounded-[2px] focus-visible:outline-none"
+          className="mb-5 focus-visible:outline-none"
         >
           {serverError}
-        </StatusMessage>
+        </AuthStatusMessage>
       )}
 
       <form
@@ -297,7 +297,7 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               aria-pressed={showPassword}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setShowPassword((prev) => !prev)}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-[2px] border border-[#4d8c8c] bg-white px-3 text-[13px] font-medium text-[#0b2e2e] transition-[border-color,background-color,transform] duration-150 ease-[var(--ease-out)] hover:border-[#0b5c5c] hover:bg-[#eaf6f6] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:border-[#0b2e2e] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0b5c5c]/25"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-lg border border-border bg-background px-3 text-[13px] font-medium text-foreground transition-colors duration-200 ease-[var(--ease-out)] hover:bg-muted active:bg-muted motion-reduce:transition-none focus-visible:border-ring focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/20"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>
@@ -309,9 +309,9 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
         </div>
-        <SubmitButton pendingLabel="Creating account…">
+        <AuthSubmitButton pendingLabel="Creating account…">
           Create account
-        </SubmitButton>
+        </AuthSubmitButton>
       </form>
     </>
   );

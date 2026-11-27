@@ -11,30 +11,30 @@
   color-scheme: light;
   themecontroller: false;
 
-  --color-base-100: #eaf6f6;
-  --color-base-200: #eaf6f6;
-  --color-base-300: #b9dede;
-  --color-base-content: #0b2e2e;
+  --color-base-100: #ffffff;
+  --color-base-200: #f5f5f7;
+  --color-base-300: #d2d2d7;
+  --color-base-content: #1d1d1f;
   --color-primary: #0b5c5c;
   --color-primary-content: #ffffff;
-  --color-secondary: #eaf6f6;
-  --color-secondary-content: #0b2e2e;
-  --color-accent: #ff0063;
-  --color-accent-content: #000000;
-  --color-neutral: #0b2e2e;
+  --color-secondary: #f5f5f7;
+  --color-secondary-content: #1d1d1f;
+  --color-accent: #0b5c5c;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1d1d1f;
   --color-neutral-content: #ffffff;
-  --color-info: #0b5c5c;
+  --color-info: #1d1d1f;
   --color-info-content: #ffffff;
   --color-success: #0b5c5c;
   --color-success-content: #ffffff;
-  --color-warning: #ff0063;
-  --color-warning-content: #000000;
-  --color-error: #c2004b;
+  --color-warning: #6e6e73;
+  --color-warning-content: #ffffff;
+  --color-error: #b42318;
   --color-error-content: #ffffff;
 
   --radius-selector: 999px;
-  --radius-field: 0.75rem;
-  --radius-box: 1rem;
+  --radius-field: 0.625rem;
+  --radius-box: 0.75rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
@@ -43,59 +43,49 @@
 }
 
 @theme inline {
-  --color-background: #eaf6f6;
-  --color-foreground: #0b2e2e;
+  --color-background: #ffffff;
+  --color-foreground: #1d1d1f;
   --color-card: #ffffff;
-  --color-card-foreground: #0b2e2e;
+  --color-card-foreground: #1d1d1f;
   --color-popover: #ffffff;
-  --color-popover-foreground: #0b2e2e;
-  /* Dark teal is the legible brand text role on mist and white. Core teal
-     #66bfbf is decorative only and lives in --color-brand below. */
+  --color-popover-foreground: #1d1d1f;
+
   --color-primary: #0b5c5c;
   --color-primary-foreground: #ffffff;
-  --color-secondary: #eaf6f6;
-  --color-secondary-foreground: #0b2e2e;
-  --color-muted: #eaf6f6;
-  --color-muted-foreground: #356464;
-  --color-accent: #ff0063;
-  --color-accent-foreground: #000000;
-  /* Deep accent for small text and focus rings. Mirrors
-     colors.smallTextAccent in lib/design-tokens.ts. */
-  --color-accent-deep: #c2004b;
-  --color-destructive: #c2004b;
+  --color-secondary: #f5f5f7;
+  --color-secondary-foreground: #1d1d1f;
+  --color-muted: #f5f5f7;
+  --color-muted-foreground: #6e6e73;
+
+  /* Deep teal is the only accent. It is reserved for the single most
+     important action in a view and for quiet interactive emphasis. */
+  --color-accent: #0b5c5c;
+  --color-accent-foreground: #ffffff;
+  --color-accent-deep: #0b5c5c;
+  --color-brand: #0b5c5c;
+  --color-cta: #0b5c5c;
+  --color-cta-hover: #0b5c5c;
+  --color-cta-foreground: #ffffff;
+
+  --color-destructive: #b42318;
   --color-destructive-foreground: #ffffff;
-  --color-border: #b9dede;
-  --color-input: #4d8c8c;
-  --color-ring: #c2004b;
-  /* Core teal: decorative fills, borders and structure. Use --color-primary
-     for text on light surfaces; core teal on white is not a text colour. */
-  --color-brand: #66bfbf;
-  /* Semantic body copy roles. Replaces opacity-derived greys that fell below
-     4.5:1. Secondary is #356464 (legible on mist and white). */
-  --color-body: #0b2e2e;
-  --color-body-secondary: #356464;
-  /* Quiet ink for metadata and inactive controls on light surfaces. */
-  --color-ink-soft: #356464;
-  /* The single filled CTA. Role tokens: magenta with black text, since white
-     on magenta fails AA. Mirrors colors.cta / ctaHover / onCta in
-     lib/design-tokens.ts. --color-primary stays the quiet dark teal role. */
-  --color-cta: #ff0063;
-  --color-cta-hover: #d40054;
-  --color-cta-foreground: #000000;
-  /* One stronger edge for grouped surfaces on mist. Mirrors
-     colors.borderStrong in lib/design-tokens.ts. */
-  --color-border-strong: #4d8c8c;
-  /* Two soft, offset elevation steps. Mirrors elevation.card/cardRaised in
-     lib/design-tokens.ts: base groups read fast, raised marks importance. */
-  --shadow-card: 0 1px 2px rgb(11 46 46 / 0.06), 0 1px 3px rgb(11 46 46 / 0.04);
-  --shadow-card-raised: 0 6px 18px rgb(11 46 46 / 0.09), 0 2px 6px rgb(11 46 46 / 0.05);
-  --radius: 0.5rem;
+  --color-border: #d2d2d7;
+  --color-border-strong: #d2d2d7;
+  --color-input: #d2d2d7;
+  --color-ring: #0b5c5c;
+
+  --color-body: #1d1d1f;
+  --color-body-secondary: #6e6e73;
+  --color-ink-soft: #6e6e73;
+
+  --shadow-card: 0 1px 2px rgb(29 29 31 / 0.035);
+  --shadow-card-raised: 0 8px 30px rgb(29 29 31 / 0.06);
+  --radius: 0.75rem;
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
-  /* One easing curve and three durations, mirrored in the motion constants. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-100: 100ms;
   --duration-150: 150ms;
@@ -103,14 +93,8 @@
 }
 
 @layer base {
-  /* Tailwind's default ring-offset colour is white, which is nearly invisible
-     on the mist page. Components that sit on dark teal set their own explicit
-     ring-offset colour and win in the utilities layer. */
   :root {
     --tw-ring-offset-color: var(--color-background);
-    /* Font smoothing is set once on the root and inherited everywhere.
-       `app/layout.tsx` also puts `antialiased` on <body>; that duplicate is
-       outside this file. */
     @apply antialiased;
   }
 
@@ -118,14 +102,16 @@
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    /* Long-form copy gets a little more air than the browser default. */
-    line-height: 1.65;
+  html {
+    scroll-padding-top: 5rem;
   }
 
-  /* Heading defaults carry hierarchy through weight and leading, not colour.
-     Page utilities still win where a bespoke display size is intentional. */
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
   h1,
   h2,
   h3,
@@ -133,55 +119,40 @@
     text-wrap: balance;
     font-weight: 600;
   }
+
   h1 {
-    line-height: 1.08;
-    letter-spacing: -0.04em;
+    line-height: 1.06;
+    letter-spacing: -0.045em;
   }
+
   h2 {
-    line-height: 1.18;
-    letter-spacing: -0.02em;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
   }
+
   h3 {
-    line-height: 1.25;
+    line-height: 1.22;
     letter-spacing: -0.02em;
   }
 
   p {
-    line-height: 1.65;
+    line-height: 1.6;
     text-wrap: pretty;
   }
 
-  /* Browser surfaces belong to the palette too: a legible magenta selection
-     with black text instead of the default blue. */
   ::selection {
-    background-color: var(--color-cta);
-    color: var(--color-cta-foreground);
+    background-color: var(--color-border);
+    color: var(--color-foreground);
   }
 
-  /* One token-based focus indicator at the shared layer. Components that
-     paint their own ring opt out with `focus-visible:outline-none`; utilities
-     win over this base rule. */
   :focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
   }
-
-  /* Anchors and keyboard focus must never land under the 64px sticky header. */
-  html {
-    scroll-padding-top: 4rem;
-  }
 }
 
-/* Marketing interaction classes. Left unlayered on purpose: Tailwind 4 emits
-   utilities in a layer, so these component rules win at equal specificity and
-   their :active transform is not swallowed by a hover transform utility.
-
-   Chrome is a single quiet bar: one tinted surface, one 1px hairline, no
-   floating pill, no inner highlight, no colored shadow, no stacked glass. */
-
-/* Marketplace content is present on first paint. Older reveal wrappers may
-   remain in secondary pages, but they must never hide or shift content while
-   JavaScript loads or while the reader scrolls. */
+/* Content is present on first paint. Legacy reveal wrappers remain valid but
+   never hide, blur, shift, or zoom content while scripts load or scroll. */
 [data-reveal],
 [data-scale-fade] {
   opacity: 1 !important;
@@ -189,39 +160,121 @@
   filter: none !important;
 }
 
-/* Press feedback lives on pointer-down and retargets from the current value.
-   Transform is dropped under reduced motion; color feedback remains. */
 .pressable {
   transition:
-    transform var(--duration-100) var(--ease-out),
     background-color var(--duration-150) var(--ease-out),
-    color var(--duration-150) var(--ease-out);
+    color var(--duration-150) var(--ease-out),
+    border-color var(--duration-150) var(--ease-out);
 }
+
 .pressable:active {
-  transform: scale(0.98);
+  transform: none;
 }
 
-/* Photograph zoom was removed: the photograph is the one bright moment and
-   should stay still. The class is retained so existing call sites stay valid. */
-
-/* Workspace shortcut lists carry their own rules and dividers, so this surface
-   is a flat, token-derived paper wash rather than a drawn grid. Declared in the
-   components layer so a caller's background utility (e.g. the dark loading
-   panel) still wins. */
 @layer components {
-  /* Target of an in-page link: clears the sticky header with one small gap. */
   .scroll-mt-chapter {
-    scroll-margin-top: 1rem;
+    scroll-margin-top: 2rem;
   }
 
   .workspace-paper {
     background-color: var(--color-background);
   }
+
+  /* Shared minimal layout rhythm. Pages may widen media inside these shells. */
+  .content-shell {
+    width: 100%;
+    max-width: 68rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .media-shell {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .section-shell {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+
+  .hairline {
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  /* A quiet, natural-case section cue. No marker, no uppercase, no tracking. */
+  .index-label {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-muted-foreground);
+  }
+
+  .display-xl {
+    font-size: clamp(2.75rem, 7vw, 5.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.05em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .display-lg {
+    font-size: clamp(2.125rem, 5vw, 3.875rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .display-md {
+    font-size: clamp(1.75rem, 3.5vw, 2.625rem);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .lead-copy {
+    font-size: clamp(1.0625rem, 2vw, 1.25rem);
+    line-height: 1.55;
+    color: var(--color-body-secondary);
+    text-wrap: pretty;
+  }
+
+  .quiet-note {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+  }
+
+  .trust-line {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+  }
+
+  .photo-plate,
+  .plate {
+    background-color: var(--color-secondary);
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  html {
+    scroll-padding-top: 7.5rem;
+  }
+}
+
+@media (min-width: 48rem) {
+  .content-shell,
+  .media-shell {
+    padding-inline: 2.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* Shared backstop: no smooth scrolling, no running or looping animation and
-     no lingering transition anywhere, even outside the opted-in components. */
   html {
     scroll-behavior: auto;
   }
@@ -234,75 +287,10 @@
     transition-duration: 0.01ms !important;
   }
 
-  .pressable:active {
-    transform: none;
-  }
-
-  /* Belt-and-braces: a scroll reveal must never leave content shifted,
-     blurred or dimmed when the visitor has asked for reduced motion. */
-  [data-reveal] {
+  [data-reveal],
+  [data-scale-fade] {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
   }
-
-  [data-scale-fade] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* ==========================================================================
-   Marketplace layer
-   --------------------------------------------------------------------------
-   The marketing site uses a practical marketplace rhythm: mist background,
-   white work surfaces, teal structure, and magenta for one high-priority
-   action in a view. Type and spacing carry hierarchy; decorative effects do
-   not delay or obscure content.
-   ========================================================================== */
-
-/* Section label: a short, natural-case wayfinding cue with one teal marker.
-   It supports the heading instead of competing with it. */
-@layer components {
-  .index-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--color-primary);
-  }
-
-  .index-label::before {
-    content: "";
-    display: inline-block;
-    width: 1rem;
-    height: 2px;
-    background: var(--color-cta);
-  }
-
-  /* Marketplace display scale. It stays strong without pushing the first
-     action below the fold on a phone. */
-  .display-xl {
-    font-size: clamp(2.75rem, 6vw, 4.75rem);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    font-weight: 600;
-    text-wrap: balance;
-  }
-
-  .display-lg {
-    font-size: clamp(2rem, 4vw, 3.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.035em;
-    font-weight: 600;
-    text-wrap: balance;
-  }
-}
-
-/* Photograph plates sit on a teal mat so a slow connection shows brand colour
-   instead of a grey box. */
-.plate {
-  background: var(--color-brand);
 }

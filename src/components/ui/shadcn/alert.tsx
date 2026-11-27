@@ -13,10 +13,10 @@ export type AlertProps = React.ComponentProps<"div"> & {
 
 /** Quiet, toned-down semantic tints drawn from the project's status tokens. */
 const variantStyles: Record<AlertVariant, string> = {
-  default: "border-[#b9dede] bg-card text-foreground",
-  success: "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]",
-  warning: "border-[#c2004b]/20 bg-[#ffffff] text-[#c2004b]",
-  error: "border-[#ff0063] bg-[#ff0063]/8 text-[#c2004b]",
+  default: "border-border bg-card text-foreground",
+  success: "border-border bg-secondary text-accent",
+  warning: "border-destructive/20 bg-card text-destructive",
+  error: "border-accent bg-cta/8 text-destructive",
 }
 
 function Alert({

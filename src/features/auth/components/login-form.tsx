@@ -23,8 +23,8 @@ import {
   authLinkClassName,
   focusRing,
 } from "@/features/auth/components/styles";
-import { StatusMessage } from "@/components/ui/status-message";
-import { SubmitButton } from "@/components/ui/submit-button";
+import { AuthStatusMessage } from "@/features/auth/components/auth-status-message";
+import { AuthSubmitButton } from "@/features/auth/components/auth-submit-button";
 import { cn } from "@/lib/utils";
 
 type FieldName = "email" | "password";
@@ -106,15 +106,15 @@ export function LoginForm({
   return (
     <>
       {serverStatus && (
-        <StatusMessage
+        <AuthStatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
           tabIndex={-1}
           tone={serverStatusTone}
-          className="mb-5 rounded-[2px] focus-visible:outline-none"
+          className="mb-5 focus-visible:outline-none"
         >
           {serverStatus}
-        </StatusMessage>
+        </AuthStatusMessage>
       )}
 
       <form
@@ -197,7 +197,7 @@ export function LoginForm({
             </a>
           </p>
         </div>
-        <SubmitButton pendingLabel="Logging in…">Log in</SubmitButton>
+        <AuthSubmitButton pendingLabel="Logging in…">Log in</AuthSubmitButton>
       </form>
     </>
   );

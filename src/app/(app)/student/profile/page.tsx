@@ -42,7 +42,7 @@ export default async function StudentProfilePage() {
           action={
             <a
               href="/student/profile"
-              className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+              className="inline-flex min-h-11 items-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Try again
             </a>
@@ -65,7 +65,7 @@ export default async function StudentProfilePage() {
           action={
             <Link
               href="/"
-              className="inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] px-5 py-3 text-sm font-medium text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+              className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-accent transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Go to home
             </Link>
@@ -103,7 +103,7 @@ export default async function StudentProfilePage() {
           action={
             <a
               href="/student/profile"
-              className="inline-flex min-h-11 items-center rounded-lg bg-[#ff0063] px-5 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+              className="inline-flex min-h-11 items-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Try again
             </a>

@@ -14,18 +14,18 @@ export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
 
   return (
     <section aria-label="Workspace figures">
-      <dl className="grid grid-cols-1 divide-y divide-[#b9dede] border-y border-[#b9dede] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+      <dl className="grid grid-cols-1 divide-y divide-border border-y border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {stats.map((stat) => (
           <div
             key={stat.label}
             className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-3 sm:px-5 sm:py-4 sm:first:pl-0 sm:last:pr-0"
           >
-            <dt className="min-w-0 text-sm text-[#356464]">{stat.label}</dt>
-            <dd className="shrink-0 text-lg font-semibold leading-none tabular-nums text-[#0b5c5c]">
+            <dt className="min-w-0 text-sm text-body-secondary">{stat.label}</dt>
+            <dd className="shrink-0 text-lg font-semibold leading-none tabular-nums text-accent">
               {stat.value}
             </dd>
             {stat.detail ? (
-              <p className="w-full text-xs leading-5 text-[#356464] sm:w-full">
+              <p className="w-full text-xs leading-5 text-body-secondary sm:w-full">
                 {stat.detail}
               </p>
             ) : null}

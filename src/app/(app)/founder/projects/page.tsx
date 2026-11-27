@@ -14,7 +14,7 @@ import { ProjectsClient, type FounderProjectRow } from './projects-client';
 export const metadata = { title: 'My Projects' };
 
 const PRIMARY_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-4 py-2 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 const FILTER_VALUES = new Set([
   'all',

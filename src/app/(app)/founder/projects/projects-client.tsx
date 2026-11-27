@@ -36,16 +36,16 @@ const FILTERS = [
 ] as const;
 
 const STATUS_DOT: Record<string, string> = {
-  open: 'bg-[#66bfbf]',
-  in_progress: 'bg-[#0b5c5c]',
-  review: 'bg-[#ff0063]',
-  completed: 'bg-[#356464]',
+  open: 'bg-secondary',
+  in_progress: 'bg-cta',
+  review: 'bg-cta',
+  completed: 'bg-foreground',
 };
 
 const PRIMARY_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-4 py-2 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 const ROW_LINK =
-  'inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#c2004b] hover:decoration-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]';
+  'inline-flex min-h-11 items-center rounded text-sm font-semibold text-accent underline decoration-accent underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-destructive hover:decoration-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 
 export function ProjectsClient({
   projects,
@@ -119,7 +119,7 @@ export function ProjectsClient({
         className="w-full justify-start sm:w-auto"
       />
 
-      <p className="text-xs tabular-nums text-[#356464]" aria-live="polite">
+      <p className="text-xs tabular-nums text-body-secondary" aria-live="polite">
         {countLabel}
       </p>
 
@@ -132,7 +132,7 @@ export function ProjectsClient({
             <button
               type="button"
               onClick={() => setFilter('all')}
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Show all projects
             </button>
@@ -142,26 +142,26 @@ export function ProjectsClient({
         <>
           {/* Mobile: stacked rows keep the status and the action visible at
               360px instead of squeezing a four-column table. */}
-          <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede] sm:hidden">
+          <ul className="divide-y divide-border border-y border-border sm:hidden">
             {filtered.map((p) => (
               <li key={p.id} className="py-3">
                 <div className="flex items-start justify-between gap-3">
                   <p
-                    className="min-w-0 line-clamp-2 break-words text-sm font-semibold text-[#0b5c5c]"
+                    className="min-w-0 line-clamp-2 break-words text-sm font-semibold text-accent"
                     title={p.title}
                   >
                     {p.title}
                   </p>
-                  <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
+                  <Badge className="shrink-0 gap-1.5 border-border bg-secondary text-accent">
                     <span
                       aria-hidden="true"
-                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
+                      className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-foreground'}`}
                     />
                     {statusLabel(p.status)}
                   </Badge>
                 </div>
                 <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                  <span className="text-xs tabular-nums text-[#356464]">
+                  <span className="text-xs tabular-nums text-body-secondary">
                     {date(p.created_at)}
                   </span>
                   <Link href={`/founder/projects/${p.id}`} className={ROW_LINK}>
@@ -174,9 +174,9 @@ export function ProjectsClient({
           </ul>
 
           {/* Desktop: the same rows as a bounded table. */}
-          <div className="hidden min-w-0 overflow-x-auto border-y border-[#b9dede] sm:block">
+          <div className="hidden min-w-0 overflow-x-auto border-y border-border sm:block">
             <table className="w-full text-left text-sm" aria-label="My projects">
-              <thead className="border-b border-[#b9dede] text-xs font-medium text-[#356464]">
+              <thead className="border-b border-border text-xs font-medium text-body-secondary">
                 <tr>
                   <th scope="col" className="px-3 py-2.5 font-semibold">
                     Project
@@ -192,29 +192,29 @@ export function ProjectsClient({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#b9dede]">
+              <tbody className="divide-y divide-border">
                 {filtered.map((p) => (
                   <tr
                     key={p.id}
-                    className="transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6]"
+                    className="transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary"
                   >
                     <th
                       scope="row"
-                      className="max-w-xs break-words px-3 py-3 text-left font-semibold text-[#0b5c5c]"
+                      className="max-w-xs break-words px-3 py-3 text-left font-semibold text-accent"
                       title={p.title}
                     >
                       {p.title}
                     </th>
                     <td className="px-3 py-3">
-                      <Badge className="gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
+                      <Badge className="gap-1.5 border-border bg-secondary text-accent">
                         <span
                           aria-hidden="true"
-                          className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
+                          className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-foreground'}`}
                         />
                         {statusLabel(p.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-3 py-3 tabular-nums text-[#356464]">
+                    <td className="whitespace-nowrap px-3 py-3 tabular-nums text-body-secondary">
                       {date(p.created_at)}
                     </td>
                     <td className="px-3 py-3 text-right">

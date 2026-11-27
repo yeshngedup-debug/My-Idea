@@ -16,8 +16,8 @@ import {
   authInputErrorClassName,
   authLabelClassName,
 } from "@/features/auth/components/styles";
-import { StatusMessage } from "@/components/ui/status-message";
-import { SubmitButton } from "@/components/ui/submit-button";
+import { AuthStatusMessage } from "@/features/auth/components/auth-status-message";
+import { AuthSubmitButton } from "@/features/auth/components/auth-submit-button";
 import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
@@ -81,15 +81,15 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
   return (
     <>
       {serverError && (
-        <StatusMessage
+        <AuthStatusMessage
           ref={serverErrorRef}
           id={serverErrorId}
           tabIndex={-1}
           tone="error"
-          className="mb-5 rounded-[2px] focus-visible:outline-none"
+          className="mb-5 focus-visible:outline-none"
         >
           {serverError}
-        </StatusMessage>
+        </AuthStatusMessage>
       )}
 
       <form
@@ -153,7 +153,9 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
           )}
         </div>
 
-        <SubmitButton pendingLabel="Saving new password…">Save new password</SubmitButton>
+        <AuthSubmitButton pendingLabel="Saving new password…">
+          Save new password
+        </AuthSubmitButton>
       </form>
     </>
   );

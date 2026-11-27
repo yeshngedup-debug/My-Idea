@@ -27,8 +27,8 @@ export const metadata = { title: "Founder Dashboard" };
 const PILL = {
   open: "border-border bg-secondary text-secondary-foreground",
   pending: "border-accent-deep/30 bg-accent-deep/10 text-accent-deep",
-  active: "border-primary/30 bg-primary/10 text-primary",
-  confirmed: "border-primary bg-primary text-primary-foreground",
+  active: "border-accent/30 bg-accent/10 text-accent",
+  confirmed: "border-accent bg-accent text-primary-foreground",
   danger: "border-destructive/30 bg-destructive/10 text-accent-deep",
   neutral: "border-border bg-muted text-muted-foreground",
 } as const;
@@ -36,7 +36,7 @@ const PILL = {
 const PILL_DOT = {
   open: "bg-accent-deep",
   pending: "bg-accent-deep",
-  active: "bg-primary",
+  active: "bg-accent",
   confirmed: "bg-primary-foreground",
   danger: "bg-accent-deep",
   neutral: "bg-muted-foreground",
@@ -163,12 +163,12 @@ export default async function FounderDashboard() {
       {/* Block A — the single next action, ahead of the figures. */}
       <section
         aria-labelledby="founder-next-action-title"
-        className="rounded-xl border border-primary/25 bg-card px-5 py-5 sm:px-6"
+        className="rounded-xl border border-accent/25 bg-card px-5 py-5 sm:px-6"
       >
         <p className="text-xs font-semibold text-accent-deep">Next action</p>
         <h2
           id="founder-next-action-title"
-          className="mt-2 text-lg font-semibold tracking-tight text-primary"
+          className="mt-2 text-lg font-semibold text-accent"
         >
           {nextAction.title}
         </h2>
@@ -184,7 +184,7 @@ export default async function FounderDashboard() {
           </Link>
           <Link
             href={secondaryAction.href}
-            className="inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             {secondaryAction.label}
           </Link>
@@ -196,13 +196,13 @@ export default async function FounderDashboard() {
       <section className="grid grid-cols-12 gap-6 lg:gap-8">
         <div className="col-span-12 min-w-0 lg:col-span-8">
           <div className="mb-4 flex items-end justify-between gap-4">
-            <h2 className="text-lg font-semibold tracking-tight text-primary">
+            <h2 className="text-lg font-semibold text-accent">
               Recent projects
             </h2>
             {projects.length > 0 && (
               <Link
                 href="/founder/projects"
-                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 View all
               </Link>
@@ -215,7 +215,7 @@ export default async function FounderDashboard() {
               action={
                 <Link
                   href="/founder/projects/post"
-                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                 >
                   Create your first project
                 </Link>
@@ -233,7 +233,7 @@ export default async function FounderDashboard() {
                       className={ROW_LINK}
                     >
                       <span className="min-w-0">
-                        <span className="block truncate text-sm font-medium text-primary">
+                        <span className="block truncate text-sm font-medium text-accent">
                           {project.title}
                         </span>
                         <span className="mt-0.5 block text-xs tabular-nums text-body-secondary">
@@ -259,7 +259,7 @@ export default async function FounderDashboard() {
         </div>
 
         <div className="col-span-12 min-w-0 lg:col-span-4">
-          <h2 className="mb-4 text-lg font-semibold tracking-tight text-primary">
+          <h2 className="mb-4 text-lg font-semibold text-accent">
             Go to
           </h2>
           <nav aria-label="Founder shortcuts" className="workspace-paper divide-y divide-border border-y border-border">
@@ -271,7 +271,7 @@ export default async function FounderDashboard() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

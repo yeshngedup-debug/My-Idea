@@ -61,12 +61,12 @@ function Progress({
         aria-valuetext={current === undefined ? undefined : ariaValueText ?? displayValue}
         aria-label={ariaLabel ?? label}
         aria-labelledby={ariaLabelledBy}
-        className="h-2 w-full overflow-hidden rounded-full bg-[#0b2e2e]/10"
+        className="h-2 w-full overflow-hidden rounded-full bg-foreground/10"
       >
         {current !== undefined ? (
           <div
             data-slot="progress-indicator"
-            className="h-full rounded-full bg-[#0b5c5c]"
+            className="h-full rounded-full bg-cta"
             style={{ width: `${percent}%` }}
           />
         ) : null}

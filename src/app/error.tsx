@@ -19,14 +19,13 @@ export default function ErrorPage({
   return (
     <main
       id="main-content"
-      className="flex min-h-svh flex-col bg-[#eaf6f6] px-5 py-16 text-[#0b2e2e] sm:px-8 sm:py-24"
+      className="flex min-h-svh flex-col bg-background px-5 py-16 text-foreground sm:px-8 sm:py-24"
     >
-      <div className="m-auto w-full max-w-xl border-l-2 border-[#b9dede] pl-6 sm:pl-8">
-        <p className="text-sm font-semibold text-[#0b5c5c]">Page error</p>
-        <h1 className="mt-3 max-w-[18ch] text-[clamp(2rem,8vw,3.5rem)] font-semibold leading-[1.04] tracking-[-0.04em]">
+      <div className="m-auto w-full max-w-xl">
+        <h1 className="text-balance text-[clamp(2rem,6vw,3.25rem)] font-semibold leading-[1.08] tracking-tight">
           This page could not load
         </h1>
-        <p className="mt-5 max-w-[52ch] text-base leading-7 text-[#356464]">
+        <p className="mt-5 max-w-[52ch] text-base leading-7 text-muted-foreground">
           The request did not finish. Try the page again, or return to a known
           starting point.
         </p>
@@ -34,13 +33,13 @@ export default function ErrorPage({
           <button
             type="button"
             onClick={retry}
-            className="pressable inline-flex min-h-12 items-center rounded-lg bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors duration-150 hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+            className="inline-flex min-h-12 items-center rounded-lg bg-cta px-6 py-3 text-sm font-semibold text-cta-foreground transition-colors duration-150 hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             Try again
           </button>
           <Link
             href={recoveryHref}
-            className="pressable inline-flex min-h-12 items-center rounded-lg border border-[#4d8c8c] bg-white px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 hover:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+            className="inline-flex min-h-12 items-center rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-border-strong hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             {recoveryLabel}
           </Link>

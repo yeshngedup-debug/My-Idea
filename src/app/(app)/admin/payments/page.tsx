@@ -109,14 +109,14 @@ export default async function AdminPaymentsPage() {
               action={
                 <a
                   href="/admin/payments"
-                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   Try again
                 </a>
               }
             />
           ) : (
-            <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-5">
+            <div className="rounded-xl border border-border bg-secondary p-4 sm:p-5">
               <PaymentsClient orders={orders} />
             </div>
           )}

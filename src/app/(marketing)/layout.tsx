@@ -1,9 +1,19 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import { MinimalSiteFooter } from "@/components/marketing/minimal-site-footer";
+import { MinimalSiteHeader } from "@/components/marketing/minimal-site-header";
 
 /**
- * Public/marketing shell. Kept intentionally thin: global providers live in
- * the root layout, and public pages do not need an auth guard.
+ * Public/marketing shell. The header and footer appear once here, around a
+ * single main landmark for the root layout's skip link.
  */
 export default function MarketingLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <MinimalSiteHeader />
+      <main id="main-content" className="w-full max-w-full overflow-x-clip">
+        {children}
+      </main>
+      <MinimalSiteFooter />
+    </>
+  );
 }

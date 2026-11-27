@@ -85,7 +85,7 @@ The full module shape is `components/`, `hooks/`, `actions.ts`, `queries.ts`, `s
 | `validators.ts` | Shared Zod schemas. |
 | `format.ts`, `order-status.ts`, `metadata.ts`, `design-tokens.ts` | Formatting, domain copy, SEO helpers, design tokens. |
 
-The auth screens (`src/app/(auth)/**` and `src/features/auth/components/**`) carry the BTC brand palette: teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`, with derived legibility roles ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b` and black `#000000` on magenta.
+The auth screens (`src/app/(auth)/**` and `src/features/auth/components/**`) carry the locked palette: white `#FFFFFF`, quiet gray `#F5F5F7`, ink `#1D1D1F`, secondary text `#6E6E73`, border `#D2D2D7`, and deep teal `#0B5C5C` as the only accent.
 | `pdf.ts` | Hand-built PDF 1.4 byte stream. |
 | `rate-limit.ts` | In-memory limiter — documented multi-instance limitation. |
 | `utils.ts` | `cn()` and small helpers. |

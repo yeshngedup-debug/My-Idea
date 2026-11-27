@@ -2,15 +2,14 @@
 
 import { useId, useState } from "react";
 import type { ReactNode } from "react";
-import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 
 /**
  * Disclosure list with native button/region semantics.
  *
- * Open and close are immediate, while the chevron gives a short 200ms
- * interaction cue. Nothing is hidden during the first paint and no panel
- * starts at zero opacity.
+ * Open and close are immediate. The chevron changes glyph rather than rotating,
+ * and no panel starts at zero opacity.
  */
 
 export type DisclosureItem = {
@@ -92,7 +91,7 @@ export function AnimatedDisclosureList({
             data-expanded={open}
             className={cn(
               "group border-t last:border-b",
-              dark ? "border-white/15" : "border-[#0b2e2e]/15",
+              dark ? "border-white/15" : "border-border",
             )}
           >
             <button
@@ -102,10 +101,10 @@ export function AnimatedDisclosureList({
               aria-controls={panelId}
               onClick={() => toggle(item.id)}
               className={cn(
-                "flex min-h-11 w-full items-center justify-between gap-4 rounded-sm px-2 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+                "flex min-h-11 w-full items-center justify-between gap-4 rounded-sm px-2 py-3 text-left transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none",
                 dark
-                  ? "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#0b2e2e]"
-                  : "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#eaf6f6]",
+                  ? "text-white focus-visible:ring-white focus-visible:ring-offset-foreground"
+                  : "text-foreground focus-visible:ring-ring focus-visible:ring-offset-background",
               )}
             >
               <span className="min-w-0 flex-1">{item.trigger}</span>
@@ -113,10 +112,18 @@ export function AnimatedDisclosureList({
                 aria-hidden="true"
                 weight="light"
                 size={16}
-                strokeWidth={1.5}
                 className={cn(
-                  "h-4 w-4 shrink-0 transition-transform duration-200 ease-out group-data-[expanded=true]:rotate-90 motion-reduce:transition-none",
-                  dark ? "text-[#66bfbf]" : "text-[#c2004b]",
+                  "h-4 w-4 shrink-0 group-data-[expanded=true]:hidden",
+                  dark ? "text-white/70" : "text-muted-foreground",
+                )}
+              />
+              <CaretDown
+                aria-hidden="true"
+                weight="light"
+                size={16}
+                className={cn(
+                  "hidden h-4 w-4 shrink-0 group-data-[expanded=true]:block",
+                  dark ? "text-white/70" : "text-muted-foreground",
                 )}
               />
             </button>
@@ -129,7 +136,7 @@ export function AnimatedDisclosureList({
               >
                 <div
                   className={cn(
-                    dark ? "text-white/70" : "text-[#0b2e2e]/70",
+                    dark ? "text-white/70" : "text-muted-foreground",
                   )}
                 >
                   {item.children}

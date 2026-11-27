@@ -28,13 +28,13 @@ export default function ProjectDetailError({
             <button
               type="button"
               onClick={retry}
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0b5c5c] px-4 py-2 text-sm font-semibold text-[#ffffff] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-cta px-4 py-2 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Try again
             </button>
             <Link
               href="/founder/projects"
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Back to projects
             </Link>

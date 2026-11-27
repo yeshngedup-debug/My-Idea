@@ -157,7 +157,7 @@ export function PostProjectForm() {
 
   function fieldError(id: FieldId) {
     return errors[id] ? (
-      <p id={`${id}-error`} className="mt-1.5 text-xs text-[#c2004b]">
+      <p id={`${id}-error`} className="mt-1.5 text-xs text-destructive">
         {errors[id]}
       </p>
     ) : null;
@@ -210,21 +210,21 @@ export function PostProjectForm() {
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       {status && !status.ok && <StatusMessage tone="error">{status.msg}</StatusMessage>}
 
-      <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4">
+      <div className="rounded-xl border border-border bg-secondary p-4">
         <Progress
           value={ready}
           max={requirements.length}
           label="Ready to post"
           valueLabel={`${ready} of ${requirements.length} details ready`}
         />
-        <p id="post-form-missing" className="mt-2 text-xs leading-5 text-[#356464]">
+        <p id="post-form-missing" className="mt-2 text-xs leading-5 text-body-secondary">
           {missing.length === 0
             ? 'All required details are ready. You can post the project.'
             : `Still needed: ${missing.join('; ')}.`}
         </p>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
+      <div className="space-y-5 rounded-xl border border-border bg-card p-4 sm:p-5">
         <div>
           <Label htmlFor="title" className="mb-2">Project title *</Label>
           <Input
@@ -237,7 +237,7 @@ export function PostProjectForm() {
             maxLength={120}
             invalid={Boolean(errors.title)}
             describedBy={errors.title ? 'title-error' : undefined}
-            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
           />
           {fieldError('title')}
         </div>
@@ -245,7 +245,7 @@ export function PostProjectForm() {
         <div>
           <div className="flex items-center justify-between mb-2">
             <Label htmlFor="description">Description *</Label>
-            <span className="text-xs text-[#356464]">{description.length}/2000</span>
+            <span className="text-xs text-body-secondary">{description.length}/2000</span>
           </div>
           <Textarea
             id="description"
@@ -257,7 +257,7 @@ export function PostProjectForm() {
             maxLength={2000}
             invalid={Boolean(errors.description)}
             describedBy={errors.description ? 'description-error' : undefined}
-            className="w-full min-h-[140px] rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full min-h-[140px] rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
           />
           {fieldError('description')}
         </div>
@@ -276,31 +276,31 @@ export function PostProjectForm() {
                 }
               }}
               placeholder="React, Figma, Python..."
-              className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+              className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
             />
             <Button
               type="button"
               onClick={addSkill}
               disabled={skills.length >= 15}
               variant="outline"
-              className="pressable h-auto min-h-11 shrink-0 border-[#b9dede] bg-[#ffffff] px-4 text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+              className="pressable h-auto min-h-11 shrink-0 border-border bg-card px-4 text-accent hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Add
             </Button>
           </div>
-          <p className="mt-1.5 text-xs text-[#356464]">
+          <p className="mt-1.5 text-xs text-body-secondary">
             Optional. Add up to 15 skills, separated by commas.
           </p>
           {skills.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-3">
               {skills.map((s) => (
-                <Badge key={s} className="gap-1 border-[#b9dede] bg-[#eaf6f6] pr-1 text-[#0b5c5c]">
+                <Badge key={s} className="gap-1 border-border bg-secondary pr-1 text-accent">
                   {s}
                   <button
                     type="button"
                     aria-label={`Remove ${s}`}
                     onClick={() => setSkills(skills.filter((x) => x !== s))}
-                    className="pressable grid min-h-8 min-w-8 place-items-center rounded-md p-1 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                    className="pressable grid min-h-8 min-w-8 place-items-center rounded-md p-1 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <X className="w-3 h-3" aria-hidden="true" />
                   </button>
@@ -311,7 +311,7 @@ export function PostProjectForm() {
         </div>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
+      <div className="space-y-5 rounded-xl border border-border bg-card p-4 sm:p-5">
         <div>
           <Label htmlFor="duration" className="mb-2">Duration *</Label>
           <select
@@ -321,7 +321,7 @@ export function PostProjectForm() {
             required
             aria-invalid={Boolean(errors.duration)}
             aria-describedby={errors.duration ? 'duration-error' : undefined}
-            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
           >
             <option value="">Select duration</option>
             {DURATIONS.map((d) => (
@@ -349,7 +349,7 @@ export function PostProjectForm() {
                 aria-label="Budget minimum"
                 invalid={Boolean(errors['budget-min'])}
                 describedBy={errors['budget-min'] ? 'budget-min-error' : undefined}
-                className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+                className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base tabular-nums text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
               />
               {fieldError('budget-min')}
             </div>
@@ -368,18 +368,18 @@ export function PostProjectForm() {
                 aria-label="Budget maximum"
                 invalid={Boolean(errors['budget-max'])}
                 describedBy={errors['budget-max'] ? 'budget-max-error' : undefined}
-                className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+                className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base tabular-nums text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
               />
               {fieldError('budget-max')}
             </div>
           </div>
-          <p className="mt-1.5 text-xs text-[#356464]">
+          <p className="mt-1.5 text-xs text-body-secondary">
             Nu. amounts can have up to 2 decimal places.
           </p>
         </div>
 
         <fieldset>
-          <legend className="mb-2 text-sm font-medium text-[#0b2e2e]">
+          <legend className="mb-2 text-sm font-medium text-foreground">
             Work mode
           </legend>
           <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Work mode">
@@ -395,10 +395,10 @@ export function PostProjectForm() {
                 tabIndex={workMode === value ? 0 : -1}
                 onKeyDown={(event) => handleWorkModeKeyDown(event, value)}
                 onClick={() => setWorkMode(value)}
-                className={`pressable min-h-11 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
+                className={`pressable min-h-11 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   workMode === value
-                    ? 'bg-[#0b5c5c] text-[#ffffff]'
-                    : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
+                    ? 'bg-cta text-cta-foreground'
+                    : 'border border-border bg-card text-body-secondary hover:bg-secondary'
                 }`}
               >
                 {label}
@@ -415,9 +415,9 @@ export function PostProjectForm() {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             describedBy="deadline-help"
-            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-border bg-card px-3.5 py-2.5 text-base text-accent placeholder:text-body-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:border-destructive"
           />
-          <p id="deadline-help" className="mt-1.5 text-xs text-[#356464]">
+          <p id="deadline-help" className="mt-1.5 text-xs text-body-secondary">
             Optional. Open through this date in your local time; students see it on the card.
           </p>
         </div>
@@ -426,7 +426,7 @@ export function PostProjectForm() {
       <Button
         type="submit"
         disabled={saving}
-        className="pressable h-12 w-full bg-[#ff0063] text-base font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+        className="pressable h-12 w-full bg-cta text-base font-semibold text-cta-foreground hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         {saving ? 'Posting...' : 'Post project'}
       </Button>

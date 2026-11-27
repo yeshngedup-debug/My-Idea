@@ -21,9 +21,9 @@ export function SpotlightCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[1.5rem] border border-[#0b2e2e]/12 bg-[#ffffff]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]",
-        "focus-within:ring-2 focus-within:ring-[#c2004b]",
+        "relative overflow-hidden rounded-[1.5rem] border border-border/12 bg-card",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "focus-within:ring-2 focus-within:ring-ring",
         className,
       )}
     >

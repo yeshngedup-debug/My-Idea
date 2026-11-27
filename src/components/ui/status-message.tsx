@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 export type StatusTone = "success" | "error" | "info";
 
 const TONE_STYLES: Record<StatusTone, string> = {
-  success: "border-[#66bfbf]/30 bg-[#eaf6f6] text-[#0b5c5c]",
-  error: "border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]",
-  info: "border-[#66bfbf]/25 bg-white text-[#0b5c5c]",
+  success: "border-border/30 bg-secondary text-accent",
+  error: "border-destructive/25 bg-cta/8 text-destructive",
+  info: "border-border/25 bg-card text-accent",
 };
 
 /**

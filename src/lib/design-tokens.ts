@@ -1,18 +1,10 @@
 /**
  * Bhutan Tech Connect — canonical design tokens.
  *
- * BTC brand: teal structure, mist page, white surfaces and magenta CTA, paired
- * with Geist type, generous spacing and restrained motion. The product reads as
- * a practical local marketplace: dark teal carries structure, mist separates
- * surfaces, and magenta is reserved for the one high-emphasis action in a
- * view. Dark teal and dark magenta roles are derived for legibility on light
- * surfaces. This module is the single typed source of truth for the visual
- * language. `app/globals.css` mirrors the colour, radius and motion values for
- * Tailwind/CSS; keep the two in sync.
- *
- * The old `designTokens` object and its helpers are kept for additive
- * compatibility (they are currently unused by the app). New work should use
- * the named role constants below.
+ * The visual system is intentionally quiet: white pages, light gray surfaces,
+ * near-black type, medium gray supporting copy, and one deep teal accent used
+ * only for the most important action in a view. `app/globals.css` mirrors these
+ * values for Tailwind and CSS; keep the two in sync.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -21,81 +13,72 @@
 
 export const colors = {
   /* Surfaces and lines */
-  page: "#eaf6f6",
+  page: "#ffffff",
   surface: "#ffffff",
-  surfaceMuted: "#eaf6f6",
-  secondary: "#eaf6f6",
-  border: "#b9dede",
-  borderHover: "#4d8c8c",
-  input: "#4d8c8c",
+  surfaceMuted: "#f5f5f7",
+  secondary: "#f5f5f7",
+  border: "#d2d2d7",
+  borderHover: "#d2d2d7",
+  input: "#d2d2d7",
 
   /* Ink */
-  ink: "#0b2e2e",
-  /** Quiet ink for metadata and inactive controls on light; CSS: --color-ink-soft. */
-  inkSoft: "#356464",
-  textSecondary: "#356464",
-  /** Canonical body-copy roles; use instead of opacity greys. */
-  body: "#0b2e2e",
-  bodySecondary: "#356464",
-  textMuted: "#356464",
-  textMutedLegacy: "#356464",
-  textDim: "#356464",
+  ink: "#1d1d1f",
+  /** Quiet ink for metadata and inactive controls. */
+  inkSoft: "#6e6e73",
+  textSecondary: "#6e6e73",
+  body: "#1d1d1f",
+  bodySecondary: "#6e6e73",
+  textMuted: "#6e6e73",
+  textMutedLegacy: "#6e6e73",
+  textDim: "#6e6e73",
   onDark: "#ffffff",
 
-  /* Quiet structural teal. Headings use the same legible dark teal. */
+  /* Deep teal carries structure and the single primary action. */
   forest: "#0b5c5c",
-  forestHover: "#0b2e2e",
-  heroInk: "#0b2e2e",
+  forestHover: "#0b5c5c",
+  heroInk: "#1d1d1f",
 
-  /* The single filled CTA role (mirrors --color-cta* in app/globals.css).
-     Magenta is the action role only: one filled action per view, peers stay
-     outline or quiet. Text on magenta is black; white fails AA. */
-  cta: "#ff0063",
-  ctaHover: "#d40054",
-  onCta: "#000000",
-  /** Stronger edge for grouped surfaces on mist; mirrors --color-border-strong. */
-  borderStrong: "#4d8c8c",
+  /* The one filled CTA role. White text meets AA on deep teal. */
+  cta: "#0b5c5c",
+  ctaHover: "#0b5c5c",
+  onCta: "#ffffff",
+  borderStrong: "#d2d2d7",
 
-  /* Accent: magenta. The deep tone is for small text and focus rings;
-     CSS mirrors it as --color-accent-deep. */
-  accent: "#ff0063",
-  accentHover: "#d40054",
-  smallTextAccent: "#c2004b",
-  onAccent: "#000000",
+  accent: "#0b5c5c",
+  accentHover: "#0b5c5c",
+  smallTextAccent: "#0b5c5c",
+  onAccent: "#ffffff",
 
-  /* Highlight primitives. Display and logo tones are the rendered variants. */
-  amber: "#ff0063",
-  amberDisplay: "#d40054",
-  amberLogo: "#66bfbf",
+  /* Legacy aliases retained for call-site compatibility. */
+  amber: "#0b5c5c",
+  amberDisplay: "#0b5c5c",
+  amberLogo: "#0b5c5c",
 
-  /* Status */
+  /* Status roles stay quiet and semantic. */
   success: "#0b5c5c",
-  successBg: "#eaf6f6",
-  successBorder: "#b9dede",
+  successBg: "#f5f5f7",
+  successBorder: "#d2d2d7",
   successText: "#0b5c5c",
-  error: "#c2004b",
-  errorBg: "#eaf6f6",
-  errorBorder: "#c2004b",
-  errorText: "#c2004b",
-  info: "#0b5c5c",
-  infoBg: "#eaf6f6",
-  infoBorder: "#b9dede",
-  infoText: "#0b5c5c",
-  destructive: "#c2004b",
+  error: "#b42318",
+  errorBg: "#f5f5f7",
+  errorBorder: "#d2d2d7",
+  errorText: "#b42318",
+  info: "#1d1d1f",
+  infoBg: "#f5f5f7",
+  infoBorder: "#d2d2d7",
+  infoText: "#1d1d1f",
+  destructive: "#b42318",
 
-  /* Focus */
-  focus: "#c2004b",
+  focus: "#0b5c5c",
 
-  /* Core brand primitives and derived legible roles. Mirrors the --color-*
-     variables in app/globals.css. */
-  brand: "#66bfbf",
-  mist: "#eaf6f6",
-  magenta: "#ff0063",
+  brand: "#0b5c5c",
+  mist: "#f5f5f7",
+  magenta: "#0b5c5c",
   brandText: "#0b5c5c",
-  accentText: "#c2004b",
-  onMagenta: "#000000",
-  magentaHover: "#d40054",
-  borderInput: "#4d8c8c",
+  accentText: "#0b5c5c",
+  onMagenta: "#ffffff",
+  magentaHover: "#0b5c5c",
+  borderInput: "#d2d2d7",
 } as const;
 
 /** Alias for callers that prefer the longer name. */
@@ -103,7 +86,7 @@ export const brandColors = colors;
 
 export type ColorRole = keyof typeof colors;
 
-/** The headline roles used in the brand guidelines. */
+/** Headline roles used across product and marketing surfaces. */
 export const palette = {
   page: colors.page,
   surface: colors.surface,
@@ -123,7 +106,6 @@ export type PaletteRole = keyof typeof palette;
 /* Space and shape                                                            */
 /* -------------------------------------------------------------------------- */
 
-/** 4px-based rhythm; rem values match Tailwind utility steps. */
 export const spacing = {
   xs: "0.5rem",
   sm: "0.75rem",
@@ -148,25 +130,19 @@ export const radii = {
 
 export type RadiusStep = keyof typeof radii;
 
-/**
- * Two soft, offset elevation steps, mirrored as --shadow-card and
- * --shadow-card-raised in app/globals.css. Use `card` for ordinary groups and
- * `cardRaised` for the one or two cards that carry extra importance.
- */
+/** Restrained elevation for the few surfaces that need separation. */
 export const elevation = {
-  card: "0 1px 2px rgb(11 46 46 / 0.06), 0 1px 3px rgb(11 46 46 / 0.04)",
-  cardRaised: "0 6px 18px rgb(11 46 46 / 0.09), 0 2px 6px rgb(11 46 46 / 0.05)",
+  card: "0 1px 2px rgb(29 29 31 / 0.035)",
+  cardRaised: "0 8px 30px rgb(29 29 31 / 0.06)",
 } as const;
 
 export type ElevationRole = keyof typeof elevation;
 
-/** WCAG 2.5.8 floor for interactive controls, plus the inline-link floor. */
 export const touchTarget = {
   min: "44px",
   inlineMin: "24px",
 } as const;
 
-/** Focus appearance used by `focus-visible` utilities across the app. */
 export const focus = {
   ringWidth: "2px",
   ringColor: colors.smallTextAccent,
@@ -174,12 +150,11 @@ export const focus = {
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/* Motion — mirrors the custom properties in app/globals.css                  */
+/* Motion                                                                     */
 /* -------------------------------------------------------------------------- */
 
 export const motion = {
   easing: {
-    /** Matches --ease-out in app/globals.css. */
     out: "cubic-bezier(0.22, 1, 0.36, 1)",
     inOut: "cubic-bezier(0.77, 0, 0.175, 1)",
   },
@@ -188,13 +163,13 @@ export const motion = {
     fast: "150ms",
     base: "200ms",
   },
-  pressScale: 0.98,
+  pressScale: 1,
 } as const;
 
 export type MotionDuration = keyof typeof motion.duration;
 
 /* -------------------------------------------------------------------------- */
-/* Type — Geist via next/font (--font-geist), with size-specific tracking      */
+/* Type                                                                       */
 /* -------------------------------------------------------------------------- */
 
 export const fontFamily = {
@@ -205,47 +180,40 @@ export const fontFamily = {
 } as const;
 
 export const tracking = {
-  tightest: "-0.09em",
-  tighter: "-0.06em",
+  tightest: "-0.05em",
+  tighter: "-0.045em",
   tight: "-0.04em",
-  heading: "-0.02em",
+  heading: "-0.03em",
   normal: "0",
-  /** Short labels only. Long uppercase spans should not use these steps. */
-  label: "0.08em",
-  wide: "0.14em",
-  wider: "0.2em",
+  label: "0",
+  wide: "0.04em",
+  wider: "0.08em",
 } as const;
 
 export type TrackingStep = keyof typeof tracking;
 
-/**
- * Measured scale: unitless leading (tight for short headings, 1.65 for long
- * copy), sizes descending by level, tracking in em and zero on body copy.
- * Headings take the weight; labels and supporting text stay regular so they
- * no longer compete at the same mid weight.
- */
 export const typeScale = {
   display: {
-    size: "clamp(2.75rem, 6vw, 4.75rem)",
-    lineHeight: "1",
-    tracking: tracking.tight,
+    size: "clamp(2.75rem, 7vw, 5.25rem)",
+    lineHeight: "1.04",
+    tracking: tracking.tighter,
     weight: 600,
   },
   pageTitle: {
-    size: "clamp(2.5rem, 5vw, 4.25rem)",
-    lineHeight: "1.04",
+    size: "clamp(2.5rem, 5vw, 4rem)",
+    lineHeight: "1.08",
     tracking: tracking.tight,
     weight: 600,
   },
   h1: {
-    size: "clamp(2.25rem, 4.5vw, 3.75rem)",
+    size: "clamp(2.25rem, 4.5vw, 3.5rem)",
     lineHeight: "1.08",
     tracking: tracking.tight,
     weight: 600,
   },
   h2: {
-    size: "clamp(1.65rem, 3vw, 2.5rem)",
-    lineHeight: "1.18",
+    size: "clamp(1.875rem, 3vw, 2.75rem)",
+    lineHeight: "1.14",
     tracking: tracking.heading,
     weight: 600,
   },
@@ -256,8 +224,8 @@ export const typeScale = {
     weight: 600,
   },
   body: {
-    size: "1rem",
-    lineHeight: "1.65",
+    size: "1.0625rem",
+    lineHeight: "1.6",
     tracking: tracking.normal,
     weight: 400,
   },
@@ -267,26 +235,21 @@ export const typeScale = {
     tracking: tracking.normal,
     weight: 400,
   },
-  /** Short, natural-case labels. Keep these rare; the heading does the work. */
   eyebrow: {
-    size: "0.75rem",
-    lineHeight: "1.3",
-    tracking: tracking.label,
+    size: "0.875rem",
+    lineHeight: "1.4",
+    tracking: tracking.normal,
     weight: 500,
   },
   microLabel: {
-    size: "0.75rem",
-    lineHeight: "1.3",
-    tracking: tracking.wide,
+    size: "0.8125rem",
+    lineHeight: "1.4",
+    tracking: tracking.normal,
     weight: 500,
   },
 } as const;
 
 export type TypeRole = keyof typeof typeScale;
-
-/* -------------------------------------------------------------------------- */
-/* Elevation — values actually used by the app                                */
-/* -------------------------------------------------------------------------- */
 
 export const zIndex = {
   base: 0,
@@ -301,7 +264,7 @@ export const zIndex = {
 export type ZIndexRole = keyof typeof zIndex;
 
 /* -------------------------------------------------------------------------- */
-/* Additive compatibility: original aggregate object and helpers              */
+/* Additive compatibility                                                     */
 /* -------------------------------------------------------------------------- */
 
 export const designTokens = {

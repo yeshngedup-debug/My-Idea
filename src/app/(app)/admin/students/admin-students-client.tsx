@@ -256,7 +256,7 @@ export function AdminStudentsClient({
     <div className="space-y-4 pb-28">
       {/* Search + filters */}
       <div className="relative">
-        <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#0b5c5c]/30 pointer-events-none" aria-hidden="true" />
+        <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-accent/30 pointer-events-none" aria-hidden="true" />
         <Input
           type="search"
           value={query}
@@ -291,10 +291,10 @@ export function AdminStudentsClient({
               setPage(1);
             }}
             aria-pressed={verifiedFilter === f.value}
-            className={`pressable min-h-11 shrink-0 rounded-md border px-4 py-2 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
+            className={`pressable min-h-11 shrink-0 rounded-md border px-4 py-2 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               verifiedFilter === f.value
-                ? 'border-[#0b5c5c] bg-[#0b5c5c] text-[#ffffff]'
-                : 'border-[#b9dede] bg-[#eaf6f6] text-[#356464] hover:bg-[#0b5c5c]/10'
+                ? 'border-accent bg-cta text-cta-foreground'
+                : 'border-border bg-secondary text-body-secondary hover:bg-cta/10'
             }`}
           >
             {f.label}
@@ -305,7 +305,7 @@ export function AdminStudentsClient({
       <h2 className="sr-only">Student profiles</h2>
 
       {!loadError && filtered.length > 0 && (
-        <p className="text-xs text-[#356464]">
+        <p className="text-xs text-body-secondary">
           {`Showing ${(currentPage - 1) * STUDENTS_PER_PAGE + 1}–${Math.min(
             currentPage * STUDENTS_PER_PAGE,
             filtered.length
@@ -330,10 +330,10 @@ export function AdminStudentsClient({
         <button
           type="button"
           onClick={toggleSelectAll}
-          className="pressable inline-flex min-h-11 items-center gap-2 rounded-md px-1 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+          className="pressable inline-flex min-h-11 items-center gap-2 rounded-md px-1 text-sm text-body-secondary transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {allVisibleSelected ? (
-            <CheckSquare className="w-4 h-4 text-[#0b5c5c]" />
+            <CheckSquare className="w-4 h-4 text-accent" />
           ) : (
             <Square className="w-4 h-4" />
           )}
@@ -351,7 +351,7 @@ export function AdminStudentsClient({
               <button
                 type="button"
                 onClick={() => router.refresh()}
-                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Try again
               </button>
@@ -374,7 +374,7 @@ export function AdminStudentsClient({
                     setVerifiedFilter('');
                     setPage(1);
                   }}
-                  className="pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                  className="pressable inline-flex min-h-11 items-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   Clear filters
                 </button>
@@ -383,7 +383,7 @@ export function AdminStudentsClient({
           />
         )
       ) : (
-        <ul id="student-profiles-list" className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
+        <ul id="student-profiles-list" className="divide-y divide-border border-y border-border">
           {visibleStudents.map((s) => {
             const displayName = s.full_name?.trim() || 'Unnamed student';
             const isSelected = selected.has(s.id);
@@ -394,7 +394,7 @@ export function AdminStudentsClient({
               <li
                 key={s.id}
                 aria-busy={savingRank || savingVerify}
-                className={`py-4 ${isSelected ? 'bg-[#ff0063]/8' : ''}`}
+                className={`py-4 ${isSelected ? 'bg-cta/8' : ''}`}
               >
                 <div className="flex items-start gap-3">
                   {/* Select */}
@@ -403,18 +403,18 @@ export function AdminStudentsClient({
                     onClick={() => toggleSelect(s.id)}
                     aria-label={isSelected ? `Deselect ${displayName}` : `Select ${displayName}`}
                     aria-pressed={isSelected}
-                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-md p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-md p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {isSelected ? (
-                      <CheckSquare className="w-5 h-5 text-[#0b5c5c]" aria-hidden="true" />
+                      <CheckSquare className="w-5 h-5 text-accent" aria-hidden="true" />
                     ) : (
-                      <Square className="w-5 h-5 text-[#356464]" aria-hidden="true" />
+                      <Square className="w-5 h-5 text-body-secondary" aria-hidden="true" />
                     )}
                   </button>
 
                   {/* Rank */}
                   <div className="shrink-0">
-                    <label htmlFor={`rank-${s.id}`} className="block text-xs text-[#356464] mb-1 text-center">
+                    <label htmlFor={`rank-${s.id}`} className="block text-xs text-body-secondary mb-1 text-center">
                       Rank
                     </label>
                     <input
@@ -428,23 +428,23 @@ export function AdminStudentsClient({
                       onKeyDown={(e) => e.key === 'Enter' && saveRank(s.id)}
                       disabled={savingRank}
                       placeholder="-"
-                      className="w-14 h-11 rounded-md bg-[#eaf6f6] border border-[#b9dede] text-center text-[#0b5c5c] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 [color-scheme:light]"
+                      className="w-14 h-11 rounded-md bg-secondary border border-border text-center text-accent text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 [color-scheme:light]"
                     />
                   </div>
 
                   {/* Identity */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="truncate text-base font-semibold text-[#0b5c5c]">
+                      <h3 className="truncate text-base font-semibold text-accent">
                         {displayName}
                       </h3>
                       {isVerified ? (
-                        <SealCheck className="w-4 h-4 text-[#0b5c5c] shrink-0" aria-hidden="true" />
+                        <SealCheck className="w-4 h-4 text-accent shrink-0" aria-hidden="true" />
                       ) : (
-                        <Bag className="w-4 h-4 text-[#0b5c5c]/30 shrink-0" aria-hidden="true" />
+                        <Bag className="w-4 h-4 text-accent/30 shrink-0" aria-hidden="true" />
                       )}
                     </div>
-                    <p className="text-xs text-[#356464] truncate">
+                    <p className="text-xs text-body-secondary truncate">
                       {s.college}
                       {s.course ? ` - ${s.course}` : ''}
                       {s.year ? ` (${s.year})` : ''}
@@ -452,18 +452,18 @@ export function AdminStudentsClient({
                     {(s.skills?.length ?? 0) > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {(s.skills ?? []).slice(0, 4).map((k) => (
-                          <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[10px] text-[#356464]">
+                          <Badge key={k} variant="outline" className="border-border bg-secondary text-[10px] text-body-secondary">
                             {k}
                           </Badge>
                         ))}
                         {(s.skills ?? []).length > 4 && (
-                          <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[10px] text-[#356464]">
+                          <Badge variant="outline" className="border-border bg-secondary text-[10px] text-body-secondary">
                             +{(s.skills ?? []).length - 4}
                           </Badge>
                         )}
                       </div>
                     )}
-                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-[#356464]">
+                    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 text-xs text-body-secondary">
                       {s.availability && <span>{AVAILABILITY_LABEL[s.availability] ?? s.availability}</span>}
                       <span>
                         {(s.applications ?? 0) > 0
@@ -476,7 +476,7 @@ export function AdminStudentsClient({
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Open CV for ${displayName} in a new tab`}
-                          className="inline-flex min-h-11 items-center gap-1 rounded px-1 text-[#0b5c5c] underline decoration-[#ff0063]/40 underline-offset-2 transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                          className="inline-flex min-h-11 items-center gap-1 rounded px-1 text-accent underline decoration-accent/40 underline-offset-2 transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         >
                           <FileText className="w-3 h-3" aria-hidden="true" /> CV on file
                         </a>
@@ -492,10 +492,10 @@ export function AdminStudentsClient({
                     onClick={() => toggleVerified(s)}
                     disabled={savingVerify}
                     aria-busy={savingVerify}
-                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
+                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60 ${
                       isVerified
-                        ? 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c] hover:bg-[#0b5c5c]/10'
-                        : 'border-[#ff0063] bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
+                        ? 'border-border bg-secondary text-accent hover:bg-cta/10'
+                        : 'border-accent bg-cta text-cta-foreground hover:bg-cta-hover'
                     }`}
                   >
                     {isVerified ? (
@@ -522,11 +522,11 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-md border border-border bg-secondary px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-cta/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
           >
             Previous
           </button>
-          <span aria-current="page" className="text-xs text-[#356464]">
+          <span aria-current="page" className="text-xs text-body-secondary">
             Page {currentPage} of {totalPages}
           </span>
           <button
@@ -534,7 +534,7 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-md border border-border bg-secondary px-4 py-2 text-sm font-semibold text-accent transition-colors hover:bg-cta/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
           >
             Next
           </button>
@@ -543,13 +543,13 @@ export function AdminStudentsClient({
 
       {/* Shortlist generation result */}
       {shortlistText && (
-        <div className="space-y-3 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
-          <h3 className="text-sm font-semibold text-[#0b5c5c]">Generated shortlist</h3>
+        <div className="space-y-3 rounded-xl border border-border bg-card p-4">
+          <h3 className="text-sm font-semibold text-accent">Generated shortlist</h3>
           <textarea
             readOnly
             value={shortlistText}
             rows={12}
-            className="w-full rounded-md border border-[#b9dede] bg-[#eaf6f6] p-3 font-mono text-xs text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+            className="w-full rounded-md border border-border bg-secondary p-3 font-mono text-xs text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Generated shortlist text"
           />
           <div className="flex flex-col gap-2 sm:flex-row">
@@ -557,14 +557,14 @@ export function AdminStudentsClient({
               <CopyButton
                 text={shortlistText}
                 label="Copy"
-                className="w-full rounded-md border-[#b9dede] bg-[#eaf6f6] font-semibold text-[#0b5c5c] hover:bg-[#b9dede]"
+                className="w-full rounded-md border-border bg-secondary font-semibold text-accent hover:bg-secondary"
               />
             </div>
             <Button
               type="button"
               onClick={downloadShortlist}
               variant="outline"
-              className="h-11 flex-1 border-[#b9dede] bg-transparent text-[#0b5c5c] hover:bg-[#0b5c5c]/10"
+              className="h-11 flex-1 border-border bg-transparent text-accent hover:bg-cta/10"
             >
               <Download className="mr-1 w-4 h-4" aria-hidden="true" /> Download .txt
             </Button>
@@ -574,9 +574,9 @@ export function AdminStudentsClient({
 
       {/* Sticky action bar */}
       {selected.size > 0 && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-[#ffffff] border-t border-[#b9dede] px-4 py-3">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-card border-t border-border px-4 py-3">
           <div className="max-w-2xl mx-auto space-y-2">
-            <p className="text-xs text-[#356464] text-center sm:text-left">
+            <p className="text-xs text-body-secondary text-center sm:text-left">
               {selected.size} {selected.size === 1 ? 'student' : 'students'} selected
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -587,7 +587,7 @@ export function AdminStudentsClient({
                   setProjectId('');
                 }}
                 aria-label="Choose founder"
-                className="min-w-0 flex-1 rounded-md border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] [&>option]:bg-[#ffffff]"
+                className="min-w-0 flex-1 rounded-md border border-border bg-secondary px-3 py-2.5 text-sm text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring [&>option]:bg-card"
               >
                 <option value="">Choose founder...</option>
                 {founders.map((f) => (
@@ -601,7 +601,7 @@ export function AdminStudentsClient({
                 onChange={(e) => setProjectId(e.target.value)}
                 aria-label="Choose project"
                 disabled={!founderId}
-                className="min-w-0 flex-1 rounded-md border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40 [&>option]:bg-[#ffffff]"
+                className="min-w-0 flex-1 rounded-md border border-border bg-secondary px-3 py-2.5 text-sm text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40 [&>option]:bg-card"
               >
                 <option value="">No specific project</option>
                 {founderProjects.map((p) => (
@@ -614,7 +614,7 @@ export function AdminStudentsClient({
                 type="button"
                 onClick={handleGenerate}
                 disabled={generating || !founderId}
-                className="pressable bg-[#ff0063] text-[#000000] font-semibold hover:bg-[#d40054] h-11 shrink-0"
+                className="pressable bg-cta text-cta-foreground font-semibold hover:bg-cta-hover h-11 shrink-0"
               >
                 <Star className="w-4 h-4 mr-1" aria-hidden="true" />
                 {generating ? 'Generating...' : 'Generate'}

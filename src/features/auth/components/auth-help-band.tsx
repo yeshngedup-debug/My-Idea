@@ -38,15 +38,14 @@ export function AuthHelpBand({
   return (
     <section
       aria-label="Account help"
-      className={cn(
-        "mt-4 border border-[#b9dede] bg-white p-5 sm:p-6",
-        className,
-      )}
+      className={cn("mt-10 border-t border-border pt-6", className)}
     >
-      <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+      <div className="grid gap-6 sm:grid-cols-2">
         <div>
-          <h2 className="text-[13px] font-semibold text-[#0b2e2e]">Account help</h2>
-          <p className="mt-2 text-[14px] leading-6 text-[#356464]">
+          <h2 className="text-sm font-medium tracking-normal text-foreground">
+            Account help
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Questions about student signup, founder access or a project?{" "}
             <a
               href={`mailto:${APP_CONTACT.email}`}
@@ -59,14 +58,16 @@ export function AuthHelpBand({
         </div>
 
         <div>
-          <h2 className="text-[13px] font-semibold text-[#0b2e2e]">Founder access</h2>
-          <p className="mt-2 text-[14px] leading-6 text-[#356464]">
+          <h2 className="text-sm font-medium tracking-normal text-foreground">
+            Founder access
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Founder accounts are not created through public signup.
           </p>
           <Link
             href={FOUNDER_ACCESS.href}
             className={cn(
-              "mt-2 inline-flex min-h-8 items-center rounded-[2px]",
+              "mt-2 inline-flex min-h-8 items-center rounded-sm",
               authLinkClassName,
               focusRing,
             )}
@@ -77,12 +78,12 @@ export function AuthHelpBand({
       </div>
 
       {newLink ? (
-        <div className="mt-5 border-t border-[#b9dede] pt-4">
+        <div className="mt-5 border-t border-border pt-4">
           {isHelpLink(newLink) ? (
             <Link
               href={newLink.href}
               className={cn(
-                "inline-flex min-h-8 items-center rounded-[2px]",
+                "inline-flex min-h-8 items-center rounded-sm",
                 authLinkClassName,
                 focusRing,
               )}

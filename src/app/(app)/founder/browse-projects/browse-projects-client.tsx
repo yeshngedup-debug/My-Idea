@@ -46,14 +46,14 @@ const FILTERS = [
 
 /** Decorative cue only; the status text above stays the accessible label. */
 const STATUS_DOT: Record<string, string> = {
-  open: 'bg-[#66bfbf]',
-  in_progress: 'bg-[#0b5c5c]',
-  review: 'bg-[#ff0063]',
-  completed: 'bg-[#0b5c5c]',
+  open: 'bg-secondary',
+  in_progress: 'bg-cta',
+  review: 'bg-cta',
+  completed: 'bg-cta',
 };
 
 const DISCLOSURE_CLASS =
-  'pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-2.5 py-1 text-xs font-medium text-[#356464] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center rounded-md border border-border bg-secondary px-2.5 py-1 text-xs font-medium text-body-secondary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background';
 
 function formatDate(value: string | null): string {
   return formatBhutanDate(value, 'Not set');
@@ -102,7 +102,7 @@ export function BrowseProjectsClient({
             className="max-w-full"
           />
         </div>
-        <p className="text-xs tabular-nums text-[#356464]">
+        <p className="text-xs tabular-nums text-body-secondary">
           {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
           {status ? ` · ${projectStatusLabel(status)}` : ''}
         </p>
@@ -125,7 +125,7 @@ export function BrowseProjectsClient({
               <button
                 type="button"
                 onClick={() => setStatus('')}
-                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#0b5c5c] px-5 py-2.5 text-sm font-semibold text-[#ffffff] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 Show all projects
               </button>
@@ -133,15 +133,15 @@ export function BrowseProjectsClient({
           }
         />
       ) : (
-        <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
+        <ul className="divide-y divide-border border-y border-border">
           {filtered.map((p) => (
             <li key={p.id} className="py-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h2 className="break-words text-base font-semibold leading-snug text-[#0b5c5c]">
+                  <h2 className="break-words text-base font-semibold leading-snug text-accent">
                     {p.title}
                   </h2>
-                  <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#356464]">
+                  <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-body-secondary">
                     <span className="inline-flex min-h-6 items-center gap-1.5">
                       <UserCircle size={16} aria-hidden="true" className="shrink-0" />
                       {p.founderName}
@@ -152,10 +152,10 @@ export function BrowseProjectsClient({
                     </span>
                   </p>
                 </div>
-                <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
+                <Badge className="shrink-0 gap-1.5 border-border bg-secondary text-accent">
                   <span
                     aria-hidden="true"
-                    className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
+                    className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-foreground'}`}
                   />
                   {projectStatusLabel(p.status)}
                 </Badge>
@@ -164,7 +164,7 @@ export function BrowseProjectsClient({
               <div>
                 <p
                   id={`brief-${p.id}`}
-                  className={`mt-3 text-sm leading-6 text-[#356464] ${
+                  className={`mt-3 text-sm leading-6 text-body-secondary ${
                     expandedId === p.id ? '' : 'line-clamp-2'
                   }`}
                 >
@@ -183,7 +183,7 @@ export function BrowseProjectsClient({
                       <Badge
                         key={skill}
                         variant="outline"
-                        className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]"
+                        className="border-border bg-secondary text-body-secondary"
                       >
                         {skill}
                       </Badge>
@@ -230,24 +230,24 @@ export function BrowseProjectsClient({
                 )}
               </div>
 
-              <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#b9dede] pt-4 text-xs sm:grid-cols-4">
+              <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-border pt-4 text-xs sm:grid-cols-4">
                 <div className="min-w-0">
-                  <dt className="text-[#356464]">Budget</dt>
-                  <dd className="mt-0.5 break-words font-medium tabular-nums text-[#0b5c5c]">
+                  <dt className="text-body-secondary">Budget</dt>
+                  <dd className="mt-0.5 break-words font-medium tabular-nums text-accent">
                     {budgetLabel(p.budgetMin, p.budgetMax)}
                   </dd>
                 </div>
                 <div className="min-w-0">
-                  <dt className="inline-flex items-center gap-1.5 text-[#356464]">
+                  <dt className="inline-flex items-center gap-1.5 text-body-secondary">
                     <Clock size={14} aria-hidden="true" className="shrink-0" />
                     Duration
                   </dt>
-                  <dd className="mt-0.5 break-words font-medium text-[#0b5c5c]">
+                  <dd className="mt-0.5 break-words font-medium text-accent">
                     {p.duration || 'Not set'}
                   </dd>
                 </div>
                 <div className="min-w-0">
-                  <dt className="inline-flex items-center gap-1.5 text-[#356464]">
+                  <dt className="inline-flex items-center gap-1.5 text-body-secondary">
                     {p.workMode === 'onsite' ? (
                       <MapPin size={14} aria-hidden="true" className="shrink-0" />
                     ) : p.workMode === 'remote' ? (
@@ -255,22 +255,22 @@ export function BrowseProjectsClient({
                     ) : null}
                     Work mode
                   </dt>
-                  <dd className="mt-0.5 font-medium text-[#0b5c5c]">
+                  <dd className="mt-0.5 font-medium text-accent">
                     {workModeLabel(p.workMode)}
                   </dd>
                 </div>
                 <div className="min-w-0">
-                  <dt className="inline-flex items-center gap-1.5 text-[#356464]">
+                  <dt className="inline-flex items-center gap-1.5 text-body-secondary">
                     <CalendarBlank size={14} aria-hidden="true" className="shrink-0" />
                     Apply by
                   </dt>
-                  <dd className="mt-0.5 font-medium tabular-nums text-[#0b5c5c]">
+                  <dd className="mt-0.5 font-medium tabular-nums text-accent">
                     {formatDeadline(p.deadline)}
                   </dd>
                 </div>
               </dl>
 
-              <p className="mt-4 text-xs text-[#356464]">
+              <p className="mt-4 text-xs text-body-secondary">
                 Read-only brief. Applicants are managed by the founder who posted it.
               </p>
             </li>
