@@ -11,9 +11,14 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { requestPasswordReset } from "@/features/auth/actions";
 import { FieldError } from "@/features/auth/components/field-error";
-import { authInputClassName } from "@/features/auth/components/styles";
+import {
+  authInputClassName,
+  authInputErrorClassName,
+  authLabelClassName,
+} from "@/features/auth/components/styles";
 import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { cn } from "@/lib/utils";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -80,13 +85,10 @@ export function ForgotPasswordForm({
         onSubmit={handleSubmit}
         noValidate
         aria-describedby={status ? statusId : undefined}
-        className="space-y-5"
+        className="space-y-4 sm:space-y-5"
       >
         <div>
-          <label
-            htmlFor="email"
-            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
-          >
+          <label htmlFor="email" className={cn(authLabelClassName, "mb-1.5")}>
             Email
           </label>
           <input
@@ -100,7 +102,10 @@ export function ForgotPasswordForm({
             onChange={() => setEmailError(undefined)}
             autoComplete="email"
             placeholder="you@example.com"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              emailError && authInputErrorClassName,
+            )}
           />
           {emailError && (
             <FieldError id={emailErrorId}>{emailError}</FieldError>

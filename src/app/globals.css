@@ -17,14 +17,14 @@
   --color-base-content: #0b2e2e;
   --color-primary: #0b5c5c;
   --color-primary-content: #ffffff;
-  --color-secondary: #66bfbf;
+  --color-secondary: #eaf6f6;
   --color-secondary-content: #0b2e2e;
   --color-accent: #ff0063;
   --color-accent-content: #000000;
   --color-neutral: #0b2e2e;
   --color-neutral-content: #ffffff;
-  --color-info: #66bfbf;
-  --color-info-content: #0b2e2e;
+  --color-info: #0b5c5c;
+  --color-info-content: #ffffff;
   --color-success: #0b5c5c;
   --color-success-content: #ffffff;
   --color-warning: #ff0063;
@@ -93,32 +93,13 @@
 }
 
 :root {
-  --background: 180 40% 94%;
-  --foreground: 180 61% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 180 61% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 180 61% 11%;
-  --primary: 180 79% 20%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 180 40% 94%;
-  --secondary-foreground: 180 61% 11%;
-  --muted: 180 40% 94%;
-  --muted-foreground: 180 31% 30%;
-  --accent: 337 100% 50%;
-  --accent-foreground: 0 0% 0%;
-  --destructive: 337 100% 38%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 180 36% 80%;
-  --input: 180 29% 43%;
-  --ring: 337 100% 38%;
   --radius: 0.5rem;
 
   /* One easing curve and three durations, mirrored in the motion constants. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-100: 100ms;
   --duration-150: 150ms;
-  --duration-250: 250ms;
+  --duration-200: 200ms;
 }
 
 @layer base {
@@ -157,8 +138,8 @@
     letter-spacing: -0.04em;
   }
   h2 {
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    line-height: 1.18;
+    letter-spacing: -0.02em;
   }
   h3 {
     line-height: 1.25;
@@ -185,13 +166,9 @@
     outline-offset: 2px;
   }
 
-  /* Anchors and keyboard focus must never land under the 64px sticky header.
-     A page that also renders the sticky ChapterProgress bar publishes that
-     bar's measured height as --chapter-bar-height, so an in-page link clears
-     the whole sticky stack instead of only the header. */
+  /* Anchors and keyboard focus must never land under the 64px sticky header. */
   html {
     scroll-padding-top: 4rem;
-    --chapter-bar-height: 0px;
   }
 }
 
@@ -201,6 +178,16 @@
 
    Chrome is a single quiet bar: one tinted surface, one 1px hairline, no
    floating pill, no inner highlight, no colored shadow, no stacked glass. */
+
+/* Marketplace content is present on first paint. Older reveal wrappers may
+   remain in secondary pages, but they must never hide or shift content while
+   JavaScript loads or while the reader scrolls. */
+[data-reveal],
+[data-scale-fade] {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
 
 /* Press feedback lives on pointer-down and retargets from the current value.
    Transform is dropped under reduced motion; color feedback remains. */
@@ -222,29 +209,13 @@
    components layer so a caller's background utility (e.g. the dark loading
    panel) still wins. */
 @layer components {
-  /* Target of an in-page link: clears the sticky header (handled by
-     scroll-padding-top) and the sticky chapter bar above it, with one
-     16px gap so the target never sits flush against the bar. */
+  /* Target of an in-page link: clears the sticky header with one small gap. */
   .scroll-mt-chapter {
-    scroll-margin-top: calc(1rem + var(--chapter-bar-height, 0px));
+    scroll-margin-top: 1rem;
   }
 
   .workspace-paper {
-    background-color: color-mix(
-      in srgb,
-      var(--color-secondary) 60%,
-      var(--color-background)
-    );
-  }
-}
-
-/* Scroll-stacked chapters: each card sticks at its own offset on desktop, so
-   the deck overlaps as the reader moves down the list. The cards stay in
-   normal flow and every link inside them remains tabbable. */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  [data-stacked-card] {
-    position: sticky;
-    top: var(--stack-top);
+    background-color: var(--color-background);
   }
 }
 
@@ -267,104 +238,66 @@
     transform: none;
   }
 
-  /* Belt-and-braces: a scroll reveal must never leave content shifted or
-     dimmed when the visitor has asked for reduced motion. */
+  /* Belt-and-braces: a scroll reveal must never leave content shifted,
+     blurred or dimmed when the visitor has asked for reduced motion. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
   [data-scale-fade] {
     opacity: 1 !important;
     transform: none !important;
   }
-
-  [data-stacked-card] {
-    position: static;
-    top: auto;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .scrub-word {
-    opacity: 1 !important;
-  }
-}
-
-/* Grain: one fixed film over the whole app. Decorative only. */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ==========================================================================
-   Editorial layer
+   Marketplace layer
    --------------------------------------------------------------------------
-   The public marketing site is built as a printed ledger: a paper-white
-   canvas, hairline rules instead of boxes, oversized Geist display type set
-   tight, and magenta used as a marker (a rule, an index numeral, one action).
-
-   Everything below is additive. The softer rounded surfaces defined earlier
-   in this file stay in place so screens outside marketing keep working.
+   The marketing site uses a practical marketplace rhythm: mist background,
+   white work surfaces, teal structure, and magenta for one high-priority
+   action in a view. Type and spacing carry hierarchy; decorative effects do
+   not delay or obscure content.
    ========================================================================== */
 
-/* Section index: a small, wide-tracked label that opens a band.
-   Natural case, one weight, no pill and no background. Declared in the
-   components layer so a caller's text colour utility still wins on dark
-   bands. */
+/* Section label: a short, natural-case wayfinding cue with one teal marker.
+   It supports the heading instead of competing with it. */
 @layer components {
   .index-label {
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    font-size: 0.6875rem;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: var(--color-primary);
   }
 
   .index-label::before {
     content: "";
     display: inline-block;
-    width: 1.5rem;
-    height: 1px;
+    width: 1rem;
+    height: 2px;
     background: var(--color-cta);
-    transform: translateY(-0.25em);
   }
 
-  /* The display scale used by heroes and band headings. */
+  /* Marketplace display scale. It stays strong without pushing the first
+     action below the fold on a phone. */
   .display-xl {
-    font-size: clamp(2.9rem, 7.4vw, 6.5rem);
-    line-height: 0.94;
-    letter-spacing: -0.055em;
+    font-size: clamp(2.75rem, 6vw, 4.75rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
     font-weight: 600;
     text-wrap: balance;
   }
 
   .display-lg {
-    font-size: clamp(2.25rem, 4.6vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.045em;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
     font-weight: 600;
     text-wrap: balance;
-  }
-}
-
-/* Teal marquee. Two identical tracks translate as one; the second copy makes
-   the loop seamless. Motion stops entirely when the visitor asks for less. */
-@keyframes btc-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.btc-marquee {
-  animation: btc-marquee 44s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .btc-marquee {
-    animation: none !important;
-    transform: none !important;
   }
 }
 

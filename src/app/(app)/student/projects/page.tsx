@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Student Projects — server component.
  * Loads open projects, the student's existing applications and real founder
  * names, then hands them to the interactive post feed (apply + status feedback).
@@ -90,7 +90,7 @@ export default async function StudentProjectsPage({
   const appliedIds = applied;
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-6xl">
         <PinnedHeadingSection
           heading={

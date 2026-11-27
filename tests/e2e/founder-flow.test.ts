@@ -34,11 +34,9 @@ test.describe('Founder flow', () => {
           'Redesign our mobile app with a modern look, clean navigation, and a working contact form.'
         );
 
-      const skillInput = page.getByLabel('Required skills');
-      await skillInput.fill('Figma');
-      await skillInput.press('Enter');
-      await skillInput.fill('React Native');
-      await skillInput.press('Enter');
+      const skillInput = page.getByLabel('Skills students need');
+      await skillInput.fill('Figma, React Native');
+      await page.getByRole('button', { name: 'Add' }).click();
       await expect(
         page.getByRole('button', { name: 'Remove Figma' })
       ).toBeVisible();

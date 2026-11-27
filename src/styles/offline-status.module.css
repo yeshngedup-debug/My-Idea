@@ -1,6 +1,6 @@
 /* Global connectivity notice. Fixed at the bottom edge so it never covers the
-   h-16 header or the sticky page headings, and pointer-events stay off so the
-   quiet status strip cannot intercept clicks. */
+   header or sticky page headings, and pointer-events stay off so the quiet
+   status strip cannot intercept clicks. */
 
 .notice {
   position: fixed;
@@ -21,9 +21,8 @@
   line-height: 1.45;
   pointer-events: none;
   transition:
-    opacity var(--duration-250) var(--ease-out),
-    transform var(--duration-250) var(--ease-out);
-  animation: notice-in var(--duration-250) var(--ease-out) both;
+    opacity var(--duration-150) var(--ease-out),
+    transform var(--duration-150) var(--ease-out);
 }
 
 .marker {
@@ -38,21 +37,8 @@
   background-color: var(--color-primary);
 }
 
-@keyframes notice-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .notice {
-    animation: none;
     transition: none;
   }
 }

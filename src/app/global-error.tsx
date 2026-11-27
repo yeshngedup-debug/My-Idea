@@ -14,6 +14,9 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>Something went wrong | Bhutan Tech Connect</title>
+      </head>
       <body
         style={{
           margin: 0,

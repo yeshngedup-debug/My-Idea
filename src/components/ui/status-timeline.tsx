@@ -2,6 +2,11 @@
  * StatusTimeline: a reusable, accessible status stepper.
  * Server compatible: plain semantic markup, no client JS, no server APIs.
  */
+import {
+  APPLICATION_STATUS_LABEL,
+  PROJECT_STATUS_LABEL,
+} from "@/lib/status-labels";
+
 /** One step in a status path. `value` must match a stored status string. */
 export interface StatusStep {
   value: string;
@@ -127,20 +132,24 @@ export function StatusTimeline({
 
 /** Application states from the student's point of view. */
 export const STUDENT_APPLICATION_STEPS: readonly StatusStep[] = [
-  { value: 'pending', label: 'Pending', next: 'Founder is reviewing your application.' },
+  {
+    value: 'pending',
+    label: APPLICATION_STATUS_LABEL.pending,
+    next: 'Founder is reviewing your application.',
+  },
   {
     value: 'shortlisted',
-    label: 'Shortlisted',
+    label: APPLICATION_STATUS_LABEL.shortlisted,
     next: 'Founder picked you. Your founder will contact you when the next step is ready.',
   },
   {
     value: 'accepted',
-    label: 'Accepted',
+    label: APPLICATION_STATUS_LABEL.accepted,
     next: 'Work starts now. Check your project brief.',
   },
   {
     value: 'rejected',
-    label: 'Rejected',
+    label: APPLICATION_STATUS_LABEL.rejected,
     next: 'Not this time. Browse other open projects and apply again.',
     terminal: true,
   },
@@ -148,20 +157,24 @@ export const STUDENT_APPLICATION_STEPS: readonly StatusStep[] = [
 
 /** Application states from the founder's point of view. */
 export const FOUNDER_APPLICATION_STEPS: readonly StatusStep[] = [
-  { value: 'pending', label: 'Pending', next: 'An application is waiting for your review.' },
+  {
+    value: 'pending',
+    label: APPLICATION_STATUS_LABEL.pending,
+    next: 'An application is waiting for your review.',
+  },
   {
     value: 'shortlisted',
-    label: 'Shortlisted',
+    label: APPLICATION_STATUS_LABEL.shortlisted,
     next: 'You picked this applicant. Move toward an agreement.',
   },
   {
     value: 'accepted',
-    label: 'Accepted',
+    label: APPLICATION_STATUS_LABEL.accepted,
     next: 'Work starts now. The project can move forward.',
   },
   {
     value: 'rejected',
-    label: 'Rejected',
+    label: APPLICATION_STATUS_LABEL.rejected,
     next: 'Not this time. The applicant can apply elsewhere.',
     terminal: true,
   },
@@ -169,10 +182,26 @@ export const FOUNDER_APPLICATION_STEPS: readonly StatusStep[] = [
 
 /** Project lifecycle states. */
 export const PROJECT_STEPS: readonly StatusStep[] = [
-  { value: 'open', label: 'Open', next: 'Project is open. Students can apply.' },
-  { value: 'in_progress', label: 'In progress', next: 'Work has started. Keep the project moving.' },
-  { value: 'review', label: 'In review', next: 'Review the work before marking it complete.' },
-  { value: 'completed', label: 'Completed', next: 'Project finished. No further action needed.' },
+  {
+    value: 'open',
+    label: PROJECT_STATUS_LABEL.open,
+    next: 'Project is open. Students can apply.',
+  },
+  {
+    value: 'in_progress',
+    label: PROJECT_STATUS_LABEL.in_progress,
+    next: 'Work has started. Keep the project moving.',
+  },
+  {
+    value: 'review',
+    label: PROJECT_STATUS_LABEL.review,
+    next: 'Review the work before marking it complete.',
+  },
+  {
+    value: 'completed',
+    label: PROJECT_STATUS_LABEL.completed,
+    next: 'Project finished. No further action needed.',
+  },
 ];
 
 /** Manual payment states for a shortlist order. */

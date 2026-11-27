@@ -71,7 +71,7 @@ export default async function ProjectDetailPage({
   const applicants: Applicant[] = apps;
 
   return (
-    <div className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <div>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           split="lg:grid-cols-[0.3fr_0.7fr]"

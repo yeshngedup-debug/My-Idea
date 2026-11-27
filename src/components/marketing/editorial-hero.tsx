@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { HeroCopyEntrance } from "./hero-motion";
 import { HeroPhotoEntrance } from "./hero-photo";
 import { actionClass, LinkArrow, quietClass } from "./editorial";
 import { cn } from "@/lib/utils";
@@ -57,7 +56,7 @@ export function EditorialHero({
   return (
     <section className="border-b border-[#0b2e2e]/10">
       <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 px-5 pb-12 pt-10 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-12 lg:pb-16 lg:pt-14">
-        <HeroCopyEntrance className="lg:col-span-7 lg:pr-8">
+        <div className="lg:col-span-7 lg:pr-8">
           <p className="index-label">
             {index} · {eyebrow}
           </p>
@@ -79,7 +78,7 @@ export function EditorialHero({
               </Link>
             ) : null}
           </div>
-        </HeroCopyEntrance>
+        </div>
 
         <div className="lg:col-span-5">
           <HeroPhotoEntrance>
@@ -89,7 +88,7 @@ export function EditorialHero({
                   src={heroImage.src}
                   alt={heroImage.alt}
                   fill
-                  priority
+                  preload
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   className={cn(
                     "object-cover",

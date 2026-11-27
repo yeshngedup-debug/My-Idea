@@ -9,13 +9,13 @@ type StateProps = {
   headingLevel?: "h1" | "h2" | "h3";
 };
 
-const bodyClass =
-  "mx-auto mt-2 max-w-[46ch] text-sm leading-6 text-[#356464]";
-const actionClass = "mt-5 flex justify-center";
+const bodyClass = "mt-1.5 max-w-[52ch] text-sm leading-6 text-[#356464]";
+const actionClass = "mt-4";
 
 /**
  * Shared zero-state panel for dashboards. It states what is missing and gives
- * one next action when there is somewhere useful to go.
+ * one next action when there is somewhere useful to go. Left-aligned and
+ * compact so it sits inside a dense section instead of floating as a card.
  */
 export function EmptyState({
   title,
@@ -27,11 +27,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-dashed border-[#b9dede] bg-white p-8 text-center sm:p-10",
+        "rounded-xl border border-dashed border-[#b9dede] bg-[#ffffff] px-5 py-6",
         className,
       )}
     >
-      <Heading className="text-lg font-semibold text-[#0b5c5c]">
+      <Heading className="text-base font-semibold leading-6 text-[#0b5c5c]">
         {title}
       </Heading>
       <p className={bodyClass}>{description}</p>
@@ -55,11 +55,11 @@ export function ErrorState({
     <div
       role="alert"
       className={cn(
-        "rounded-2xl border border-[#c2004b]/25 bg-[#ff0063]/8 p-8 text-center sm:p-10",
+        "rounded-xl border border-[#c2004b]/30 bg-[#ff0063]/8 px-5 py-6",
         className,
       )}
     >
-      <Heading className="text-lg font-semibold text-[#c2004b]">
+      <Heading className="text-base font-semibold leading-6 text-[#c2004b]">
         {title}
       </Heading>
       <p className={bodyClass}>{description}</p>

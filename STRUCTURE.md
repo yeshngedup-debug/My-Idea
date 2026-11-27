@@ -36,6 +36,12 @@ Pages stay thin (< 40 lines); business logic lives in `features/`.
 
 Route groups do not appear in URLs, so moving a page into `(marketing)` or `(app)` does not change its path. The group layouts are intentionally thin pass-throughs; auth is enforced by `proxy.ts` and re-checked in each page and Server Action.
 
+The landing page lives at `/public`. The root path `/` is redirected to it by a
+server-level rule in `next.config.ts`, so the browser gets a `308` before any
+page is rendered. `src/app/(marketing)/page.tsx` is only the route-level
+fallback — a page-level redirect is thrown after the shell has flushed and
+would leave the first paint as an empty loading skeleton.
+
 Pages that read cookies/sessions use `export const dynamic = 'force-dynamic'` so Next.js does not prerender them at build time.
 
 ## `src/components/` — shared UI
@@ -90,7 +96,8 @@ The auth screens (`src/app/(auth)/**` and `src/features/auth/components/**`) car
 | --- | --- | --- |
 | Application tables | Neon Postgres | `src/lib/neon-data.ts` |
 | Identities and sessions | Neon Managed Better Auth | `src/lib/auth*` |
-| Private CV / payment-proof files | Neon Object Storage (`cvs` bucket) | `src/lib/storage.ts` |
+| Private CV files | Neon Object Storage (`cvs` bucket) | `src/lib/storage.ts` |
+| Private payment proofs | Neon Object Storage (`payment-screenshots` bucket) | `src/features/payments/actions.ts` |
 | Live payment status | Neon Realtime | `src/lib/neon-realtime.ts` |
 | Row types | Hand-maintained Neon row shapes | `src/types/database.ts` |
 

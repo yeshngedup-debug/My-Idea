@@ -57,12 +57,21 @@ NEON_AUTH_COOKIE_SECRET=<at-least-32-character-random-secret>
 # Pooled Neon Postgres connection string (server-only)
 DATABASE_URL=postgresql://<user>:<password>@<host>-pooler.<region>.neon.tech/<db>?sslmode=require
 
-# Public origin — pins auth redirects and generated CV links
+# Public origin — pins auth redirects, canonical URLs and CV links.
+# Production uses https://myidea-virid.vercel.app.
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 
 # Neon Realtime — the sealing secret stays server-only
 NEON_REALTIME_SECRET=<sealing-secret>
 NEXT_PUBLIC_NEON_REALTIME_URL=<public-realtime-url>
+
+# Manual payment destinations — leave blank to pause new shortlist orders.
+# Set the real values only in the deployment environment; never commit them.
+NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER=
+NEXT_PUBLIC_PAYMENT_MBOB_NUMBER=
+
+# Optional contact mailbox; production should set a real address.
+CONTACT_EMAIL=hello@example.com
 ```
 
 Notes on the variables:
@@ -75,7 +84,14 @@ Notes on the variables:
 - `DATABASE_URL` must be the **pooled** Neon connection string.
 - `NEXT_PUBLIC_APP_URL` is the real public origin (required in production).
   It prevents Host-header spoofing in auth redirects and CV links. The legacy
-  alias `NEXT_PUBLIC_SITE_URL` is still accepted.
+  alias `NEXT_PUBLIC_SITE_URL` is still accepted. The current production origin
+  is `https://myidea-virid.vercel.app`; canonical URLs and JSON-LD derive from it.
+- `NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER` and `NEXT_PUBLIC_PAYMENT_MBOB_NUMBER` are
+  the real Bank of Bhutan account and mBoB number. Blank or whitespace-only
+  values keep `PAYMENT_CONFIGURED` false, so founders cannot pay to a fake or
+  blank destination. Never commit real numbers.
+- `CONTACT_EMAIL` should be set to the real support mailbox in production. The
+  fallback is the explicit placeholder `hello@example.com`, not an old domain.
 - `NEXT_PUBLIC_NEON_REALTIME_URL` is public by design; `NEON_REALTIME_SECRET`
   must stay server-only.
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3` and
@@ -94,8 +110,8 @@ neon neon-auth status  # confirm Managed Auth is enabled; read the branch auth U
 ```
 
 `neon env pull` writes to `.env`; Next.js also reads that file. Keep manual
-overrides (E2E credentials, payment placeholders) in `.env.local`, which takes
-precedence.
+overrides (E2E credentials, `NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER` and
+`NEXT_PUBLIC_PAYMENT_MBOB_NUMBER`) in `.env.local`, which takes precedence.
 
 ### Deploying to Vercel
 
@@ -116,15 +132,27 @@ database request — set the variables anyway.
 | `NEON_AUTH_COOKIE_SECRET` | Session cookie signing (>= 32 chars) | No (runtime) |
 | `DATABASE_URL` | Neon Postgres — all reads/writes | No (read lazily per query) |
 | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_ENDPOINT_URL_S3`, `AWS_REGION` | Object Storage uploads and signed URLs | No (runtime) |
-| `NEXT_PUBLIC_APP_URL` | Auth redirects, CV links | Yes (inlined; validated at runtime) |
+| `NEXT_PUBLIC_APP_URL` | Auth redirects, canonical URLs, CV links | Yes (inlined; validated at runtime) |
 | `NEXT_PUBLIC_NEON_REALTIME_URL` | Live shortlist payment status | Yes |
 | `NEON_REALTIME_SECRET` | Seal Realtime queries | No (runtime) |
+| `NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER` | Real Bank of Bhutan account shown to founders | Yes (inlined; blank pauses orders) |
+| `NEXT_PUBLIC_PAYMENT_MBOB_NUMBER` | Real mBoB number shown to founders | Yes (inlined; blank pauses orders) |
+| `NEON_BRANCH_ID`, `NEON_FUNCTION_HOST_SUFFIX` | `/api/neon` status endpoint | No (runtime) |
+| `CONTACT_EMAIL` | Contact link and Organization JSON-LD | No |
 
 ### Register the deployed origin with Neon Auth
 
 Sign-in from a deployed URL fails with `403 Invalid origin` until that origin is
 on the Auth allow-list. Localhost is allowed by default, so this only shows up
-after deployment. Register every production and preview origin:
+after deployment. The current production origin is
+`https://myidea-virid.vercel.app` and is registered on the production branch;
+verify it after any branch or domain change:
+
+```bash
+neon neon-auth domain list
+```
+
+If a new production or preview origin is added, register it before deploying:
 
 ```bash
 neon neon-auth domain add https://your-app.vercel.app
@@ -133,8 +161,6 @@ neon neon-auth domain list
 
 Without this step, credentials are valid but the login form reports
 "Check your email and password and try again."
-| `NEON_BRANCH_ID`, `NEON_FUNCTION_HOST_SUFFIX` | `/api/neon` status endpoint | No (runtime) |
-| `CONTACT_EMAIL` | Contact link | No |
 
 ## 3. Set up the database (Neon)
 
@@ -193,7 +219,8 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — you will be redirected to the public landing page.
+Open http://localhost:3000 — the server answers with a `308` redirect to the
+public landing page at `/public`, so the first paint is never an empty shell.
 
 > **Before real users pay:** the bank account and mBoB number in
 > `src/config/payment.ts` are placeholders. Replace them with real details.
@@ -251,7 +278,7 @@ service dependency on a local database stack.
 
 ## Design and imagery
 
-The public experience uses an editorial, photo-led layout with oversized type, clear hierarchy, and responsive motion. The photographs in `public/assets/` show Bhutanese people in gho and kira, sourced from Wikimedia Commons under CC BY-SA licences; the per-image author and licence are kept with the image credits, and credit links appear with each image.
+The public experience uses an editorial, photo-led layout with oversized type, clear hierarchy, and responsive motion. The photographs in `public/images/` show Bhutanese people, streets and architecture, sourced from Wikimedia Commons under CC0; the per-image author, source file and licence are recorded in `src/lib/photo-credits.ts`.
 
 The BTC brand palette is teal `#66bfbf`, mist `#eaf6f6`, white `#ffffff` and magenta `#ff0063`. Derived legibility roles are ink `#0b2e2e`, muted `#356464`, brand text `#0b5c5c`, accent text `#c2004b`, and black `#000000` for text on magenta. The auth screens use these roles: magenta carries the single filled action, and mist and white carry the quiet surfaces.
 
@@ -276,6 +303,16 @@ export E2E_ADMIN_EMAIL=...   E2E_ADMIN_PASSWORD=...
 export E2E_PAYMENT_FOUNDER_EMAIL=... E2E_PAYMENT_FOUNDER_PASSWORD=...
 npm run test:e2e
 ```
+
+The Playwright process loads `.env.local` and then `.env` (Next.js order), and
+real environment variables always win, so the tests use the same database and
+storage credentials as the dev server. `E2E_BASE_URL` points the suite at
+another running instance; it defaults to `http://localhost:3000`.
+
+The admin journey resets the seeded Basic order before it runs and uploads a
+real payment-proof object to Neon Object Storage, because the server checks
+that the proof exists before it confirms an order. The order row must point at
+a live object, not only carry a screenshot path.
 
 If the Neon branch is unreachable the suite **skips** with an explicit reason,
 so a local run without credentials is not mistaken for a green build. In CI,

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * My Projects — founder's posted projects list.
  *
  * Auth comes from the verified session only; every application row is read through
@@ -14,7 +14,7 @@ import { ProjectsClient, type FounderProjectRow } from './projects-client';
 export const metadata = { title: 'My Projects' };
 
 const PRIMARY_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
 
 const FILTER_VALUES = new Set([
   'all',
@@ -48,7 +48,7 @@ export default async function MyProjectsPage({
   }
 
   return (
-    <div className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <div>
       <PinnedHeadingSection
         heading={
           <WorkspacePageHeading
@@ -58,7 +58,7 @@ export default async function MyProjectsPage({
           />
         }
       >
-        <div className="mb-6 flex justify-end">
+        <div className="mb-5 flex justify-start sm:justify-end">
           <Link href="/founder/projects/post" className={PRIMARY_LINK}>
             Post a project
           </Link>

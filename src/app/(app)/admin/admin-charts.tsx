@@ -7,6 +7,7 @@
  */
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PROJECT_STATUS_LABEL } from "@/lib/status-labels";
 
 type RoleCount = { role: string; count: number };
 
@@ -26,10 +27,10 @@ const ROLE_SERIES: Series[] = [
 ];
 
 const STAGE_SERIES: Series[] = [
-  { key: "open", label: "Open", color: "#66bfbf", pattern: "" },
-  { key: "in_progress", label: "In progress", color: "#0b5c5c", pattern: "" },
-  { key: "review", label: "In review", color: "#356464", pattern: "hatch" },
-  { key: "completed", label: "Completed", color: "#0b5c5c", pattern: "" },
+  { key: "open", label: PROJECT_STATUS_LABEL.open, color: "#66bfbf", pattern: "" },
+  { key: "in_progress", label: PROJECT_STATUS_LABEL.in_progress, color: "#0b5c5c", pattern: "" },
+  { key: "review", label: PROJECT_STATUS_LABEL.review, color: "#356464", pattern: "hatch" },
+  { key: "completed", label: PROJECT_STATUS_LABEL.completed, color: "#0b5c5c", pattern: "" },
 ];
 
 function share(count: number, total: number): number {
@@ -373,7 +374,7 @@ export function ActivityTrend({
           action={
             <Link
               href="/admin/projects"
-              className="inline-flex min-h-11 items-center rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+              className="inline-flex min-h-11 items-center rounded-md border border-border bg-white px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
             >
               Open projects
             </Link>

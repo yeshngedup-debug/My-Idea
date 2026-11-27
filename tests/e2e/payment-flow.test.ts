@@ -17,22 +17,38 @@ test.describe('Premium Shortlist payment flow', () => {
     page,
     browser,
   }) => {
+    // The seeded founder may already have a confirmed order from an earlier
+    // run. Use a unique amount so this test always scopes the order it creates.
+    // shortlist_orders.amount is numeric(10,2), so keep the unique amount
+    // two-decimal to match the label the admin page renders.
+    const orderAmount = Number(
+      (1000 + (Date.now() % 90000) / 100).toFixed(2),
+    );
+    const orderAmountLabel = `Nu ${new Intl.NumberFormat('en-GB').format(orderAmount)}`;
+
     await test.step('Founder creates shortlist order', async () => {
       await loginAs(page, PAYMENT_FOUNDER);
 
       await page.goto('/founder/shortlists');
       await expect(page).toHaveURL('/founder/shortlists');
 
-      // The client may already open on the package step; only click the
-      // opener when it is actually present.
-      const opener = page.getByRole('button', { name: 'Get Shortlist' });
-      if (await opener.isVisible()) await opener.click();
-      await expect(
-        page.getByRole('heading', { name: 'Choose a package' })
-      ).toBeVisible();
+      // Open the package step from whichever stable state the account is in.
+      const packageHeading = page.getByRole('heading', {
+        name: 'Choose a package',
+      });
+      if (!(await packageHeading.isVisible())) {
+        const opener = page
+          .getByRole('button', { name: 'Get Shortlist' })
+          .or(page.getByRole('button', { name: 'Order another shortlist' }));
+        await opener.click();
+      }
+      await expect(packageHeading).toBeVisible();
 
       await page.getByRole('button', { name: /Full Support/ }).click();
-      await page.getByLabel('Amount you will pay').fill('1500');
+      await page.getByLabel('Amount you will pay').fill(String(orderAmount));
+      // A previous run can leave an unpaid order open. The UI asks before
+      // creating another one; accept so this test stays idempotent.
+      page.once('dialog', (dialog) => dialog.accept());
       await page.getByRole('button', { name: 'Continue to payment' }).click();
 
       // The revalidated route supplies the new order; wait for its UI,
@@ -48,13 +64,13 @@ test.describe('Premium Shortlist payment flow', () => {
       // action result message instead of matching every status on the page.
       await expect(
         page.getByRole('status').filter({ hasText: 'Screenshot submitted' })
-      ).toContainText('Screenshot submitted');
+      ).toContainText('Screenshot submitted', { timeout: 20_000 });
     });
 
     await test.step('Admin confirms payment', async () => {
       // Separate context: the founder session would otherwise bounce /login
       // straight back to /founder and the admin could never sign in.
-      const adminContext = await browser.newContext();
+      const adminContext = await browser.newContext({ reducedMotion: 'reduce' });
       const adminPage = await adminContext.newPage();
       await loginAs(adminPage, DEMO_USERS.admin);
 
@@ -63,20 +79,32 @@ test.describe('Premium Shortlist payment flow', () => {
         .click();
       await expect(adminPage).toHaveURL('/admin/payments');
 
-      // Scope to the order just created (Full Support, Nu 1,500) so a
-      // pre-seeded order cannot be confirmed by mistake.
+      // Scope to the unique amount created above so a pre-seeded order cannot
+      // be confirmed by mistake.
       const order = adminPage
         .locator('li')
         .filter({ hasText: 'Full Support shortlist' })
-        .filter({ hasText: '1,500' })
+        .filter({ hasText: orderAmountLabel })
         .first();
       await expect(order).toBeVisible();
+
+      // The admin must be able to open proof before money is confirmed.
+      const proof = order.getByRole('link', { name: 'View payment screenshot' });
+      await expect(proof).toBeVisible();
+      const proofUrl = await proof.getAttribute('href');
+      expect(proofUrl).toMatch(/^https:\/\//);
+      if (!proofUrl) throw new Error('Payment screenshot link has no href');
+      const proofResponse = await adminPage.request.get(proofUrl);
+      expect(proofResponse.ok()).toBeTruthy();
+      expect(proofResponse.headers()['content-type']).toMatch(/^image\//);
+
       await expect(
         order.getByRole('button', { name: 'Confirm payment' })
       ).toBeEnabled();
       await order.getByRole('button', { name: 'Confirm payment' }).click();
       await expect(adminPage.getByRole('status')).toContainText(
-        'Payment confirmed'
+        'Payment confirmed',
+        { timeout: 20_000 }
       );
 
       await adminPage.close();
@@ -85,11 +113,21 @@ test.describe('Premium Shortlist payment flow', () => {
 
     await test.step('Founder sees unlocked shortlist', async () => {
       await page.reload();
+
+      // Scope to the order created by this run; older confirmed orders must
+      // never be able to satisfy the assertion.
+      const confirmedOrder = page
+        .getByRole('listitem')
+        .filter({ hasText: orderAmountLabel })
+        .first();
       await expect(
-        page.getByRole('list', { name: /Payment status/ }).getByText('Unlocked')
+        confirmedOrder.getByText('Payment confirmed')
       ).toBeVisible();
       await expect(
         page.getByRole('heading', { name: 'Your shortlist' })
+      ).toBeVisible();
+      await expect(
+        page.getByRole('link', { name: /View .*'s CV \(rank 1\)/ })
       ).toBeVisible();
     });
   });

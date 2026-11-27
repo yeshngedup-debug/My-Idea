@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Admin — Projects: a real list of all project postings with a status filter.
  * The session identifies the caller; all table reads use typed Neon helpers.
  * Admin access is re-checked server-side here, not only in the proxy.
@@ -74,7 +74,7 @@ export default async function AdminProjectsPage() {
   }
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={

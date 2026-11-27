@@ -4,11 +4,14 @@
  * Editable student profile. All data comes from the server component; the
  * only writes are the two server actions, which re-check the session and
  * the student role. No client code reads a table directly.
+ *
+ * Profile completeness is shown as a real eight-item checklist so "what is
+ * still missing" is obvious without opening anything. The result banner
+ * appears in place; there is no entrance animation.
  */
-import { useMemo, useRef, useState, useTransition, type ChangeEvent, type FormEvent, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useMemo, useRef, useState, useTransition, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Upload, FileText, CheckCircle, Warning } from '@phosphor-icons/react';
+import { X, Upload, FileText, CheckCircle, Warning, Check } from '@phosphor-icons/react';
 import { saveStudentProfile, uploadCv } from '@/features/users/actions';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -47,27 +50,9 @@ async function hasPdfHeader(file: File) {
 
 /** One style contract for every text field, including select controls. */
 const FIELD_CLASS =
-  'w-full min-w-0 rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus:outline-none focus-visible:border-[#ff0063] focus-visible:ring-2 focus-visible:ring-[#ff0063]/35 motion-reduce:transition-none';
+  'w-full min-w-0 rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b2e2e] placeholder:text-[#356464] focus:outline-none focus-visible:border-[#ff0063] focus-visible:ring-2 focus-visible:ring-[#ff0063]/35 motion-reduce:transition-none';
 
 type Banner = { tone: 'success' | 'error'; msg: string };
-
-/** Mirrors the --ease-out token in app/globals.css. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-
-/** One gentle entrance for the result banner, never for the form fields. */
-function BannerEntrance({ children }: { children: ReactNode }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div>{children}</div>;
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.16, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export interface StudentProfileData {
   full_name: string | null;
@@ -114,8 +99,8 @@ export function ProfileForm({
   // freshly signed CV URL. No fake path is ever stored or displayed.
   const hasCv = Boolean(initial.cv_path) || cvUploaded;
 
-  const { completion, completed, total, missing } = useMemo(() => {
-    const checks = [
+  const { completion, completed, total, missing, checks } = useMemo(() => {
+    const list = [
       { label: 'Full name', done: fullName.trim().length > 1 },
       { label: 'College', done: college.trim().length > 1 },
       { label: 'Course', done: course.trim().length > 1 },
@@ -125,12 +110,13 @@ export function ProfileForm({
       { label: 'Availability', done: availability !== '' },
       { label: 'CV', done: hasCv },
     ];
-    const done = checks.filter((c) => c.done).length;
+    const done = list.filter((c) => c.done).length;
     return {
-      completion: Math.round((done / checks.length) * 100),
+      completion: Math.round((done / list.length) * 100),
       completed: done,
-      total: checks.length,
-      missing: checks.filter((c) => !c.done).map((c) => c.label),
+      total: list.length,
+      missing: list.filter((c) => !c.done).map((c) => c.label),
+      checks: list,
     };
   }, [fullName, college, course, year, skills, bio, availability, hasCv]);
 
@@ -306,90 +292,106 @@ export function ProfileForm({
     <div className="space-y-6">
       <section
         aria-labelledby="profile-summary-heading"
-        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
+        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5"
       >
-        <h2 id="profile-summary-heading" className="text-sm font-semibold text-[#0b5c5c]">
-          Progress
-        </h2>
-        <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="min-w-0">
-            <dt className="text-xs text-[#356464]">Name</dt>
-            <dd className="mt-1 truncate text-sm font-semibold text-[#0b5c5c]">
-              {fullName.trim() || 'Not set'}
-            </dd>
-          </div>
-          <div className="min-w-0">
-            <dt className="text-xs text-[#356464]">Details added</dt>
-            <dd className="mt-1 text-sm font-semibold tabular-nums text-[#0b5c5c]">
-              {completion}%
-            </dd>
-          </div>
-          <div className="min-w-0">
-            <dt className="text-xs text-[#356464]">CV</dt>
-            <dd className="mt-1 text-sm font-semibold text-[#0b5c5c]">
-              {hasCv ? 'Uploaded' : 'Not uploaded'}
-            </dd>
-          </div>
-        </dl>
-        <div className="mt-4 border-t border-[#b9dede] pt-4">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <h2 id="profile-summary-heading" className="text-sm font-semibold text-[#0b5c5c]">
+            Profile completeness
+          </h2>
+          <p className="text-sm font-semibold tabular-nums text-[#0b5c5c]">
+            {completed} of {total} added · {completion}%
+          </p>
+        </div>
+
+        <div className="mt-3">
           <Progress
             value={completion}
             label="Profile details"
             valueLabel={`${completed} of ${total} added`}
+            showValue={false}
             aria-valuetext={`${completion}% of profile details added, ${completed} of ${total}`}
           />
-          <p className="mt-3 text-xs leading-5 text-[#356464]">
-            {missing.includes('Full name')
-              ? 'Add your full name to save this profile. Other details are optional.'
-              : missing.length === 0
-                ? 'All details added. Save any changes to keep them.'
-                : `Add more detail when you can: ${missing.join(', ')}`}
-          </p>
         </div>
+
+        <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 sm:grid-cols-4">
+          {checks.map((check) => (
+            <li
+              key={check.label}
+              className="flex min-w-0 items-center gap-1.5 text-xs"
+            >
+              <span
+                aria-hidden="true"
+                className={`grid h-4 w-4 shrink-0 place-items-center rounded-full ${
+                  check.done
+                    ? 'bg-[#0b5c5c] text-[#ffffff]'
+                    : 'border border-[#b9dede] text-transparent'
+                }`}
+              >
+                <Check className="h-2.5 w-2.5" aria-hidden="true" />
+              </span>
+              <span
+                className={`truncate ${
+                  check.done ? 'text-[#0b2e2e]' : 'text-[#356464]'
+                }`}
+              >
+                {check.label}
+              </span>
+              <span className="sr-only">
+                {check.done ? ' added' : ' still missing'}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-4 border-t border-[#b9dede] pt-3 text-xs leading-5 text-[#356464]">
+          {missing.includes('Full name')
+            ? 'Add your full name to save this profile. Other details are optional.'
+            : missing.length === 0
+              ? 'All details added. Save any changes to keep them.'
+              : `Add more detail when you can: ${missing.join(', ')}`}
+        </p>
       </section>
 
       {visibleBanner && (
-        <BannerEntrance>
-          <StatusMessage
-            key={`${visibleBanner.tone}:${visibleBanner.msg}`}
-            tone={
-              visibleBanner.tone === 'error'
-                ? 'error'
-                : visibleBanner.tone === 'success'
-                  ? 'success'
-                  : 'info'
-            }
-            className="min-w-0"
-          >
-            {visibleBanner.tone === 'success' ? (
-              <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            ) : visibleBanner.tone === 'error' ? (
-              <Warning className="h-4 w-4 shrink-0" aria-hidden="true" />
-            ) : (
-              <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-current" />
-            )}
-            <span>{visibleBanner.msg}</span>
-          </StatusMessage>
-        </BannerEntrance>
+        <StatusMessage
+          key={`${visibleBanner.tone}:${visibleBanner.msg}`}
+          tone={
+            visibleBanner.tone === 'error'
+              ? 'error'
+              : visibleBanner.tone === 'success'
+                ? 'success'
+                : 'info'
+          }
+          className="min-w-0"
+        >
+          {visibleBanner.tone === 'success' ? (
+            <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+          ) : visibleBanner.tone === 'error' ? (
+            <Warning className="h-4 w-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full bg-current" />
+          )}
+          <span>{visibleBanner.msg}</span>
+        </StatusMessage>
       )}
 
       <form
         onSubmit={(e) => { void handleCvSubmit(e); }}
         aria-labelledby="cv-heading"
-        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
+        className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5"
       >
         <h2 id="cv-heading" className="text-sm font-semibold text-[#0b5c5c]">
           CV / Resume
         </h2>
         <p id="cv-hint" className="mt-1 text-xs text-[#356464]">
-          PDF only, max 5 MB.
+          PDF only, max 5 MB. A CV is required before founders can shortlist you.
         </p>
 
         {hasCv && (
-          <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#66bfbf]/20 bg-[#0b5c5c]/8 px-4 py-3">
+          <div className="mt-3 flex items-center gap-3 rounded-md border border-[#66bfbf]/30 bg-[#eaf6f6] px-3.5 py-2.5">
             <FileText className="h-5 w-5 shrink-0 text-[#0b5c5c]" aria-hidden="true" />
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-[#0b5c5c]">CV uploaded</p>
+              <p className="text-sm font-medium text-[#0b5c5c]">CV uploaded</p>
               {fileName && (
                 <p className="break-all text-xs leading-5 text-[#356464]" title={fileName}>
                   {fileName}
@@ -401,14 +403,14 @@ export function ProfileForm({
                 href={cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded text-xs font-semibold text-[#0b5c5c] underline underline-offset-2 transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
+                className="ml-auto inline-flex min-h-11 shrink-0 items-center rounded text-xs font-semibold text-[#0b5c5c] underline underline-offset-2 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
               >
                 View PDF
               </a>
             )}
           </div>
         )}
-        <div className="mt-4">
+        <div className="mt-3">
           <input
             ref={fileInputRef}
             id="cv"
@@ -421,7 +423,7 @@ export function ProfileForm({
           />
           <label
             htmlFor="cv"
-            className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-[#b9dede] px-4 py-4 text-sm text-[#356464] transition-colors hover:border-[#66bfbf]/40 hover:text-[#0b5c5c] peer-focus-visible:border-[#ff0063] peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#ff0063] peer-focus-visible:ring-offset-2 motion-reduce:transition-none"
+            className="flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-[#4d8c8c] bg-[#ffffff] px-4 py-3 text-sm font-medium text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] peer-focus-visible:border-[#ff0063] peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-[#ff0063] peer-focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
           >
             <Upload className="h-4 w-4 shrink-0" aria-hidden="true" />
             {hasCv ? 'Replace PDF' : 'Choose PDF file'}
@@ -449,7 +451,7 @@ export function ProfileForm({
         onSubmit={handleProfileSubmit}
         noValidate
         aria-labelledby="details-heading"
-        className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5"
+        className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5"
       >
         <h2 id="details-heading" className="text-sm font-semibold text-[#0b5c5c]">
           Your details
@@ -554,7 +556,7 @@ export function ProfileForm({
                       type="button"
                       aria-label={`Remove ${s}`}
                       onClick={() => setSkills(skills.filter((x) => x !== s))}
-                      className="pressable grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] motion-reduce:transition-none"
+                      className="pressable relative grid h-7 w-7 shrink-0 place-items-center rounded text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] after:absolute after:-inset-2 after:content-['']"
                     >
                       <X className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>

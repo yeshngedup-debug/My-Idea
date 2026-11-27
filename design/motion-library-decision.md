@@ -1,14 +1,16 @@
 ﻿# Motion library decision: no third runtime
 
-> **Superseded 2026-11-24 (final state).** GSAP and `@gsap/react` have been
-> **removed** from `package.json`, and the unused `components/motion/*` set has
-> been deleted. Both scroll chapters are static: `desire-chapter.tsx` and
-> `pinned-step-chapter.tsx` no longer animate. **Motion is now the only
-> animation runtime.** The comparison below is retained as the record of why
-> anime.js was rejected; its "keep GSAP" conclusion no longer applies because
-> the two chapters that justified it were removed.
+> **Historical record, superseded 2026-11-27.** The 2026-11-24 note below was
+> inaccurate: GSAP and the `components/motion/*` set still existed. The live
+> marketplace contract now removes scroll reveals, scrubbed text, marquees,
+> parallax, pinned editorial chapters, blur/scale entrances, and initial
+> `opacity: 0` states. Motion is reserved for direct interaction feedback on
+> controls; reduced motion remains mandatory. See
+> `design/brand-guidelines.md` for the current motion contract.
 
-Status: accepted 2026-11-24, amended same day. Scope: `motion@14.14.0` remains; `animejs` was rejected.
+Status: original comparison accepted 2026-11-24; current implementation
+contract updated 2026-11-27. Scope: `motion@14.14.0` remains; `animejs` was
+rejected.
 
 ## Comparison
 

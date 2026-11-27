@@ -8,6 +8,11 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { formatBhutanDate } from "@/lib/format";
+import {
+  PROJECT_STATUS_LABEL,
+  projectStatusLabel,
+} from "@/lib/status-labels";
 import { EmptyState, ErrorState } from "@/components/ui/empty-state";
 import { SegmentedControl } from "@/components/interactive/segmented-control";
 
@@ -22,18 +27,11 @@ export interface ProjectRow {
 
 const FILTERS = [
   { value: "all", label: "All" },
-  { value: "open", label: "Open" },
-  { value: "in_progress", label: "In progress" },
-  { value: "review", label: "In review" },
-  { value: "completed", label: "Completed" },
+  { value: "open", label: PROJECT_STATUS_LABEL.open },
+  { value: "in_progress", label: PROJECT_STATUS_LABEL.in_progress },
+  { value: "review", label: PROJECT_STATUS_LABEL.review },
+  { value: "completed", label: PROJECT_STATUS_LABEL.completed },
 ] as const;
-
-const STATUS_LABEL: Record<string, string> = {
-  open: "Open",
-  in_progress: "In progress",
-  review: "In review",
-  completed: "Completed",
-};
 
 const STATUS_BADGE: Record<string, string> = {
   open: "border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]",
@@ -76,7 +74,7 @@ export function ProjectsClient({
               <button
                 type="button"
                 onClick={() => router.refresh()}
-                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
                 Try again
               </button>
@@ -92,19 +90,13 @@ export function ProjectsClient({
     );
   }
 
-  const date = (value: string) =>
-    new Date(value).toLocaleDateString("en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  const statusLabel = (status: string) =>
-    STATUS_LABEL[status] ?? status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ");
+  const date = (value: string) => formatBhutanDate(value);
+  const statusLabel = (status: string) => projectStatusLabel(status);
 
   const countLabel =
     filter === "all"
       ? `Showing all ${rows.length} ${rows.length === 1 ? "project" : "projects"}`
-      : `Showing ${filtered.length} ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} ${filtered.length === 1 ? "project" : "projects"}`;
+      : `Showing ${filtered.length} ${projectStatusLabel(filter).toLowerCase()} ${filtered.length === 1 ? "project" : "projects"}`;
 
   return (
     <div className="space-y-4">
@@ -122,13 +114,13 @@ export function ProjectsClient({
 
       {filtered.length === 0 ? (
         <EmptyState
-          title={`No ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} projects`}
+          title={`No ${projectStatusLabel(filter).toLowerCase()} projects`}
           description="No stored project is at this stage right now."
           action={
             <button
               type="button"
               onClick={() => setFilter("all")}
-              className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+              className="pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
             >
               Show all projects
             </button>
@@ -136,11 +128,11 @@ export function ProjectsClient({
         />
       ) : (
         <>
-          <ul className="space-y-2.5 sm:hidden">
+          <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede] sm:hidden">
             {filtered.map((row) => (
               <li
                 key={row.id}
-                className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
+                className="border-b border-[#b9dede] py-3 last:border-0"
               >
                 <div className="flex items-start justify-between gap-3">
                   <h3
@@ -164,9 +156,9 @@ export function ProjectsClient({
             ))}
           </ul>
 
-          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#b9dede] bg-[#ffffff] sm:block">
+          <div className="hidden min-w-0 overflow-x-auto border-y border-[#b9dede] sm:block">
             <table className="w-full text-left text-sm" aria-label="All projects by status">
-              <thead className="sticky top-[72px] z-10 bg-[#eaf6f6] text-xs font-medium text-[#356464]">
+              <thead className="border-b border-[#b9dede] text-xs font-medium text-[#356464]">
                 <tr>
                   <th
                     scope="col"

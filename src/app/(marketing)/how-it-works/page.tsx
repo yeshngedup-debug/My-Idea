@@ -1,68 +1,68 @@
-import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
+import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
-import { EditorialHero } from "@/components/marketing/editorial-hero";
 import {
-  Action,
-  Band,
-  Figure,
-  LedgerRow,
-  RuleLink,
-  SectionHead,
-  container,
-  gutters,
-} from "@/components/marketing/editorial";
-import { HorizontalAccordion } from "@/components/marketing/editorial-page-motion";
-import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
-import { PinnedScrollChapter } from "@/components/motion";
-import { ScrubbedTextReveal } from "@/components/motion";
-import { ChapterProgress, type ChapterLink } from "@/components/motion";
-import { cn } from "@/lib/utils";
+  CheckList,
+  FactRow,
+  MarketButton,
+  Photo,
+  Section,
+  SectionHeading,
+  StepCards,
+  TrustBar,
+  type ThreeSteps,
+} from "@/components/marketing/marketplace";
+import {
+  CTA_HREFS,
+  CTA_LABELS,
+  FOUNDER_ACCESS,
+} from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
   title: "How it works",
   description:
-    "See how founders post scoped projects, students apply to projects, and both sides work from a clear brief.",
+    "Three steps: a founder posts a scoped project, a student applies with a profile and CV, and both sides work from the same brief.",
   path: "/how-it-works",
 });
 
-const steps = [
+/**
+ * This page promises exactly three steps, so the list is typed as a tuple of
+ * three. Adding or removing an entry is a type error, not a silent change.
+ */
+const steps: ThreeSteps = [
   {
-    id: "step-01",
-    number: "01",
     title: "A founder posts a scoped project",
-    body: "The founder sets the scope, a budget range, and a duration. They can also list the skills they need and set a deadline. The brief gives both sides a clear place to start.",
+    body: "The founder writes the scope, a budget range in Nu and a duration, and can add the skills needed and an apply-by date. The brief gives both sides the same starting point.",
   },
   {
-    id: "step-02",
-    number: "02",
-    title: "A student builds a profile and applies",
-    body: "The student can add skills, a short bio, availability, and a PDF CV. A complete profile and CV help founders decide. Then they apply to the projects that fit their strengths.",
+    title: "A student applies with a profile and CV",
+    body: "The student adds skills, a short bio, availability and a PDF CV. A complete profile and CV help founders decide, then they apply to the projects that fit.",
   },
   {
-    id: "step-03",
-    number: "03",
     title: "Both sides work from the brief",
-    body: "The brief stays the reference point. Founders can update project and applicant status as the work moves forward.",
+    body: "The brief stays the reference point. Founders update project and applicant status as the work moves forward, and the student sees the same status.",
   },
-] as const;
+];
 
 const briefColumns = [
   {
     heading: "What the founder writes",
     items: [
       "The scope of the work",
-      "A budget range",
+      "A budget range in Nu",
       "A duration",
-      "Skills and a deadline, when added",
+      "The skills needed",
+      "An apply-by date",
+      "Whether the work is remote or on site",
     ],
   },
   {
     heading: "What the student sees",
     items: [
-      "The scope and any skills listed",
-      "The budget range and any deadline",
-      "A brief to apply to; a complete profile and CV help founders decide",
+      "The scope and the skills listed",
+      "The budget range and the deadline",
+      "A brief to apply to, with one application per project",
+      "How the project payment is agreed, in Ngultrum",
     ],
   },
 ];
@@ -70,7 +70,7 @@ const briefColumns = [
 const protections = [
   {
     title: "An admin confirms payment",
-    body: "Founders pay Premium Shortlist orders by bank or mBoB transfer, upload a screenshot, and an admin confirms the payment before the order counts as paid.",
+    body: "Shortlist orders are paid by bank transfer or mBoB. The founder uploads a screenshot and an admin confirms it before the order counts as paid.",
   },
   {
     title: "CVs stay private",
@@ -78,22 +78,14 @@ const protections = [
   },
   {
     title: "Founders cannot confirm their own payments",
-    body: "After a founder uploads proof, the order moves to submitted and waits for admin review. Application status stays separate: pending, shortlisted, accepted, or rejected.",
+    body: "After a founder uploads proof, the order waits for admin review. Application status stays separate: pending, shortlisted, accepted or rejected.",
   },
-];
-
-const guideChapters: ChapterLink[] = [
-  { id: "journey", label: "Three steps" },
-  { id: "brief", label: "The brief" },
-  { id: "place", label: "Built for work here" },
-  { id: "care", label: "Both sides protected" },
-  { id: "shortlist", label: "After a shortlist" },
 ];
 
 const afterShortlist = [
   {
     title: "Admins can prepare a shortlist",
-    body: "Admins can review student profiles, set manual ranks, and apply the verified badge when preparing a shortlist.",
+    body: "Admins review student profiles, set manual ranks and apply the verified badge when preparing a shortlist.",
   },
   {
     title: "The founder reviews the paid shortlist",
@@ -107,268 +99,236 @@ const afterShortlist = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="min-h-[100dvh] bg-white text-[#0b2e2e]">
+    <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
       <SiteHeader />
 
       <main id="main-content" className="w-full max-w-full overflow-x-clip">
-        <EditorialHero
-          index="01"
-          eyebrow="How it works"
-          title={
-            <>
-              Founders post the brief.{" "}
-              <span className="text-[#0b5c5c]">Students do the work.</span>
-            </>
-          }
-          lead="Three steps connect a founder's scoped project with a student ready to build. No bidding war, no unverified profiles."
-          intent="student"
-          secondary={{
-            href: CTA_HREFS.forStudents,
-            label: CTA_LABELS.studentGuide,
-          }}
-          image={{
-            src: "/images/bhutanese-students.jpg",
-            alt: "Two young Bhutanese women tending a water supply",
-          }}
-          imagePosition="object-center"
-        />
+        {/* Hero — the three actions a visitor can take right now. */}
+        <section className="bg-white">
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+            <div className="grid gap-8 py-7 lg:grid-cols-12 lg:gap-10 lg:py-10">
+              <div className="lg:col-span-7">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0b5c5c]">
+                  How it works
+                </p>
+                <h1 className="mt-2 text-[clamp(1.9rem,7.6vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.04em] text-[#0b2e2e]">
+                  Three steps connect a brief to the work.
+                </h1>
+                <p className="mt-3 max-w-[46ch] text-[14px] leading-6 text-[#356464] sm:text-[15px] sm:leading-7">
+                  A founder posts a scoped project with a budget. A student
+                  applies with a profile and a CV. Both sides then work from
+                  the same written brief.
+                </p>
 
-        {/* One statement, scrubbed in. The brief is the spine of the product. */}
-        <Band tone="mist" className="border-b border-[#0b2e2e]/10">
-          <div className={cn(container, gutters, "py-14 md:py-20")}>
-            <p className="index-label">The principle</p>
-            <ScrubbedTextReveal
-              as="p"
-              text="The brief stays the reference point. Scope, budget and deadline are written down before anyone starts."
-              className="mt-6 max-w-[26ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[30ch]"
-            />
-          </div>
-        </Band>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  <MarketButton href={CTA_HREFS.signup} variant="primary">
+                    {CTA_LABELS.signup}
+                  </MarketButton>
+                  <MarketButton href={CTA_HREFS.studentProjects} variant="outline">
+                    {CTA_LABELS.browseProjects}
+                  </MarketButton>
+                  <MarketButton href={FOUNDER_ACCESS.href} variant="outline">
+                    {FOUNDER_ACCESS.label}
+                  </MarketButton>
+                </div>
+              </div>
 
-        <ChapterProgress
-          chapters={guideChapters}
-          className="sticky top-16 z-30 border-[#0b2e2e]/12 bg-white [&_a]:text-[#0b2e2e] [&_a:hover]:text-[#0b5c5c] [&_a]:focus-visible:ring-[#0b5c5c] [&_a]:focus-visible:ring-offset-white [&_a[aria-current]]:text-[#0b5c5c] [&_a[aria-current]]:decoration-[#ff0063] [&_a[aria-current]]:decoration-1 [&_a[aria-current]]:underline-offset-[10px] [&_[data-chapter-bar]]:bg-[#ff0063]"
-        />
-
-        {/* Three steps — horizontal accordion on a ruled frame. */}
-        <Band id="journey" labelledBy="journey-heading">
-          <div className={cn(container, gutters, "py-16 md:py-24")}>
-            <MarketingReveal>
-              <SectionHead
-                index="02"
-                eyebrow="Three steps"
-                id="journey-heading"
-                title="Three steps, one clear brief"
-                lead="Each step keeps the work focused and the expectations visible to everyone involved."
-              />
-            </MarketingReveal>
-
-            <MarketingReveal className="mt-12">
-              <HorizontalAccordion items={steps} label="The three steps" />
-            </MarketingReveal>
-          </div>
-        </Band>
-
-        {/* Two-column brief: title pins on desktop, content scrolls beneath.
-            The pin clears the sticky ChapterProgress bar above it. */}
-        <PinnedScrollChapter
-          id="brief"
-          labelledBy="brief-heading"
-          pinOffset={152}
-          className="px-5 py-16 sm:px-8 md:py-24 lg:px-12"
-          title={
-            <div>
-              <p className="index-label">03 · The brief</p>
-              <h2
-                id="brief-heading"
-                className="display-lg mt-6 max-w-[14ch] text-[#0b2e2e]"
-              >
-                Founders set the brief. Students apply to the projects.
-              </h2>
-              <p className="mt-6 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
-                Two columns, side by side: what the founder writes, and what the
-                student sees.
-              </p>
+              <div className="lg:col-span-5">
+                <Photo
+                  src="/images/thimphu-city-clean.webp"
+                  alt="Handicraft shops along Norzin Lam road in Thimphu"
+                  ratio="aspect-[16/10] lg:aspect-[4/5]"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  preload
+                />
+              </div>
             </div>
-          }
-        >
-          {briefColumns.map((column, index) => (
-            <MarketingReveal delay={index * 0.08} key={column.heading}>
-              <h3 className="flex items-baseline gap-3 border-b border-[#0b2e2e]/20 pb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0b5c5c]">
-                {String(index + 1).padStart(2, "0")} {column.heading}
-              </h3>
-              <ul className="mt-2">
-                {column.items.map((item) => (
+          </div>
+        </section>
+
+        <TrustBar>
+          {"Human verification · Paid in Ngultrum · No bidding wars · Built in Bhutan"}
+        </TrustBar>
+
+        {/* The three steps — early and compact. */}
+        <Section labelledBy="how-steps-heading">
+          <SectionHeading
+            id="how-steps-heading"
+            eyebrow="The process"
+            title="Three steps, one clear brief"
+            lead="Each step keeps the scope, the budget and the deadline visible to everyone involved."
+          />
+          <div className="mt-5">
+            <StepCards steps={steps} />
+          </div>
+        </Section>
+
+        {/* The brief, from both sides. */}
+        <Section tone="mist" labelledBy="how-brief-heading">
+          <SectionHeading
+            id="how-brief-heading"
+            eyebrow="The brief"
+            title="Founders set the brief. Students apply to the brief."
+            lead="Two views of the same written project, so nobody works from a vague message."
+          />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {briefColumns.map((column) => (
+              <div
+                key={column.heading}
+                className="rounded-[4px] border border-[#b9dede] bg-white p-4 sm:p-5"
+              >
+                <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0b5c5c]">
+                  {column.heading}
+                </h3>
+                <ul className="mt-2">
+                  {column.items.map((item) => (
+                    <li
+                      key={item}
+                      className="border-b border-[#b9dede] py-2.5 text-[13px] leading-6 text-[#0b2e2e] last:border-b-0"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Application status. */}
+        <Section labelledBy="how-status-heading">
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-5">
+              <SectionHeading
+                id="how-status-heading"
+                eyebrow="Application status"
+                title="You always know where an application stands"
+                lead="The same four statuses are used by the student and the founder."
+              />
+              <div className="mt-5">
+                <CheckList
+                  items={[
+                    "Pending: the application is with the founder.",
+                    "Shortlisted: the founder kept the profile and can open the CV.",
+                    "Accepted: the student was selected for the project.",
+                    "Rejected: the application was closed for that project.",
+                  ]}
+                />
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <div className="rounded-[4px] border border-[#b9dede] bg-white p-4 sm:p-5">
+                <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#0b5c5c]">
+                  Who does what
+                </h3>
+                <dl className="mt-2">
+                  <FactRow
+                    term="Founder"
+                    detail="Posts the brief, reviews applicants, updates applicant status, and agrees the work and the budget in Ngultrum."
+                  />
+                  <FactRow
+                    term="Student"
+                    detail="Completes the profile, uploads a PDF CV, browses open projects, applies, and follows each application status."
+                  />
+                  <FactRow
+                    term="Admin"
+                    detail="Checks identities, colleges and CVs by hand, and confirms payment before a shortlist is released."
+                  />
+                </dl>
+              </div>
+            </div>
+          </div>
+        </Section>
+
+        {/* Protections. */}
+        <Section tone="mist" labelledBy="how-care-heading">
+          <SectionHeading
+            id="how-care-heading"
+            eyebrow="Both sides protected"
+            title="The rules that keep the process fair"
+            lead="A few clear rules keep the documents private and the payment honest."
+          />
+          <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+            {protections.map((rule) => (
+              <li
+                key={rule.title}
+                className="rounded-[4px] border border-[#b9dede] bg-white p-4"
+              >
+                <h3 className="text-[15px] font-semibold leading-snug tracking-[-0.02em] text-[#0b2e2e]">
+                  {rule.title}
+                </h3>
+                <p className="mt-1.5 text-[13px] leading-6 text-[#356464]">
+                  {rule.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/* After a shortlist. */}
+        <Section labelledBy="how-after-heading">
+          <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className="lg:col-span-6">
+              <SectionHeading
+                id="how-after-heading"
+                eyebrow="After a shortlist"
+                title="What happens once a shortlist is ready"
+                lead="The handoff stays explicit so founders and students know where they stand."
+              />
+              <ul className="mt-5 grid gap-3">
+                {afterShortlist.map((item) => (
                   <li
-                    key={item}
-                    className="border-b border-[#0b2e2e]/10 py-4 text-[1.05rem] font-medium leading-7 tracking-[-0.015em] text-[#0b2e2e] sm:text-[1.15rem]"
+                    key={item.title}
+                    className="rounded-[4px] border border-[#b9dede] bg-white p-4"
                   >
-                    {item}
+                    <h3 className="text-[15px] font-semibold leading-snug tracking-[-0.02em] text-[#0b2e2e]">
+                      {item.title}
+                    </h3>
+                    <p className="mt-1.5 text-[13px] leading-6 text-[#356464]">
+                      {item.body}
+                    </p>
                   </li>
                 ))}
               </ul>
-            </MarketingReveal>
-          ))}
-        </PinnedScrollChapter>
-
-        {/* The place. */}
-        <Band id="place" labelledBy="place-heading">
-          <div className={cn(container, gutters, "py-16 md:py-24")}>
-            <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
-              <MarketingReveal className="lg:col-span-7">
-                <Figure
-                  src="/images/thimphu-city.jpg"
-                  alt="Handicraft shops along Norzin Lam road in Thimphu"
-                  ratio="aspect-[4/3]"
-                  sizes="(max-width: 1024px) 100vw, 90vw"
-                />
-              </MarketingReveal>
-              <MarketingReveal
-                delay={0.08}
-                className="flex flex-col justify-between lg:col-span-5 lg:pl-4"
-              >
-                <div>
-                  <p className="index-label">04 · The place</p>
-                  <h2
-                    id="place-heading"
-                    className="display-lg mt-6 max-w-[12ch]"
-                  >
-                    Built for work here
-                  </h2>
-                  <p className="mt-6 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
-                    The platform connects Bhutanese students with startup
-                    founders. These photographs show Bhutanese places, not
-                    platform listings or members.
-                  </p>
-                </div>
-                <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
-                  <RuleLink href={CTA_HREFS.forStudents}>
-                    {CTA_LABELS.studentPath}
-                  </RuleLink>
-                </div>
-              </MarketingReveal>
             </div>
-          </div>
-        </Band>
-
-        {/* Protections — three ruled columns. */}
-        <Band
-          id="care"
-          tone="mist"
-          labelledBy="care-heading"
-          className="border-y border-[#0b2e2e]/10"
-        >
-          <div className={cn(container, gutters, "py-16 md:py-24")}>
-            <MarketingReveal>
-              <SectionHead
-                index="05"
-                eyebrow="Both sides protected"
-                id="care-heading"
-                title="The details that protect both sides"
-                lead="A few clear rules keep the process fair and the documents private."
+            <div className="lg:col-span-6">
+              <Photo
+                src="/images/thimphu-hills.jpg"
+                alt="Thimphu's main road with the valley hills behind"
+                ratio="aspect-[4/3]"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-            </MarketingReveal>
-
-            <ul className="mt-12 grid grid-cols-1 gap-x-10 border-t border-[#0b2e2e]/15 sm:grid-cols-3">
-              {protections.map((rule, index) => (
-                <li
-                  key={rule.title}
-                  className="border-b border-[#0b2e2e]/15 py-6 sm:border-b-0 sm:py-7"
-                >
-                  <MarketingReveal delay={index * 0.06}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-semibold tabular-nums tracking-[0.18em] text-[#c2004b]">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="h-px flex-1 bg-[#0b2e2e]/15"
-                      />
-                    </div>
-                    <h3 className="mt-4 text-[1.15rem] font-semibold leading-snug tracking-[-0.025em] text-[#0b2e2e]">
-                      {rule.title}
-                    </h3>
-                    <p className="mt-2 max-w-[34ch] text-sm leading-6 text-[#356464]">
-                      {rule.body}
-                    </p>
-                  </MarketingReveal>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Band>
-
-        {/* After a shortlist — a numbered ledger. */}
-        <Band id="shortlist" labelledBy="shortlist-heading">
-          <div className={cn(container, gutters, "py-16 md:py-24")}>
-            <MarketingReveal>
-              <SectionHead
-                index="06"
-                eyebrow="After a shortlist"
-                id="shortlist-heading"
-                title="What happens after a shortlist"
-                lead="The handoff stays explicit so founders and students know where they stand."
-              />
-            </MarketingReveal>
-
-            <ol className="mt-12 border-t border-[#0b2e2e]/15">
-              {afterShortlist.map((item, index) => (
-                <LedgerRow
-                  key={item.title}
-                  index={String(index + 1).padStart(2, "0")}
-                  title={item.title}
-                >
-                  {item.body}
-                </LedgerRow>
-              ))}
-            </ol>
-
-            <div className="mt-12 flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t border-[#0b2e2e]/12 pt-6">
-              <RuleLink href={CTA_HREFS.faq}>{CTA_LABELS.faq}</RuleLink>
-              <RuleLink href={CTA_HREFS.forFounders}>
-                {CTA_LABELS.founders}
-              </RuleLink>
-              <RuleLink href={CTA_HREFS.forStudents}>
-                {CTA_LABELS.students}
-              </RuleLink>
-            </div>
-          </div>
-        </Band>
-
-        {/* Closing band. */}
-        <Band tone="teal">
-          <div
-            className={cn(
-              container,
-              gutters,
-              "grid grid-cols-1 items-end gap-10 py-16 md:py-24 lg:grid-cols-12",
-            )}
-          >
-            <MarketingReveal className="lg:col-span-8">
-              <p className="index-label text-[#0b2e2e]">
-                {CTA_LABELS.closingEyebrow}
+              <p className="mt-3 text-[12px] leading-5 text-[#356464]">
+                Bhutan Tech Connect connects Bhutanese students with startup
+                founders. These photographs show Bhutanese places, not platform
+                listings or members.
               </p>
-              <h2 className="display-xl mt-6 max-w-[15ch]">
+            </div>
+          </div>
+        </Section>
+
+        {/* Closing. */}
+        <Section tone="deep">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-[clamp(1.35rem,3.6vw,1.9rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-white">
                 Start with one paid project.
               </h2>
-              <p className="mt-6 max-w-[42ch] text-base leading-7 text-[#0b2e2e]">
+              <p className="mt-2 max-w-[52ch] text-[14px] leading-6 text-[#eaf6f6]/80">
                 Create a student account, or ask about founder access.
               </p>
-            </MarketingReveal>
-            <MarketingReveal
-              delay={0.08}
-              className="flex flex-col items-start gap-4 lg:col-span-4 lg:items-end"
-            >
-              <Action href={CTA_HREFS.signup}>{CTA_LABELS.signup}</Action>
-              <RuleLink
-                href={CTA_HREFS.contact}
-                className="decoration-[#0b2e2e]/30 hover:decoration-[#0b2e2e]"
-              >
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <MarketButton href={CTA_HREFS.signup} variant="onDeepSolid">
+                {CTA_LABELS.signup}
+              </MarketButton>
+              <MarketButton href={CTA_HREFS.contact} variant="onDeep">
                 {CTA_LABELS.contact}
-              </RuleLink>
-            </MarketingReveal>
+              </MarketButton>
+            </div>
           </div>
-        </Band>
+        </Section>
       </main>
 
       <SiteFooter />

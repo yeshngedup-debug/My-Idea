@@ -2,7 +2,31 @@
 
 **Verdict at audit time: 30/100 — BLOCKED.** The redesign had unwired every interactive component, and two RLS policies let a founder bypass payment approval and read any student's CV with only the public anon key.
 
-**Current status after remediation (section 0): all audit findings are fixed in code.** The two things that still block a real deploy are *environmental*, not code defects: the new migration has not been applied to a live Supabase project (this host does not resolve), and the E2E flows cannot run without seeded accounts. A re-audit score is not asserted until those two steps are done.
+**Current status (2026-11-26): all code findings below were remediated.** The app now runs entirely on Neon (Postgres, Managed Better Auth, Object Storage, Realtime). `README.md` owns current setup and deployment; there is no Supabase migration or RLS layer to apply. Supabase/RLS details below are a point-in-time record, not live instructions. No re-audit score is asserted here.
+
+**Latest pass (2026-11-27):** the final audit/fix round covered the remaining
+first-paint, authorisation, payment and media findings:
+
+- Reveal wrappers start fully visible on the server render and the first client
+  render; only below-fold elements animate, and reduced motion stays static.
+- The root path `/` now answers with a server-level `308` to `/public`. Before
+  this, the page-level redirect was thrown after the shell had flushed, so the
+  root URL rendered an empty loading skeleton and only redirected once
+  JavaScript ran.
+- `proxy.ts`, the Server Actions and `src/lib/neon-data.ts` fail closed on
+  role and ownership checks; no gate is client-only.
+- Bank and mBoB details come from deployment environment variables only. No
+  account number is invented in source, blank values pause new orders, and the
+  admin payment screen always opens a freshly signed proof link.
+- Every `/images/*` homepage asset loads with a real layout box, with a teal
+  fallback plate and no zero-sized references.
+- The production origin `https://myidea-virid.vercel.app` is registered as a
+  trusted Neon Auth domain, and the canonical URL, JSON-LD, contact and
+  repository documentation use that origin.
+
+Verification on the live seeded Neon branch: `npx tsc --noEmit` clean ·
+`npm run lint` clean · `npm test` 285/285 · `npm run test:e2e` 10/10 (student,
+founder, admin, payment and homepage first-paint flows, no skips).
 
 Audit date: 2026-11-24. Source of truth: current working tree (branch `main`, base `a00a6c8`, 65 modified/untracked files, ~5,329 insertions / 3,710 deletions).
 
@@ -33,7 +57,7 @@ Every blocker and high-value item in sections 2–3 has been addressed. The find
 
 **Verification after fixes:** `tsc --noEmit` clean · `npm run lint` 0 errors · `npm test` 45/45 · `npm run build` clean (27 routes, no deprecation warning) · E2E 4 skipped without DB · Playwright re-drove the public/auth/legal pages with zero app console errors.
 
-**Still unverified:** the SQL migration has not been applied to a live Postgres/Supabase instance (no reachable database in this environment), and no authenticated end-to-end flow could be run. Before deploy, apply `20261124000000_close_security_bypasses.sql`, audit existing `shortlist_orders` for self-confirmed rows, seed the E2E accounts described in `tests/e2e/demo-users.ts`, and run the E2E job once with `E2E_REQUIRE_DB=1`.
+**Historical verification gap at audit time:** no live Supabase database was reachable, so authenticated end-to-end flows could not run. That Supabase migration path is obsolete: the current schema is `neon/schema.sql`, and authenticated E2E requires the seeded Neon branch and accounts described in `tests/e2e/demo-users.ts`. Current setup steps are in `README.md`.
 
 ---
 
@@ -142,7 +166,7 @@ Agents used: `explore` (architecture map), `code-reviewer` (working-tree diff re
 
 ---
 
-## 5. Evidence missing / next action
+## 5. Historical evidence gaps
 
-- **Missing:** valid Supabase credentials (DB is down locally), a deployed URL, and a tested rollback path for the pending migrations. Without these, authenticated flows could not be exercised live and the RLS exploits were confirmed by policy inspection, not by an actual unauthorized request.
-- **Next action:** restore the seven unwired client components first — that is what makes the product usable. Then fix B2 and B3 as a single security migration, repair the E2E auth helper, and re-run the full suite.
+- **At audit time:** Supabase credentials and a deployed URL were missing, so authenticated flows could not be exercised live and the RLS exploits were confirmed by policy inspection rather than an unauthorized request.
+- **Current status:** there is no Supabase dependency, no RLS layer and no pending Supabase migration. The seven unwired components were restored; current setup and verification steps live in `README.md` and `tests/e2e/`.

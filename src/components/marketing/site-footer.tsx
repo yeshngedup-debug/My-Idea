@@ -1,59 +1,34 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ArrowRight } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
-import {
-  CTA_HREFS,
-  CTA_LABELS,
-  FOUNDER_ACCESS,
-  LOGIN_LINK,
-  NAV_LINKS,
-  SITE,
-  UTILITY_LINKS,
-  resolvePrimaryCta,
-  type NavLink,
-} from "./nav";
+import { NAV_LINKS, SITE } from "./nav";
+import { footerColumnHeading, footerLinkClass } from "./styles";
+import { FooterStartLinks, FooterUtilityLinks } from "./site-footer-links";
 
-const linkClass =
-  "inline-flex min-h-6 items-center text-sm text-[#356464] transition-colors duration-150 ease-[cubic-bezier(0.32,0.72,0,1)] hover:text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none";
-
-const startLinkClass =
-  "group inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
-
-const arrowClass =
-  "transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0";
-
-const columnHeading =
-  "text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]";
-
+/**
+ * Site footer for the public marketing pages.
+ *
+ * Deep teal to close the page, with the same links the header offers plus
+ * the two routes a visitor is most likely to want next. No magenta action
+ * here: the emphasis belongs to the page, not the chrome.
+ *
+ * This is a server component. Only the two route-aware link lists live in a
+ * client leaf, so the footer markup itself never enters the client bundle.
+ */
 export function SiteFooter({ compact = false }: { compact?: boolean }) {
-  const pathname = usePathname();
-  const primaryCta = resolvePrimaryCta(pathname);
-  const utilityLinks: NavLink[] = [...UTILITY_LINKS, LOGIN_LINK];
-  const startLinks: NavLink[] = [
-    { href: CTA_HREFS.signup, label: CTA_LABELS.signup },
-    FOUNDER_ACCESS,
-  ];
-
   return (
-    <footer className="border-t border-[#0b2e2e]/12 bg-white px-5 sm:px-8 lg:px-12">
+    <footer className="border-t border-[#0b2e2e] bg-[#0b2e2e] px-4 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-[1440px]">
         <div
           className={cn(
-            "grid gap-10 border-b border-[#0b2e2e]/10 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] lg:gap-12",
-            compact ? "py-10" : "py-16 md:py-20",
+            "grid gap-8 border-b border-white/15 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] lg:gap-10",
+            compact ? "py-8" : "py-10 md:py-12",
           )}
         >
           <div>
             <Link
               href={SITE.homeHref}
-              className={cn(
-                "inline-flex min-h-11 items-center gap-2.5 text-[#0b2e2e]",
-                linkClass,
-              )}
+              className="inline-flex min-h-11 items-center gap-2.5 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b2e2e]"
             >
               <Logo size="h-7 w-7" />
               <span className="text-[15px] font-semibold tracking-[-0.02em]">
@@ -61,24 +36,23 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
               </span>
             </Link>
             {!compact ? (
-              <p className="mt-4 max-w-[30ch] text-sm leading-6 text-[#356464]">
+              <p className="mt-3 max-w-[32ch] text-[13px] leading-6 text-[#eaf6f6]/80">
                 {SITE.tagline}
               </p>
             ) : null}
-            <p className="mt-5 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#356464]">
-              <span aria-hidden="true" className="h-px w-6 bg-[#ff0063]" />
+            <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b9dede]">
               Thimphu · Bhutan
             </p>
           </div>
 
           <div>
-            <p className={columnHeading}>Explore</p>
+            <p className={footerColumnHeading}>Explore</p>
             <nav
               aria-label="Footer navigation"
-              className="mt-4 flex flex-col items-start gap-2.5"
+              className="mt-2 flex flex-col items-start"
             >
               {NAV_LINKS.map((link) => (
-                <Link key={link.href} href={link.href} className={linkClass}>
+                <Link key={link.href} href={link.href} className={footerLinkClass}>
                   {link.label}
                 </Link>
               ))}
@@ -86,72 +60,31 @@ export function SiteFooter({ compact = false }: { compact?: boolean }) {
           </div>
 
           <div>
-            <p className={columnHeading}>More</p>
-            <nav
-              aria-label="Utility navigation"
-              className="mt-4 flex flex-col items-start gap-2.5"
-            >
-              {utilityLinks
-                .filter((link) => link.href !== pathname)
-                .map((link) => (
-                  <Link key={link.href} href={link.href} className={linkClass}>
-                    {link.label}
-                  </Link>
-                ))}
+            <p className={footerColumnHeading}>Start</p>
+            <nav aria-label="Account navigation" className="mt-2 flex flex-col items-start">
+              <FooterStartLinks />
             </nav>
           </div>
 
           <div>
-            <p className={columnHeading}>Start</p>
-            <div className="mt-4 flex flex-col items-start gap-2.5">
-              {startLinks
-                .filter((link) => link.href !== pathname)
-                .map((link) => {
-                  const primary = link.href === primaryCta.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={cn(
-                        primary ? startLinkClass : linkClass,
-                        "gap-1.5",
-                      )}
-                    >
-                      <span>{link.label}</span>
-                      <ArrowRight
-                        size={14}
-                        weight="bold"
-                        aria-hidden="true"
-                        className={arrowClass}
-                      />
-                    </Link>
-                  );
-                })}
-            </div>
+            <p className={footerColumnHeading}>More</p>
+            <nav
+              aria-label="Utility navigation"
+              className="mt-2 flex flex-col items-start"
+            >
+              <FooterUtilityLinks />
+            </nav>
           </div>
         </div>
 
-        {!compact ? (
-          <p
-            aria-hidden="true"
-            className="mt-10 select-none text-[clamp(1.75rem,7.4vw,7rem)] font-semibold leading-[0.86] tracking-[-0.06em] text-[#0b2e2e]"
-          >
-            Bhutan Tech
-            <br />
-            Connect<span className="text-[#66bfbf]">.</span>
-          </p>
-        ) : null}
-
         <div
           className={cn(
-            "flex flex-col gap-3 border-t border-[#0b2e2e]/10 text-xs text-[#356464]",
-            compact
-              ? "mt-8 pt-6"
-              : "mt-10 pt-6 pb-10 sm:flex-row sm:items-baseline sm:justify-between",
+            "flex flex-col gap-2 text-xs text-[#eaf6f6]/70",
+            compact ? "pt-5" : "py-6",
           )}
         >
           <p>© 2026 {SITE.name}</p>
-          <p className="text-[10px] uppercase tracking-[0.18em]">
+          <p className="text-[11px] uppercase tracking-[0.16em]">
             Local talent · Real projects · Built in Bhutan
           </p>
         </div>

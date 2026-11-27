@@ -4,6 +4,11 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { updateProjectStatus, updateApplicationStatus } from '@/features/projects/actions';
 import { Badge } from '@/components/ui/badge';
+import { formatBhutanDate } from '@/lib/format';
+import {
+  APPLICATION_STATUS_LABEL,
+  PROJECT_STATUS_LABEL,
+} from '@/lib/status-labels';
 import { EmptyState } from '@/components/ui/empty-state';
 import { StatusMessage } from '@/components/ui/status-message';
 import {
@@ -40,10 +45,10 @@ export interface ProjectInfo {
 }
 
 const APP_BADGE: Record<string, { label: string; cls: string }> = {
-  pending: { label: 'Pending', cls: 'border-amber-200 bg-amber-50 text-[#0b5c5c]' },
-  shortlisted: { label: 'Shortlisted', cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
-  accepted: { label: 'Accepted', cls: 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]' },
-  rejected: { label: 'Rejected', cls: 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]' },
+  pending: { label: APPLICATION_STATUS_LABEL.pending, cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
+  shortlisted: { label: APPLICATION_STATUS_LABEL.shortlisted, cls: 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]' },
+  accepted: { label: APPLICATION_STATUS_LABEL.accepted, cls: 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]' },
+  rejected: { label: APPLICATION_STATUS_LABEL.rejected, cls: 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]' },
 };
 
 const APPLICATION_STATUSES = [
@@ -77,10 +82,10 @@ function applicantStatusHelp(value: string): string {
 }
 
 const PROJECT_STATUSES = [
-  { value: 'open', label: 'Open' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'review', label: 'In review' },
-  { value: 'completed', label: 'Completed' },
+  { value: 'open', label: PROJECT_STATUS_LABEL.open },
+  { value: 'in_progress', label: PROJECT_STATUS_LABEL.in_progress },
+  { value: 'review', label: PROJECT_STATUS_LABEL.review },
+  { value: 'completed', label: PROJECT_STATUS_LABEL.completed },
 ];
 
 function projectStatusLabel(value: string): string {
@@ -196,11 +201,11 @@ export function ProjectDetailClient({
               disabled={busy || projectStatus === s.value}
               onClick={() => setProject(s.value)}
               aria-pressed={projectStatus === s.value}
-              className={`pressable inline-flex min-h-9 items-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
+              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
                 projectStatus === s.value
                   ? 'bg-[#0b5c5c] text-[#ffffff]'
                   : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
-                }`}
+              }`}
               >
                 {s.label}
               </button>
@@ -226,14 +231,14 @@ export function ProjectDetailClient({
               description="When a student applies, you can review their details here."
             />
           ) : (
-            <ul className="space-y-3">
+            <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
               {applicants.map((a) => {
                 const s = a.student;
                 const current = appStatus[a.id] ?? a.status;
                 const badge = APP_BADGE[current] ?? APP_BADGE.pending;
                 const statusHelpId = `applicant-status-help-${a.id}`;
                 return (
-                  <li key={a.id} className="space-y-3 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
+                  <li key={a.id} className="space-y-3 py-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h3 className="truncate text-base font-semibold text-[#0b5c5c]">
@@ -266,7 +271,7 @@ export function ProjectDetailClient({
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                       {s?.cv_path && (
-                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1.5 text-[#c2004b] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
+                        <a href={`/api/cv/${encodeURIComponent(a.student_id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1.5 text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           View CV
                           <span className="sr-only">
                             {' '}for {s?.full_name ?? 'this applicant'} (opens in a new tab)
@@ -274,12 +279,12 @@ export function ProjectDetailClient({
                         </a>
                       )}
                       {s?.contact_email && (
-                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-9 items-center gap-1.5 break-all text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
+                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-11 items-center gap-1.5 break-all text-[#356464] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           {s.contact_email}
                         </a>
                       )}
                       <span className="inline-flex items-center gap-1.5 text-xs tabular-nums text-[#356464]">
-                        Applied {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                        Applied {formatBhutanDate(a.created_at)}
                       </span>
                     </div>
 
@@ -300,7 +305,7 @@ export function ProjectDetailClient({
                               disabled={busy || isCurrent || !isAllowed}
                               onClick={() => setApplication(a.id, st, s?.full_name ?? 'this applicant')}
                               aria-pressed={isCurrent}
-                              className={`pressable inline-flex min-h-9 items-center rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:cursor-not-allowed disabled:opacity-60 ${
+                              className={`pressable inline-flex min-h-11 items-center rounded-md px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:cursor-not-allowed disabled:opacity-60 ${
                                 isCurrent
                                   ? 'bg-[#0b5c5c] text-[#ffffff]'
                                   : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'

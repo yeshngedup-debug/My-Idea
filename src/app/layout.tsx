@@ -1,27 +1,14 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
-import { Geist, Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Geist } from "next/font/google";
 import { headers } from "next/headers";
 import { MotionProvider } from "@/components/ui/motion-provider";
 import { OfflineStatus } from "@/components/network/offline-status";
-import { APP_URL } from "@/config/app";
+import { APP_CONTACT, APP_URL } from "@/config/app";
 import "./globals.css";
 
-/* Geist is the editorial display and body face for the public site: tight
-   tracking at display sizes, open counters at reading sizes. Plus Jakarta Sans
-   and Outfit stay loaded as fallbacks for product screens that still use them. */
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
-  display: "swap",
-});
-
+/* Geist is the single product typeface. Its open counters stay legible in
+   dense tables and its tight display sizes work on small phones. */
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",
@@ -41,7 +28,6 @@ export const metadata: Metadata = {
      dir="ltr"` below and `og:locale: "en_BT"` here are deliberate; no fake
      localized routes or invented alternates are added. When translated routes
      ship, add `alternates.languages`/`hreflang` metadata and a locale switcher. */
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: "Bhutan Tech Connect",
@@ -80,12 +66,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const organizationJsonLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Bhutan Tech Connect",
+    url: `${APP_URL}/`,
+    email: APP_CONTACT.email,
+    logo: `${APP_URL}/icon-512.png`,
+  }).replace(/</g, "\\u003c");
 
   return (
     <html
       lang="en"
       dir="ltr"
-      className={`${plusJakarta.variable} ${outfit.variable} ${geist.variable} font-sans`}
+      className={`${geist.variable} font-sans`}
       suppressHydrationWarning
     >
       <head>
@@ -93,12 +87,11 @@ export default async function RootLayout({
             above. Manual duplicates here previously produced two titles and two
             descriptions on every route. */}
 
-        {/* Favicons & app icons (new logo mark) */}
-        {/* Preferred: the vector mark (brand teal + magenta arch cap). */}
+        {/* Favicons & app icons. */}
+        {/* Preferred: the vector mark (primary teal + decorative teal arch). */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        {/* PNG/ICO fallbacks for browsers without SVG favicon support. All were
-            regenerated deterministically from /favicon.svg in the canonical
-            forest + amber palette (see reports/icon-fix.md). */}
+        {/* PNG/ICO fallbacks for browsers without SVG favicon support. All are
+            regenerated from /favicon.svg in the canonical teal palette. */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link
           rel="icon"
@@ -118,8 +111,8 @@ export default async function RootLayout({
           sizes="48x48"
           href="/favicon-48.png"
         />
-        {/* iOS requires a PNG apple-touch-icon; this 180px asset was regenerated
-            from /favicon.svg with the canonical forest + amber mark. */}
+        {/* iOS requires a PNG apple-touch-icon; this 180px asset is regenerated
+            from /favicon.svg with the canonical teal mark. */}
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -132,26 +125,16 @@ export default async function RootLayout({
           type="application/ld+json"
           nonce={nonce}
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Bhutan Tech Connect",
-              url: "https://bhutantech.bt/",
-              email: "hello@bhutantech.bt",
-              logo: "https://bhutantech.bt/icon-512.png",
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: organizationJsonLd }}
         />
       </head>
       <body
         className="font-sans"
         style={{
           fontFamily:
-            "var(--font-geist), var(--font-display), var(--font-outfit), ui-sans-serif, system-ui, sans-serif",
+            "var(--font-geist), ui-sans-serif, system-ui, sans-serif",
         }}
       >
-        <div className="grain-overlay" aria-hidden="true" />
         {/* Skip to main content link */}
         <a
           href="#main-content"

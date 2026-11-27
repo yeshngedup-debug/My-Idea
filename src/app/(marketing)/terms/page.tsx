@@ -16,16 +16,15 @@ import {
   hairline,
 } from "@/components/marketing/editorial";
 import { resolveAction } from "@/components/marketing/nav";
+import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Terms of Use",
   description:
     "Bhutan Tech Connect terms of use: matching service terms, Premium Shortlist policy, fair use, and contact.",
-  alternates: {
-    canonical: "https://bhutantech.bt/terms",
-  },
-};
+  path: "/terms",
+});
 
 const chapters = [
   { id: "what-this-platform-is", label: "What this platform is" },
@@ -78,7 +77,7 @@ export default function TermsPage() {
           <div className="grid w-full gap-10 lg:grid-cols-12 lg:gap-12">
             <nav
               aria-label="On this page"
-              className="min-w-0 lg:col-span-3 lg:sticky lg:top-24 lg:self-start"
+              className="min-w-0 lg:col-span-3 lg:self-start"
             >
               <p className="border-b border-[#0b2e2e]/15 pb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]">
                 Contents

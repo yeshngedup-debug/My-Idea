@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
+  formatBhutanDate,
+  formatEnGbDate,
+  formatEnGbShortDate,
   formatEnGbUtcDate,
   formatEnGbUtcDateTime,
   formatNuAmount,
@@ -39,5 +42,53 @@ describe("UTC date formatters", () => {
   it("falls back for invalid dates", () => {
     expect(formatEnGbUtcDate("not-a-date")).toBe("Date not set");
     expect(formatEnGbUtcDateTime("not-a-date")).toBe("Date not set");
+  });
+});
+
+describe("marketplace date formatters", () => {
+  it("formats a full date without a timezone suffix", () => {
+    expect(formatEnGbDate("2026-11-25T14:30:00.000Z")).toBe("25 Nov 2026");
+  });
+
+  it("keeps a date-only value on its own calendar day", () => {
+    expect(formatEnGbDate("2026-12-14")).toBe("14 Dec 2026");
+    expect(formatEnGbShortDate("2026-12-14")).toBe("14 Dec");
+  });
+
+  it("formats a short date from a timestamp", () => {
+    expect(formatEnGbShortDate("2026-11-25T14:30:00.000Z")).toBe("25 Nov");
+  });
+
+  it("uses the same calendar day whatever the host time zone is", () => {
+    expect(formatEnGbDate("2026-01-01T00:30:00Z")).toBe("1 Jan 2026");
+  });
+
+  it("falls back for missing or invalid dates", () => {
+    expect(formatEnGbDate(null)).toBe("Date not set");
+    expect(formatEnGbDate(undefined)).toBe("Date not set");
+    expect(formatEnGbDate("not-a-date")).toBe("Date not set");
+    expect(formatEnGbShortDate("")).toBe("Date not set");
+  });
+});
+
+describe("formatBhutanDate", () => {
+  it("shows the Bhutan calendar day, not the UTC day", () => {
+    // 18:30 UTC is already the next day in Bhutan (UTC+6).
+    expect(formatBhutanDate("2026-11-25T18:30:00.000Z")).toBe("26 Nov 2026");
+  });
+
+  it("keeps a timestamp on the same day for every host time zone", () => {
+    expect(formatBhutanDate("2026-01-01T00:30:00Z")).toBe("1 Jan 2026");
+  });
+
+  it("keeps a date-only value on its own calendar day", () => {
+    expect(formatBhutanDate("2026-12-14")).toBe("14 Dec 2026");
+  });
+
+  it("falls back for missing or invalid dates", () => {
+    expect(formatBhutanDate(null)).toBe("Date not set");
+    expect(formatBhutanDate(undefined)).toBe("Date not set");
+    expect(formatBhutanDate("not-a-date")).toBe("Date not set");
+    expect(formatBhutanDate("2026-12-14", "Not set")).toBe("14 Dec 2026");
   });
 });

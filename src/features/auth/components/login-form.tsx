@@ -15,9 +15,17 @@ import type { FormEvent, RefObject } from "react";
 import Link from "next/link";
 import { login } from "@/features/auth/actions";
 import { FieldError } from "@/features/auth/components/field-error";
-import { authInputClassName, focusRing } from "@/features/auth/components/styles";
+import {
+  authHintClassName,
+  authInputClassName,
+  authInputErrorClassName,
+  authLabelClassName,
+  authLinkClassName,
+  focusRing,
+} from "@/features/auth/components/styles";
 import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { cn } from "@/lib/utils";
 
 type FieldName = "email" | "password";
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -114,13 +122,10 @@ export function LoginForm({
         onSubmit={handleSubmit}
         noValidate
         aria-describedby={serverStatus ? serverErrorId : undefined}
-        className="space-y-5"
+        className="space-y-4 sm:space-y-5"
       >
         <div>
-          <label
-            htmlFor="email"
-            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
-          >
+          <label htmlFor="email" className={cn(authLabelClassName, "mb-1.5")}>
             Email
           </label>
           <input
@@ -134,23 +139,27 @@ export function LoginForm({
             onChange={() => clearError("email")}
             autoComplete="email"
             placeholder="you@example.com"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              errors.email && authInputErrorClassName,
+            )}
           />
           {errors.email && (
             <FieldError id={emailErrorId}>{errors.email}</FieldError>
           )}
         </div>
         <div>
-          <div className="mb-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-            <label
-              htmlFor="password"
-              className="text-sm font-semibold text-[#0b5c5c]"
-            >
+          <div className="mb-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+            <label htmlFor="password" className={authLabelClassName}>
               Password
             </label>
             <Link
               href="/forgot-password"
-              className={`pressable inline-flex min-h-6 items-center rounded-sm text-xs font-medium text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
+              className={cn(
+                "pressable inline-flex min-h-6 items-center rounded-sm text-[13px]",
+                authLinkClassName,
+                focusRing,
+              )}
             >
               Forgot password?
             </Link>
@@ -166,16 +175,23 @@ export function LoginForm({
             onChange={() => clearError("password")}
             autoComplete="current-password"
             placeholder="Enter your password"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              errors.password && authInputErrorClassName,
+            )}
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
           )}
-          <p className="mt-2 text-xs leading-5 text-[#356464]">
+          <p className={cn("mt-2", authHintClassName)}>
             Didn&apos;t get a reset email?{" "}
             <a
               href={passwordHelpContactHref}
-              className={`pressable inline-flex min-h-6 items-center rounded-sm font-medium text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-[color,text-decoration-color] duration-200 ease-[var(--ease-out)] hover:text-[#356464] hover:decoration-[#0b5c5c] ${focusRing}`}
+              className={cn(
+                "pressable inline-flex min-h-6 items-center rounded-sm",
+                authLinkClassName,
+                focusRing,
+              )}
             >
               Contact us
             </a>

@@ -34,7 +34,7 @@ export function Accordion({ items, className }: AccordionProps) {
             <CaretRight
               aria-hidden="true"
               weight="bold"
-              className="h-5 w-5 shrink-0 text-[#ff0063] transition-transform duration-250 ease-[var(--ease-out)] group-open:rotate-90 motion-reduce:transition-none"
+              className="h-5 w-5 shrink-0 text-[#ff0063] transition-transform duration-200 ease-[var(--ease-out)] group-open:rotate-90 motion-reduce:transition-none"
             />
           </summary>
           <div className="px-2 pb-6 pr-10 text-sm leading-7 text-[#0b2e2e]/75 sm:text-base">

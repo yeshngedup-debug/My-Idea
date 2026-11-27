@@ -5,13 +5,17 @@
  * only borrowed idea: every value below comes from the project row supplied
  * by the server, and the only actions are the real Apply action and the real
  * project-detail link. No reactions, counters or invented social proof.
+ *
+ * Cards are dense rows with hairline separators, not floating panels, and the
+ * apply result appears in place without any entrance animation.
  */
-import { useEffect, useState, startTransition, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useState, startTransition } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { applyToProject } from '@/features/projects/actions';
 import { Badge } from '@/components/ui/badge';
+import { formatEnGbDate, formatEnGbShortDate } from '@/lib/format';
+import { projectStatusLabel } from '@/lib/status-labels';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { StatusMessage } from '@/components/ui/status-message';
@@ -53,33 +57,7 @@ function normalizeWorkMode(value: string | null): WorkModeFilter {
 }
 
 function statusLabel(status: string): string {
-  return status
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
-
-function founderInitial(name: string | null): string {
-  const value = (name ?? '').trim();
-  return value ? value.charAt(0).toUpperCase() : 'F';
-}
-
-/** Mirrors the --ease-out token in app/globals.css. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-
-/** One gentle entrance for the apply result under a card, not for the feed. */
-function ResultEntrance({ children }: { children: ReactNode }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div>{children}</div>;
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.16, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.div>
-  );
+  return projectStatusLabel(status);
 }
 
 type ParsedDeadline = { date: Date; dateOnly: boolean };
@@ -113,11 +91,11 @@ function formatDeadline(deadline: string, withYear: boolean): string {
   const parsed = parseDeadline(deadline);
   if (!parsed) return 'Date to be confirmed';
 
-  return parsed.date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    ...(withYear ? { year: 'numeric' as const } : {}),
-  });
+  // Formatted from the stored value so the server render and the browser
+  // hydration always agree on the calendar day.
+  return withYear
+    ? formatEnGbDate(deadline, 'Date to be confirmed')
+    : formatEnGbShortDate(deadline, 'Date to be confirmed');
 }
 
 export function ProjectCard({
@@ -158,14 +136,8 @@ export function ProjectCard({
   const hiddenSkillCount = Math.max(0, skills.length - visibleSkills.length);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-card">
-      <header className="flex items-center gap-3 border-b border-border px-4 py-3 sm:px-5">
-        <span
-          aria-hidden="true"
-          className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-secondary text-sm font-semibold text-primary"
-        >
-          {founderInitial(project.founderName)}
-        </span>
+    <article className="overflow-hidden rounded-xl border border-border bg-card">
+      <header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3 sm:px-5">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-primary">
             {project.founderName ?? 'Founder'}
@@ -178,7 +150,7 @@ export function ProjectCard({
             </time>
           </p>
         </div>
-        <Badge className="ml-auto shrink-0 gap-1.5 border-border bg-background text-primary">
+        <Badge className="mt-0.5 shrink-0 gap-1.5 border-border bg-background text-primary">
           <span
             aria-hidden="true"
             className="h-1.5 w-1.5 rounded-full bg-primary"
@@ -195,9 +167,9 @@ export function ProjectCard({
           {project.description}
         </p>
 
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-3 border-t border-border pt-4 text-xs">
+        <dl className="mt-3 flex flex-wrap gap-x-5 gap-y-2 border-t border-border pt-3 text-xs">
           {skills.length > 0 && (
-            <div className="min-w-0">
+            <div className="min-w-0 basis-full">
               <dt className="text-muted-foreground">Skills</dt>
               <dd className="mt-1 flex flex-wrap gap-1.5">
                 {visibleSkills.map((skill, index) => (
@@ -213,7 +185,7 @@ export function ProjectCard({
                   <Link
                     href={detailHref}
                     aria-label={`+${hiddenSkillCount} more required ${hiddenSkillCount === 1 ? 'skill' : 'skills'}`}
-                    className="inline-flex min-h-11 items-center rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none!"
+                    className="inline-flex min-h-11 items-center rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                   >
                     +{hiddenSkillCount} more
                   </Link>
@@ -221,25 +193,25 @@ export function ProjectCard({
               </dd>
             </div>
           )}
-          <div>
+          <div className="min-w-0">
             <dt className="text-muted-foreground">Budget</dt>
-            <dd className="mt-1 font-medium tabular-nums text-primary">
+            <dd className="mt-1 break-words font-medium tabular-nums text-primary">
               {budget}
             </dd>
           </div>
-          <div>
+          <div className="min-w-0">
             <dt className="text-muted-foreground">Duration</dt>
             <dd className="mt-1 font-medium text-primary">
               {project.duration ?? 'Flexible'}
             </dd>
           </div>
-          <div>
+          <div className="min-w-0">
             <dt className="text-muted-foreground">Work mode</dt>
             <dd className="mt-1 font-medium text-primary">
               {project.work_mode === 'onsite' ? 'Onsite' : 'Remote'}
             </dd>
           </div>
-          <div>
+          <div className="min-w-0">
             <dt className="text-muted-foreground">Apply by</dt>
             <dd className="mt-1 font-medium tabular-nums text-primary">
               {deadline}
@@ -260,10 +232,10 @@ export function ProjectCard({
                 : 'Applications closed'
               : undefined
           }
-          className={`pressable inline-flex min-h-11 items-center justify-center rounded-lg px-5 text-sm font-semibold transition-colors motion-reduce:transition-none! focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+          className={`pressable inline-flex min-h-11 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
             applied || closed
               ? 'cursor-not-allowed bg-muted text-muted-foreground'
-              : 'bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
+              : 'bg-[#0b5c5c] text-[#ffffff] hover:bg-[#0b2e2e]'
           }`}
         >
           {applied
@@ -276,22 +248,19 @@ export function ProjectCard({
         </button>
         <Link
           href={detailHref}
-          className="inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline-offset-4 hover:text-destructive hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none!"
+          className="inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline-offset-4 hover:text-destructive hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
         >
           View details
         </Link>
-      </div>
-
-      {status && (
-        <ResultEntrance>
+        {status ? (
           <StatusMessage
             tone={status.ok ? 'success' : 'error'}
-            className="mx-4 mb-3 break-words text-xs sm:mx-5"
+            className="w-full min-w-0 break-words text-xs sm:w-auto sm:flex-1"
           >
             {status.ok ? 'Applied successfully!' : status.message}
           </StatusMessage>
-        </ResultEntrance>
-      )}
+        ) : null}
+      </div>
     </article>
   );
 }
@@ -419,40 +388,37 @@ export function ProjectsClient({
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-6">
+    <div className="mx-auto w-full max-w-2xl space-y-5">
       <h2 className="sr-only">Open project posts</h2>
 
-      <div className="space-y-4 rounded-xl border border-border bg-card p-4 sm:p-5">
-        <div>
-          <label
-            htmlFor="project-search"
-            className="block text-sm font-semibold text-primary"
-          >
-            Search project briefs
-          </label>
-          <p
-            id="project-search-hint"
-            className="mt-1 text-xs text-muted-foreground"
-          >
-            Search by title, skill, or founder.
-          </p>
-          <Input
-            id="project-search"
-            type="search"
-            value={query}
-            onChange={(event) => handleQueryChange(event.target.value)}
-            placeholder="Search briefs"
-            describedBy="project-search-hint"
-            className="mt-2"
+      <div className="rounded-xl border border-border bg-card p-4">
+        <label
+          htmlFor="project-search"
+          className="block text-sm font-semibold text-primary"
+        >
+          Search project briefs
+        </label>
+        <p id="project-search-hint" className="mt-1 text-xs text-muted-foreground">
+          Search by title, skill, or founder.
+        </p>
+        <Input
+          id="project-search"
+          type="search"
+          value={query}
+          onChange={(event) => handleQueryChange(event.target.value)}
+          placeholder="Search briefs"
+          describedBy="project-search-hint"
+          className="mt-2"
+        />
+        <div className="mt-3">
+          <SegmentedControl
+            options={WORK_MODE_FILTERS}
+            value={mode}
+            onChange={handleModeChange}
+            ariaLabel="Filter by work mode"
           />
         </div>
-        <SegmentedControl
-          options={WORK_MODE_FILTERS}
-          value={mode}
-          onChange={handleModeChange}
-          ariaLabel="Filter by work mode"
-        />
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="mt-3 flex flex-wrap items-center gap-3">
           <p className="text-xs text-muted-foreground">
             Showing {filteredProjects.length} of {projects.length}{' '}
             {projects.length === 1 ? 'project brief' : 'project briefs'}
@@ -461,7 +427,7 @@ export function ProjectsClient({
             <button
               type="button"
               onClick={clearFilters}
-              className="pressable inline-flex min-h-11 items-center justify-center rounded-lg border border-border bg-background px-4 text-xs font-semibold text-primary transition-colors motion-reduce:transition-none! hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-background px-4 text-xs font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
               Clear filters
             </button>
@@ -486,7 +452,7 @@ export function ProjectsClient({
               <button
                 type="button"
                 onClick={clearFilters}
-                className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground transition-colors motion-reduce:transition-none! hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card"
               >
                 Show all briefs
               </button>
@@ -494,18 +460,20 @@ export function ProjectsClient({
           }
         />
       ) : (
-        filteredProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            applied={
-              appliedIds.includes(project.id) || locallyApplied.includes(project.id)
-            }
-            applying={applying.has(project.id)}
-            onApply={apply}
-            detailHref={detailHref(project.id)}
-          />
-        ))
+        <div className="space-y-4">
+          {filteredProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              applied={
+                appliedIds.includes(project.id) || locallyApplied.includes(project.id)
+              }
+              applying={applying.has(project.id)}
+              onApply={apply}
+              detailHref={detailHref(project.id)}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

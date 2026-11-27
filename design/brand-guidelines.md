@@ -1,132 +1,107 @@
 # Bhutan Tech Connect — Brand guidelines
 
-**Canonical since:** 2026-11-24. This document is the visual brand contract. The
-typed source of truth is `lib/design-tokens.ts`; `app/globals.css` mirrors the
-CSS/Tailwind values. One palette describes the site as it is actually built —
-no repaint is required or implied.
+**Canonical since:** 2026-11-27. This document is the visual and product-language contract. The typed source of truth is `src/lib/design-tokens.ts`; `src/app/globals.css` mirrors the CSS and Tailwind values.
 
-## 1. Canonical palette
+## 1. Product read
+
+Bhutan Tech Connect is a practical local talent marketplace, not an editorial magazine. The interface should help a student or founder understand the next useful action in seconds, on a phone and without prior platform knowledge.
+
+The brand promise is **back people, not companies**: a student and a founder meet through a clear brief, visible budget, human verification, and payment in Ngultrum.
+
+### Experience principles
+
+1. **Action before atmosphere.** Show the role-specific next action early. Marketing imagery supports the decision; it does not delay it.
+2. **Trust is visible.** Human verification, Ngultrum payment, no bidding wars, and Bhutan-based work should appear without scrolling on the homepage.
+3. **Density over decoration.** Use real briefs, budgets, statuses, deadlines, and package details. Do not fill space with feature claims or invented social proof.
+4. **One emphasis.** Magenta marks the single high-priority action in a view. Peer actions use outline, text, or dark teal.
+5. **Phone first.** Critical copy and controls remain usable at 360–390 px. Every interactive target is at least 44 × 44 px.
+
+## 2. Canonical palette
 
 | Role | Token | HEX | Where it is used |
 |---|---|---|---|
-| Page | `colors.page` | `#f5f2ea` | Warm paper background, chrome (`theme-color`), most page roots |
-| Surface | `colors.surface` | `#fffefa` | Cards, popovers, inputs, mobile sheet, raised panels |
-| Ink | `colors.ink` | `#18251f` | Body copy and general foreground text |
-| Primary action / forest | `colors.forest` | `#17352b` | Primary buttons, hero bands, headings, logo, borders at opacity |
-| Forest hover | `colors.forestHover` | `#244b3e` | Hover state of forest buttons |
-| Small-text accent | `colors.smallTextAccent` | `#b23c26` | Eyebrows, inline links, list markers, small labels, focus ring in legal UI |
-| Warm accent | `colors.accent` | `#d84f37` | Decorative icons, rules, large text, default focus ring |
-| Warm accent hover | `colors.accentHover` | `#b44532` | Hover state of the warm accent |
-| Amber highlight | `colors.amber` | `#fbbf24` | Logo arch master, CTA ambient glow, highlight fills |
-| Amber (display) | `colors.amberDisplay` | `#e7b648` | Oversized statistics on the warm paper background |
-| Amber (logo in app) | `colors.amberLogo` | `#e0ad3c` | In-app logo arch (`components/ui/logo.tsx`) |
-| Border | `colors.border` | `#ded8cb` | Hairlines, inputs, table rules |
-| Muted foreground | `colors.textMuted` | `#657069` | Secondary/meta text |
-| On dark | `colors.onDark` | `#fffefa` | Text and icons on forest surfaces |
+| Mist page | `colors.page` | `#eaf6f6` | App background, quiet sections, page gutters |
+| White surface | `colors.surface` | `#ffffff` | Forms, project rows, cards, panels |
+| Primary teal | `colors.forest` | `#0b5c5c` | Primary text, structure, outlined actions, dark surfaces |
+| Deep teal ink | `colors.ink` | `#0b2e2e` | Headings and body copy |
+| Soft ink | `colors.inkSoft` | `#356464` | Supporting copy and metadata |
+| Pale teal line | `colors.border` | `#b9dede` | Borders, dividers, inactive controls |
+| Strong teal line | `colors.borderStrong` | `#4d8c8c` | Hover borders and grouped surfaces |
+| Decorative teal | `colors.brand` | `#66bfbf` | Logo arch, image fallback, decorative fills only |
+| Magenta CTA | `colors.cta` | `#ff0063` | One filled high-priority action per view |
+| Magenta hover | `colors.ctaHover` | `#d40054` | Filled CTA hover state |
+| CTA ink | `colors.onCta` | `#000000` | Text on magenta; white fails contrast |
+| Deep magenta | `colors.smallTextAccent` | `#c2004b` | Small accent text, focus rings, error text |
+| Error | `colors.error` | `#c2004b` | Error text and borders |
 
-**Supporting tones:** secondary surface `#eae5d9`; soft muted surface
-`#eeeae1`; hover border `#cfc6b6`; secondary text `#56645c`; success
-`#377553` / `#e7f2e9`; error `#c24132` / `#fcebea`; info `#466e8c` /
-`#e9f1f5`.
+### Palette rules
 
-**Retired direction.** The brief's navy `#16324f` and its adjacent amber were
-consolidated into forest `#17352b`, vermilion `#b23c26`/`#d84f37` and amber
-`#fbbf24` for contrast on warm paper and a warmer, Bhutan-specific feel. The
-legacy navy survives only in archived `design/*.svg` masters and old
-single-colour files; it is not a UI colour for new work.
+- `#66bfbf` is decorative. Do not use it for body text or small labels on white.
+- Use `#0b5c5c` for teal text on mist or white.
+- Use white text on `#0b2e2e`; use black text on `#ff0063`.
+- Do not introduce violet, generic tech blue, gradient text, neon text, or glass effects.
+- Status is always communicated by a readable label and, where useful, a shape or icon. Colour alone is never sufficient.
 
-## 2. Typography
+## 3. Typography
 
-- **Family:** Geist loaded through `next/font/google` as `--font-geist`
-  (`app/layout.tsx`), applied to `html`/`body` via `font-sans`. Fallback stack:
-  `ui-sans-serif, system-ui, sans-serif`. Serif (`Georgia, Cambria, …`) and
-  mono are reserved for exceptional display/OG contexts, not body copy.
-- **Voice:** editorial and confident — large semibold headings, short measured
-  lines (`text-balance`), generous vertical rhythm.
+- **Family:** Geist through `next/font/google` as `--font-geist`. It is the only product typeface.
+- **Voice:** direct, calm, specific. Headings describe the outcome; body copy explains what happens next.
+- **Measure:** body copy stays below roughly 70 characters per line.
 
 | Role | Size | Leading | Tracking | Weight |
 |---|---|---|---|---|
-| Display / hero numeral | `clamp(4.5rem, 10vw, 8rem)` | `0.8` | `-0.09em` | 600 |
-| Page title | `clamp(3rem, 7vw, 6rem)` | `0.92` | `-0.06em` | 600 |
-| H1 | `clamp(2.25rem, 4.6vw, 4.25rem)` | `1.02` | `-0.045em` | 600 |
-| H2 | `clamp(2rem, 6vw, 5.5rem)` | `1.04` | `-0.045em` | 600 |
-| H3 / card title | `1.5rem` | `1.2` | `-0.03em` | 600 |
-| Body | `1rem` | `1.75` | `0` | 400 |
-| Small | `0.875rem` | `1.5` | `0` | 400 |
-| Eyebrow / kicker | `0.75rem` | `1.2` | `+0.14em` to `+0.2em`, uppercase | 700 |
-| Micro label / credit | `0.625rem` | `1.2` | `+0.2em` | 700 |
+| Marketplace display | `clamp(2.75rem, 6vw, 4.75rem)` | `1.0` | `-0.04em` | 600 |
+| Page title | `clamp(2.5rem, 5vw, 4.25rem)` | `1.04` | `-0.04em` | 600 |
+| H1 | `clamp(2.25rem, 4.5vw, 3.75rem)` | `1.08` | `-0.04em` | 600 |
+| H2 | `clamp(1.65rem, 3vw, 2.5rem)` | `1.18` | `-0.02em` | 600 |
+| H3 / card title | `1.5rem` | `1.25` | `-0.02em` | 600 |
+| Body | `1rem` | `1.65` | `0` | 400 |
+| Small | `0.875rem` | `1.55` | `0` | 400 |
+| Label | `0.75rem` | `1.3` | `0.08em` | 500 |
 
-**Rule:** tracking tightens as size grows; never tightens body copy or apply
-expanded tracking to paragraphs. Legal/meta text may use `+0.02em`. No gradient
-text, no outline text, no letter-spacing tricks that reduce legibility.
+**Rule:** tracking tightens as size grows; body copy stays at normal tracking. Natural-case labels are preferred. Wide uppercase tracking is reserved for compact navigation or metadata, never a row of decorative eyebrows.
 
-## 3. Logo
+## 4. Layout and components
 
-**Symbol.** Two dots (student, founder) joined by a bridge, with an amber arch
-cap above. Meaning: connecting student talent to founder opportunity — "back
-people, not companies." Built on a 256×256 grid, filled paths only (no
-strokes), no live text inside the symbol. It works alone as favicon/app icon or
-alongside the wordmark.
+- **Marketing:** a practical landing rhythm. The hero exposes both audiences' actions, followed by the trust bar and the three-step process. Photography supports decisions; it is not the product.
+- **Product:** one compact shell with role-specific navigation, a clear next action, then dense queues and forms.
+- **Cards:** use one radius family and real borders. Cards group related information; they are not decorative tiles repeated without hierarchy.
+- **Status:** badges use short labels such as `Open`, `In review`, `Awaiting payment`, `Verified`, and `Rejected`. The same stored status uses the same wording across student, founder, and admin screens.
+- **Empty and error states:** explain what is missing and give one useful next action. They are never generic apologetic messages.
+- **Loading states:** static, low-contrast placeholders that match the final layout. No shimmer, pulse, or hidden content.
 
-**Colour rules.**
+## 5. Logo
 
-- Digital UI: forest `#17352b` symbol with amber `#e0ad3c` arch — the live
-  rendering in `components/ui/logo.tsx` and `public/favicon.svg`.
-- Full-colour master: forest/amber. One-colour versions: forest (dark on light)
-  and white (reversed on forest/dark). Greyscale must still carry the concept.
-- The archived masters use navy `#16324f` + `#fbbf24`. Keep them as source
-  artifacts; do not introduce navy into new UI, and do not repaint existing
-  assets just to match the new palette.
+**Symbol.** Two dots (student and founder) joined by a bridge, capped by a teal arch. It means connecting people through opportunity.
 
-**Lockups.**
+- Digital UI: deep teal `#0b2e2e` symbol with decorative teal `#66bfbf` arch.
+- One-colour versions may use deep teal or white.
+- Do not add gradients, shadows, sacred imagery, or a third dot.
+- Keep clear space equal to half the mark height and use the mark at 24 px or larger.
 
-| File | Use |
-|---|---|
-| `btc-lockup-horizontal.svg` | Website header, print, wide applications |
-| `btc-lockup-stacked.svg` | Social avatar, square applications |
-| `btc-symbol-small.svg` | Favicon, app icon (16–512 px) |
+## 6. Photography
 
-**Clear space:** at least half the symbol's height on every side. **Minimum
-size:** 24 px wide (symbol), 100 px wide (lockup). Do not stretch, rotate,
-outline, add shadows/gradients, or place on busy photography without a solid
-backing shape. The wordmark in the SVG lockups is live text (Inter); convert it
-to outlines for print. When creating new lockups use Geist, matching the site.
+- Use real, locally relevant photographs of Bhutanese people, work, and places.
+- The current active photographs are CC0 Wikimedia Commons files. Their source and licence record lives in `src/lib/photo-credits.ts`.
+- Alt text describes the scene, not the licence.
+- Do not use stock-photo gestures, staged boardrooms, fabricated product screenshots, or religious imagery as decoration.
+- Use `next/image` with explicit responsive `sizes`. The teal plate behind an image is the loading fallback.
+- Avoid large text over photographs. When a label must sit on an image, use a solid backing.
 
-**Asset inventory:** `btc-symbol.svg`, `btc-symbol-colour.svg`,
-`btc-symbol-navy.svg`, `btc-symbol-white.svg`, `btc-symbol-small*.svg`,
-`btc-lockup-horizontal.svg`, `btc-lockup-stacked.svg`, `favicon.svg`,
-`favicon.ico`, favicon PNGs, `apple-touch-icon.png`, `icon-192.png`,
-`icon-512.png`, `maskable-512.png`, `site.webmanifest`.
+## 7. Motion
 
-## 4. Photography
+- Motion budget: **low**.
+- Allowed: 100–200 ms colour, border, opacity, or small press feedback on a control the visitor activates.
+- Not allowed: scroll reveals, blur entrances, parallax, marquees, scrubbed text, pinned editorial chapters, autoplay, or looping decoration.
+- Content must be visible in the first server render and first client render. Do not set `opacity: 0` as an initial state.
+- Honour `prefers-reduced-motion`. The global CSS backstop removes animation and transition durations for visitors who request it.
 
-- Use **real Wikimedia Commons photographs of Bhutanese people in gho and
-  kira**. No stock, no AI-generated faces, no sacred or religious imagery.
-- Attribution is mandatory and must travel with the image. Pass the Commons
-  file URL to `components/ui/photo-credit.tsx`, which owns the author/licence
-  registry and renders the visible credit link. Current credits: Doctor 17
-  (CC BY-SA 4.0), Keith Mason (CC BY-SA 3.0), Christopher J. Fynn
-  (CC BY-SA 3.0); the registry is authoritative if more are added.
-- Alt text must describe the person/scene, not the licence line. Credit text
-  stays legible over both paper and forest surfaces.
-- Treat photos as the hero: full-bleed or bento imagery with a restrained dark
-  wash (`.cinematic-wash`) or amber glow (`.cta-ambient`). No gradient text over
-  photos. Never place the logo directly on a photo without a solid backing.
+## 8. Accessibility
 
-## 5. Accessibility
-
-- Targets: **4.5:1** for normal text, **3:1** for large text (≥24 px regular or
-  ≥18.66 px bold) and UI components/focus indicators, per WCAG 2.2 AA.
-- Body ink `#18251f` on paper `#f5f2ea` measures **14.19:1**; forest
-  `#17352b` on paper **11.88:1**; both pass comfortably.
-- Small-text accent `#b23c26` measures **5.26:1** on paper / **5.83:1** on
-  surface — use it for all small vermilion text.
-- Warm accent `#d84f37` is **3.69:1** on paper / **4.09:1** on surface: use it
-  for large text, decoration and focus rings only, not 14px copy. Its hover
-  tone `#b44532` is **4.89:1** on paper.
-- Amber highlights are decorative: `#fbbf24` on forest **7.96:1**, but
-  `#e7b648` on paper only **1.68:1** — never use amber for body text on paper.
-- Focus: 2px `#d84f37` ring with 2px offset; 44px minimum touch targets (24px
-  for inline links). Respect `prefers-reduced-motion`,
-  `prefers-reduced-transparency` and `prefers-contrast: more` — the CSS already
-  provides solid, non-animated, high-contrast fallbacks.
+- WCAG 2.2 AA: 4.5:1 for normal text, 3:1 for large text and UI/focus indicators.
+- Deep teal `#0b2e2e` on mist or white is the default body treatment. Soft ink `#356464` is used for supporting copy and remains readable.
+- Magenta `#ff0063` uses black text; white text on magenta is not allowed.
+- Focus: a 2 px deep-magenta ring with a 2 px offset.
+- Keep a skip link, one meaningful `h1` per page, ordered headings, visible labels, and programmatic status announcements.
+- Every interactive target is at least 44 × 44 px; inline text links may use the 24 px floor.
+- Do not rely on colour alone for project, application, payment, or verification state.

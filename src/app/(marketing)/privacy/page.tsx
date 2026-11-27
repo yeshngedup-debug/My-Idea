@@ -16,16 +16,15 @@ import {
   hairline,
 } from "@/components/marketing/editorial";
 import { resolveAction } from "@/components/marketing/nav";
+import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Privacy Policy",
   description:
     "Bhutan Tech Connect privacy policy: what we collect, how we use your data, and how to request deletion.",
-  alternates: {
-    canonical: "https://bhutantech.bt/privacy",
-  },
-};
+  path: "/privacy",
+});
 
 const chapters = [
   { id: "what-we-collect", label: "What we collect" },
@@ -78,7 +77,7 @@ export default function PrivacyPage() {
           <div className="grid w-full gap-10 lg:grid-cols-12 lg:gap-12">
             <nav
               aria-label="On this page"
-              className="min-w-0 lg:col-span-3 lg:sticky lg:top-24 lg:self-start"
+              className="min-w-0 lg:col-span-3 lg:self-start"
             >
               <p className="border-b border-[#0b2e2e]/15 pb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#0b5c5c]">
                 Contents

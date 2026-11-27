@@ -20,10 +20,12 @@ import {
 } from "@/lib/neon-data";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState, ErrorState } from "@/components/ui/empty-state";
+import { formatBhutanDate } from "@/lib/format";
+import {
+  applicationStatusLabel,
+} from "@/lib/status-labels";
 
 export const metadata = { title: "Student Dashboard" };
-
-const BHUTAN_TIME_ZONE = "Asia/Thimphu";
 
 /** The project detail route only accepts UUIDs; anything else uses the list. */
 const UUID_PATTERN =
@@ -73,16 +75,9 @@ const APPLICATION_TONE: Record<string, PillTone> = {
   rejected: "danger",
 };
 
-const APPLICATION_LABEL: Record<string, string> = {
-  pending: "Pending",
-  accepted: "Accepted",
-  rejected: "Declined",
-  shortlisted: "Shortlisted",
-};
-
-/* Quiet, shared link treatment: one filled CTA stays in the page header. */
+/* Quiet, shared link treatment: one filled CTA lives in the next action. */
 const QUIET_LINK =
-  "inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline decoration-border underline-offset-4 transition-colors hover:text-accent-deep hover:decoration-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
+  "inline-flex min-h-11 items-center rounded text-sm font-semibold text-primary underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep hover:decoration-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
 
 type ProfileRow = Awaited<ReturnType<typeof getStudentProfile>>;
 
@@ -109,7 +104,7 @@ function RetryNotice({
         /* A full reload retries this server render instead of a cached transition. */
         <a
           href="/student"
-          className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 items-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
         >
           Try again
         </a>
@@ -118,23 +113,9 @@ function RetryNotice({
   );
 }
 
+/** Same wording and time base as every other application date in the app. */
 function formatAppliedDate(value: string): string {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "date unavailable";
-
-  const yearFormatter = new Intl.DateTimeFormat("en-GB", {
-    timeZone: BHUTAN_TIME_ZONE,
-    year: "numeric",
-  });
-  const sameYear =
-    yearFormatter.format(date) === yearFormatter.format(new Date());
-
-  return new Intl.DateTimeFormat("en-GB", {
-    timeZone: BHUTAN_TIME_ZONE,
-    day: "numeric",
-    month: "short",
-    ...(sameYear ? {} : { year: "numeric" }),
-  }).format(date);
+  return formatBhutanDate(value, "date unavailable");
 }
 
 /**
@@ -159,10 +140,7 @@ function profileCompletion(profile: ProfileRow) {
 }
 
 function statusLabel(status: string): string {
-  return (
-    APPLICATION_LABEL[status] ??
-    status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ")
-  );
+  return applicationStatusLabel(status);
 }
 
 function applicationHref(application: {
@@ -210,7 +188,7 @@ export default async function StudentDashboard() {
         action={
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+            className="inline-flex min-h-11 items-center rounded-md border border-border px-5 py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
           >
             Go to home
           </Link>
@@ -305,17 +283,20 @@ export default async function StudentDashboard() {
     { href: "/student/profile", title: "Profile", description: "Skills, availability, CV" },
   ];
 
+  const recentApplications = applications.slice(0, 5);
+
   return (
     <div className="space-y-8">
-      {/* Page header — the only filled CTA on this page. */}
+      {/* Page header. The filled action lives with the next action below, so
+          there is exactly one magenta control on this view. */}
       <section
         aria-labelledby="student-overview-title"
-        className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
+        className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6"
       >
         <div className="min-w-0">
           <h1
             id="student-overview-title"
-            className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.25] tracking-[-0.02em] text-primary text-balance"
+            className="text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.2] tracking-[-0.03em] text-primary text-balance"
           >
             Overview
           </h1>
@@ -324,26 +305,18 @@ export default async function StudentDashboard() {
             Your applications, next steps and shortcuts.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <Link
-            href="/student/projects"
-            className="pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-          >
-            Browse projects
-          </Link>
-          <Link
-            href="/student/profile"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg border border-border px-5 py-3 text-sm font-medium text-primary transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
-          >
-            Update profile
-          </Link>
-        </div>
+        <Link
+          href="/student/profile"
+          className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-md border border-border-strong bg-card px-4 py-2.5 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Update profile
+        </Link>
       </section>
 
       {/* Block A — the single next action, ahead of the figures. */}
       <section
         aria-labelledby="student-next-action-title"
-        className="rounded-2xl border border-border bg-card px-5 py-5 sm:px-6"
+        className="rounded-xl border border-primary/25 bg-card px-5 py-5 sm:px-6"
       >
         <p className="text-xs font-semibold text-accent-deep">Next action</p>
         <h2
@@ -357,17 +330,17 @@ export default async function StudentDashboard() {
             {nextAction.progress}
           </p>
         )}
-        <Link href={nextAction.href} className={`mt-3 ${QUIET_LINK}`}>
+        <Link
+          href={nextAction.href}
+          className="pressable mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+        >
           {nextAction.action}
-          <span aria-hidden="true" className="ml-1.5">
-            →
-          </span>
         </Link>
       </section>
 
       {/* Block B — quiet figures, each labelled by a real destination. */}
-      <section aria-label="Application figures" className="border-y border-border py-4">
-        <dl className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-3">
+      <section aria-label="Application figures" className="border-y border-border py-3">
+        <dl className="grid grid-cols-1 gap-x-8 gap-y-1 sm:grid-cols-3">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -376,7 +349,7 @@ export default async function StudentDashboard() {
               <dt className="min-w-0">
                 <Link
                   href={stat.href}
-                  className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary underline decoration-border underline-offset-4 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                  className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary underline decoration-border underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
                 >
                   {stat.label}
                 </Link>
@@ -411,59 +384,93 @@ export default async function StudentDashboard() {
               }
             />
           ) : (
-            <table className="w-full border-collapse text-left">
-              <caption className="sr-only">Your most recent applications</caption>
-              <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground">
-                  <th scope="col" className="w-full py-2 pr-3 font-medium">
-                    Project
-                  </th>
-                  <th scope="col" className="whitespace-nowrap px-3 py-2 font-medium">
-                    Applied
-                  </th>
-                  <th scope="col" className="whitespace-nowrap py-2 pl-3 text-right font-medium">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {applications.slice(0, 5).map((application) => {
+            <>
+              {/* Mobile: stacked rows keep the title and the status visible at
+                  360px instead of squeezing a three-column table. */}
+              <ul className="divide-y divide-border border-y border-border sm:hidden">
+                {recentApplications.map((application) => {
                   const tone = APPLICATION_TONE[application.status] ?? "neutral";
                   return (
-                    <tr
+                    <li
                       key={application.id}
-                      className="relative border-b border-border last:border-0 transition-colors hover:bg-secondary"
+                      className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 py-3"
                     >
-                      <td className="py-2 pr-3">
-                        <Link
-                          href={applicationHref(application)}
-                          className="inline-flex min-h-11 max-w-full items-center rounded text-sm font-medium text-primary after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-inset"
-                        >
-                          <span
-                            className="block max-w-full truncate"
-                            title={application.project?.title ?? undefined}
-                          >
-                            {application.project?.title ?? "Project"}
-                          </span>
-                        </Link>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-xs tabular-nums text-body-secondary">
-                        {formatAppliedDate(application.created_at)}
-                      </td>
-                      <td className="whitespace-nowrap py-2 pl-3 text-right">
-                        <Badge className={`gap-1.5 ${PILL[tone]}`}>
-                          <span
-                            aria-hidden="true"
-                            className={`h-1.5 w-1.5 rounded-full ${PILL_DOT[tone]}`}
-                          />
-                          {statusLabel(application.status)}
-                        </Badge>
-                      </td>
-                    </tr>
+                      <Link
+                        href={applicationHref(application)}
+                        className="inline-flex min-h-11 min-w-0 flex-1 items-center truncate rounded text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                      >
+                        {application.project?.title ?? "Project"}
+                      </Link>
+                      <Badge className={`shrink-0 gap-1.5 ${PILL[tone]}`}>
+                        <span
+                          aria-hidden="true"
+                          className={`h-1.5 w-1.5 rounded-full ${PILL_DOT[tone]}`}
+                        />
+                        {statusLabel(application.status)}
+                      </Badge>
+                      <span className="w-full text-xs tabular-nums text-body-secondary">
+                        Applied {formatAppliedDate(application.created_at)}
+                      </span>
+                    </li>
                   );
                 })}
-              </tbody>
-            </table>
+              </ul>
+
+              {/* Desktop: the same rows as a real table. */}
+              <table className="hidden w-full border-collapse text-left sm:table">
+                <caption className="sr-only">Your most recent applications</caption>
+                <thead>
+                  <tr className="border-b border-border text-xs text-muted-foreground">
+                    <th scope="col" className="w-full py-2 pr-3 font-medium">
+                      Project
+                    </th>
+                    <th scope="col" className="whitespace-nowrap px-3 py-2 font-medium">
+                      Applied
+                    </th>
+                    <th scope="col" className="whitespace-nowrap py-2 pl-3 text-right font-medium">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentApplications.map((application) => {
+                    const tone = APPLICATION_TONE[application.status] ?? "neutral";
+                    return (
+                      <tr
+                        key={application.id}
+                        className="relative border-b border-border last:border-0 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary"
+                      >
+                        <td className="py-2 pr-3">
+                          <Link
+                            href={applicationHref(application)}
+                            className="inline-flex min-h-11 max-w-full items-center rounded text-sm font-medium text-primary after:absolute after:inset-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-inset"
+                          >
+                            <span
+                              className="block max-w-full truncate"
+                              title={application.project?.title ?? undefined}
+                            >
+                              {application.project?.title ?? "Project"}
+                            </span>
+                          </Link>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2 text-xs tabular-nums text-body-secondary">
+                          {formatAppliedDate(application.created_at)}
+                        </td>
+                        <td className="whitespace-nowrap py-2 pl-3 text-right">
+                          <Badge className={`gap-1.5 ${PILL[tone]}`}>
+                            <span
+                              aria-hidden="true"
+                              className={`h-1.5 w-1.5 rounded-full ${PILL_DOT[tone]}`}
+                            />
+                            {statusLabel(application.status)}
+                          </Badge>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </>
           )}
         </div>
 
@@ -480,7 +487,7 @@ export default async function StudentDashboard() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

@@ -1,8 +1,7 @@
 /**
- * Workspace figures as quiet cards. The numbers stay legible and tabular, but
- * no single figure dominates the page. Server-only, no icons or charts. Each
- * figure sits in a teal-tinted outer tray with a hairline edge and a white
- * inner core carrying an inset highlight and a soft diffused lift.
+ * Workspace figures as one dense ledger row rather than a wall of cards.
+ * The numbers stay legible and tabular; the surrounding labels carry the
+ * context. Server-only, no icons, charts or entrance motion.
  */
 export interface WorkspaceStat {
   label: string;
@@ -11,30 +10,25 @@ export interface WorkspaceStat {
 }
 
 export function WorkspaceStats({ stats }: { stats: WorkspaceStat[] }) {
-  const [lead] = stats;
-  if (!lead) return null;
+  if (stats.length === 0) return null;
 
   return (
     <section aria-label="Workspace figures">
-      <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+      <dl className="grid grid-cols-1 divide-y divide-[#b9dede] border-y border-[#b9dede] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="min-w-0 rounded-[1.5rem] border border-[#b9dede]/80 bg-[#dff0f0]/55 p-1.5 shadow-[0_14px_34px_-32px_rgba(11,92,92,0.5)]"
+            className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-3 sm:px-5 sm:py-4 sm:first:pl-0 sm:last:pr-0"
           >
-            <div className="rounded-[calc(1.5rem_-_0.375rem)] bg-white px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.95)] sm:px-5 sm:py-5">
-              <dt className="text-xs font-medium text-[#356464]">
-                {stat.label}
-              </dt>
-              <dd className="mt-2 text-2xl font-semibold leading-none tabular-nums tracking-tight text-[#0b5c5c]">
-                {stat.value}
-                {stat.detail ? (
-                  <span className="mt-2 block text-xs font-normal leading-5 tracking-normal text-[#356464]">
-                    {stat.detail}
-                  </span>
-                ) : null}
-              </dd>
-            </div>
+            <dt className="min-w-0 text-sm text-[#356464]">{stat.label}</dt>
+            <dd className="shrink-0 text-lg font-semibold leading-none tabular-nums text-[#0b5c5c]">
+              {stat.value}
+            </dd>
+            {stat.detail ? (
+              <p className="w-full text-xs leading-5 text-[#356464] sm:w-full">
+                {stat.detail}
+              </p>
+            ) : null}
           </div>
         ))}
       </dl>

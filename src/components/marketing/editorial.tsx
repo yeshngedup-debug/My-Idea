@@ -217,14 +217,15 @@ export function Figure({
   className,
   ratio = "aspect-[4/3]",
   sizes = "(max-width: 640px) 100vw, 50vw",
-  priority = false,
+  preload = false,
 }: {
   src: string;
   alt: string;
   className?: string;
   ratio?: string;
   sizes?: string;
-  priority?: boolean;
+  /** Preload the image instead of lazy-loading it (Next 16 `preload` prop). */
+  preload?: boolean;
 }) {
   return (
     <figure className={className}>
@@ -233,7 +234,7 @@ export function Figure({
           src={src}
           alt={alt}
           fill
-          priority={priority}
+          preload={preload}
           sizes={sizes}
           className="object-cover"
         />

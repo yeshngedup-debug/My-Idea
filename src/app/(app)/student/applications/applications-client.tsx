@@ -11,6 +11,11 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { formatBhutanDate } from "@/lib/format";
+import {
+  APPLICATION_STATUS_LABEL,
+  applicationStatusLabel,
+} from "@/lib/status-labels";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SegmentedControl } from "@/components/interactive/segmented-control";
 import {
@@ -27,20 +32,13 @@ export interface ApplicationRow {
 
 const FILTERS = [
   { value: "all", label: "All" },
-  { value: "pending", label: "Pending" },
-  { value: "shortlisted", label: "Shortlisted" },
-  { value: "accepted", label: "Accepted" },
-  { value: "rejected", label: "Rejected" },
+  { value: "pending", label: APPLICATION_STATUS_LABEL.pending },
+  { value: "shortlisted", label: APPLICATION_STATUS_LABEL.shortlisted },
+  { value: "accepted", label: APPLICATION_STATUS_LABEL.accepted },
+  { value: "rejected", label: APPLICATION_STATUS_LABEL.rejected },
 ] as const;
 
 const FILTER_VALUES: readonly string[] = FILTERS.map((item) => item.value);
-
-const STATUS_LABEL: Record<string, string> = {
-  pending: "Pending",
-  shortlisted: "Shortlisted",
-  accepted: "Accepted",
-  rejected: "Rejected",
-};
 
 const STATUS_DOT: Record<string, string> = {
   pending: "bg-[#66bfbf]",
@@ -93,7 +91,7 @@ export function ApplicationsClient({
         action={
           <Link
             href="/student/projects"
-            className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] transition-colors motion-reduce:transition-none! hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+            className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             Browse projects
           </Link>
@@ -105,7 +103,7 @@ export function ApplicationsClient({
   const countLabel =
     filter === "all"
       ? `Showing all ${rows.length} ${rows.length === 1 ? "application" : "applications"}`
-      : `Showing ${filtered.length} ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} ${filtered.length === 1 ? "application" : "applications"}`;
+      : `Showing ${filtered.length} ${applicationStatusLabel(filter).toLowerCase()} ${filtered.length === 1 ? "application" : "applications"}`;
 
   return (
     <div className="space-y-4">
@@ -117,38 +115,35 @@ export function ApplicationsClient({
         ariaLabel="Filter applications by status"
       />
 
-      <p className="text-xs text-[#356464]">
+      <p className="text-xs text-[#356464]" aria-live="polite">
         {countLabel}
       </p>
 
       {filtered.length === 0 ? (
         <EmptyState
           headingLevel="h2"
-          title={`No ${STATUS_LABEL[filter]?.toLowerCase() ?? filter} applications`}
+          title={`No ${applicationStatusLabel(filter).toLowerCase()} applications`}
           description="None of your applications are at this stage right now."
           action={
             <button
               type="button"
               onClick={() => handleFilterChange("all")}
-              className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
             >
               Show all applications
             </button>
           }
         />
       ) : (
-        <ul className="space-y-3">
+        <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
           {filtered.map((item) => (
-            <li
-              key={item.id}
-              className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
+            <li key={item.id} className="py-4">
+              <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+                <div className="min-w-0 flex-1">
                   {item.project?.id ? (
                     <Link
                       href={`/student/projects/${item.project.id}`}
-                      className="inline-block max-w-full truncate rounded text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none! hover:text-[#d40054] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+                      className="inline-flex min-h-11 max-w-full items-center truncate rounded text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#d40054] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                     >
                       {item.project.title}
                     </Link>
@@ -158,17 +153,12 @@ export function ApplicationsClient({
                     </p>
                   )}
                   <p className="mt-1 text-xs tabular-nums text-[#356464]">
-                    Applied{" "}
-                    {new Date(item.created_at).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    Applied {formatBhutanDate(item.created_at)}
                   </p>
                 </div>
                 <Badge className="shrink-0 gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
                   <span aria-hidden="true" className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[item.status] ?? "bg-[#356464]"}`} />
-                  {STATUS_LABEL[item.status] ?? item.status}
+                  {applicationStatusLabel(item.status)}
                 </Badge>
               </div>
               <StatusTimeline
@@ -176,11 +166,12 @@ export function ApplicationsClient({
                 status={item.status}
                 label={`Application status for ${item.project?.title ?? "project"}`}
                 compact
+                className="mt-3"
               />
               {item.status === "rejected" && (
                 <Link
                   href="/student/projects"
-                  className="mt-3 inline-flex min-h-9 items-center rounded text-sm font-semibold text-[#c2004b] transition-colors motion-reduce:transition-none! hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2"
+                  className="mt-3 inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                 >
                   Browse open projects
                 </Link>

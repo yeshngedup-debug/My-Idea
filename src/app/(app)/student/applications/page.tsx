@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Student Applications — server component.
  * Lists the logged-in student's applications joined with project info.
  * Filtering and status feedback live in the client list below.
@@ -47,7 +47,7 @@ export default async function StudentApplicationsPage({
   }
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={

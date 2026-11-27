@@ -12,6 +12,11 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { formatBhutanDate } from '@/lib/format';
+import {
+  PROJECT_STATUS_LABEL,
+  projectStatusLabel,
+} from '@/lib/status-labels';
 import { EmptyState } from '@/components/ui/empty-state';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 
@@ -24,18 +29,11 @@ export interface FounderProjectRow {
 
 const FILTERS = [
   { value: 'all', label: 'All' },
-  { value: 'open', label: 'Open' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'review', label: 'In review' },
-  { value: 'completed', label: 'Completed' },
+  { value: 'open', label: PROJECT_STATUS_LABEL.open },
+  { value: 'in_progress', label: PROJECT_STATUS_LABEL.in_progress },
+  { value: 'review', label: PROJECT_STATUS_LABEL.review },
+  { value: 'completed', label: PROJECT_STATUS_LABEL.completed },
 ] as const;
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Open',
-  in_progress: 'In progress',
-  review: 'In review',
-  completed: 'Completed',
-};
 
 const STATUS_DOT: Record<string, string> = {
   open: 'bg-[#66bfbf]',
@@ -45,9 +43,9 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 const PRIMARY_LINK =
-  'pressable inline-flex min-h-11 items-center justify-center rounded-lg bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-4 py-2 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
 const ROW_LINK =
-  'inline-flex min-h-11 items-center rounded text-xs font-semibold text-[#0b5c5c] transition-colors hover:text-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]';
+  'inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#c2004b] hover:decoration-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]';
 
 export function ProjectsClient({
   projects,
@@ -70,16 +68,9 @@ export function ProjectsClient({
     [projects, filter],
   );
 
-  const date = (value: string) =>
-    new Date(value).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+  const date = (value: string) => formatBhutanDate(value);
 
-  const statusLabel = (status: string) =>
-    STATUS_LABEL[status] ??
-    status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
+  const statusLabel = (status: string) => projectStatusLabel(status);
 
   if (!signedIn) {
     return (
@@ -103,7 +94,7 @@ export function ProjectsClient({
         title="No projects yet"
         description="Post your first short paid project and students can apply right away."
         action={
-          <Link href="/founder/projects/post" className={`${PRIMARY_LINK} w-full`}>
+          <Link href="/founder/projects/post" className={PRIMARY_LINK}>
             Post your first project
           </Link>
         }
@@ -128,7 +119,7 @@ export function ProjectsClient({
         className="w-full justify-start sm:w-auto"
       />
 
-      <p className="text-xs tabular-nums text-[#356464]">
+      <p className="text-xs tabular-nums text-[#356464]" aria-live="polite">
         {countLabel}
       </p>
 
@@ -141,7 +132,7 @@ export function ProjectsClient({
             <button
               type="button"
               onClick={() => setFilter('all')}
-              className="pressable inline-flex min-h-11 items-center rounded-lg border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
             >
               Show all projects
             </button>
@@ -149,12 +140,11 @@ export function ProjectsClient({
         />
       ) : (
         <>
-          <ul className="space-y-2.5 sm:hidden">
+          {/* Mobile: stacked rows keep the status and the action visible at
+              360px instead of squeezing a four-column table. */}
+          <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede] sm:hidden">
             {filtered.map((p) => (
-              <li
-                key={p.id}
-                className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-4"
-              >
+              <li key={p.id} className="py-3">
                 <div className="flex items-start justify-between gap-3">
                   <p
                     className="min-w-0 line-clamp-2 break-words text-sm font-semibold text-[#0b5c5c]"
@@ -170,40 +160,34 @@ export function ProjectsClient({
                     {statusLabel(p.status)}
                   </Badge>
                 </div>
-                <p className="mt-1 text-xs tabular-nums text-[#356464]">
-                  {date(p.created_at)}
-                </p>
-                <Link
-                  href={`/founder/projects/${p.id}`}
-                  className={`mt-3 w-full justify-center ${ROW_LINK}`}
-                >
-                  View applicants
-                  <span className="sr-only"> for {p.title}</span>
-                </Link>
+                <div className="mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                  <span className="text-xs tabular-nums text-[#356464]">
+                    {date(p.created_at)}
+                  </span>
+                  <Link href={`/founder/projects/${p.id}`} className={ROW_LINK}>
+                    View applicants
+                    <span className="sr-only"> for {p.title}</span>
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
 
-          <div className="hidden min-w-0 overflow-x-auto rounded-xl border border-[#b9dede] bg-[#ffffff] sm:block">
+          {/* Desktop: the same rows as a bounded table. */}
+          <div className="hidden min-w-0 overflow-x-auto border-y border-[#b9dede] sm:block">
             <table className="w-full text-left text-sm" aria-label="My projects">
-              <thead className="bg-[#eaf6f6] text-xs font-medium text-[#356464]">
+              <thead className="border-b border-[#b9dede] text-xs font-medium text-[#356464]">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 font-semibold first:rounded-tl-xl"
-                  >
+                  <th scope="col" className="px-3 py-2.5 font-semibold">
                     Project
                   </th>
-                  <th scope="col" className="px-4 py-3 font-semibold">
+                  <th scope="col" className="px-3 py-2.5 font-semibold">
                     Status
                   </th>
-                  <th scope="col" className="px-4 py-3 font-semibold">
+                  <th scope="col" className="px-3 py-2.5 font-semibold">
                     Posted
                   </th>
-                  <th
-                    scope="col"
-                    className="px-4 py-3 font-semibold last:rounded-tr-xl"
-                  >
+                  <th scope="col" className="px-3 py-2.5 font-semibold">
                     <span className="sr-only">Applicants</span>
                   </th>
                 </tr>
@@ -212,16 +196,16 @@ export function ProjectsClient({
                 {filtered.map((p) => (
                   <tr
                     key={p.id}
-                    className="transition-colors duration-150 hover:bg-[#eaf6f6]"
+                    className="transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6]"
                   >
                     <th
                       scope="row"
-                      className="max-w-xs break-words px-4 py-3.5 text-left font-semibold text-[#0b5c5c]"
+                      className="max-w-xs break-words px-3 py-3 text-left font-semibold text-[#0b5c5c]"
                       title={p.title}
                     >
                       {p.title}
                     </th>
-                    <td className="px-4 py-3.5">
+                    <td className="px-3 py-3">
                       <Badge className="gap-1.5 border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c]">
                         <span
                           aria-hidden="true"
@@ -230,10 +214,10 @@ export function ProjectsClient({
                         {statusLabel(p.status)}
                       </Badge>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3.5 tabular-nums text-[#356464]">
+                    <td className="whitespace-nowrap px-3 py-3 tabular-nums text-[#356464]">
                       {date(p.created_at)}
                     </td>
-                    <td className="px-4 py-3.5 text-right">
+                    <td className="px-3 py-3 text-right">
                       <Link
                         href={`/founder/projects/${p.id}`}
                         className={ROW_LINK}

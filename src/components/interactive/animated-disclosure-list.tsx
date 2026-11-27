@@ -2,15 +2,15 @@
 
 import { useId, useState } from "react";
 import type { ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 
 /**
- * Disclosure list with a real height tween, derived from the Motion Primitives
- * accordion pattern (MIT). The state, markup and styling here are local: a
- * controlled value, a native button per row, and one chevron rotated through a
- * data attribute. Reduced motion gets an instant open/close.
+ * Disclosure list with native button/region semantics.
+ *
+ * Open and close are immediate, while the chevron gives a short 200ms
+ * interaction cue. Nothing is hidden during the first paint and no panel
+ * starts at zero opacity.
  */
 
 export type DisclosureItem = {
@@ -49,7 +49,6 @@ export function AnimatedDisclosureList({
   label: string;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
   const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [internal, setInternal] = useState<DisclosureValue>(
     defaultValue ?? items[0]?.id ?? null,
@@ -105,7 +104,7 @@ export function AnimatedDisclosureList({
               className={cn(
                 "flex min-h-11 w-full items-center justify-between gap-4 rounded-sm px-2 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
                 dark
-                  ? "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#0b5c5c]"
+                  ? "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#0b2e2e]"
                   : "focus-visible:ring-[#ff0063] focus-visible:ring-offset-[#eaf6f6]",
               )}
             >
@@ -121,41 +120,24 @@ export function AnimatedDisclosureList({
                 )}
               />
             </button>
-            <AnimatePresence initial={false}>
-              {open ? (
-                <motion.div
-                  id={panelId}
-                  key="panel"
-                  role="region"
-                  aria-labelledby={triggerId}
-                  initial={reduce ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={
-                    reduce
-                      ? { height: 0, opacity: 0, transition: { duration: 0 } }
-                      : { height: 0, opacity: 0 }
-                  }
-                  transition={
-                    reduce
-                      ? { duration: 0 }
-                      : {
-                          height: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
-                          opacity: { duration: 0.18 },
-                        }
-                  }
-                  className="overflow-hidden"
+            {open ? (
+              <div
+                id={panelId}
+                role="region"
+                aria-labelledby={triggerId}
+                className="px-2 pb-5 pr-8 text-sm leading-7 sm:text-base"
+              >
+                <div
+                  className={cn(
+                    dark ? "text-white/70" : "text-[#0b2e2e]/70",
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "px-2 pb-5 pr-8 text-sm leading-7 sm:text-base",
-                      dark ? "text-white/70" : "text-[#0b2e2e]/70",
-                    )}
-                  >
-                    {item.children}
-                  </div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+                  {item.children}
+                </div>
+              </div>
+            ) : (
+              <span id={panelId} hidden />
+            )}
           </div>
         );
       })}

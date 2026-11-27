@@ -2,6 +2,11 @@
  * SimpleLayout — server-only workspace chrome.
  * Header (brand + role badge + nav + account), one content container.
  * No client state lives here; only the nav's active marker is client-side.
+ *
+ * The shell stays compact on a 360px screen: the brand truncates, the role is
+ * a single chip, and the account/logout control is always reachable. The
+ * decorative workspace clock was removed — it carried no information the
+ * workspace needed and cost horizontal room.
  */
 import Link from "next/link";
 import { logout } from "@/features/auth/actions";
@@ -9,7 +14,6 @@ import { getUser } from "@/lib/auth";
 import { getProfile } from "@/lib/neon-data";
 import { Logo } from "@/components/ui/logo";
 import { WorkspaceNav, WorkspaceMobileNav } from "./workspace-nav";
-import { WorkspaceClock } from "./workspace-clock";
 
 const ROLE_LABEL: Record<string, string> = {
   student: "Student",
@@ -57,42 +61,38 @@ export default async function SimpleLayout({
 
   return (
     <div className="min-h-[100dvh] bg-[#eaf6f6] text-[#0b2e2e]">
-      {/* Persistent work chrome only: a quiet glass bar with one hairline.
-          No scroll-driven motion and no blur on the content below. */}
-      <header className="sticky top-0 z-30 border-b border-[#b9dede]/80 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/75">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-          <div className="flex min-h-[60px] items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
+      {/* One quiet work bar: a hairline edge, a solid white field and no
+          floating pill, blur stack or decorative chrome. */}
+      <header className="sticky top-0 z-30 border-b border-[#b9dede] bg-[#ffffff]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex min-h-[56px] items-center justify-between gap-2 sm:gap-3">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
               <Link
                 href="/"
-                className="pressable flex min-h-11 shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+                className="pressable flex min-h-11 min-w-0 shrink items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
               >
-                <Logo size="h-7 w-7" />
+                <Logo size="h-6 w-6" />
                 <span className="truncate text-sm font-semibold tracking-tight text-[#0b2e2e] sm:text-base">
                   Bhutan Tech Connect
                 </span>
               </Link>
               {roleLabel && (
-                <>
-                  <span className="sr-only sm:hidden">{roleLabel} workspace</span>
-                  <span className="hidden shrink-0 items-center rounded-full border border-[#b9dede]/90 bg-[#eaf6f6]/80 px-3 py-1 text-xs font-medium tracking-tight text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] sm:inline-flex">
-                    {roleLabel}
-                  </span>
-                </>
+                <span className="shrink-0 rounded-md border border-[#66bfbf] bg-[#eaf6f6] px-2 py-0.5 text-[11px] font-semibold leading-4 text-[#0b5c5c]">
+                  {roleLabel}
+                </span>
               )}
             </div>
 
             <WorkspaceNav links={roleLinks} />
 
-            <div className="flex min-w-0 items-center gap-3">
-              <WorkspaceClock />
-              <span className="hidden max-w-36 truncate text-sm text-[#356464] sm:inline">
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <span className="hidden max-w-40 truncate text-sm text-[#356464] xl:inline">
                 {profile?.full_name ?? "Signed in"}
               </span>
               <form action={logout} className="inline">
                 <button
                   type="submit"
-                  className="inline-flex min-h-11 items-center rounded-full border border-[#66bfbf] bg-white/70 px-4 py-2 text-sm font-medium text-[#0b5c5c] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] hover:bg-[#eaf6f6] hover:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff] motion-safe:transition-[background-color,border-color,color,transform] motion-safe:duration-200 motion-safe:ease-[var(--ease-out)] motion-safe:active:scale-[0.98] motion-reduce:active:scale-100"
+                  className="pressable inline-flex min-h-11 items-center rounded-md border border-[#4d8c8c] bg-[#ffffff] px-3 py-2 text-sm font-medium text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:border-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
                 >
                   Log out
                 </button>
@@ -103,7 +103,7 @@ export default async function SimpleLayout({
         </div>
       </header>
       <main
-        className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-10"
+        className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         id="main-content"
       >
         {children}

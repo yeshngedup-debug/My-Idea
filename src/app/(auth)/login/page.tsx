@@ -1,21 +1,20 @@
-import { AuthShell } from "@/features/auth/components/auth-shell";
+import Link from "next/link";
+import { AuthCard } from "@/features/auth/components/auth-card";
 import { AuthHelpBand } from "@/features/auth/components/auth-help-band";
 import { LoginForm } from "@/features/auth/components/login-form";
-import {
-  Band,
-  RuleLink,
-  container,
-  gutters,
-} from "@/components/marketing/editorial";
 import { APP_CONTACT } from "@/config/app";
 import { CTA_HREFS, CTA_LABELS } from "@/components/marketing/nav";
 import { pageMetadata } from "@/lib/metadata";
+import {
+  authLinkClassName,
+  focusRing,
+} from "@/features/auth/components/styles";
 import { cn } from "@/lib/utils";
 
 export const metadata = pageMetadata({
   title: "Log in",
   description:
-    "Log in to your Bhutan Tech Connect account to access your dashboard and manage projects or applications.",
+    "Log in to your Bhutan Tech Connect account to open your dashboard and manage your profile, projects or applications.",
   path: "/login",
 });
 
@@ -48,55 +47,35 @@ export default async function LoginPage({
   const passwordHelpContactHref = `mailto:${APP_CONTACT.email}?subject=${encodeURIComponent("Password help request")}`;
 
   return (
-    <AuthShell>
-      {/* The ledger opening: what this page is, then the form that acts on it. */}
-      <Band className="border-b border-[#0b2e2e]/10">
-        <div
-          className={cn(
-            container,
-            gutters,
-            "grid grid-cols-1 gap-12 py-12 md:py-16 lg:grid-cols-12 lg:gap-12",
-          )}
-        >
-          <div className="lg:col-span-6 lg:pr-8">
-            <p className="index-label">Account · Log in</p>
-            <h1 className="display-lg mt-7 max-w-[12ch] text-[#0b2e2e]">
-              Log in
-            </h1>
-            <p className="mt-6 max-w-[42ch] text-lg leading-8 text-[#356464]">
-              Your student workspace, your applications and your shortlist sit
-              behind one sign-in.
-            </p>
+    <>
+      <AuthCard
+        eyebrow="Welcome back"
+        title="Log in"
+        lead="Your student workspace, your applications and your shortlist sit behind one sign-in."
+      >
+        <LoginForm
+          serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
+          serverMessage={message ? MESSAGES[message] : undefined}
+          passwordHelpContactHref={passwordHelpContactHref}
+        />
 
-            <div className="mt-10 border-t border-[#0b2e2e]/12 pt-6">
-              <p className="index-label">New here</p>
-              <p className="mt-4 max-w-[38ch] text-[15px] leading-7 text-[#356464]">
-                A student account needs a name, an email and a password. You
-                build the profile after you sign in.
-              </p>
-              <RuleLink href={CTA_HREFS.signup} className="mt-5">
-                {CTA_LABELS.signup}
-              </RuleLink>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 lg:col-start-8">
-            <div className="border-t border-[#0b2e2e]/15 pt-6">
-              <p className="index-label">Sign in</p>
-              <div className="mt-6">
-                <LoginForm
-                  serverError={error ? ERRORS[error] ?? GENERIC_ERROR : undefined}
-                  serverMessage={message ? MESSAGES[message] : undefined}
-                  passwordHelpContactHref={passwordHelpContactHref}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </Band>
+        <p className="mt-5 text-[14px] leading-6 text-[#356464]">
+          New to Bhutan Tech Connect?{" "}
+          <Link
+            href={CTA_HREFS.signup}
+            className={cn(
+              "pressable inline-flex min-h-6 items-center rounded-sm",
+              authLinkClassName,
+              focusRing,
+            )}
+          >
+            {CTA_LABELS.signup}
+          </Link>
+        </p>
+      </AuthCard>
 
       {/* Help and the other way in. */}
       <AuthHelpBand />
-    </AuthShell>
+    </>
   );
 }

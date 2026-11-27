@@ -1,11 +1,12 @@
-﻿/**
+/**
  * Admin Payments — confirm or reject shortlist orders.
  * Server loads orders + founder names + project titles + fresh screenshot
  * links, then hands them to the interactive PaymentsClient.
  *
  * All table reads/writes go through typed Neon helpers. Identity comes from
  * the session helper and payment proofs are opened through short-lived signed
- * links — never through a direct table call.
+ * links — never through a direct table call. A failed read is caught here so
+ * the queue shows a retryable error instead of an unhandled server failure.
  */
 import { redirect } from 'next/navigation';
 import { getUser } from '@/lib/auth';
@@ -18,6 +19,7 @@ import {
 } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
+import { ErrorState } from '@/components/ui/empty-state';
 import { PaymentsClient, type AdminOrder } from './payments-client';
 
 export const metadata = { title: 'Payments | Admin' };
@@ -30,7 +32,15 @@ export default async function AdminPaymentsPage() {
   const role = await getProfileRole(user.id);
   if (role !== 'admin') redirect('/');
 
-  const allOrders = await listOrders();
+  let allOrders: Awaited<ReturnType<typeof listOrders>> = [];
+  let loadError: string | null = null;
+  try {
+    allOrders = await listOrders();
+  } catch (error) {
+    // Logged on the server; the admin gets a retryable message, not a stack.
+    console.error('[admin/payments] Failed to load orders', error);
+    loadError = 'Could not load payment orders. Try again.';
+  }
 
   const rows: AdminOrder[] = allOrders.map((o) => ({
     id: o.id,
@@ -80,7 +90,7 @@ export default async function AdminPaymentsPage() {
   );
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
@@ -91,9 +101,25 @@ export default async function AdminPaymentsPage() {
             />
           }
         >
-          <div className="rounded-2xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-6">
-            <PaymentsClient orders={orders} />
-          </div>
+          {loadError ? (
+            <ErrorState
+              headingLevel="h2"
+              title="Could not load payment orders"
+              description={loadError}
+              action={
+                <a
+                  href="/admin/payments"
+                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                >
+                  Try again
+                </a>
+              }
+            />
+          ) : (
+            <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-5">
+              <PaymentsClient orders={orders} />
+            </div>
+          )}
         </PinnedHeadingSection>
       </div>
     </section>

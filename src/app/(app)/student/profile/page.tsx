@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Student Profile — server component.
  * Loads the student's own profile row (never an id from the URL) and mints a
  * fresh signed URL for the CV on every render. Table access goes through typed
@@ -33,7 +33,7 @@ export default async function StudentProfilePage() {
     role = await getProfileRole(user.id);
   } catch {
     return (
-      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <section>
         <ErrorState
           className="mx-auto max-w-3xl"
           headingLevel="h1"
@@ -56,7 +56,7 @@ export default async function StudentProfilePage() {
 
   if (!role) {
     return (
-      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <section>
         <EmptyState
           className="mx-auto max-w-3xl"
           headingLevel="h1"
@@ -94,7 +94,7 @@ export default async function StudentProfilePage() {
     data = await getStudentProfile(user.id);
   } catch {
     return (
-      <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <section>
         <ErrorState
           className="mx-auto max-w-3xl"
           headingLevel="h1"
@@ -140,7 +140,7 @@ export default async function StudentProfilePage() {
   }
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-3xl space-y-7">
         <WorkspacePageHeading
           eyebrow="Student workspace"

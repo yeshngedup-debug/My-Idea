@@ -26,7 +26,7 @@ export function Progress({
       {...props}
     >
       <div
-        className="h-full rounded-full bg-[#0b5c5c] transition-[width] duration-250 ease-[var(--ease-out)] motion-reduce:transition-none"
+        className="h-full rounded-full bg-[#0b5c5c] transition-[width] duration-200 ease-[var(--ease-out)] motion-reduce:transition-none"
         style={{ width: `${clamped}%` }}
       />
     </div>

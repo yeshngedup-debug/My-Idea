@@ -1,5 +1,13 @@
 # Dashboard design direction — Bhutan Tech Connect
 
+> **Historical record, superseded 2026-11-27.** This report captured the
+> cream/forest/amber direction that existed on 2026-11-24. The live product now
+> uses the canonical teal/mist/magenta system and a practical marketplace
+> layout. For the current contract, read `design/brand-guidelines.md`,
+> `design/brand-system.md`, and `src/lib/design-tokens.ts`. The report is kept
+> for implementation history only; do not use its palette, pinned headings, or
+> editorial direction for new work.
+
 **Agent:** frontend developer (UI redesign wave). **Date:** 2026-11-24.
 **Scope:** the three authenticated workspace families (admin, founder, student) and
 the shared workspace shell. Research first, then implementation. No product data,

@@ -48,7 +48,7 @@ export default async function BrowseProjectsPage() {
   }));
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={

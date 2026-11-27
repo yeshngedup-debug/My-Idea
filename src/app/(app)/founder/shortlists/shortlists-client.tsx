@@ -1,7 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { createRealtimeClient, type SealedLiveQuery } from '@neon/realtime/client';
 import { RealtimeProvider, useLiveQuery } from '@neon/realtime-react';
@@ -53,41 +52,6 @@ const SHORTLIST_STEPS = ORDER_STEPS.map((step) => {
   if (step.value === 'rejected') return { ...step, next: ORDER_COPY.rejectedTimeline };
   return step;
 });
-
-/** Mirrors the --ease-out token in app/globals.css. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-
-/**
- * Local entrance for a panel that appears after an action — never for a list
- * or a stat. One 160ms opacity + small scale, so a step change does not
- * teleport. Reduced motion gets the panel with no animation attached.
- */
-function PanelEntrance({
-  children,
-  className,
-  id,
-  skipInitial = false,
-}: {
-  children: ReactNode;
-  className?: string;
-  id?: string;
-  /** Suppress the entrance when the panel is already present on first render. */
-  skipInitial?: boolean;
-}) {
-  const reduce = useReducedMotion();
-  if (reduce) return <section id={id} className={className}>{children}</section>;
-  return (
-    <motion.section
-      id={id}
-      className={className}
-      initial={skipInitial ? false : { opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.16, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.section>
-  );
-}
 
 /**
  * The shared live pill updates independently of the server-rendered page.
@@ -188,14 +152,6 @@ export function ShortlistsClient({
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const [creating, startCreate] = useTransition();
   const [uploading, startUpload] = useTransition();
-
-  // A pending order can put the pay step on screen at first render. Panels
-  // already open on load must not animate; only later step changes do.
-  const [skipInitial, setSkipInitial] = useState(true);
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setSkipInitial(false));
-    return () => cancelAnimationFrame(frame);
-  }, []);
 
   // A live confirmation can land while the founder is on the pay step. Derive
   // the visible step so a confirmed order never keeps an upload form open.
@@ -300,7 +256,7 @@ export function ShortlistsClient({
       )}
 
       {visibleStep === 'package' && (
-        <PanelEntrance id="order-form" className="space-y-3" skipInitial={skipInitial}>
+        <section id="order-form" className="space-y-3">
           <h2 className="text-base font-semibold text-[#0b5c5c]">Choose a package</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {(Object.values(PACKAGES) as (typeof PACKAGES)[PackageId][]).map((pkg) => (
@@ -312,9 +268,9 @@ export function ShortlistsClient({
                   setAmount(String(pkg.defaultAmount));
                 }}
                 aria-pressed={chosenPackage === pkg.id}
-                className={`pressable rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
+                className={`pressable rounded-xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
                   chosenPackage === pkg.id
-                    ? 'border-[#66bfbf] bg-[#0b5c5c]/6'
+                    ? 'border-[#0b5c5c] bg-[#0b5c5c]/6'
                     : 'border-[#b9dede] bg-[#ffffff] hover:bg-[#eaf6f6]'
                 }`}
               >
@@ -336,7 +292,7 @@ export function ShortlistsClient({
           </div>
 
           {chosenPackage && (
-            <div className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+            <div className="space-y-4 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
               <div>
                 <label htmlFor="order-project" className="block text-sm font-medium text-[#0b5c5c] mb-2">
                   Attach to project (optional)
@@ -345,7 +301,7 @@ export function ShortlistsClient({
                   id="order-project"
                   value={projectId}
                   onChange={(e) => setProjectId(e.target.value)}
-                  className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] focus:outline-none focus:ring-2 focus:ring-[#c2004b]/30 focus:border-[#c2004b]"
+                  className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] focus:outline-none focus:ring-2 focus:ring-[#c2004b]/30 focus:border-[#c2004b]"
                 >
                   <option value="">No specific project</option>
                   {projects.map((p) => (
@@ -372,11 +328,11 @@ export function ShortlistsClient({
               </Button>
             </div>
           )}
-        </PanelEntrance>
+        </section>
       )}
 
       {visibleStep === 'pay' && pendingOrder && (
-        <PanelEntrance className="space-y-4" skipInitial={skipInitial}>
+        <section className="space-y-4">
           <h2 className="text-base font-semibold text-[#0b5c5c]">
             Pay {pendingOrder.package === 'full' ? 'Full Support' : 'Basic'} -{' '}
             <span className="tabular-nums">{formatNuAmount(pendingOrder.amount)}</span>
@@ -389,7 +345,7 @@ export function ShortlistsClient({
             </p>
           )}
 
-          <div className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+          <div className="space-y-4 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
             <div className="flex items-start gap-3">
               <div className="text-sm">
                 <p className="font-semibold text-[#0b5c5c]">Bank transfer</p>
@@ -414,7 +370,7 @@ export function ShortlistsClient({
             <p className="text-xs text-[#356464]">{PAYMENT_DETAILS.note}</p>
           </div>
 
-          <form onSubmit={handleUpload} className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+          <form onSubmit={handleUpload} className="space-y-4 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
             <h3 className="text-sm font-semibold text-[#0b5c5c]">Upload payment screenshot</h3>
             <input
               id="screenshot"
@@ -438,13 +394,13 @@ export function ShortlistsClient({
               Start a different order
             </button>
           </form>
-        </PanelEntrance>
+        </section>
       )}
 
       {orders.length > 0 && (
         <section className="space-y-3">
           <h2 className="text-base font-semibold text-[#0b5c5c]">Your orders</h2>
-          <ul className="space-y-2">
+          <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
             {orders.map((o) => {
               const packageName = o.package === 'full' ? 'Full Support' : 'Basic';
               const projectTitle = o.project_id
@@ -454,7 +410,7 @@ export function ShortlistsClient({
               const isOpen = o.status === 'pending' || o.status === 'submitted';
 
               return (
-                <li key={o.id} className="bg-[#ffffff] border border-[#b9dede] rounded-2xl p-4 space-y-3">
+                <li key={o.id} className="space-y-3 py-4">
                   <div className="min-w-0">
                     <p className="text-sm font-semibold truncate">
                       {packageName} shortlist - {projectTitle}
@@ -518,14 +474,14 @@ export function ShortlistsClient({
               {ORDER_COPY.shortlistPending}
             </p>
           ) : (
-            <ul className="space-y-3">
+            <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
               {students.map((s, i) => {
                 const studentName = s.full_name?.trim() || 'Student record';
 
                 return (
-                  <li key={s.shortlistId} className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="w-7 h-7 rounded-full bg-[#66bfbf] text-[#0b2e2e] font-semibold text-sm tabular-nums flex items-center justify-center shrink-0">
+                  <li key={s.shortlistId} className="py-4">
+                    <div className="mb-2 flex items-center gap-3">
+                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-[#eaf6f6] text-sm font-semibold tabular-nums text-[#0b2e2e]">
                         {i + 1}
                       </span>
                       <h3 className="truncate text-base font-semibold text-[#0b5c5c]">{studentName}</h3>
@@ -540,7 +496,7 @@ export function ShortlistsClient({
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 text-sm">
                       {s.contact_email && (
-                        <a href={`mailto:${s.contact_email}`} className="break-all text-[#c2004b] underline-offset-2 hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
+                        <a href={`mailto:${s.contact_email}`} className="inline-flex min-h-11 items-center break-all text-[#c2004b] underline-offset-2 hover:text-[#0b5c5c] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] rounded">
                           {s.contact_email}
                         </a>
                       )}
@@ -564,9 +520,9 @@ export function ShortlistsClient({
         </section>
       )}
 
-      <section className="rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5">
+      <section className="rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
         <h2 className="text-sm font-semibold text-[#0b5c5c] mb-1">Service agreement</h2>
-        <a href="/founder/shortlists/agreement" download className="inline-flex items-center gap-2 rounded-xl border border-[#b9dede] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
+        <a href="/founder/shortlists/agreement" download className="inline-flex min-h-11 items-center gap-2 rounded-md border border-[#b9dede] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
           Download agreement (PDF)
         </a>
       </section>

@@ -64,6 +64,9 @@ export const CTA_LABELS = {
   howItWorks: "How it works",
   readProcess: "Read the process",
   pricing: "See pricing",
+  browseProjects: "Browse projects",
+  postProject: "Post a project",
+  myApplications: "Go to my applications",
   faq: "Read the FAQ",
   faqPay: "Read the FAQ about pay",
   askUs: "Ask us something",
@@ -89,10 +92,15 @@ export const CTA_HREFS = {
   faq: "/faq",
   terms: "/terms",
   privacy: "/privacy",
+  /** In-page anchor on the founder page, where the packages live. */
   pricing: "#pricing",
+  /** The same packages, reached from another page. */
+  founderPricing: "/for-founders#pricing",
   studentProjects: "/student/projects",
   studentApplications: "/student/applications",
   founderShortlists: "/founder/shortlists",
+  /** Founder posting happens inside a founder account. */
+  founderPostProject: "/founder/projects/post",
 } as const;
 
 /** The single founder-access label and destination, used by header and footer. */
@@ -100,6 +108,21 @@ export const FOUNDER_ACCESS: NavLink = {
   label: CTA_LABELS.contact,
   href: CTA_HREFS.contact,
 };
+
+/** Footer "Start" column: the routes a visitor most likely wants next. */
+export const FOOTER_START_LINKS: readonly NavLink[] = [
+  { href: CTA_HREFS.signup, label: CTA_LABELS.signup },
+  { href: CTA_HREFS.studentProjects, label: "Browse projects" },
+  FOUNDER_ACCESS,
+  { href: "/for-founders#pricing", label: CTA_LABELS.pricing },
+  { href: CTA_HREFS.founderPostProject, label: CTA_LABELS.postProject },
+];
+
+/** Footer "More" column: the utility pages plus sign in. */
+export const FOOTER_UTILITY_LINKS: readonly NavLink[] = [
+  ...UTILITY_LINKS,
+  LOGIN_LINK,
+];
 
 export type MarketingImage = {
   src: string;
@@ -137,6 +160,8 @@ export type CtaIntent =
   | "students"
   | "readProcess"
   | "pricing"
+  | "browseProjects"
+  | "postProject"
   | "faq"
   | "faqPay"
   | "askUs"
@@ -195,6 +220,13 @@ export function resolveAction(
       return { href: CTA_HREFS.howItWorks, label: CTA_LABELS.readProcess };
     case "pricing":
       return { href: CTA_HREFS.pricing, label: CTA_LABELS.pricing };
+    case "browseProjects":
+      return { href: CTA_HREFS.studentProjects, label: CTA_LABELS.browseProjects };
+    case "postProject":
+      return {
+        href: CTA_HREFS.founderPostProject,
+        label: CTA_LABELS.postProject,
+      };
     case "faq":
       return { href: CTA_HREFS.faq, label: CTA_LABELS.faq };
     case "faqPay":

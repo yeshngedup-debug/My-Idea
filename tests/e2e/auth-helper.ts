@@ -13,6 +13,10 @@
 import { expect, type Page } from '@playwright/test';
 import { ROLE_HOME, type DemoUser } from './demo-users';
 
+// Live Neon Auth sign-in plus the role mirror can exceed Playwright's 5s
+// default on a cold dev server. Wait for the actual redirect, with headroom.
+const LOGIN_TIMEOUT_MS = 20_000;
+
 export async function loginAs(page: Page, user: DemoUser): Promise<void> {
   if (!user.email || !user.password) {
     throw new Error(
@@ -36,6 +40,8 @@ export async function loginAs(page: Page, user: DemoUser): Promise<void> {
 
   // Outcome: the login server action redirects to the role's dashboard, and
   // middleware keeps the user inside that role area.
-  await expect(page).toHaveURL(ROLE_HOME[user.role]);
-  await expect(page.getByRole('link', { name: 'Overview', exact: true })).toBeVisible();
+  await expect(page).toHaveURL(ROLE_HOME[user.role], { timeout: LOGIN_TIMEOUT_MS });
+  await expect(page.getByRole('link', { name: 'Overview', exact: true })).toBeVisible({
+    timeout: LOGIN_TIMEOUT_MS,
+  });
 }

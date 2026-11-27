@@ -224,7 +224,7 @@ export function PostProjectForm() {
         </p>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
+      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
         <div>
           <Label htmlFor="title" className="mb-2">Project title *</Label>
           <Input
@@ -237,7 +237,7 @@ export function PostProjectForm() {
             maxLength={120}
             invalid={Boolean(errors.title)}
             describedBy={errors.title ? 'title-error' : undefined}
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
           {fieldError('title')}
         </div>
@@ -257,7 +257,7 @@ export function PostProjectForm() {
             maxLength={2000}
             invalid={Boolean(errors.description)}
             describedBy={errors.description ? 'description-error' : undefined}
-            className="w-full min-h-[140px] rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full min-h-[140px] rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
           {fieldError('description')}
         </div>
@@ -276,7 +276,7 @@ export function PostProjectForm() {
                 }
               }}
               placeholder="React, Figma, Python..."
-              className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+              className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
             />
             <Button
               type="button"
@@ -300,7 +300,7 @@ export function PostProjectForm() {
                     type="button"
                     aria-label={`Remove ${s}`}
                     onClick={() => setSkills(skills.filter((x) => x !== s))}
-                    className="pressable grid min-h-6 min-w-6 place-items-center rounded-full p-0.5 transition-colors hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                    className="pressable grid min-h-8 min-w-8 place-items-center rounded-md p-1 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                   >
                     <X className="w-3 h-3" aria-hidden="true" />
                   </button>
@@ -311,7 +311,7 @@ export function PostProjectForm() {
         </div>
       </div>
 
-      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-5">
+      <div className="space-y-5 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
         <div>
           <Label htmlFor="duration" className="mb-2">Duration *</Label>
           <select
@@ -321,7 +321,7 @@ export function PostProjectForm() {
             required
             aria-invalid={Boolean(errors.duration)}
             aria-describedby={errors.duration ? 'duration-error' : undefined}
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           >
             <option value="">Select duration</option>
             {DURATIONS.map((d) => (
@@ -349,7 +349,7 @@ export function PostProjectForm() {
                 aria-label="Budget minimum"
                 invalid={Boolean(errors['budget-min'])}
                 describedBy={errors['budget-min'] ? 'budget-min-error' : undefined}
-                className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+                className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
               />
               {fieldError('budget-min')}
             </div>
@@ -368,7 +368,7 @@ export function PostProjectForm() {
                 aria-label="Budget maximum"
                 invalid={Boolean(errors['budget-max'])}
                 describedBy={errors['budget-max'] ? 'budget-max-error' : undefined}
-                className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+                className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base tabular-nums text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
               />
               {fieldError('budget-max')}
             </div>
@@ -395,9 +395,9 @@ export function PostProjectForm() {
                 tabIndex={workMode === value ? 0 : -1}
                 onKeyDown={(event) => handleWorkModeKeyDown(event, value)}
                 onClick={() => setWorkMode(value)}
-                className={`pressable min-h-11 rounded-xl px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
+                className={`pressable min-h-11 rounded-md px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
                   workMode === value
-                    ? 'bg-[#66bfbf] text-[#0b2e2e]'
+                    ? 'bg-[#0b5c5c] text-[#ffffff]'
                     : 'border border-[#b9dede] bg-[#ffffff] text-[#356464] hover:bg-[#eaf6f6]'
                 }`}
               >
@@ -415,7 +415,7 @@ export function PostProjectForm() {
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
             describedBy="deadline-help"
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
+            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c] placeholder:text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]/30 focus-visible:border-[#c2004b]"
           />
           <p id="deadline-help" className="mt-1.5 text-xs text-[#356464]">
             Optional. Open through this date in your local time; students see it on the card.

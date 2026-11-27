@@ -1,15 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><title>Bhutan Tech Connect</title>
-  <!-- Active favicon: two equal dots + one bridge + one amber arch cap.
-       Canonical palette only: forest #17352b, in-app amber #e0ad3c. -->
+  <!-- Active favicon: two equal dots + one bridge + one teal arch cap.
+       Canonical palette: primary teal #0b5c5c and decorative teal #66bfbf. -->
   <g transform="translate(-87.42 -87.42) scale(1.683)">
     <g id="symbol">
-      <!-- dot: student (left) -->
-      <circle cx="72" cy="128" r="17" fill="#17352b" />
-      <!-- dot: founder (right) -->
-      <circle cx="184" cy="128" r="17" fill="#17352b" />
-      <!-- bridge: single rounded connector -->
-      <rect x="89" y="120" width="78" height="16" rx="8" fill="#17352b" />
-      <!-- arch cap: amber band over the bridge -->
-      <path d="M 89 120 A 41 41 0 0 1 167 120 L 167 128 A 41 41 0 0 0 89 128 Z" fill="#e0ad3c" />
+      <circle cx="72" cy="128" r="17" fill="#0b5c5c" />
+      <circle cx="184" cy="128" r="17" fill="#0b5c5c" />
+      <rect x="89" y="120" width="78" height="16" rx="8" fill="#0b5c5c" />
+      <path d="M 89 120 A 41 41 0 0 1 167 120 L 167 128 A 41 41 0 0 0 89 128 Z" fill="#66bfbf" />
     </g>
-  </g></svg>
+  </g>
+</svg>

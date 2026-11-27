@@ -14,7 +14,12 @@ import { useActionState, useEffect, useId, useMemo, useRef, useState } from "rea
 import type { RefObject } from "react";
 import { signup } from "@/features/auth/actions";
 import { FieldError } from "@/features/auth/components/field-error";
-import { authInputClassName } from "@/features/auth/components/styles";
+import {
+  authHintClassName,
+  authInputClassName,
+  authInputErrorClassName,
+  authLabelClassName,
+} from "@/features/auth/components/styles";
 import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
@@ -25,6 +30,7 @@ import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
 } from "@/features/auth/schemas";
+import { cn } from "@/lib/utils";
 
 type FieldName = "firstName" | "lastName" | "email" | "password";
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -42,7 +48,7 @@ const EMPTY_VALUES: FieldValues = {
 
 const INITIAL_SUBMIT_STATE: SubmitState = { errors: {}, submitCount: 0 };
 
-const labelClassName = "mb-2 block text-sm font-semibold text-[#0b5c5c]";
+const labelClassName = cn(authLabelClassName, "mb-1.5");
 
 function validate(values: FieldValues): FieldErrors {
   const next: FieldErrors = {};
@@ -175,7 +181,9 @@ export function SignupForm({ serverError }: { serverError?: string }) {
         aria-describedby={serverError ? serverErrorId : undefined}
         className="space-y-4 sm:space-y-5"
       >
-        <div className="grid grid-cols-1 gap-3 sm:gap-4">
+        {/* First and last name sit side by side so the whole signup form —
+            title, every field and the submit — still fits one phone screen. */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label htmlFor="firstName" className={labelClassName}>
               First name
@@ -193,7 +201,10 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={(event) => setField("firstName", event.target.value)}
               autoComplete="given-name"
               placeholder="Tashi"
-              className={authInputClassName}
+              className={cn(
+                authInputClassName,
+                errors.firstName && authInputErrorClassName,
+              )}
             />
             {errors.firstName && (
               <FieldError id={firstNameErrorId}>{errors.firstName}</FieldError>
@@ -216,7 +227,10 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               onChange={(event) => setField("lastName", event.target.value)}
               autoComplete="family-name"
               placeholder="Dorji"
-              className={authInputClassName}
+              className={cn(
+                authInputClassName,
+                errors.lastName && authInputErrorClassName,
+              )}
             />
             {errors.lastName && (
               <FieldError id={lastNameErrorId}>{errors.lastName}</FieldError>
@@ -240,7 +254,10 @@ export function SignupForm({ serverError }: { serverError?: string }) {
             onChange={(event) => setField("email", event.target.value)}
             autoComplete="email"
             placeholder="you@example.com"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              errors.email && authInputErrorClassName,
+            )}
           />
           {errors.email && (
             <FieldError id={emailErrorId}>{errors.email}</FieldError>
@@ -268,8 +285,11 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               }
               onChange={(event) => setField("password", event.target.value)}
               autoComplete="new-password"
-              placeholder="Use 6 to 128 characters"
-              className={authInputClassName}
+              placeholder="Your password"
+              className={cn(
+                authInputClassName,
+                errors.password && authInputErrorClassName,
+              )}
             />
             <button
               type="button"
@@ -277,12 +297,12 @@ export function SignupForm({ serverError }: { serverError?: string }) {
               aria-pressed={showPassword}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => setShowPassword((prev) => !prev)}
-              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-[2px] border border-[#b9dede] bg-white px-3 text-sm font-medium text-[#0b5c5c] transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-out)] hover:bg-[#eaf6f6] hover:border-[#66bfbf] active:scale-[0.98] motion-reduce:active:scale-100 focus-visible:border-[#0b5c5c] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#66bfbf]/25"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center whitespace-nowrap rounded-[2px] border border-[#4d8c8c] bg-white px-3 text-[13px] font-medium text-[#0b2e2e] transition-[border-color,background-color,transform] duration-150 ease-[var(--ease-out)] hover:border-[#0b5c5c] hover:bg-[#eaf6f6] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 focus-visible:border-[#0b2e2e] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0b5c5c]/25"
             >
               {showPassword ? "Hide password" : "Show password"}
             </button>
           </div>
-          <p id={passwordHintId} className="mt-1.5 text-xs text-[#356464]">
+          <p id={passwordHintId} className={cn("mt-1.5", authHintClassName)}>
             Use 6 to 128 characters.
           </p>
           {errors.password && (

@@ -2,10 +2,12 @@
  * Bhutan Tech Connect — canonical design tokens.
  *
  * BTC brand: teal structure, mist page, white surfaces and magenta CTA, paired
- * with editorial Geist type, generous spacing and restrained motion. Dark teal
- * and dark magenta roles are derived for legibility on light surfaces. This
- * module is the single typed source of truth for the visual language.
- * `app/globals.css` mirrors the colour, radius and motion values for
+ * with Geist type, generous spacing and restrained motion. The product reads as
+ * a practical local marketplace: dark teal carries structure, mist separates
+ * surfaces, and magenta is reserved for the one high-emphasis action in a
+ * view. Dark teal and dark magenta roles are derived for legibility on light
+ * surfaces. This module is the single typed source of truth for the visual
+ * language. `app/globals.css` mirrors the colour, radius and motion values for
  * Tailwind/CSS; keep the two in sync.
  *
  * The old `designTokens` object and its helpers are kept for additive
@@ -84,8 +86,8 @@ export const colors = {
   /* Focus */
   focus: "#c2004b",
 
-  /* Core brand primitives and derived legible roles. Mirrors
-     replica/design/tokens.json and the --color-* variables in app/globals.css. */
+  /* Core brand primitives and derived legible roles. Mirrors the --color-*
+     variables in app/globals.css. */
   brand: "#66bfbf",
   mist: "#eaf6f6",
   magenta: "#ff0063",
@@ -101,7 +103,7 @@ export const brandColors = colors;
 
 export type ColorRole = keyof typeof colors;
 
-/** The seven headline roles used in the brand guidelines. */
+/** The headline roles used in the brand guidelines. */
 export const palette = {
   page: colors.page,
   surface: colors.surface,
@@ -184,13 +186,9 @@ export const motion = {
   duration: {
     instant: "100ms",
     fast: "150ms",
-    base: "250ms",
-    /** Inline on `.bento-cell .bento-zoom` in globals.css. */
-    slow: "700ms",
+    base: "200ms",
   },
   pressScale: 0.98,
-  figureZoom: 1.02,
-  bentoZoom: 1.04,
 } as const;
 
 export type MotionDuration = keyof typeof motion.duration;
@@ -228,25 +226,25 @@ export type TrackingStep = keyof typeof tracking;
  */
 export const typeScale = {
   display: {
-    size: "clamp(4rem, 9vw, 6rem)",
-    lineHeight: "1.1",
-    tracking: tracking.tighter,
+    size: "clamp(2.75rem, 6vw, 4.75rem)",
+    lineHeight: "1",
+    tracking: tracking.tight,
     weight: 600,
   },
   pageTitle: {
-    size: "clamp(3.25rem, 7vw, 6rem)",
-    lineHeight: "1.05",
+    size: "clamp(2.5rem, 5vw, 4.25rem)",
+    lineHeight: "1.04",
     tracking: tracking.tight,
     weight: 600,
   },
   h1: {
-    size: "clamp(2.5rem, 5vw, 4.5rem)",
+    size: "clamp(2.25rem, 4.5vw, 3.75rem)",
     lineHeight: "1.08",
     tracking: tracking.tight,
     weight: 600,
   },
   h2: {
-    size: "clamp(1.75rem, 3.4vw, 3rem)",
+    size: "clamp(1.65rem, 3vw, 2.5rem)",
     lineHeight: "1.18",
     tracking: tracking.heading,
     weight: 600,

@@ -11,13 +11,18 @@ import { useEffect, useId, useRef, useState } from "react";
 import type { FormEvent, RefObject } from "react";
 import { resetPassword } from "@/features/auth/actions";
 import { FieldError } from "@/features/auth/components/field-error";
-import { authInputClassName } from "@/features/auth/components/styles";
+import {
+  authInputClassName,
+  authInputErrorClassName,
+  authLabelClassName,
+} from "@/features/auth/components/styles";
 import { StatusMessage } from "@/components/ui/status-message";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
 } from "@/features/auth/schemas";
+import { cn } from "@/lib/utils";
 
 type FieldName = "password" | "confirmPassword";
 type FieldErrors = Partial<Record<FieldName, string>>;
@@ -92,13 +97,10 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
         onSubmit={handleSubmit}
         noValidate
         aria-describedby={serverError ? serverErrorId : undefined}
-        className="space-y-5"
+        className="space-y-4 sm:space-y-5"
       >
         <div>
-          <label
-            htmlFor="password"
-            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
-          >
+          <label htmlFor="password" className={cn(authLabelClassName, "mb-1.5")}>
             New password
           </label>
           <input
@@ -114,7 +116,10 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("password")}
             autoComplete="new-password"
             placeholder="Enter a new password"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              errors.password && authInputErrorClassName,
+            )}
           />
           {errors.password && (
             <FieldError id={passwordErrorId}>{errors.password}</FieldError>
@@ -122,10 +127,7 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
         </div>
 
         <div>
-          <label
-            htmlFor="confirmPassword"
-            className="mb-2 block text-sm font-semibold text-[#0b5c5c]"
-          >
+          <label htmlFor="confirmPassword" className={cn(authLabelClassName, "mb-1.5")}>
             Confirm new password
           </label>
           <input
@@ -141,7 +143,10 @@ export function ResetPasswordForm({ serverError }: { serverError?: string }) {
             onChange={() => clearError("confirmPassword")}
             autoComplete="new-password"
             placeholder="Enter the new password again"
-            className={authInputClassName}
+            className={cn(
+              authInputClassName,
+              errors.confirmPassword && authInputErrorClassName,
+            )}
           />
           {errors.confirmPassword && (
             <FieldError id={confirmErrorId}>{errors.confirmPassword}</FieldError>

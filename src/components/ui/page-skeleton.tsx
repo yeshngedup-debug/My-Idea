@@ -14,12 +14,12 @@ export function PageSkeleton({ label }: { label: string }) {
       aria-label="Loading"
     >
       {/* Mobile top bar */}
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-[#0b2e2e]/10 bg-[#eaf6f6]/90 px-4 backdrop-blur-md lg:hidden">
+      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-[#0b2e2e]/10 bg-[#eaf6f6] px-4 lg:hidden">
         <div className="h-4 w-28 rounded bg-[#0b2e2e]/10" />
       </header>
 
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 hidden h-full w-72 flex-col gap-3 border-r border-[#0b2e2e]/10 bg-[#eaf6f6]/70 p-6 backdrop-blur-xl lg:flex">
+      <aside className="fixed left-0 top-0 hidden h-full w-72 flex-col gap-3 border-r border-[#0b2e2e]/10 bg-[#eaf6f6] p-6 lg:flex">
         <div className="h-5 w-36 rounded bg-[#0b2e2e]/10" />
         <div className="h-9 w-full rounded-lg bg-[#0b2e2e]/5" />
         <div className="h-9 w-full rounded-lg bg-[#0b2e2e]/5" />

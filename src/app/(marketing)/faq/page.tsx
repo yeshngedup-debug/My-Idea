@@ -5,7 +5,8 @@ import type { ReactNode } from "react";
 import { isValidElement } from "react";
 import Link from "next/link";
 import { Plus } from "@phosphor-icons/react/dist/ssr";
-import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
+import { MarketingReveal } from "@/components/marketing/reveal";
+import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { EditorialHero } from "@/components/marketing/editorial-hero";
 import {
@@ -19,9 +20,6 @@ import {
 } from "@/components/marketing/editorial";
 import { InlineImageText } from "@/components/editorial";
 import { CTA_HREFS, resolveAction } from "@/components/marketing/nav";
-import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
-import { ChapterProgress, type ChapterLink } from "@/components/motion";
-import { ScrubbedTextReveal } from "@/components/motion";
 import { pageMetadata } from "@/lib/metadata";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +48,7 @@ const askCta = resolveAction("/faq", "askUs");
 const contactCta = resolveAction("/faq", "contactTeam");
 const processCta = resolveAction("/faq", "readProcess");
 
-const chapters: ChapterLink[] = [
+const chapters: { id: string; label: string }[] = [
   { id: "getting-started", label: "The basics" },
   { id: "profiles-and-projects", label: "Profiles and projects" },
   { id: "shortlists-and-payments", label: "Shortlists and payments" },
@@ -284,22 +282,32 @@ export default async function FaqPage() {
           imagePosition="object-center"
         />
 
-        {/* One statement, scrubbed in. */}
+        {/* One plain statement. */}
         <Band tone="mist" className="border-b border-[#0b2e2e]/10">
           <div className={cn(container, gutters, "py-14 md:py-20")}>
             <p className="index-label">Eleven answers</p>
-            <ScrubbedTextReveal
-              as="p"
-              text="Every answer here is a rule the platform actually follows."
-              className="mt-6 max-w-[24ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[28ch]"
-            />
+            <p className="mt-6 max-w-[24ch] text-[clamp(1.75rem,3.6vw,3.1rem)] font-semibold leading-[1.08] tracking-[-0.04em] text-[#0b2e2e] md:max-w-[28ch]">
+              Every answer here is a rule the platform actually follows.
+            </p>
           </div>
         </Band>
 
-        <ChapterProgress
-          chapters={chapters}
-          className="sticky top-16 z-30 border-[#0b2e2e]/12 bg-white [&_a]:text-[#0b2e2e] [&_a:hover]:text-[#0b5c5c] [&_a]:focus-visible:ring-[#0b5c5c] [&_a]:focus-visible:ring-offset-white [&_a[aria-current]]:text-[#0b5c5c] [&_a[aria-current]]:decoration-[#ff0063] [&_a[aria-current]]:decoration-1 [&_a[aria-current]]:underline-offset-[10px] [&_[data-chapter-bar]]:bg-[#ff0063]"
-        />
+        <nav
+          aria-label="FAQ sections"
+          className="border-y border-[#0b2e2e]/12 bg-white"
+        >
+          <div className="mx-auto flex max-w-[1440px] flex-wrap gap-x-5 gap-y-1 px-4 py-3 sm:px-6 lg:px-10">
+            {chapters.map((chapter) => (
+              <a
+                key={chapter.id}
+                href={`#${chapter.id}`}
+                className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#0b2e2e] underline decoration-transparent decoration-1 underline-offset-4 transition-colors duration-150 hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2 focus-visible:ring-offset-white motion-reduce:transition-none"
+              >
+                {chapter.label}
+              </a>
+            ))}
+          </div>
+        </nav>
 
         {clusters.map((cluster, clusterIndex) => (
           <Band
@@ -351,7 +359,7 @@ export default async function FaqPage() {
                             aria-hidden="true"
                             weight="light"
                             strokeWidth={1.6}
-                            className="h-5 w-5 shrink-0 text-[#c2004b] transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
+                            className="h-5 w-5 shrink-0 text-[#c2004b] transition-transform duration-200 group-open:rotate-45 motion-reduce:transition-none"
                           />
                         </span>
                       </summary>
@@ -382,7 +390,7 @@ export default async function FaqPage() {
             </MarketingReveal>
 
             <MarketingReveal className="mt-12">
-              <GsapScaleFadeImage>
+              <div className="w-full">
                 <figure>
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
                     <Image
@@ -394,7 +402,7 @@ export default async function FaqPage() {
                     />
                   </div>
                 </figure>
-              </GsapScaleFadeImage>
+              </div>
             </MarketingReveal>
           </div>
         </Band>

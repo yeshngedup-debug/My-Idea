@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { StatusMessage } from '@/components/ui/status-message';
 import { updateFounderName } from './actions';
 
 /** Mirrors the server schema so bad names get app-level feedback, not just a native tooltip. */
@@ -28,6 +29,16 @@ export function ProfileClient({ fullName }: { fullName: string }) {
   const [draft, setDraft] = useState(fullName);
   const [result, setResult] = useState<SaveResult | null>(null);
   const [saving, startSave] = useTransition();
+
+  // The server is authoritative. After router.refresh() the prop can change
+  // (the stored name may differ from what we submitted), so re-sync the local
+  // state with it. An unsaved edit in the field is never overwritten.
+  const [lastServerName, setLastServerName] = useState(fullName);
+  if (fullName !== lastServerName) {
+    setLastServerName(fullName);
+    setName(fullName);
+    setDraft((current) => (current.trim() === name ? fullName : current));
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -61,7 +72,7 @@ export function ProfileClient({ fullName }: { fullName: string }) {
   }
 
   return (
-    <section className="space-y-4 rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 sm:p-6">
+    <section className="space-y-4 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4 sm:p-5">
       <div>
         <h2 className="text-base font-semibold text-[#0b5c5c]">Display name</h2>
         <p className="mt-1 text-sm leading-6 text-[#356464]">
@@ -94,7 +105,7 @@ export function ProfileClient({ fullName }: { fullName: string }) {
                 ? 'founder-name-result'
                 : undefined
             }
-            className="w-full rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-3 text-base text-[#0b5c5c]"
+            className="w-full rounded-md border border-[#b9dede] bg-[#ffffff] px-3.5 py-2.5 text-base text-[#0b5c5c]"
           />
         </div>
 
@@ -110,17 +121,12 @@ export function ProfileClient({ fullName }: { fullName: string }) {
       <p className="text-xs text-[#356464]">Current name: {name}</p>
 
       {result && (
-        <p
+        <StatusMessage
           id="founder-name-result"
-          role={result.ok ? 'status' : 'alert'}
-          className={`rounded-xl border px-4 py-3 text-sm ${
-            result.ok
-              ? 'border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-              : 'border-[#c2004b]/25 bg-[#ff0063]/8 text-[#c2004b]'
-          }`}
+          tone={result.ok ? 'success' : 'error'}
         >
           {result.message}
-        </p>
+        </StatusMessage>
       )}
     </section>
   );

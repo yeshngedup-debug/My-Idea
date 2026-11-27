@@ -8,8 +8,7 @@
  * and setOrderStatus only transitions pending/submitted rows in Neon. This
  * component keeps a mirrors-only local view so the buttons respond instantly.
  */
-import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, WarningCircle, X, FileImage, Clock } from '@phosphor-icons/react';
 import { confirmOrder, rejectOrder } from '@/features/payments/actions';
@@ -53,24 +52,6 @@ const FILTERS = [
 
 function isActionable(status: string): boolean {
   return status === 'submitted' || status === 'pending';
-}
-
-/** Mirrors the --ease-out token in app/globals.css. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-
-/** Entrance for a panel that appears after a decision, never for the list. */
-function PanelEntrance({ children }: { children: ReactNode }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div>{children}</div>;
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.16, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.div>
-  );
 }
 
 export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
@@ -138,7 +119,9 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
         setStatus({ ok: false, msg: 'Could not update the order. Try again.' });
       } finally {
         setBusyId(null);
-        router.refresh();
+        // The server action already calls revalidatePath, so the refreshed RSC
+        // payload arrives with it. An immediate router.refresh() here can
+        // interrupt the pending transition before status and busy state commit.
       }
     });
   }
@@ -159,16 +142,14 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
     <div className="space-y-4">
       {/* One action-result region; failures interrupt, success waits politely. */}
       {status && (
-        <PanelEntrance>
-          <StatusMessage tone={status.ok ? 'success' : 'error'}>
-            {status.ok ? (
-              <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-            ) : (
-              <X className="h-4 w-4 shrink-0" aria-hidden="true" />
-            )}
-            {status.msg}
-          </StatusMessage>
-        </PanelEntrance>
+        <StatusMessage tone={status.ok ? 'success' : 'error'}>
+          {status.ok ? (
+            <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
+          ) : (
+            <X className="h-4 w-4 shrink-0" aria-hidden="true" />
+          )}
+          {status.msg}
+        </StatusMessage>
       )}
 
       <h2 className="sr-only">Payment orders</h2>
@@ -195,7 +176,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
             <button
               type="button"
               onClick={() => setFilter('all')}
-              className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+              className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
             >
               Show all orders
             </button>
@@ -247,7 +228,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     href={o.screenshotUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-9 items-center gap-1.5 rounded text-sm font-semibold text-[#c2004b] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded text-sm font-semibold text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
                   >
                     <FileImage className="h-4 w-4" aria-hidden="true" /> View payment screenshot
                   </a>
@@ -257,7 +238,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                       disabled={busyId === o.id}
                       onClick={() => router.refresh()}
                       aria-label={`Refresh payment screenshot link for order ${o.id.slice(0, 8)}`}
-                      className="pressable inline-flex min-h-9 items-center rounded text-xs font-semibold text-[#356464] underline decoration-[#b9dede] underline-offset-4 hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="pressable inline-flex min-h-11 items-center rounded text-xs font-semibold text-[#356464] underline decoration-[#b9dede] underline-offset-4 hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       Refresh proof link
                     </button>
@@ -277,7 +258,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                   <button
                     type="button"
                     onClick={() => router.refresh()}
-                    className="pressable inline-flex min-h-11 items-center rounded-full border border-[#c2004b]/25 bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#c2004b] hover:bg-[#ff0063]/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
+                    className="pressable inline-flex min-h-11 items-center rounded-md border border-[#c2004b]/25 bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#c2004b] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#ff0063]/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#ffffff]"
                   >
                     Refresh proof link
                   </button>
@@ -291,7 +272,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     disabled={busyId === o.id || !proofReady}
                     aria-describedby={proofMessageId}
                     onClick={() => update(o.id, 'confirm')}
-                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#66bfbf]/20 bg-[#0b5c5c]/8 px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#0b5c5c]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-[#66bfbf]/20 bg-[#0b5c5c]/8 px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#0b5c5c]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <CheckCircle className="h-4 w-4" aria-hidden="true" />
                     {busyId === o.id ? 'Working...' : 'Confirm payment'}
@@ -301,7 +282,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     type="button"
                     disabled={busyId === o.id}
                     onClick={() => setConfirmingId(o.id)}
-                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-2.5 text-sm font-semibold text-[#c2004b] hover:bg-[#ff0063]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-[#c2004b]/25 bg-[#ff0063]/8 px-4 py-2.5 text-sm font-semibold text-[#c2004b] hover:bg-[#ff0063]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <X className="h-4 w-4" aria-hidden="true" /> Reject
                   </button>
@@ -318,7 +299,6 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
               )}
 
               {actionable && confirmingId === o.id && (
-                <PanelEntrance>
                 <Alert
                   ref={alertRef}
                   tabIndex={-1}
@@ -338,7 +318,7 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                     <button
                       type="button"
                       onClick={cancelReject}
-                      className="pressable inline-flex min-h-11 items-center justify-center rounded-xl border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
+                      className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063]"
                     >
                       Keep order
                     </button>
@@ -346,14 +326,13 @@ export function PaymentsClient({ orders }: { orders: AdminOrder[] }) {
                       type="button"
                       disabled={busyId === o.id}
                       onClick={() => update(o.id, 'reject')}
-                      className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-[#c2004b]/25 bg-[#ff0063]/8 px-5 py-2.5 text-sm font-semibold text-[#c2004b] hover:bg-[#ff0063]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md border border-[#c2004b]/25 bg-[#ff0063]/8 px-5 py-2.5 text-sm font-semibold text-[#c2004b] hover:bg-[#ff0063]/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                       {busyId === o.id ? 'Rejecting...' : 'Reject payment'}
                     </button>
                   </div>
                 </Alert>
-                </PanelEntrance>
               )}
             </li>
           );

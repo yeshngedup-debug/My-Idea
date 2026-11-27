@@ -2,9 +2,11 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Section heading that stays near the viewport top while a long sibling
- * column scrolls. Plain CSS `position: sticky` on lg+ only; below lg both
- * columns stack normally and the class is inert. No animation runtime.
+ * Section heading and content in a two-column layout.
+ *
+ * The heading stays in normal document flow. It is not pinned while the
+ * sibling column scrolls, which keeps the reading order stable and avoids a
+ * scroll-driven layout system.
  */
 export function PinnedHeadingSection({
   heading,
@@ -19,7 +21,7 @@ export function PinnedHeadingSection({
 }) {
   return (
     <div className={cn("grid gap-8 lg:gap-12", split, className)}>
-      <div className="lg:sticky lg:top-24 lg:self-start">{heading}</div>
+      <div className="self-start">{heading}</div>
       <div className="min-w-0">{children}</div>
     </div>
   );

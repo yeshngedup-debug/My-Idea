@@ -11,11 +11,15 @@
 import { test, expect } from './fixtures';
 import { DEMO_USERS } from './demo-users';
 import { loginAs } from './auth-helper';
+import { resetSeededBasicOrderForAdmin } from './db';
 
 test.describe('Admin flow', () => {
   test('complete admin journey: login → rank/verify → generate shortlist → manage payments', async ({
     page,
   }) => {
+    // Make the seeded Basic order confirmable again; see db.ts for why.
+    await resetSeededBasicOrderForAdmin();
+
     await test.step('Log in as admin', async () => {
       await loginAs(page, DEMO_USERS.admin);
     });
@@ -34,7 +38,7 @@ test.describe('Admin flow', () => {
       const rank = card.locator('input[id^="rank-"]');
       await rank.fill('1');
       await rank.blur();
-      await expect(page.getByRole('status')).toContainText('Rank 1 saved');
+      await expect(page.getByRole('status')).toContainText('Rank saved.');
 
       const notVerified = card.locator('button').filter({ hasText: /Not verified/ });
       if (await notVerified.isVisible()) {
@@ -48,32 +52,46 @@ test.describe('Admin flow', () => {
 
       const founderSelect = page.getByLabel('Choose founder');
       await expect(founderSelect).toBeVisible();
-      // Option 0 is the "Choose founder..." placeholder; seed supplies a founder.
-      await founderSelect.selectOption({ index: 1 });
+      // The seeded founder has only a submitted Basic order, so generation is
+      // not constrained by a confirmed package size. Do not select by index:
+      // the payment flow adds another founder whose Full Support package
+      // requires 5–10 students and changes the option order.
+      await founderSelect.selectOption({ label: 'Ugyen Dorji' });
 
       await page.getByRole('button', { name: 'Generate' }).click();
       await expect(
         page.getByRole('heading', { name: 'Generated shortlist' })
-      ).toBeVisible();
+      ).toBeVisible({ timeout: 20_000 });
     });
 
     await test.step('Confirm a payment order', async () => {
       await page.getByRole('link', { name: 'Payments', exact: true }).click();
       await expect(page).toHaveURL('/admin/payments');
 
-      // Seed a submitted Basic order with a screenshot. Scoping by package
-      // keeps this independent of the Full Support order in payment-flow.
-      const order = page
+      // Setup restores this order to submitted. Scoping by package keeps this
+      // independent of the Full Support order in payment-flow.
+      const basicOrder = page
         .locator('li')
         .filter({ hasText: 'Basic shortlist' })
+        .filter({ hasText: 'Verifying payment' })
         .first();
-      await expect(order).toBeVisible();
+      await expect(basicOrder).toBeVisible();
+
+      // Pin the row by its order id. Once confirmed, the list re-sorts and a
+      // positional locator would resolve to a different Basic order.
+      const summary = await basicOrder.locator('p').first().innerText();
+      const orderKey = summary.match(/#([0-9a-f]{8})/i)?.[1];
+      expect(orderKey).toBeTruthy();
+      const order = page.locator('li').filter({ hasText: `#${orderKey}` });
+
       await expect(
         order.getByRole('button', { name: 'Confirm payment' })
       ).toBeEnabled();
       await order.getByRole('button', { name: 'Confirm payment' }).click();
-      await expect(page.getByRole('status')).toContainText('Payment confirmed');
-      await expect(order).toContainText('Confirmed');
+      await expect(page.getByRole('status')).toContainText('Payment confirmed', {
+        timeout: 20_000,
+      });
+      await expect(order).toContainText('Confirmed', { timeout: 20_000 });
     });
   });
 });

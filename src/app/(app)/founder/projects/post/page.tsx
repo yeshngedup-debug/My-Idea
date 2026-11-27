@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Post a Project — server wrapper with an auth guard.
  * The interactive form lives in the client component. Auth is the only use of
  * the session here; the new project row is written by the server action through
@@ -20,7 +20,7 @@ export default async function PostProjectPage() {
   const user = await getUser();
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={

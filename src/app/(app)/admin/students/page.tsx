@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Admin — Students management. Rank, verify profiles, select for shortlist.
  * Server loads students (with application counts), founders and projects
  * from Neon, then hands them to the interactive AdminStudentsClient.
@@ -83,7 +83,7 @@ export default async function AdminStudentsPage() {
   }
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-5xl">
         <PinnedHeadingSection
           heading={
@@ -94,7 +94,7 @@ export default async function AdminStudentsPage() {
             />
           }
         >
-          <div className="rounded-2xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-6">
+          <div className="rounded-xl border border-[#b9dede] bg-[#eaf6f6] p-4 sm:p-5">
             <AdminStudentsClient
               students={students}
               founders={founders}

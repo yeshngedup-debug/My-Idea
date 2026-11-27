@@ -1,9 +1,11 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import { AuthShell } from "@/features/auth/components/auth-shell";
 
 /**
- * Auth shell. Each auth page renders its own AuthShell; this group layout only
- * provides a stable boundary so future shared auth chrome has a home.
+ * Auth shell. One shared chrome for every auth route: the header, the single
+ * work column and the footer live here, so each page only renders its own
+ * form card and help panel.
  */
 export default function AuthLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return <AuthShell>{children}</AuthShell>;
 }

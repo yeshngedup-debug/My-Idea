@@ -14,6 +14,11 @@ import {
 } from '@phosphor-icons/react';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
 import { Badge } from '@/components/ui/badge';
+import { formatBhutanDate, formatEnGbDate } from '@/lib/format';
+import {
+  PROJECT_STATUS_LABEL,
+  projectStatusLabel,
+} from '@/lib/status-labels';
 import { EmptyState } from '@/components/ui/empty-state';
 
 export interface OtherProject {
@@ -33,18 +38,11 @@ export interface OtherProject {
 
 const FILTERS = [
   { label: 'All', value: '' },
-  { label: 'Open', value: 'open' },
-  { label: 'In progress', value: 'in_progress' },
-  { label: 'Review', value: 'review' },
-  { label: 'Completed', value: 'completed' },
+  { label: PROJECT_STATUS_LABEL.open, value: 'open' },
+  { label: PROJECT_STATUS_LABEL.in_progress, value: 'in_progress' },
+  { label: PROJECT_STATUS_LABEL.review, value: 'review' },
+  { label: PROJECT_STATUS_LABEL.completed, value: 'completed' },
 ];
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Open',
-  in_progress: 'In progress',
-  review: 'In review',
-  completed: 'Completed',
-};
 
 /** Decorative cue only; the status text above stays the accessible label. */
 const STATUS_DOT: Record<string, string> = {
@@ -55,22 +53,15 @@ const STATUS_DOT: Record<string, string> = {
 };
 
 const DISCLOSURE_CLASS =
-  'pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#eaf6f6] px-2.5 py-0.5 text-xs font-medium text-[#356464] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
+  'pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-2.5 py-1 text-xs font-medium text-[#356464] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#b9dede] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]';
 
 function formatDate(value: string | null): string {
-  if (!value) return 'Not set';
-  // A date-only value must be built from local calendar parts: new Date('YYYY-MM-DD')
-  // is UTC midnight and shows the previous day in UTC-negative time zones.
-  const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
-  const date = parts
-    ? new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]))
-    : new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Not set';
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+  return formatBhutanDate(value, 'Not set');
+}
+
+/** A deadline is a calendar fact, not an instant, so it keeps the plain day. */
+function formatDeadline(value: string | null): string {
+  return formatEnGbDate(value, 'Not set');
 }
 
 function budgetLabel(min: number | null, max: number | null): string {
@@ -113,7 +104,7 @@ export function BrowseProjectsClient({
         </div>
         <p className="text-xs tabular-nums text-[#356464]">
           {filtered.length} {filtered.length === 1 ? 'project' : 'projects'}
-          {status ? ` · ${STATUS_LABEL[status] ?? status}` : ''}
+          {status ? ` · ${projectStatusLabel(status)}` : ''}
         </p>
       </div>
 
@@ -134,7 +125,7 @@ export function BrowseProjectsClient({
               <button
                 type="button"
                 onClick={() => setStatus('')}
-                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#0b5c5c] px-5 py-2.5 text-sm font-semibold text-[#ffffff] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
                 Show all projects
               </button>
@@ -166,7 +157,7 @@ export function BrowseProjectsClient({
                     aria-hidden="true"
                     className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[p.status] ?? 'bg-[#356464]'}`}
                   />
-                  {STATUS_LABEL[p.status] ?? p.status}
+                  {projectStatusLabel(p.status)}
                 </Badge>
               </div>
 
@@ -274,7 +265,7 @@ export function BrowseProjectsClient({
                     Apply by
                   </dt>
                   <dd className="mt-0.5 font-medium tabular-nums text-[#0b5c5c]">
-                    {formatDate(p.deadline)}
+                    {formatDeadline(p.deadline)}
                   </dd>
                 </div>
               </dl>

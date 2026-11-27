@@ -16,6 +16,8 @@ import {
 } from '@/lib/neon-data';
 import { Badge } from '@/components/ui/badge';
 import { SubmitButton } from '@/components/ui/submit-button';
+import { formatBhutanDate, formatEnGbDate } from '@/lib/format';
+import { projectStatusLabel } from '@/lib/status-labels';
 
 export const metadata = { title: 'Project Details' };
 
@@ -74,11 +76,19 @@ type ProjectDetail = {
   created_at: string;
 };
 
+/** Same wording as every other project status in the app. */
 function statusLabel(status: string): string {
-  return status
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+  return projectStatusLabel(status);
+}
+
+/** A deadline is a calendar fact, not an instant, so it keeps the plain day. */
+function formatCalendarDate(value: string): string {
+  return formatEnGbDate(value, 'Date not set');
+}
+
+/** A posting timestamp is shown on the Bhutan local calendar day. */
+function formatPostedDate(value: string): string {
+  return formatBhutanDate(value, 'Date not set');
 }
 
 /** Neon stores deadline as a date; mapProject returns it as an ISO string. */
@@ -92,16 +102,6 @@ function localDate(value: string): Date {
     );
   }
   return new Date(value);
-}
-
-function formatDate(value: string): string {
-  const date = localDate(value);
-  if (Number.isNaN(date.getTime())) return 'Date not set';
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
 }
 
 /** A date-only deadline stays open through the local calendar day. */
@@ -247,25 +247,25 @@ export default async function StudentProjectDetailPage({
     },
     {
       label: 'Apply by',
-      value: project.deadline ? formatDate(project.deadline) : 'Open until closed',
+      value: project.deadline ? formatCalendarDate(project.deadline) : 'Open until closed',
     },
     {
       label: 'Posted',
-      value: formatDate(project.created_at),
+      value: formatPostedDate(project.created_at),
     },
   ];
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-3xl">
         <Link
           href="/student/projects"
-          className="mb-6 inline-flex min-h-9 items-center gap-2 rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none! hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="mb-6 inline-flex min-h-11 items-center gap-2 rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none! hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           Back to open projects
         </Link>
 
-        <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <h1 className="break-words text-xl font-semibold tracking-tight text-primary sm:text-2xl">
@@ -330,7 +330,7 @@ export default async function StudentProjectDetailPage({
             {notice && (
               <p
                 role={notice.role}
-                className={`mb-4 break-words rounded-lg border px-4 py-3 text-sm leading-6 ${
+                className={`mb-4 break-words rounded-md border px-4 py-3 text-sm leading-6 ${
                   notice.role === 'status'
                     ? 'border-border bg-background text-primary'
                     : 'border-border bg-background text-destructive'
@@ -362,7 +362,7 @@ export default async function StudentProjectDetailPage({
                 <button
                   type="button"
                   disabled
-                  className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-lg bg-muted px-5 text-sm font-semibold text-muted-foreground"
+                  className="inline-flex min-h-11 cursor-not-allowed items-center justify-center rounded-md bg-muted px-5 text-sm font-semibold text-muted-foreground"
                 >
                   {applied ? 'Applied' : 'Applications closed'}
                 </button>
@@ -370,11 +370,11 @@ export default async function StudentProjectDetailPage({
                   {applied
                     ? 'Your application is on file. '
                     : closedByDeadline && project.deadline
-                      ? `Applications closed on ${formatDate(project.deadline)}. `
+                      ? `Applications closed on ${formatCalendarDate(project.deadline)}. `
                       : `This brief is now ${statusLabel(project.status)}. `}
                   <Link
                     href="/student/applications"
-                    className="rounded font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="inline-block rounded py-0.5 font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     Track applications
                   </Link>

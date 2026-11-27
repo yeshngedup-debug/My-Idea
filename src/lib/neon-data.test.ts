@@ -588,6 +588,14 @@ describe('shortlist orders', () => {
     );
   });
 
+  it('insertOrder casts the nullable project id so Postgres can infer its type', async () => {
+    db.setRows([{ id: 'o1' }]);
+    await expect(data.insertOrder(orderInput)).resolves.toEqual({ id: 'o1' });
+
+    const [strings] = db.snapshot().calls.at(-1) ?? [];
+    expect((strings as TemplateStringsArray).join('?')).toContain('::uuid');
+  });
+
   it('getOrder maps a row or null', async () => {
     db.setRows([
       orderRow({ confirmed_at: '2026-02-01T00:00:00Z', project_id: 'p1' }),

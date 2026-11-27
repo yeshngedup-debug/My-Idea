@@ -1,7 +1,7 @@
 /**
  * Compact page heading for workspace sub-pages.
- * Server-only. One real h1 and a short purpose line answer "where am I" and
- * "what is here". Role context stays non-visual so nothing competes with it.
+ * Server-only. One real h1, a quiet context line and a short purpose line
+ * answer "where am I" and "what is here".
  */
 export function WorkspacePageHeading({
   eyebrow,
@@ -14,7 +14,8 @@ export function WorkspacePageHeading({
 }) {
   return (
     <div className="min-w-0" data-role-context={eyebrow}>
-      <h1 className="text-[clamp(1.5rem,3vw,2.125rem)] font-semibold leading-[1.15] tracking-[-0.035em] text-[#0b2e2e] text-balance">
+      <p className="text-xs font-medium text-[#356464]">{eyebrow}</p>
+      <h1 className="mt-1.5 text-[clamp(1.5rem,3vw,2rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#0b2e2e] text-balance">
         {title}
       </h1>
       <p className="mt-2 max-w-sm text-sm leading-6 text-[#356464] sm:max-w-md">

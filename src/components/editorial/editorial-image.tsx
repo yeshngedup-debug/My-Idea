@@ -9,7 +9,8 @@ export type EditorialImageProps = {
   alt: string;
   /** Crop contract. Defaults to wide. */
   ratio?: "wide" | "portrait" | "square";
-  priority?: boolean;
+  /** Preload the image instead of lazy-loading it (Next 16 `preload` prop). */
+  preload?: boolean;
   /** Sizing or spacing utilities applied to the figure. */
   className?: string;
 };
@@ -36,7 +37,7 @@ export function EditorialImage({
   src,
   alt,
   ratio = "wide",
-  priority = false,
+  preload = false,
   className,
 }: EditorialImageProps) {
   return (
@@ -52,7 +53,7 @@ export function EditorialImage({
         src={src}
         alt={alt}
         fill
-        priority={priority}
+        preload={preload}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40rem"
         className={cn(styles.zoom, "object-cover object-[45%_55%]")}
       />

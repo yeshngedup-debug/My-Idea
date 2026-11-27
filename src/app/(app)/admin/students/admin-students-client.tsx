@@ -5,8 +5,7 @@
  * multi-select, shortlist generation with copy + download.
  * Mobile-first: cards with 44px+ touch targets, sticky action bar.
  */
-import { useMemo, useState, useTransition, type ReactNode } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   MagnifyingGlass,
@@ -66,24 +65,6 @@ const AVAILABILITY_LABEL: Record<string, string> = {
 };
 
 const STUDENTS_PER_PAGE = 12;
-
-/** Mirrors the --ease-out token in app/globals.css. */
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
-
-/** One gentle entrance for the generated result, which appears after an action. */
-function ResultEntrance({ children }: { children: ReactNode }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div>{children}</div>;
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.97 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.16, ease: EASE_OUT }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export function AdminStudentsClient({
   students,
@@ -310,10 +291,10 @@ export function AdminStudentsClient({
               setPage(1);
             }}
             aria-pressed={verifiedFilter === f.value}
-            className={`pressable min-h-11 shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
+            className={`pressable min-h-11 shrink-0 rounded-md border px-4 py-2 text-sm font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
               verifiedFilter === f.value
-                ? 'bg-[#66bfbf] text-[#0b2e2e]'
-                : 'bg-[#eaf6f6] border border-[#b9dede] text-[#356464] hover:bg-[#0b5c5c]/10'
+                ? 'border-[#0b5c5c] bg-[#0b5c5c] text-[#ffffff]'
+                : 'border-[#b9dede] bg-[#eaf6f6] text-[#356464] hover:bg-[#0b5c5c]/10'
             }`}
           >
             {f.label}
@@ -349,7 +330,7 @@ export function AdminStudentsClient({
         <button
           type="button"
           onClick={toggleSelectAll}
-          className="pressable inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+          className="pressable inline-flex min-h-11 items-center gap-2 rounded-md px-1 text-sm text-[#356464] transition-colors hover:text-[#0b5c5c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
         >
           {allVisibleSelected ? (
             <CheckSquare className="w-4 h-4 text-[#0b5c5c]" />
@@ -370,7 +351,7 @@ export function AdminStudentsClient({
               <button
                 type="button"
                 onClick={() => router.refresh()}
-                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#ff0063] px-6 py-3 text-sm font-semibold text-[#000000] hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                className="pressable inline-flex min-h-11 items-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
               >
                 Try again
               </button>
@@ -393,7 +374,7 @@ export function AdminStudentsClient({
                     setVerifiedFilter('');
                     setPage(1);
                   }}
-                  className="pressable inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#ffffff] px-6 py-3 text-sm font-semibold text-[#0b5c5c] hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+                  className="pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
                 >
                   Clear filters
                 </button>
@@ -402,7 +383,7 @@ export function AdminStudentsClient({
           />
         )
       ) : (
-        <ul id="student-profiles-list" className="space-y-3">
+        <ul id="student-profiles-list" className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
           {visibleStudents.map((s) => {
             const displayName = s.full_name?.trim() || 'Unnamed student';
             const isSelected = selected.has(s.id);
@@ -413,9 +394,7 @@ export function AdminStudentsClient({
               <li
                 key={s.id}
                 aria-busy={savingRank || savingVerify}
-                className={`bg-[#ffffff] border rounded-2xl p-4 transition-colors ${
-                  isSelected ? 'border-[#ff0063]/40 bg-[#ff0063]/8' : 'border-[#b9dede]'
-                }`}
+                className={`py-4 ${isSelected ? 'bg-[#ff0063]/8' : ''}`}
               >
                 <div className="flex items-start gap-3">
                   {/* Select */}
@@ -424,7 +403,7 @@ export function AdminStudentsClient({
                     onClick={() => toggleSelect(s.id)}
                     aria-label={isSelected ? `Deselect ${displayName}` : `Select ${displayName}`}
                     aria-pressed={isSelected}
-                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                    className="mt-1 grid min-h-11 min-w-11 shrink-0 place-items-center rounded-md p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
                   >
                     {isSelected ? (
                       <CheckSquare className="w-5 h-5 text-[#0b5c5c]" aria-hidden="true" />
@@ -449,7 +428,7 @@ export function AdminStudentsClient({
                       onKeyDown={(e) => e.key === 'Enter' && saveRank(s.id)}
                       disabled={savingRank}
                       placeholder="-"
-                      className="w-14 h-11 rounded-xl bg-[#eaf6f6] border border-[#b9dede] text-center text-[#0b5c5c] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 [color-scheme:light]"
+                      className="w-14 h-11 rounded-md bg-[#eaf6f6] border border-[#b9dede] text-center text-[#0b5c5c] text-base tabular-nums focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 [color-scheme:light]"
                     />
                   </div>
 
@@ -513,10 +492,10 @@ export function AdminStudentsClient({
                     onClick={() => toggleVerified(s)}
                     disabled={savingVerify}
                     aria-busy={savingVerify}
-                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
+                    className={`pressable inline-flex min-h-11 items-center gap-1.5 rounded-md border px-3 py-2 text-xs font-semibold transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-60 ${
                       isVerified
-                        ? 'border border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c] hover:bg-[#0b5c5c]/12'
-                        : 'border border-[#ff0063] bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
+                        ? 'border-[#b9dede] bg-[#eaf6f6] text-[#0b5c5c] hover:bg-[#0b5c5c]/10'
+                        : 'border-[#ff0063] bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
                     }`}
                   >
                     {isVerified ? (
@@ -543,7 +522,7 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
           >
             Previous
           </button>
@@ -555,7 +534,7 @@ export function AdminStudentsClient({
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             aria-controls="student-profiles-list"
-            className="inline-flex min-h-11 items-center rounded-full border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
+            className="inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#eaf6f6] px-4 py-2 text-sm font-semibold text-[#0b5c5c] transition-colors hover:bg-[#0b5c5c]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40"
           >
             Next
           </button>
@@ -564,35 +543,33 @@ export function AdminStudentsClient({
 
       {/* Shortlist generation result */}
       {shortlistText && (
-        <ResultEntrance>
-        <div className="bg-[#ffffff] border border-[#ff0063]/25 rounded-2xl p-5 space-y-3">
+        <div className="space-y-3 rounded-xl border border-[#b9dede] bg-[#ffffff] p-4">
           <h3 className="text-sm font-semibold text-[#0b5c5c]">Generated shortlist</h3>
           <textarea
             readOnly
             value={shortlistText}
             rows={12}
-            className="w-full rounded-xl bg-[#eaf6f6] border border-[#b9dede] p-4 text-xs text-[#0b5c5c] font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+            className="w-full rounded-md border border-[#b9dede] bg-[#eaf6f6] p-3 font-mono text-xs text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
             aria-label="Generated shortlist text"
           />
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <div className="flex-1">
               <CopyButton
                 text={shortlistText}
                 label="Copy"
-                className="w-full rounded-xl border-[#66bfbf] bg-[#eaf6f6] font-semibold text-[#0b5c5c] hover:bg-[#b9dede]"
+                className="w-full rounded-md border-[#b9dede] bg-[#eaf6f6] font-semibold text-[#0b5c5c] hover:bg-[#b9dede]"
               />
             </div>
             <Button
               type="button"
               onClick={downloadShortlist}
               variant="outline"
-              className="flex-1 border-[#b9dede] bg-transparent text-[#0b5c5c] hover:bg-[#0b5c5c]/10 h-11"
+              className="h-11 flex-1 border-[#b9dede] bg-transparent text-[#0b5c5c] hover:bg-[#0b5c5c]/10"
             >
-              <Download className="w-4 h-4 mr-1" aria-hidden="true" /> Download .txt
+              <Download className="mr-1 w-4 h-4" aria-hidden="true" /> Download .txt
             </Button>
           </div>
         </div>
-        </ResultEntrance>
       )}
 
       {/* Sticky action bar */}
@@ -610,7 +587,7 @@ export function AdminStudentsClient({
                   setProjectId('');
                 }}
                 aria-label="Choose founder"
-                className="min-w-0 flex-1 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] [&>option]:bg-[#ffffff]"
+                className="min-w-0 flex-1 rounded-md border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] [&>option]:bg-[#ffffff]"
               >
                 <option value="">Choose founder...</option>
                 {founders.map((f) => (
@@ -624,7 +601,7 @@ export function AdminStudentsClient({
                 onChange={(e) => setProjectId(e.target.value)}
                 aria-label="Choose project"
                 disabled={!founderId}
-                className="min-w-0 flex-1 rounded-xl border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40 [&>option]:bg-[#ffffff]"
+                className="min-w-0 flex-1 rounded-md border border-[#b9dede] bg-[#eaf6f6] px-3 py-2.5 text-sm text-[#0b5c5c] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:opacity-40 [&>option]:bg-[#ffffff]"
               >
                 <option value="">No specific project</option>
                 {founderProjects.map((p) => (

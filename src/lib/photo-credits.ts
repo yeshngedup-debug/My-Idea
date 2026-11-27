@@ -20,7 +20,7 @@ export type PhotoAttribution = {
 
 export const PHOTO_ATTRIBUTIONS = {
   students: {
-    subject: "Two young Bhutanese women tending a water supply",
+    subject: "Two young Bhutanese girls tending a water supply",
     fileUrl:
       "https://commons.wikimedia.org/wiki/File:Two_Bhutanese_girls_take_care_of_the_water_supply.jpg",
     author: "Mussi Katz",

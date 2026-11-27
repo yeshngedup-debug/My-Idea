@@ -1,5 +1,17 @@
 'use client';
 
+/**
+ * Founder's student directory.
+ *
+ * A dense ledger, not a card wall: each student is one row with the facts a
+ * founder needs to decide (skills, college, availability) and two real
+ * actions — open the full profile, or request a shortlist. The request gate
+ * (`canRequestShortlist`) is computed on the server and mirrored here; the
+ * client never invents eligibility.
+ *
+ * One magenta action belongs to the view ("Get Shortlist", which unlocks the
+ * request flow). The per-row request button is teal so it never competes.
+ */
 import { useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { requestShortlist } from '@/features/shortlist/actions';
@@ -38,6 +50,12 @@ const AVAILABILITY_LABEL: Record<string, string> = {
   full_time: 'Full time',
   flexible: 'Flexible',
 };
+
+const ROW_LINK =
+  'inline-flex min-h-11 items-center rounded text-sm font-semibold text-[#0b5c5c] underline decoration-[#b9dede] underline-offset-4 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-[#c2004b] hover:decoration-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]';
+
+const REQUEST_BUTTON =
+  'pressable inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md bg-[#0b5c5c] px-4 py-2.5 text-sm font-semibold text-[#ffffff] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#0b2e2e] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] disabled:cursor-not-allowed disabled:opacity-80';
 
 export function BrowseClient({
   students,
@@ -131,6 +149,14 @@ export function BrowseClient({
         {availability ? ` available ${AVAILABILITY_LABEL[availability]?.toLowerCase() ?? availability}` : ''}
       </p>
 
+      {/* The one magenta action in this view. */}
+      <Link
+        href="/founder/shortlists"
+        className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-[#ff0063] px-5 py-2.5 text-sm font-semibold text-[#000000] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] focus-visible:ring-offset-2 focus-visible:ring-offset-[#eaf6f6]"
+      >
+        Get Shortlist
+      </Link>
+
       {status && (
         <StatusMessage
           key={status.id}
@@ -156,7 +182,7 @@ export function BrowseClient({
                   setQuery('');
                   setAvailability('');
                 }}
-                className="pressable inline-flex min-h-11 items-center rounded-full bg-[#0b5c5c] px-6 py-3 text-sm font-semibold text-[#ffffff] hover:bg-[#c2004b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0063] focus-visible:ring-offset-2"
+                className="pressable inline-flex min-h-11 items-center rounded-md border border-[#b9dede] bg-[#ffffff] px-5 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
               >
                 Clear filters
               </button>
@@ -164,88 +190,93 @@ export function BrowseClient({
           }
         />
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <ul className="divide-y divide-[#b9dede] border-y border-[#b9dede]">
           {filtered.map((s) => {
             const isShortlisted = shortlisted.has(s.id);
             const isPending = pendingId === s.id;
             const studentName = s.full_name ?? 'student';
+            const skills = s.skills ?? [];
             return (
-              <li key={s.id} className="group flex flex-col rounded-2xl border border-[#b9dede] bg-[#ffffff] p-5 transition-colors duration-150 motion-reduce:transition-none hover:border-[#66bfbf]/25 hover:bg-[#eaf6f6]">
-                <div className="mb-1 flex items-start justify-between gap-3">
-                  <h3 className="text-base font-semibold leading-snug text-[#0b5c5c]">
-                    {s.full_name}
-                  </h3>
-                  {s.availability && (
-                    <Badge variant="outline" className="shrink-0 text-[#0b5c5c]">
-                      {AVAILABILITY_LABEL[s.availability] ?? s.availability}
-                    </Badge>
-                  )}
-                </div>
-
-                <p className="mb-3 inline-flex items-center gap-1.5 text-sm text-[#356464]">
-                  {s.college}
-                  {s.course ? ` - ${s.course}` : ''}
-                  {s.year ? ` (${s.year} year)` : ''}
-                </p>
-
-                {(s.skills?.length ?? 0) > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {(s.skills ?? []).slice(0, 4).map((k) => (
-                      <Badge key={k} variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">{k}</Badge>
-                    ))}
-                    {(s.skills ?? []).length > 4 && (
-                      <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">
-                        +{(s.skills ?? []).length - 4}
-                      </Badge>
+              <li key={s.id} className="py-4">
+                <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="min-w-0 break-words text-base font-semibold leading-snug text-[#0b5c5c]">
+                        {s.full_name}
+                      </h3>
+                      {s.availability && (
+                        <Badge variant="outline" className="shrink-0 text-[#0b5c5c]">
+                          {AVAILABILITY_LABEL[s.availability] ?? s.availability}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="mt-0.5 text-xs text-[#356464]">
+                      {s.college}
+                      {s.course ? ` - ${s.course}` : ''}
+                      {s.year ? ` (${s.year} year)` : ''}
+                    </p>
+                    {s.bio && (
+                      <p className="mt-1.5 line-clamp-2 text-sm text-[#356464]">{s.bio}</p>
                     )}
                   </div>
-                )}
 
-                {s.bio && (
-                  <p className="mb-4 line-clamp-2 text-sm text-[#356464]">{s.bio}</p>
-                )}
-
-                <div className="mt-auto flex flex-col sm:flex-row gap-2">
-                  <Link href={`/founder/students/${s.id}`} className="pressable inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]">
-                    View full profile
-                  </Link>
-                  {s.canRequestShortlist ? (
-                    <button
-                      type="button"
-                      disabled={isShortlisted || isPending}
-                      aria-busy={isPending || undefined}
-                      onClick={() => handleShortlist(s.id)}
-                      aria-label={
-                        isShortlisted
-                          ? `Shortlisted: ${studentName}`
-                          : isPending
-                            ? `Sending shortlist request for ${studentName}`
-                            : `Request shortlist for ${studentName}`
-                      }
-                      className={`pressable inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b] ${
-                        isShortlisted
-                          ? 'cursor-default border border-[#66bfbf]/20 bg-[#0b5c5c]/8 text-[#0b5c5c]'
-                          : 'bg-[#ff0063] text-[#000000] hover:bg-[#d40054]'
-                      } disabled:opacity-80`}
-                    >
-                      {isShortlisted ? (
-                        'Shortlisted'
-                      ) : (
-                        <>
-                          {isPending ? 'Sending...' : 'Request shortlist'}
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <Link
-                      href="/founder/shortlists"
-                      aria-label={`View shortlist options for ${studentName}`}
-                      className="inline-flex min-h-11 flex-1 items-center justify-center rounded-xl border border-[#b9dede] bg-[#ffffff] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
-                    >
-                      View shortlist options
+                  <div className="flex shrink-0 flex-wrap items-center gap-2">
+                    <Link href={`/founder/students/${s.id}`} className={ROW_LINK}>
+                      View full profile
+                      <span className="sr-only"> for {studentName}</span>
                     </Link>
-                  )}
+                    {s.canRequestShortlist ? (
+                      <button
+                        type="button"
+                        disabled={isShortlisted || isPending}
+                        aria-busy={isPending || undefined}
+                        onClick={() => handleShortlist(s.id)}
+                        aria-label={
+                          isShortlisted
+                            ? `Shortlisted: ${studentName}`
+                            : isPending
+                              ? `Sending shortlist request for ${studentName}`
+                              : `Request shortlist for ${studentName}`
+                        }
+                        className={REQUEST_BUTTON}
+                      >
+                        {isShortlisted
+                          ? 'Shortlisted'
+                          : isPending
+                            ? 'Sending...'
+                            : 'Request shortlist'}
+                      </button>
+                    ) : (
+                      <Link
+                        href="/founder/shortlists"
+                        aria-label={`View shortlist options for ${studentName}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-md border border-[#b9dede] bg-[#ffffff] px-4 py-2.5 text-sm font-semibold text-[#0b5c5c] transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-[#eaf6f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c2004b]"
+                      >
+                        Shortlist options
+                      </Link>
+                    )}
+                  </div>
                 </div>
+
+                {skills.length > 0 && (
+                  <ul className="mt-2 flex flex-wrap gap-1.5">
+                    {skills.slice(0, 6).map((k) => (
+                      <li key={k}>
+                        <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">
+                          {k}
+                        </Badge>
+                      </li>
+                    ))}
+                    {skills.length > 6 && (
+                      <li>
+                        <Badge variant="outline" className="border-[#b9dede] bg-[#eaf6f6] text-[#356464]">
+                          +{skills.length - 6} more
+                        </Badge>
+                      </li>
+                    )}
+                  </ul>
+                )}
+
                 {status?.id === s.id && (
                   <p
                     className={`mt-2 text-xs ${status.ok ? 'text-[#0b5c5c]' : 'text-[#c2004b]'}`}

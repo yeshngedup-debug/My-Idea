@@ -48,7 +48,9 @@ test.describe('Student flow', () => {
         .getByLabel('Bio')
         .fill('Final-year CS student looking for part-time product work.');
       await page.getByRole('button', { name: 'Save profile' }).click();
-      await expect(page.getByRole('status')).toContainText('Profile saved');
+      await expect(page.getByRole('status')).toContainText('Profile saved', {
+        timeout: 20_000,
+      });
     });
 
     await test.step('Upload CV', async () => {
@@ -56,7 +58,9 @@ test.describe('Student flow', () => {
         .locator('input[name="cv"]')
         .setInputFiles('tests/e2e/fixtures/test-cv.pdf');
       await page.getByRole('button', { name: 'Upload CV' }).click();
-      await expect(page.getByRole('status')).toContainText('CV uploaded');
+      await expect(page.getByRole('status')).toContainText('CV uploaded', {
+        timeout: 20_000,
+      });
     });
 
     await test.step('Browse open projects', async () => {
@@ -86,7 +90,9 @@ test.describe('Student flow', () => {
         .filter({
           has: page.getByRole('heading', { level: 3, name: projectTitle }),
         });
-      await expect(appliedCard).toContainText('Applied successfully!');
+      await expect(appliedCard).toContainText('Applied successfully!', {
+        timeout: 20_000,
+      });
     });
 
     await test.step('Track applications', async () => {

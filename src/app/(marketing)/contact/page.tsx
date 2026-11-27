@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Envelope } from "@phosphor-icons/react/dist/ssr";
-import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
+import { MarketingReveal } from "@/components/marketing/reveal";
+import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import {
   Action,
@@ -20,8 +21,6 @@ import {
   FOUNDER_ACCESS,
 } from "@/components/marketing/nav";
 import { InlineImageText } from "@/components/editorial";
-import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
-import { HeroCopyEntrance } from "@/components/marketing/hero-motion";
 import { HeroPhotoEntrance } from "@/components/marketing/hero-photo";
 import { APP_CONTACT } from "@/config/app";
 import { pageMetadata } from "@/lib/metadata";
@@ -82,7 +81,7 @@ export default function ContactPage() {
         {/* Split hero: the address is the action, one plate beside it. */}
         <section className="border-b border-[#0b2e2e]/10">
           <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 gap-10 px-5 pb-12 pt-10 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-12 lg:pb-16 lg:pt-14">
-            <HeroCopyEntrance className="lg:col-span-7 lg:pr-8">
+            <div className="lg:col-span-7 lg:pr-8">
               <p className="index-label">01 · Get in touch</p>
               <h1 className="display-xl mt-7 max-w-[15ch] text-[#0b2e2e]">
                 Email the{" "}
@@ -115,7 +114,7 @@ export default function ContactPage() {
                   <RuleLink href={CTA_HREFS.faq}>{CTA_LABELS.faq}</RuleLink>
                 </div>
               </div>
-            </HeroCopyEntrance>
+            </div>
 
             <div className="lg:col-span-5">
               <HeroPhotoEntrance>
@@ -125,7 +124,7 @@ export default function ContactPage() {
                       src="/images/thimphu-city.jpg"
                       alt="Handicraft shops along Norzin Lam road in Thimphu"
                       fill
-                      priority
+                      preload
                       sizes="(max-width: 1024px) 100vw, 42vw"
                       className="object-cover object-center"
                     />
@@ -190,7 +189,7 @@ export default function ContactPage() {
               </MarketingReveal>
 
               <MarketingReveal delay={0.08} className="lg:col-span-7">
-                <GsapScaleFadeImage>
+                <div className="w-full">
                   <figure>
                     <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[16/10]">
                       <Image
@@ -202,7 +201,7 @@ export default function ContactPage() {
                       />
                     </div>
                   </figure>
-                </GsapScaleFadeImage>
+                </div>
               </MarketingReveal>
             </div>
           </div>
@@ -299,7 +298,7 @@ export default function ContactPage() {
             </MarketingReveal>
 
             <MarketingReveal className="mt-12">
-              <GsapScaleFadeImage>
+              <div className="w-full">
                 <figure>
                   <div className="plate relative aspect-[4/3] overflow-hidden sm:aspect-[21/9]">
                     <Image
@@ -311,7 +310,7 @@ export default function ContactPage() {
                     />
                   </div>
                 </figure>
-              </GsapScaleFadeImage>
+              </div>
             </MarketingReveal>
           </div>
         </Band>

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Student full profile — founder view.
  */
 import Link from 'next/link';
@@ -15,6 +15,7 @@ import {
   listStudentApplications,
 } from '@/lib/neon-data';
 import { Badge } from '@/components/ui/badge';
+import { applicationStatusLabel } from '@/lib/status-labels';
 import { ShortlistButton } from './shortlist-button';
 
 export const metadata = { title: 'Student Profile' };
@@ -25,13 +26,6 @@ const AVAILABILITY_LABEL: Record<string, string> = {
   evenings: 'Evenings',
   full_time: 'Full time',
   flexible: 'Flexible',
-};
-
-const APPLICATION_STATUS_LABEL: Record<string, string> = {
-  pending: 'Pending',
-  shortlisted: 'Shortlisted',
-  accepted: 'Accepted',
-  rejected: 'Rejected',
 };
 
 export default async function StudentProfileDetailPage({
@@ -94,7 +88,7 @@ export default async function StudentProfileDetailPage({
   );
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link href="/founder/browse-students" className="inline-flex min-h-11 items-center rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
@@ -105,7 +99,7 @@ export default async function StudentProfileDetailPage({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
           <div className="flex flex-wrap items-center gap-2 text-sm text-body-secondary">
             <span>{sp.college}{sp.course ? ` - ${sp.course}` : ''}{sp.year ? ` (${sp.year} year)` : ''}</span>
             {sp.availability && (
@@ -118,12 +112,12 @@ export default async function StudentProfileDetailPage({
               <span>Latest application to your project</span>
               <Link
                 href={`/founder/projects/${encodeURIComponent(founderApplication.project.id)}`}
-                className="rounded font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="inline-flex min-h-11 items-center rounded font-semibold text-primary underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {founderApplication.project.title}
               </Link>
               <span aria-hidden="true">·</span>
-              <span>{APPLICATION_STATUS_LABEL[founderApplication.status] ?? founderApplication.status}</span>
+              <span>{applicationStatusLabel(founderApplication.status)}</span>
             </p>
           )}
 
@@ -145,7 +139,7 @@ export default async function StudentProfileDetailPage({
           <div className="mt-6 border-t border-border pt-6">
             <h2 className="mb-2 text-sm font-semibold text-primary">CV</h2>
             {canViewCv ? (
-              <a href={`/api/cv/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-primary transition-colors motion-reduce:transition-none hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <a href={`/api/cv/${encodeURIComponent(id)}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md border border-border bg-background px-4 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 View CV (PDF)
               </a>
             ) : (

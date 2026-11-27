@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * The single brand-differentiation chapter. A plain two-column list with one
- * vermilion hairline as its only accent. No cards, no glow, no gradient.
+ * magenta rule as its only accent. No cards, no glow, no gradient.
  * Server-compatible: no hooks and no client directive. The copy lives here so
  * /about and its compact echo on /public stay in sync.
  */

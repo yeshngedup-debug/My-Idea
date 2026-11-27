@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MarketingReveal, SiteHeader } from "@/components/marketing/site-header";
+import { MarketingReveal } from "@/components/marketing/reveal";
+import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { EditorialHero } from "@/components/marketing/editorial-hero";
 import {
@@ -13,7 +14,6 @@ import {
   gutters,
 } from "@/components/marketing/editorial";
 import { InlineImageText } from "@/components/editorial";
-import { GsapScaleFadeImage } from "@/components/marketing/editorial-page-motion";
 import { LiveContext } from "@/components/data/live-context";
 import { AnimatedDisclosureList } from "@/components/interactive/animated-disclosure-list";
 import {
@@ -194,7 +194,7 @@ export default async function AboutPage() {
             </div>
 
             <MarketingReveal className="mt-12">
-              <GsapScaleFadeImage>
+              <div className="w-full">
                 <figure>
                   <div className="plate relative aspect-[16/9] overflow-hidden sm:aspect-[21/9]">
                     <Image
@@ -206,7 +206,7 @@ export default async function AboutPage() {
                     />
                   </div>
                 </figure>
-              </GsapScaleFadeImage>
+              </div>
             </MarketingReveal>
           </div>
         </Band>

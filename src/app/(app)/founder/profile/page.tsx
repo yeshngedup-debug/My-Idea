@@ -7,16 +7,17 @@ import { getUser } from '@/lib/auth';
 import { getProfile, getProfileRole, listProjectsByFounder } from '@/lib/neon-data';
 import { PinnedHeadingSection } from '@/components/layout/pinned-heading-section';
 import { WorkspacePageHeading } from '@/components/layout/workspace-page-heading';
+import { PROJECT_STATUS_LABEL } from '@/lib/status-labels';
 import { ProfileClient } from './profile-client';
 import { ProfileDetails, type ProjectCount } from './profile-details';
 
 export const metadata = { title: 'My Profile' };
 
 const STATUSES = [
-  { value: 'open', label: 'Open' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'review', label: 'In review' },
-  { value: 'completed', label: 'Completed' },
+  { value: 'open', label: PROJECT_STATUS_LABEL.open },
+  { value: 'in_progress', label: PROJECT_STATUS_LABEL.in_progress },
+  { value: 'review', label: PROJECT_STATUS_LABEL.review },
+  { value: 'completed', label: PROJECT_STATUS_LABEL.completed },
 ];
 
 export default async function FounderProfilePage() {
@@ -45,7 +46,7 @@ export default async function FounderProfilePage() {
   const fullName = profile.full_name?.trim() || '';
 
   return (
-    <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+    <section>
       <div className="mx-auto max-w-4xl">
         <PinnedHeadingSection
           heading={

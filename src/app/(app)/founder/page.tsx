@@ -18,10 +18,10 @@ import { WorkspaceHero } from "@/components/layout/workspace-hero";
 import { WorkspaceStats } from "@/components/layout/workspace-stats";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
+import { formatBhutanDate } from "@/lib/format";
+import { projectStatusLabel } from "@/lib/status-labels";
 
 export const metadata = { title: "Founder Dashboard" };
-
-const BHUTAN_TZ = "Asia/Thimphu";
 
 /* Status pills use the project's semantic tokens, not one-off hex values. */
 const PILL = {
@@ -51,37 +51,16 @@ const PROJECT_TONE: Record<string, PillTone> = {
   completed: "confirmed",
 };
 
-const PROJECT_LABEL: Record<string, string> = {
-  in_progress: "In progress",
-  review: "In review",
-};
-
 const ROW_LINK =
-  "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded py-3.5 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
+  "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded py-3 transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep";
 
-/** Render dates in Bhutan time, adding the year for projects from other years. */
+/** Same wording and time base as every other project date in the app. */
 function formatPostedDate(iso: string): string {
-  const date = new Date(iso);
-  const yearFormatter = new Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    timeZone: BHUTAN_TZ,
-  });
-  const options: Intl.DateTimeFormatOptions = {
-    day: "numeric",
-    month: "short",
-    timeZone: BHUTAN_TZ,
-  };
-  if (yearFormatter.format(date) !== yearFormatter.format(new Date())) {
-    options.year = "numeric";
-  }
-  return new Intl.DateTimeFormat("en-GB", options).format(date);
+  return formatBhutanDate(iso, "date unavailable");
 }
 
 function statusLabel(status: string): string {
-  return (
-    PROJECT_LABEL[status] ??
-    status.charAt(0).toUpperCase() + status.slice(1).replace("_", " ")
-  );
+  return projectStatusLabel(status);
 }
 
 export default async function FounderDashboard() {
@@ -105,6 +84,7 @@ export default async function FounderDashboard() {
   // Additional read-only data for the action headline. A failed project read
   // is ignored for the count; the page keeps all of its existing behaviour.
   let newApplicants: number | null = null;
+  let pendingByProject = new Map<string, number>();
   try {
     const applicantLists = await Promise.all(
       projects.map((project) =>
@@ -114,8 +94,17 @@ export default async function FounderDashboard() {
     newApplicants = applicantLists
       .flat()
       .filter((applicant) => applicant.status === "pending").length;
+    pendingByProject = new Map(
+      projects.map((project, index) => [
+        project.id,
+        (applicantLists[index] ?? []).filter(
+          (applicant) => applicant.status === "pending",
+        ).length,
+      ]),
+    );
   } catch {
     newApplicants = null;
+    pendingByProject = new Map();
   }
 
   const openProjects = projects.filter(
@@ -131,37 +120,76 @@ export default async function FounderDashboard() {
     { label: "In progress", value: inProgressProjects, detail: null },
   ];
 
-  const heroTitle =
-    newApplicants === null
-      ? "See who's applying to your projects"
-      : newApplicants === 0
-        ? "No new applicants to review"
-        : `${newApplicants} new applicant${newApplicants === 1 ? "" : "s"} to review`;
-  const heroDescription =
-    newApplicants === 0
-      ? "Open a project to read applications as soon as students apply."
-      : "Open a project to read each application and move candidates forward.";
+  // Exactly one next action: applicants to review wins, then a missing brief,
+  // then posting another project.
+  const nextAction =
+    newApplicants !== null && newApplicants > 0
+      ? {
+          title: `${newApplicants} new applicant${newApplicants === 1 ? "" : "s"} to review`,
+          description:
+            "Open a project to read each application and move candidates forward.",
+          action: "Review applicants",
+          href: "/founder/projects",
+        }
+      : projects.length === 0
+        ? {
+            title: "Post a brief to meet students",
+            description:
+              "A clear scope and budget help students understand where they can contribute. Applicants will show up on the project page.",
+            action: "Post a project",
+            href: "/founder/projects/post",
+          }
+        : {
+            title: "No new applicants to review",
+            description:
+              "Post another brief or browse student profiles that already have a CV.",
+            action: "Post a project",
+            href: "/founder/projects/post",
+          };
+
+  const secondaryAction =
+    nextAction.href === "/founder/projects/post"
+      ? { label: "Find talent", href: "/founder/browse-students" }
+      : { label: "Post a project", href: "/founder/projects/post" };
 
   return (
     <div className="space-y-8">
       <WorkspaceHero
         eyebrow="Founder workspace"
-        title={heroTitle}
-        description={heroDescription}
+        title="Founder dashboard"
+        description="Your briefs, applicants and the next step to take."
+      />
+
+      {/* Block A — the single next action, ahead of the figures. */}
+      <section
+        aria-labelledby="founder-next-action-title"
+        className="rounded-xl border border-primary/25 bg-card px-5 py-5 sm:px-6"
       >
-        <Link
-          href="/founder/projects"
-          className="pressable inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-cta px-5 py-3 text-sm font-semibold text-cta-foreground transition-colors hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+        <p className="text-xs font-semibold text-accent-deep">Next action</p>
+        <h2
+          id="founder-next-action-title"
+          className="mt-2 text-lg font-semibold tracking-tight text-primary"
         >
-          Review applicants
-        </Link>
-        <Link
-          href="/founder/projects/post"
-          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-primary-foreground/35 px-5 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#66bfbf]"
-        >
-          Post a project
-        </Link>
-      </WorkspaceHero>
+          {nextAction.title}
+        </h2>
+        <p className="mt-1 max-w-xl text-sm leading-6 text-body-secondary">
+          {nextAction.description}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href={nextAction.href}
+            className="pressable inline-flex min-h-11 items-center justify-center rounded-md bg-cta px-5 py-2.5 text-sm font-semibold text-cta-foreground transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {nextAction.action}
+          </Link>
+          <Link
+            href={secondaryAction.href}
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {secondaryAction.label}
+          </Link>
+        </div>
+      </section>
 
       <WorkspaceStats stats={stats} />
 
@@ -174,7 +202,7 @@ export default async function FounderDashboard() {
             {projects.length > 0 && (
               <Link
                 href="/founder/projects"
-                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-primary hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="inline-flex min-h-11 shrink-0 items-center rounded text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 View all
               </Link>
@@ -187,7 +215,7 @@ export default async function FounderDashboard() {
               action={
                 <Link
                   href="/founder/projects/post"
-                  className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#d40054] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2"
+                  className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border-strong bg-card px-5 py-2.5 text-sm font-semibold text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep focus-visible:ring-offset-2 focus-visible:ring-offset-card"
                 >
                   Create your first project
                 </Link>
@@ -197,6 +225,7 @@ export default async function FounderDashboard() {
             <div className="divide-y divide-border border-y border-border">
               {projects.slice(0, 5).map((project) => {
                 const tone = PROJECT_TONE[project.status] ?? "neutral";
+                const pending = pendingByProject.get(project.id) ?? 0;
                 return (
                   <div key={project.id}>
                     <Link
@@ -209,6 +238,9 @@ export default async function FounderDashboard() {
                         </span>
                         <span className="mt-0.5 block text-xs tabular-nums text-body-secondary">
                           Posted {formatPostedDate(project.created_at)}
+                          {pending > 0
+                            ? ` · ${pending} to review`
+                            : ""}
                         </span>
                       </span>
                       <Badge className={`shrink-0 gap-1.5 ${PILL[tone]}`}>
@@ -239,7 +271,7 @@ export default async function FounderDashboard() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex flex-col gap-0.5 rounded py-3.5 text-sm font-medium text-primary transition-colors hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
+                className="flex min-h-11 flex-col justify-center gap-0.5 rounded py-3 text-sm font-medium text-primary transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:text-accent-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-deep"
               >
                 {item.title}
                 <span className="text-xs font-normal text-body-secondary">

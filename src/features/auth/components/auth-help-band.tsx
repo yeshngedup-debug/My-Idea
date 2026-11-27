@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
-import {
-  Band,
-  RuleLink,
-  container,
-  gutters,
-} from "@/components/marketing/editorial";
+import Link from "next/link";
 import { APP_CONTACT } from "@/config/app";
-import { CTA_HREFS, FOUNDER_ACCESS } from "@/components/marketing/nav";
+import { FOUNDER_ACCESS } from "@/components/marketing/nav";
 import { cn } from "@/lib/utils";
+import {
+  authLinkClassName,
+  focusRing,
+} from "@/features/auth/components/styles";
 
 export type AuthHelpLink = { label: string; href: string };
 
@@ -23,67 +22,78 @@ function isHelpLink(value: AuthHelpLink | ReactNode): value is AuthHelpLink {
 }
 
 /**
- * The single help band for auth routes. `white` keeps the paper ground for
- * reset; `mist` closes the paper-led pages. `newLink` is the reset-path slot
+ * The help panel that closes every auth route.
+ *
+ * It answers the two questions a stuck visitor actually has: how to reach a
+ * human, and how to get a founder account. `newLink` is the reset-path slot
  * and accepts either a label/href pair or a ready-made node.
  */
 export function AuthHelpBand({
-  variant = "mist",
   newLink,
   className,
 }: {
-  variant?: "white" | "mist";
   newLink?: AuthHelpLink | ReactNode;
   className?: string;
 }) {
-  const emailFocusRing = cn(
-    "font-semibold text-[#0b2e2e] underline decoration-[#0b2e2e]/25 underline-offset-4 transition-colors hover:decoration-[#ff0063] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b5c5c] focus-visible:ring-offset-2",
-    variant === "white"
-      ? "focus-visible:ring-offset-white"
-      : "focus-visible:ring-offset-[#eaf6f6]",
-  );
-
   return (
-    <Band
-      tone={variant === "white" ? "paper" : "mist"}
-      className={cn("border-b border-[#0b2e2e]/10", className)}
+    <section
+      aria-label="Account help"
+      className={cn(
+        "mt-4 border border-[#b9dede] bg-white p-5 sm:p-6",
+        className,
+      )}
     >
-      <div
-        className={cn(
-          container,
-          gutters,
-          "grid grid-cols-1 gap-10 py-8 md:py-10 lg:grid-cols-12 lg:gap-12",
-        )}
-      >
-        <div className="lg:col-span-7">
-          <p className="index-label">Account help</p>
-          <p className="mt-4 max-w-[52ch] text-[15px] leading-7 text-[#356464]">
-            Questions about student signup, founder access, or a project?{" "}
-            <a href={`mailto:${APP_CONTACT.email}`} className={emailFocusRing}>
+      <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
+        <div>
+          <h2 className="text-[13px] font-semibold text-[#0b2e2e]">Account help</h2>
+          <p className="mt-2 text-[14px] leading-6 text-[#356464]">
+            Questions about student signup, founder access or a project?{" "}
+            <a
+              href={`mailto:${APP_CONTACT.email}`}
+              className={cn(authLinkClassName, focusRing)}
+            >
               {APP_CONTACT.email}
             </a>
             . We read every message and reply as soon as we can.
           </p>
-          {newLink ? (
-            <div className="mt-6 border-t border-[#0b2e2e]/12 pt-6">
-              {isHelpLink(newLink) ? (
-                <RuleLink href={newLink.href}>{newLink.label}</RuleLink>
-              ) : (
-                newLink
-              )}
-            </div>
-          ) : null}
         </div>
-        <div className="lg:col-span-4 lg:col-start-9">
-          <p className="index-label">Founder access</p>
-          <p className="mt-4 max-w-[34ch] text-[15px] leading-7 text-[#356464]">
+
+        <div>
+          <h2 className="text-[13px] font-semibold text-[#0b2e2e]">Founder access</h2>
+          <p className="mt-2 text-[14px] leading-6 text-[#356464]">
             Founder accounts are not created through public signup.
           </p>
-          <RuleLink href={CTA_HREFS.contact} className="mt-5">
+          <Link
+            href={FOUNDER_ACCESS.href}
+            className={cn(
+              "mt-2 inline-flex min-h-8 items-center rounded-[2px]",
+              authLinkClassName,
+              focusRing,
+            )}
+          >
             {FOUNDER_ACCESS.label}
-          </RuleLink>
+          </Link>
         </div>
       </div>
-    </Band>
+
+      {newLink ? (
+        <div className="mt-5 border-t border-[#b9dede] pt-4">
+          {isHelpLink(newLink) ? (
+            <Link
+              href={newLink.href}
+              className={cn(
+                "inline-flex min-h-8 items-center rounded-[2px]",
+                authLinkClassName,
+                focusRing,
+              )}
+            >
+              {newLink.label}
+            </Link>
+          ) : (
+            newLink
+          )}
+        </div>
+      ) : null}
+    </section>
   );
 }
