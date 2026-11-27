@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 test('homepage icon panels render with real layout boxes', async ({ page }) => {
-  await page.goto('/public');
+  await page.goto('/');
 
   expect(await page.locator('main img').count()).toBe(0);
 
@@ -31,13 +31,25 @@ test('homepage icon panels render with real layout boxes', async ({ page }) => {
   }
 });
 
-test('root URL redirects before any page is rendered', async ({ request }) => {
-  // A page-level redirect is thrown after the shell has flushed, so the root
-  // used to answer 200 with an empty loading skeleton. The server-level
-  // redirect must return a real status code instead.
-  const response = await request.get('/', { maxRedirects: 0 });
+test('root URL serves the landing page directly', async ({ request, page }) => {
+  const response = await request.get('/');
+  expect(response.ok()).toBeTruthy();
+  expect(await response.text()).toMatch(/Paid project work/i);
+
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(
+    page.getByRole('heading', { level: 1, name: /Paid project work/i }),
+  ).toBeVisible();
+});
+
+test('legacy /public URL redirects to the canonical root', async ({
+  request,
+}) => {
+  const response = await request.get('/public?source=bookmark', {
+    maxRedirects: 0,
+  });
   expect(response.status()).toBe(308);
-  expect(response.headers().location).toBe('/public');
+  expect(response.headers().location).toBe('/?source=bookmark');
 });
 
 test('favicon serves the canonical public asset', async ({ request }) => {
@@ -58,7 +70,7 @@ test('hero copy is static in server HTML and on first client render', async ({
   // Next streams page content through inline scripts, so a JavaScript-disabled
   // browser sees only the root loading fallback. Inspect the server HTML
   // directly instead, then verify the rendered first client state.
-  const response = await request.get('/public');
+  const response = await request.get('/');
   expect(response.ok()).toBeTruthy();
   const html = await response.text();
   expect(html).toMatch(/Paid project work/i);
@@ -66,7 +78,7 @@ test('hero copy is static in server HTML and on first client render', async ({
   expect(headingTag).not.toMatch(/opacity:\s*0/i);
   expect(headingTag).not.toMatch(/\bhidden\b/i);
 
-  await page.goto('/public', { waitUntil: 'domcontentloaded' });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
 
   const heading = page.getByRole('heading', {
     level: 1,
@@ -75,6 +87,12 @@ test('hero copy is static in server HTML and on first client render', async ({
   await expect(heading).toBeVisible();
   await expect(heading).toHaveCSS('opacity', '1');
   await expect(heading).toHaveCSS('transform', 'none');
+
+  await page.goto('/public', { waitUntil: 'domcontentloaded' });
+  await expect(page).toHaveURL('/');
+  await expect(
+    page.getByRole('heading', { level: 1, name: /Paid project work/i }),
+  ).toBeVisible();
 });
 
 for (const reducedMotion of ['reduce', 'no-preference'] as const) {
@@ -82,7 +100,7 @@ for (const reducedMotion of ['reduce', 'no-preference'] as const) {
     test.use({ reducedMotion });
 
     test('later content stays fully static after scrolling', async ({ page }) => {
-      await page.goto('/public');
+      await page.goto('/');
       const laterSection = page.locator('main section').last();
 
       await laterSection.scrollIntoViewIfNeeded();

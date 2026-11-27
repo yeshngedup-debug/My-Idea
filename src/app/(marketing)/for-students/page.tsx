@@ -1,4 +1,12 @@
-import { Bank, IdentificationCard, Student } from "@phosphor-icons/react/dist/ssr";
+import {
+  Bank,
+  ClipboardText,
+  CurrencyCircleDollar,
+  Handshake,
+  IdentificationCard,
+  ListChecks,
+  Student,
+} from "@phosphor-icons/react/dist/ssr";
 import {
   MinimalActions,
   MinimalCheckList,
@@ -109,22 +117,26 @@ export default function ForStudentsPage() {
 
       <MinimalEditorialSection
         id="path"
+        icon={ListChecks}
         titleId="students-path-heading"
         title="Five steps from sign-up to a tracked application"
         description="Everything happens in the student workspace, and you can see where each application stands."
+        motionKey="path"
       >
-        <MinimalSteps steps={studentPath} />
+        <MinimalSteps steps={studentPath} motionKey="path-items" />
       </MinimalEditorialSection>
 
       <MinimalSection
         id="profile"
+        icon={IdentificationCard}
         titleId="students-profile-heading"
         title="What a complete profile holds"
         description="A complete profile and CV help founders decide. Fill in what you can and finish it later."
+        motionKey="profile"
       >
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <div>
-            <MinimalFacts items={profileFields} />
+            <MinimalFacts items={profileFields} motionKey="profile-facts" />
             <p className="quiet-note mt-6">
               Your CV is shared only through short-lived signed links, and only with the people
               the access rules allow.
@@ -133,6 +145,7 @@ export default function ForStudentsPage() {
           <MinimalMedia
             icon={IdentificationCard}
             label="A complete profile tells founders how you fit the brief."
+            motionKey="profile-panel"
           />
         </div>
         <MinimalActions className="mt-8">
@@ -142,11 +155,13 @@ export default function ForStudentsPage() {
 
       <MinimalEditorialSection
         id="applications"
+        icon={ClipboardText}
         titleId="students-status-heading"
         title="You always know where an application stands"
         description="Founders update applicant status as they review. You see the same status in your workspace."
+        motionKey="applications"
       >
-        <MinimalFacts items={statusRows} />
+        <MinimalFacts items={statusRows} motionKey="status-facts" />
         <MinimalActions className="mt-8">
           <TextAction
             href={CTA_HREFS.studentApplications}
@@ -157,26 +172,31 @@ export default function ForStudentsPage() {
 
       <MinimalSection
         id="pay"
+        icon={CurrencyCircleDollar}
         titleId="students-pay-heading"
         title="The budget is on the brief before you apply"
         description="You can see what a project pays and how long it should take before you send anything."
+        motionKey="pay"
       >
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
-          <MinimalCheckList items={payFacts} />
+          <MinimalCheckList items={payFacts} motionKey="pay-facts" />
           <MinimalMedia
             icon={Bank}
             label="The budget and payment route are shown before you apply."
+            motionKey="pay-panel"
           />
         </div>
       </MinimalSection>
 
       <MinimalClosingAction
+        icon={Handshake}
         title="Your profile is the first step."
         description="Create the account, complete the profile, then apply to the projects that fit."
         primaryLabel={CTA_LABELS.signup}
         primaryHref={CTA_HREFS.signup}
         secondaryLabel={CTA_LABELS.howItWorks}
         secondaryHref={CTA_HREFS.howItWorks}
+        motionKey="closing"
       />
     </>
   );

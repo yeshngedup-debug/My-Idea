@@ -97,4 +97,38 @@ test.describe('Founder flow', () => {
       await expect(shortlisted).toBeVisible();
     });
   });
+
+  test('project status filter stays in sync with the URL', async ({ page }) => {
+    await test.step('Log in as founder', async () => {
+      await loginAs(page, DEMO_USERS.founder);
+    });
+
+    await page.getByRole('link', { name: 'My projects', exact: true }).click();
+    await expect(page).toHaveURL('/founder/projects');
+
+    await page.getByRole('button', { name: 'In progress', exact: true }).click();
+    await expect(page).toHaveURL('/founder/projects?status=in_progress');
+    await expect(
+      page.getByRole('button', { name: 'In progress', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    await page.goBack();
+    await expect(page).toHaveURL('/founder/projects');
+    await expect(
+      page.getByRole('button', { name: 'All', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    await page.goto('/founder/projects?status=unknown');
+    await expect(
+      page.getByRole('button', { name: 'All', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    await page.getByRole('button', { name: 'In progress', exact: true }).click();
+    await expect(page).toHaveURL('/founder/projects?status=in_progress');
+    await page.getByRole('button', { name: 'All', exact: true }).click();
+    await expect(page).toHaveURL('/founder/projects');
+    await expect(
+      page.getByRole('button', { name: 'All', exact: true }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
 });

@@ -8,7 +8,7 @@
 export const SITE = {
   name: "Bhutan Tech Connect",
   tagline: "Local talent. Real projects. Built in Bhutan.",
-  homeHref: "/public",
+  homeHref: "/",
   trustLine:
     "Human verification · Paid in Ngultrum · No bidding wars · Built in Bhutan",
 } as const;
@@ -216,7 +216,9 @@ export function resolveAction(
     case "readProcess":
       return { href: CTA_HREFS.howItWorks, label: CTA_LABELS.readProcess };
     case "pricing":
-      return { href: CTA_HREFS.pricing, label: CTA_LABELS.pricing };
+      return pathname === CTA_HREFS.forFounders
+        ? { href: CTA_HREFS.pricing, label: CTA_LABELS.pricing }
+        : { href: CTA_HREFS.founderPricing, label: CTA_LABELS.pricing };
     case "browseProjects":
       return { href: CTA_HREFS.studentProjects, label: CTA_LABELS.browseProjects };
     case "postProject":
@@ -253,7 +255,7 @@ export function resolvePrimaryCta(pathname: string | null): Cta {
   return resolveAction(pathname, "audience");
 }
 
-/** Consistent active-route check. `/public` is the marketing home. */
+/** Consistent active-route check. `/` is the marketing home. */
 export function isActivePath(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
   if (pathname === href) return true;

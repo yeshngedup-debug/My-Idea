@@ -20,6 +20,11 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { Input } from '@/components/ui/input';
 import { StatusMessage } from '@/components/ui/status-message';
 import { SegmentedControl } from '@/components/interactive/segmented-control';
+import {
+  normalizeWorkMode,
+  projectFiltersHref,
+  type WorkModeFilter,
+} from './project-filter-params';
 
 export interface OpenProject {
   id: string;
@@ -44,17 +49,11 @@ export interface ApplyResult {
   message: string;
 }
 
-type WorkModeFilter = 'all' | 'remote' | 'onsite';
-
 const WORK_MODE_FILTERS = [
   { label: 'All', value: 'all' },
   { label: 'Remote', value: 'remote' },
   { label: 'Onsite', value: 'onsite' },
 ];
-
-function normalizeWorkMode(value: string | null): WorkModeFilter {
-  return value === 'remote' || value === 'onsite' ? value : 'all';
-}
 
 function statusLabel(status: string): string {
   return projectStatusLabel(status);
@@ -333,13 +332,10 @@ export function ProjectsClient({
 
   /** Keep the active filters when a student opens a brief and comes back. */
   function detailHref(projectId: string): string {
-    const params = new URLSearchParams();
-    if (trimmedQuery) params.set('q', trimmedQuery);
-    if (mode !== 'all') params.set('mode', mode);
-    const qs = params.toString();
-    return qs
-      ? `/student/projects/${projectId}?${qs}`
-      : `/student/projects/${projectId}`;
+    return projectFiltersHref(`/student/projects/${projectId}`, {
+      q: trimmedQuery,
+      mode,
+    });
   }
 
   const needle = trimmedQuery.toLocaleLowerCase();

@@ -6,7 +6,7 @@
  */
 
 export const PATHS = {
-  home: '/public',
+  home: '/',
   root: '/',
   howItWorks: '/how-it-works',
   forStudents: '/for-students',

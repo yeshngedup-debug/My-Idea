@@ -18,6 +18,11 @@ import { Badge } from '@/components/ui/badge';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { formatBhutanDate, formatEnGbDate } from '@/lib/format';
 import { projectStatusLabel } from '@/lib/status-labels';
+import {
+  parseProjectFilters,
+  projectFiltersHref,
+  type ProjectFilters,
+} from '../project-filter-params';
 
 export const metadata = { title: 'Project Details' };
 
@@ -141,9 +146,17 @@ function applyNoticeForResult(result: ProjectResult): ApplyNotice {
   return 'error';
 }
 
-function finishApply(projectId: string, notice: ApplyNotice): never {
+function finishApply(
+  projectId: string,
+  notice: ApplyNotice,
+  filters: ProjectFilters,
+): never {
   revalidatePath(`/student/projects/${projectId}`);
-  redirect(`/student/projects/${projectId}?apply=${notice}`);
+  redirect(
+    projectFiltersHref(`/student/projects/${projectId}`, filters, {
+      apply: notice,
+    }),
+  );
 }
 
 /**
@@ -152,6 +165,7 @@ function finishApply(projectId: string, notice: ApplyNotice): never {
  */
 async function applyFromDetail(
   projectId: string,
+  filters: ProjectFilters,
   formData: FormData,
 ): Promise<void> {
   'use server';
@@ -171,7 +185,7 @@ async function applyFromDetail(
     notice = 'error';
   }
 
-  finishApply(projectId, notice);
+  finishApply(projectId, notice, filters);
 }
 
 export default async function StudentProjectDetailPage({
@@ -182,6 +196,8 @@ export default async function StudentProjectDetailPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
+  const query = await searchParams;
+  const filters = parseProjectFilters(query);
 
   // Malformed IDs never reach Neon, where they would become a raw data error.
   if (!UUID_PATTERN.test(id)) notFound();
@@ -203,11 +219,8 @@ export default async function StudentProjectDetailPage({
   const applied = appliedIds.includes(row.id);
   if (row.status !== 'open' && !applied) notFound();
 
-  const [{ apply }, founder] = await Promise.all([
-    searchParams,
-    getProfile(row.founder_id),
-  ]);
-  const noticeKey = readApplyNotice(apply);
+  const founder = await getProfile(row.founder_id);
+  const noticeKey = readApplyNotice(query.apply);
   const notice = noticeKey ? APPLY_NOTICES[noticeKey] : null;
 
   const project: ProjectDetail = {
@@ -259,7 +272,7 @@ export default async function StudentProjectDetailPage({
     <section>
       <div className="mx-auto max-w-3xl">
         <Link
-          href="/student/projects"
+          href={projectFiltersHref('/student/projects', filters)}
           className="mb-6 inline-flex min-h-11 items-center gap-2 rounded text-sm text-body-secondary transition-colors motion-reduce:transition-none! hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           Back to open projects
@@ -352,7 +365,7 @@ export default async function StudentProjectDetailPage({
             )}
 
             {canApply ? (
-              <form action={applyFromDetail.bind(null, project.id)}>
+              <form action={applyFromDetail.bind(null, project.id, filters)}>
                 <SubmitButton pendingLabel="Sending...">
                   Apply to this project
                 </SubmitButton>

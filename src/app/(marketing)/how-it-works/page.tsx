@@ -1,4 +1,12 @@
-import { Path, ShieldCheck } from "@phosphor-icons/react/dist/ssr";
+import {
+  Handshake,
+  ListChecks,
+  LockKey,
+  NotePencil,
+  Path,
+  ShieldCheck,
+  Signpost,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import {
   MinimalActions,
@@ -150,74 +158,89 @@ export default function HowItWorksPage() {
       </div>
 
       <MinimalEditorialSection
+        icon={Path}
         titleId="how-steps-heading"
         title="Three steps, one clear brief"
         description="Each step keeps the scope, the budget and the deadline visible to everyone involved."
+        motionKey="steps"
       >
         <MinimalSteps steps={steps} />
       </MinimalEditorialSection>
 
       <MinimalSection
+        icon={NotePencil}
         titleId="how-brief-heading"
         title="Founders set the brief. Students apply to the brief."
         description="Two views of the same written project, so nobody works from a vague message."
+        motionKey="brief"
       >
-        <MinimalFacts items={briefFacts} />
+        <MinimalFacts items={briefFacts} motionKey="brief-facts" />
       </MinimalSection>
 
       <MinimalEditorialSection
+        icon={ListChecks}
         titleId="how-status-heading"
         title="You always know where an application stands"
         description="The same four statuses are used by the student and the founder."
+        motionKey="status"
       >
         <h3 className="text-[1.375rem] font-semibold tracking-[-0.02em]">
           Application status
         </h3>
         <div className="mt-5">
-          <MinimalCheckList items={statuses} />
+          <MinimalCheckList items={statuses} motionKey="status-list" />
         </div>
         <h3 className="mt-12 text-[1.375rem] font-semibold tracking-[-0.02em]">
           Who does what
         </h3>
         <div className="mt-5 max-w-[54rem]">
-          <MinimalFacts items={roles} />
+          <MinimalFacts items={roles} motionKey="role-facts" />
         </div>
       </MinimalEditorialSection>
 
       <MinimalSection
+        icon={LockKey}
         titleId="how-care-heading"
         title="The rules that keep the process fair"
         description="A few clear rules keep the documents private and the payment honest."
+        motionKey="care"
       >
         <div className="max-w-[54rem]">
-          <MinimalFacts items={protections} />
+          <MinimalFacts items={protections} motionKey="care-facts" />
         </div>
       </MinimalSection>
 
       <MinimalSection
+        icon={Handshake}
+        tone="muted"
         titleId="how-after-heading"
         title="What happens once a shortlist is ready"
         description="The handoff stays explicit so founders and students know where they stand."
+        motionKey="after"
       >
         <div className="max-w-[54rem]">
-          <MinimalFacts items={afterShortlist} />
+          <MinimalFacts items={afterShortlist} motionKey="after-facts" />
         </div>
         <div className="mt-12 max-w-[52rem]">
           <MinimalMedia
             icon={ShieldCheck}
             label="Clear documents and payment rules keep the process fair."
             caption="These icons describe the platform workflow. They do not represent platform members or listings."
+            motionKey="after-panel"
           />
         </div>
       </MinimalSection>
 
       <MinimalClosingAction
+        icon={Signpost}
+        tone="plain"
         title="Start with one paid project."
         description="Create a student account, or ask about founder access."
         primaryLabel={CTA_LABELS.signup}
         primaryHref={CTA_HREFS.signup}
         secondaryLabel={FOUNDER_ACCESS.label}
         secondaryHref={FOUNDER_ACCESS.href}
+        motionKey="closing"
       />
     </>
   );

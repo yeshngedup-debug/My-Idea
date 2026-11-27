@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
  * The single brand-differentiation chapter. A plain two-column list with one
  * magenta rule as its only accent. No cards, no glow, no gradient.
  * Server-compatible: no hooks and no client directive. The copy lives here so
- * /about and its compact echo on /public stay in sync.
+ * /about and its compact echo on the landing page stay in sync.
  */
 
 export type LocalBridgeDifference = {

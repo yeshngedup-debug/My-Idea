@@ -36,11 +36,11 @@ Pages stay thin (< 40 lines); business logic lives in `features/`.
 
 Route groups do not appear in URLs, so moving a page into `(marketing)` or `(app)` does not change its path. The group layouts are intentionally thin pass-throughs; auth is enforced by `proxy.ts` and re-checked in each page and Server Action.
 
-The landing page lives at `/public`. The root path `/` is redirected to it by a
-server-level rule in `next.config.ts`, so the browser gets a `308` before any
-page is rendered. `src/app/(marketing)/page.tsx` is only the route-level
-fallback — a page-level redirect is thrown after the shell has flushed and
-would leave the first paint as an empty loading skeleton.
+The landing page lives at `/`. The legacy path `/public` is a compatibility
+alias redirected to `/` by a server-level rule in `next.config.ts`, preserving
+query strings before any page is rendered. `src/app/(marketing)/page.tsx` owns
+the canonical landing implementation; `src/app/(marketing)/public/page.tsx`
+only re-exports it for old links and bookmarks.
 
 Pages that read cookies/sessions use `export const dynamic = 'force-dynamic'` so Next.js does not prerender them at build time.
 

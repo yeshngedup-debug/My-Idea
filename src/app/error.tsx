@@ -11,7 +11,7 @@ export default function ErrorPage({
 }) {
   const pathname = usePathname();
   const area = pathname?.match(/^\/(founder|student|admin)(?:\/|$)/)?.[1];
-  const recoveryHref = area ? `/${area}` : "/public";
+  const recoveryHref = area ? `/${area}` : "/";
   const recoveryLabel = area
     ? `Back to ${area} workspace`
     : "Back to home";

@@ -43,7 +43,7 @@ Remaining nice-to-haves from the review: per-row "Saved" indicators for admin ra
 
 ## 5. WCAG 2.2 AA audit — serious findings
 
-Full audit was run with browser DOM/accessibility-tree inspection, keyboard traversal, 320px reflow and computed contrast on `/public`, `/login`, `/signup`, `/privacy`, `/terms` and a 404. No physical screen reader was available, so announcements are inferred from the accessibility tree.
+Full audit was run with browser DOM/accessibility-tree inspection, keyboard traversal, 320px reflow and computed contrast on `/` (formerly `/public`), `/login`, `/signup`, `/privacy`, `/terms` and a 404. No physical screen reader was available, so announcements are inferred from the accessibility tree.
 
 - **Validation errors not announced** (3.3.1, 4.1.3): native bubbles only. Now mitigated by the global `role="status"` live region; field-level `aria-invalid`/`aria-describedby` is still to do.
 - **404 had no main landmark and a broken skip-link target** (2.4.1, 1.3.1): fixed by the new `app/not-found.tsx`.
@@ -51,7 +51,7 @@ Full audit was run with browser DOM/accessibility-tree inspection, keyboard trav
 - **Contrast** (1.4.3): historical `#d84f37` / `#b44532` accents are retired. The active palette uses `#1D1D1F` body text, `#6E6E73` secondary text and `#0B5C5C` for focus and the primary action.
 - **Target size** (2.5.8) and **focus appearance on text links** (2.4.11): controls keep at least a 44px minimum target and use a visible deep-teal focus outline.
 
-Verified passing: `lang="en"`, unique titles, one h1 per page with no skipped levels, landmarks on `/public`, working skip link on five pages, full keyboard reachability, visible deep-teal focus treatment, real labels and autocomplete on auth forms, neutral icon panels in place of website photography, and reduced motion throughout.
+Verified passing: `lang="en"`, unique titles, one h1 per page with no skipped levels, landmarks on `/`, working skip link on five pages, full keyboard reachability, visible deep-teal focus treatment, real labels and autocomplete on auth forms, neutral icon panels in place of website photography, and reduced motion throughout.
 
 The newly added marketing pages (`/how-it-works`, `/for-students`, `/for-founders`, `/about`, `/faq`, `/contact`) were still being built during the audit and need a dedicated re-audit, ideally with a real screen reader.
 

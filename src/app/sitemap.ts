@@ -4,8 +4,7 @@ import { APP_URL } from '@/config/app';
 /** Public routes only — dashboard and account pages must not be indexed. */
 const PUBLIC_ROUTES: { path: string; frequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
   { path: '/', frequency: 'weekly', priority: 1 },
-  // /public is the landing page; / redirects to it.
-  { path: '/public', frequency: 'weekly', priority: 1 },
+  // /public is a compatibility alias and intentionally not indexed twice.
   { path: '/how-it-works', frequency: 'monthly', priority: 0.9 },
   { path: '/for-students', frequency: 'monthly', priority: 0.9 },
   { path: '/for-founders', frequency: 'monthly', priority: 0.9 },

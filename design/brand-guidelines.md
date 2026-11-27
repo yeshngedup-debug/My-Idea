@@ -60,7 +60,7 @@ The brand promise is **back people, not companies**: a student and a founder mee
 
 ## 4. Layout and components
 
-- **Marketing:** a practical landing rhythm. The hero exposes both audiences' actions, followed by the trust bar and the three-step process. Neutral icon panels support decisions; they are not the product.
+- **Marketing:** a practical landing rhythm. The hero exposes both audiences' actions, followed by the trust bar and the three-step process. Sections alternate between white and `#F5F5F7`, with a small decorative Phosphor icon before each heading. Neutral icon panels support decisions; they are not the product.
 - **Product:** one compact shell with role-specific navigation, a clear next action, then dense queues and forms.
 - **Cards:** use one radius family and real borders. Cards group related information; they are not decorative tiles repeated without hierarchy.
 - **Status:** badges use short labels such as `Open`, `In review`, `Awaiting payment`, `Verified`, and `Rejected`. The same stored status uses the same wording across student, founder, and admin screens.
@@ -79,7 +79,8 @@ The brand promise is **back people, not companies**: a student and a founder mee
 ## 6. Visual panels
 
 - The website does not render photography. Visual panels use Phosphor icons through `MinimalMedia` in `src/components/marketing/minimal-system.tsx`.
-- Each panel has a visible label; the decorative SVG is `aria-hidden="true"`.
+- Section headings use the small `data-section-icon` cue from the same shared file. It is decorative and never replaces the heading text.
+- Each panel has a visible label; every decorative SVG is `aria-hidden="true"`.
 - Panels stay within the locked neutral palette with deep teal only as an accent.
 - Do not use stock-photo gestures, staged boardrooms, fabricated product screenshots, or religious imagery as decoration.
 

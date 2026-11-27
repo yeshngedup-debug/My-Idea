@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/public"
+            href="/"
             className="inline-flex min-h-12 items-center rounded-lg bg-cta px-6 py-3 text-sm font-semibold text-cta-foreground transition-colors duration-150 hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
           >
             Back to home

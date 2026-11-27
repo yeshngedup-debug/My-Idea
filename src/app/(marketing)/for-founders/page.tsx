@@ -1,4 +1,11 @@
-import { ClipboardText, MapPin } from "@phosphor-icons/react/dist/ssr";
+import {
+  ClipboardText,
+  CurrencyCircleDollar,
+  Handshake,
+  ListChecks,
+  MapPin,
+  NotePencil,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import {
   MinimalActions,
@@ -19,6 +26,7 @@ import {
   CTA_HREFS,
   CTA_LABELS,
   FOUNDER_ACCESS,
+  resolveAction,
   SITE,
 } from "@/components/marketing/nav";
 import { PAYMENT_CONFIGURED } from "@/config/payment";
@@ -80,7 +88,10 @@ export default function ForFoundersPage() {
         actions={
           <MinimalActions className="mt-8">
             <PrimaryAction href={FOUNDER_ACCESS.href} label={FOUNDER_ACCESS.label} />
-            <TextAction href={CTA_HREFS.pricing} label={CTA_LABELS.pricing} />
+            <TextAction
+              href={resolveAction("/for-founders", "pricing").href}
+              label={CTA_LABELS.pricing}
+            />
             <TextAction
               href={CTA_HREFS.founderPostProject}
               label={CTA_LABELS.postProject}
@@ -103,17 +114,21 @@ export default function ForFoundersPage() {
       </div>
 
       <MinimalEditorialSection
+        icon={ListChecks}
         titleId="founders-steps-heading"
         title="Three steps from brief to work"
         description="The shortlist is optional. The written brief is not."
+        motionKey="steps"
       >
-        <MinimalSteps steps={hiringSteps} />
+        <MinimalSteps steps={hiringSteps} motionKey="steps-items" />
       </MinimalEditorialSection>
 
       <MinimalSection
+        icon={NotePencil}
         titleId="founders-brief-heading"
         title="A brief that is easy to compare"
         description="Every applicant starts from the same written scope, so you compare people instead of messages."
+        motionKey="brief"
       >
         <h3 className="text-[1.375rem] font-semibold tracking-[-0.02em]">
           What you write
@@ -125,31 +140,33 @@ export default function ForFoundersPage() {
               title: field.term,
               body: field.detail,
             }))}
+            motionKey="brief-cards"
           />
         </div>
         <h3 className="mt-12 text-[1.375rem] font-semibold tracking-[-0.02em]">
           What you control
         </h3>
         <div className="mt-5">
-          <MinimalCheckList items={controls} />
+          <MinimalCheckList items={controls} motionKey="controls" />
         </div>
       </MinimalSection>
 
       <MinimalEditorialSection
         id="pricing"
+        icon={CurrencyCircleDollar}
         titleId="founders-pricing-heading"
         title="Ranked shortlist packages"
         description="When you want a ranked list instead of sorting applicants yourself. Posting a brief and reviewing applicants does not need a package."
       >
-        <div className="max-w-[52rem]">
-          <MinimalPackage id="basic" />
-          <MinimalPackage id="full" />
+        <div data-motion-section="pricing-content" className="max-w-[52rem]">
+          <MinimalPackage id="basic" motionKey="pricing-packages" />
+          <MinimalPackage id="full" motionKey="pricing-packages" />
 
           <h3 className="mt-12 text-[1.375rem] font-semibold tracking-[-0.02em]">
             How a shortlist order runs
           </h3>
           <div className="mt-5">
-            <MinimalCheckList items={orderSteps} />
+            <MinimalCheckList items={orderSteps} motionKey="order-steps" />
           </div>
 
           <div className="mt-10 border-t border-border pt-6">
@@ -171,24 +188,29 @@ export default function ForFoundersPage() {
       </MinimalEditorialSection>
 
       <MinimalSection
+        icon={MapPin}
         titleId="founders-local-heading"
         title="Work that stays close to home"
         description="Students can work remotely or on site, around their course and their exams. Budgets are set and discussed in Ngultrum, and the platform is built and run in Bhutan."
         wide
+        motionKey="local"
       >
         <MinimalMedia
           icon={MapPin}
           label="Remote or on-site work, with budgets in Ngultrum."
+          motionKey="local-panel"
         />
       </MinimalSection>
 
       <MinimalClosingAction
+        icon={Handshake}
         title="Start with one scoped brief."
         description="Tell us who you are and what you are building, and an admin will arrange founder access."
         primaryLabel={FOUNDER_ACCESS.label}
         primaryHref={FOUNDER_ACCESS.href}
         secondaryLabel={CTA_LABELS.howItWorks}
         secondaryHref={CTA_HREFS.howItWorks}
+        motionKey="closing"
       />
     </>
   );

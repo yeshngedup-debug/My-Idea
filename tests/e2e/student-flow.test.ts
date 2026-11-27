@@ -104,4 +104,40 @@ test.describe('Student flow', () => {
       await expect(page.locator('li').first()).toBeVisible();
     });
   });
+
+  test('filtered brief back link preserves validated q and mode', async ({
+    page,
+  }) => {
+    await test.step('Log in as student', async () => {
+      await loginAs(page, DEMO_USERS.student);
+    });
+
+    await page.getByRole('link', { name: 'Projects', exact: true }).click();
+    await expect(page).toHaveURL('/student/projects');
+
+    const card = page
+      .locator('article')
+      .filter({ has: page.getByRole('link', { name: 'View details' }) })
+      .first();
+    await expect(card).toBeVisible();
+    const title = (await card.getByRole('heading', { level: 3 }).innerText()).trim();
+    const mode = (await card.innerText()).includes('Onsite') ? 'Onsite' : 'Remote';
+
+    await page.getByLabel('Search project briefs').fill(title);
+    await page.getByRole('button', { name: mode, exact: true }).click();
+    await expect(page).toHaveURL(/q=/);
+
+    await card.getByRole('link', { name: 'View details' }).click();
+    await expect(page).toHaveURL(/\/student\/projects\/[a-f0-9-]+/i);
+    const detailUrl = new URL(page.url());
+    expect(detailUrl.searchParams.get('q')).toBe(title);
+    expect(detailUrl.searchParams.get('mode')).toBe(mode.toLowerCase());
+
+    await page.getByRole('link', { name: 'Back to open projects' }).click();
+    await expect(page).toHaveURL(/\/student\/projects(\?|$)/);
+    const backUrl = new URL(page.url());
+    expect(backUrl.pathname).toBe('/student/projects');
+    expect(backUrl.searchParams.get('q')).toBe(title);
+    expect(backUrl.searchParams.get('mode')).toBe(mode.toLowerCase());
+  });
 });

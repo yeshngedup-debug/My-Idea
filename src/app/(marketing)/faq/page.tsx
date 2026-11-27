@@ -1,4 +1,9 @@
-import { Question } from "@phosphor-icons/react/dist/ssr";
+import {
+  CurrencyCircleDollar,
+  Files,
+  Lifebuoy,
+  Question as QuestionIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -204,6 +209,8 @@ const clusters: readonly Cluster[] = [
   },
 ];
 
+const clusterIcons = [QuestionIcon, Files, CurrencyCircleDollar] as const;
+
 function plainText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(plainText).join("");
@@ -256,23 +263,33 @@ export default async function FaqPage() {
         }
         media={
           <MinimalMedia
-            icon={Question}
+            icon={QuestionIcon}
             label="Plain answers about accounts, applications and paid shortlists."
           />
         }
       />
 
-      {clusters.map((cluster) => (
+      {clusters.map((cluster, index) => (
         <MinimalSection
           key={cluster.id}
           id={cluster.id}
+          icon={clusterIcons[index]}
+          tone={index % 2 === 0 ? "muted" : "plain"}
           titleId={`${cluster.id}-heading`}
           title={cluster.title}
           description={cluster.lead}
+          motionKey={`cluster-${cluster.id}`}
         >
-          <div className="max-w-[54rem] border-t border-border">
+          <div
+            data-motion-group="questions"
+            className="max-w-[54rem] border-t border-border"
+          >
             {cluster.questions.map((question) => (
-              <details key={question.q} className="group border-b border-border">
+              <details
+                key={question.q}
+                data-motion-item=""
+                className="group border-b border-border"
+              >
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 text-[1.125rem] font-medium leading-snug tracking-[-0.01em] transition-colors duration-150 hover:text-primary">
                   <span className="max-w-[46rem]">{question.q}</span>
                   <span
@@ -293,12 +310,15 @@ export default async function FaqPage() {
       ))}
 
       <MinimalClosingAction
+        icon={Lifebuoy}
+        tone="plain"
         title="Still have a question?"
         description="Write to us and we will point you in the right direction."
         primaryLabel={CTA_LABELS.contactTeam}
         primaryHref={CTA_HREFS.contact}
         secondaryLabel={CTA_LABELS.readProcess}
         secondaryHref={CTA_HREFS.howItWorks}
+        motionKey="closing"
       />
     </>
   );

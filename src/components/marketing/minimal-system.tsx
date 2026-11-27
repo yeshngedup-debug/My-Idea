@@ -20,6 +20,25 @@ export type MinimalFact = {
   detail: ReactNode;
 };
 
+export type MinimalTone = "plain" | "muted";
+
+/** Optional keys used only by the scoped marketing motion layer. */
+type MotionKeyProps = {
+  motionKey?: string;
+};
+
+/** A small, decorative section cue. The heading carries the meaning. */
+function SectionIcon({ icon: Glyph }: { icon: Icon }) {
+  return (
+    <span
+      data-section-icon=""
+      className="mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card"
+    >
+      <Glyph aria-hidden="true" size={22} weight="light" className="text-cta" />
+    </span>
+  );
+}
+
 export function PrimaryAction({
   href,
   label,
@@ -119,8 +138,10 @@ type MinimalSectionProps = {
   description?: ReactNode;
   children: ReactNode;
   className?: string;
+  icon?: Icon;
+  tone?: MinimalTone;
   wide?: boolean;
-};
+} & MotionKeyProps;
 
 export function MinimalSection({
   id,
@@ -129,7 +150,10 @@ export function MinimalSection({
   description,
   children,
   className,
+  icon,
+  tone = "plain",
   wide,
+  motionKey,
 }: MinimalSectionProps) {
   const shell = wide ? "media-shell" : "content-shell";
 
@@ -137,9 +161,11 @@ export function MinimalSection({
     <section
       id={id}
       aria-labelledby={titleId}
-      className={cn("section-shell", className)}
+      data-motion-section={motionKey}
+      className={cn("section-shell", tone === "muted" && "bg-muted", className)}
     >
       <div className={shell}>
+        {icon ? <SectionIcon icon={icon} /> : null}
         <h2 id={titleId} className="display-lg max-w-[22ch]">
           {title}
         </h2>
@@ -159,7 +185,8 @@ type MinimalEditorialSectionProps = {
   description?: ReactNode;
   children: ReactNode;
   className?: string;
-};
+  icon?: Icon;
+} & MotionKeyProps;
 
 /**
  * A light-gray editorial band. Apple's App Store uses calm alternating bands
@@ -172,14 +199,18 @@ export function MinimalEditorialSection({
   description,
   children,
   className,
+  icon,
+  motionKey,
 }: MinimalEditorialSectionProps) {
   return (
     <section
       id={id}
       aria-labelledby={titleId}
+      data-motion-section={motionKey}
       className={cn("section-shell bg-muted", className)}
     >
       <div className="content-shell">
+        {icon ? <SectionIcon icon={icon} /> : null}
         <h2 id={titleId} className="display-lg max-w-[20ch]">
           {title}
         </h2>
@@ -202,15 +233,20 @@ export type MinimalEditorialCard = {
 export function MinimalEditorialCards({
   items,
   className,
+  motionKey,
 }: {
   items: readonly MinimalEditorialCard[];
   className?: string;
-}) {
+} & MotionKeyProps) {
   return (
-    <div className={cn("grid gap-4 md:grid-cols-3", className)}>
+    <div
+      data-motion-group={motionKey}
+      className={cn("grid gap-4 md:grid-cols-3", className)}
+    >
       {items.map((item, index) => (
         <article
           key={index}
+          data-motion-item={motionKey ? "" : undefined}
           className="rounded-3xl border border-border bg-card p-7 sm:p-9"
         >
           <p className="index-label">{item.label ?? String(index + 1).padStart(2, "0")}</p>
@@ -244,7 +280,7 @@ type MinimalMediaProps = {
   label: string;
   className?: string;
   caption?: ReactNode;
-};
+} & MotionKeyProps;
 
 /**
  * A quiet icon panel in place of photography. The icon is decorative: the
@@ -256,11 +292,13 @@ export function MinimalMedia({
   label,
   className,
   caption,
+  motionKey,
 }: MinimalMediaProps) {
   return (
     <figure className={cn("m-0", className)}>
       <div
         data-media-panel=""
+        data-motion-panel={motionKey}
         className="flex min-h-[16rem] flex-col items-center justify-center rounded-2xl border border-border bg-card px-6 py-10 text-center sm:min-h-[20rem] lg:min-h-[24rem]"
       >
         <PanelIcon
@@ -284,15 +322,20 @@ export function MinimalMedia({
 export function MinimalSteps({
   steps,
   className,
+  motionKey,
 }: {
   steps: readonly MinimalStep[];
   className?: string;
-}) {
+} & MotionKeyProps) {
   return (
-    <ol className={cn("m-0 grid gap-3 p-0", className)}>
+    <ol
+      data-motion-group={motionKey}
+      className={cn("m-0 grid gap-3 p-0", className)}
+    >
       {steps.map((step, index) => (
         <li
           key={index}
+          data-motion-item={motionKey ? "" : undefined}
           className="rounded-3xl border border-border bg-card p-7 sm:p-8"
         >
           <p className="index-label">{String(index + 1).padStart(2, "0")}</p>
@@ -311,15 +354,20 @@ export function MinimalSteps({
 export function MinimalFacts({
   items,
   className,
+  motionKey,
 }: {
   items: readonly MinimalFact[];
   className?: string;
-}) {
+} & MotionKeyProps) {
   return (
-    <dl className={cn("m-0 border-t border-border", className)}>
+    <dl
+      data-motion-group={motionKey}
+      className={cn("m-0 border-t border-border", className)}
+    >
       {items.map((item, index) => (
         <div
           key={index}
+          data-motion-item={motionKey ? "" : undefined}
           className="border-b border-border py-5 first:pt-0 md:grid md:grid-cols-[12rem_1fr] md:gap-8"
         >
           <dt className="font-medium">{item.term}</dt>
@@ -333,19 +381,23 @@ export function MinimalFacts({
 export function MinimalCheckList({
   items,
   className,
+  motionKey,
 }: {
   items: readonly ReactNode[];
   className?: string;
-}) {
+} & MotionKeyProps) {
   return (
     <ul
+      data-motion-group={motionKey}
       className={cn(
         "m-0 list-disc space-y-3 pl-5 text-[1.0625rem] leading-[1.6] text-muted-foreground",
         className,
       )}
     >
       {items.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index} data-motion-item={motionKey ? "" : undefined}>
+          {item}
+        </li>
       ))}
     </ul>
   );
@@ -354,14 +406,16 @@ export function MinimalCheckList({
 export function MinimalPackage({
   id,
   className,
+  motionKey,
 }: {
   id: keyof typeof PACKAGES;
   className?: string;
-}) {
+} & MotionKeyProps) {
   const pkg = PACKAGES[id];
 
   return (
     <article
+      data-motion-panel={motionKey}
       className={cn("rounded-3xl border border-border bg-card p-7 sm:p-9", className)}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
@@ -391,7 +445,9 @@ type MinimalClosingActionProps = {
   primaryHref?: string;
   secondaryLabel?: string;
   secondaryHref?: string;
-};
+  icon?: Icon;
+  tone?: MinimalTone;
+} & MotionKeyProps;
 
 export function MinimalClosingAction({
   title,
@@ -402,15 +458,25 @@ export function MinimalClosingAction({
   primaryHref,
   secondaryLabel,
   secondaryHref,
+  icon,
+  tone = "muted",
+  motionKey,
 }: MinimalClosingActionProps) {
   const copy = description ?? body;
 
   return (
-    <section className="section-shell bg-muted">
+    <section
+      data-motion-section={motionKey}
+      className={cn(
+        "section-shell",
+        tone === "muted" ? "bg-muted" : "border-t border-border",
+      )}
+    >
       <div className="content-shell">
         <div className="rounded-3xl border border-border bg-card p-8 sm:p-12">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
             <div>
+              {icon ? <SectionIcon icon={icon} /> : null}
               <h2 className="display-lg max-w-[20ch]">{title}</h2>
               {copy ? (
                 <p className="lead-copy mt-4 max-w-[38rem]">{copy}</p>

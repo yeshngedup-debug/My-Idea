@@ -219,8 +219,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — the server answers with a `308` redirect to the
-public landing page at `/public`, so the first paint is never an empty shell.
+Open http://localhost:3000 — the root URL serves the public landing page
+directly. `/public` remains a compatibility alias and redirects to `/`, so the
+first paint is never an empty shell.
 
 > **Before real users pay:** the bank account and mBoB number in
 > `src/config/payment.ts` are placeholders. Replace them with real details.

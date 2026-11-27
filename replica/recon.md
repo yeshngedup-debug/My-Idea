@@ -25,7 +25,7 @@
 ## Screen inventory
 | ID | Screen | Route | Purpose | Key components | States |
 | --- | --- | --- | --- | --- | --- |
-| S01 | Home | `/public` | Explain product, drive signup | pill nav, hero + product panel, bento, feature cards, trust grid, CTA | desktop/mobile |
+| S01 | Home | `/` | Explain product, drive signup | pill nav, hero + product panel, bento, feature cards, trust grid, CTA | desktop/mobile |
 | S02 | Students | `/for-students` | Outcome-led path for students | hero, steps, benefits, CTA | desktop/mobile |
 | S03 | Founders | `/for-founders` | Request access + pricing | hero, pain/solution, steps, pricing table, CTA | desktop/mobile |
 | S04 | How it works | `/how-it-works` | Diagram + role swimlanes | steps, images, CTA | desktop/mobile |

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { MarketingMotion } from "@/components/marketing/marketing-motion";
 import { MinimalSiteFooter } from "@/components/marketing/minimal-site-footer";
 import { MinimalSiteHeader } from "@/components/marketing/minimal-site-header";
 
@@ -10,7 +11,12 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <MinimalSiteHeader />
-      <main id="main-content" className="w-full max-w-full overflow-x-clip">
+      <main
+        id="main-content"
+        data-marketing-root=""
+        className="w-full max-w-full overflow-x-clip"
+      >
+        <MarketingMotion />
         {children}
       </main>
       <MinimalSiteFooter />

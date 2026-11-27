@@ -1,4 +1,10 @@
-import { Envelope } from "@phosphor-icons/react/dist/ssr";
+import {
+  BookOpenText,
+  ChatCircleText,
+  Envelope,
+  NotePencil,
+  UserCircle,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -96,12 +102,15 @@ export default function ContactPage() {
       />
 
       <MinimalSection
+        icon={NotePencil}
+        tone="muted"
         titleId="contact-include-heading"
         title="Tell us what you need"
         description="One email address for every question. No form and no ticket queue."
+        motionKey="include"
       >
         <div className="max-w-[46rem]">
-          <MinimalCheckList items={messageChecklist} />
+          <MinimalCheckList items={messageChecklist} motionKey="include-list" />
           <p className="quiet-note mt-8">
             We answer questions about the platform, student profiles, projects,
             and access requests.
@@ -110,9 +119,12 @@ export default function ContactPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={UserCircle}
+        tone="plain"
         titleId="contact-founders-heading"
         title="Founder access is assigned by an admin"
         description="Founder accounts are not created through public signup. Tell us who you are and what you are building."
+        motionKey="founders"
       >
         <div className="max-w-[46rem]">
           <p className="text-[1.0625rem] leading-[1.6] text-muted-foreground">
@@ -130,9 +142,12 @@ export default function ContactPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={BookOpenText}
+        tone="muted"
         titleId="contact-pages-heading"
         title="Read first"
         description="A few pages answer common questions before you write."
+        motionKey="read-first"
       >
         <div className="max-w-[54rem]">
           <MinimalFacts
@@ -144,17 +159,21 @@ export default function ContactPage() {
               ),
               detail: item.note,
             }))}
+            motionKey="read-first-facts"
           />
         </div>
       </MinimalSection>
 
       <MinimalClosingAction
+        icon={ChatCircleText}
+        tone="plain"
         title="Prefer to read first?"
         description="Common questions are answered on the FAQ page."
         primaryLabel={CTA_LABELS.faq}
         primaryHref={CTA_HREFS.faq}
         secondaryLabel={CTA_LABELS.publicHome}
         secondaryHref={CTA_HREFS.home}
+        motionKey="closing"
       />
     </>
   );

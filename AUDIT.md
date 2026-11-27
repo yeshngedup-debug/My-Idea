@@ -9,10 +9,10 @@ first-paint, authorisation, payment and media findings:
 
 - Reveal wrappers start fully visible on the server render and the first client
   render; only below-fold elements animate, and reduced motion stays static.
-- The root path `/` now answers with a server-level `308` to `/public`. Before
-  this, the page-level redirect was thrown after the shell had flushed, so the
-  root URL rendered an empty loading skeleton and only redirected once
-  JavaScript ran.
+- The root path `/` now serves the public landing page directly. `/public` is a
+  compatibility alias with a server-level `308` redirect to `/`, preserving
+  query strings. Before this, the root URL rendered an empty loading skeleton
+  and only redirected once JavaScript ran.
 - `proxy.ts`, the Server Actions and `src/lib/neon-data.ts` fail closed on
   role and ownership checks; no gate is client-only.
 - Bank and mBoB details come from deployment environment variables only. No
@@ -77,7 +77,7 @@ The landing page cited a World Bank statistic. I opened the cited source with Pl
 Files changed:
 
 - `data/landing.ts` — replaced the unused, diverging `STEPS` constant with a single source of truth for the verified facts (`WORLD_BANK_SOURCE`, `YOUTH_UNEMPLOYMENT`, `CONTEXT_FACTS`, `CONTEXT_QUOTE`).
-- `app/public/page.tsx` — imports that data, renders the quote + fact strip in the "Bhutan context" section, and links the source.
+- `src/app/(marketing)/page.tsx` — imports that data, renders the quote + fact strip in the "Bhutan context" section, and links the source; `src/app/(marketing)/public/page.tsx` re-exports it for the compatibility alias.
 
 Verified in the running app with Playwright: the section renders all new facts, the source link is present, and the browser console shows 0 errors.
 
@@ -159,7 +159,7 @@ Same policy is duplicated in `supabase/premium-shortlists.sql:21-22` and `supaba
 | `npm run build` | passed, 26 pages generated |
 | `npm run test:e2e` | **4/4 failed** at stale `select[name="role"]` |
 | `GET /api/health` | **503** `{"status":"degraded","db":"down","error":"TypeError: fetch failed"}` — Supabase unreachable from this environment |
-| Public pages (Playwright) | `/`, `/public`, `/login`, `/signup`, `/privacy`, `/terms`, `/robots.txt`, `/sitemap.xml` → 200; 404 page works; no app console errors |
+| Public pages (Playwright) | `/` → 200 landing page, `/public` → `308` to `/`, `/login`, `/signup`, `/privacy`, `/terms`, `/robots.txt`, `/sitemap.xml` → 200; 404 page works; no app console errors |
 | Protected routes (Playwright) | `/student`, `/founder`, `/admin` → redirect to `/login` correctly |
 | Signup form (Playwright) | empty submit blocked by native validation on all four fields |
 | World Bank source (Playwright) | page loads; all added facts quoted verbatim from it |

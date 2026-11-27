@@ -1,7 +1,12 @@
 import {
   Bank,
+  ChartLineUp,
+  Files,
+  Handshake,
+  Info,
   ReadCvLogo,
   ShieldCheck,
+  Signpost,
   Storefront,
   UsersThree,
 } from "@phosphor-icons/react/dist/ssr";
@@ -102,9 +107,12 @@ export default async function AboutPage() {
       />
 
       <MinimalSection
+        icon={ChartLineUp}
+        tone="muted"
         titleId="about-context-heading"
         title="Young people need work close to home"
         description="A practical first step for students and founders, set against the national picture."
+        motionKey="context"
       >
         <div className="max-w-[46rem] border-t border-border pt-7">
           <p className="text-[clamp(3.5rem,8vw,6rem)] font-semibold leading-[0.95] tracking-[-0.05em]">
@@ -129,6 +137,7 @@ export default async function AboutPage() {
               ),
               detail: fact.note,
             }))}
+            motionKey="context-facts"
           />
         </div>
 
@@ -154,9 +163,12 @@ export default async function AboutPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={Info}
+        tone="plain"
         titleId="about-official-heading"
         title="Official statistics"
         description="Annual releases and modeled estimates, not real-time data."
+        motionKey="official"
       >
         <details className="max-w-[54rem] border-t border-border pt-6">
           <summary className="cursor-pointer font-medium text-primary transition-colors duration-150 hover:text-foreground">
@@ -174,9 +186,12 @@ export default async function AboutPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={Handshake}
+        tone="muted"
         titleId="about-bridge-heading"
         title={LOCAL_BRIDGE_HEADLINE}
         description="Students and founders meet around paid project work. The platform holds the brief, the applications and the shortlist."
+        motionKey="bridge"
       >
         <div className="max-w-[54rem]">
           <MinimalFacts
@@ -184,6 +199,7 @@ export default async function AboutPage() {
               term: item.label,
               detail: item.sentence,
             }))}
+            motionKey="bridge-facts"
           />
         </div>
         <MinimalActions>
@@ -196,12 +212,15 @@ export default async function AboutPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={ShieldCheck}
+        tone="plain"
         titleId="about-verification-heading"
         title="How we verify students"
         description="A manual check, never an algorithm."
+        motionKey="verification"
       >
         <div className="max-w-[54rem]">
-          <MinimalFacts items={verification} />
+          <MinimalFacts items={verification} motionKey="verification-facts" />
         </div>
         <p className="quiet-note mt-8">
           Questions?{" "}
@@ -216,24 +235,35 @@ export default async function AboutPage() {
       </MinimalSection>
 
       <MinimalSection
+        icon={Files}
+        tone="muted"
         titleId="about-icons-heading"
         title="Icons that explain the platform"
         description="The icons on this site describe briefs, profiles, verification and payment. None represent platform members or listings."
+        motionKey="icons"
       >
         <div className="grid gap-4 md:grid-cols-2">
           {platformIcons.map((item) => (
-            <MinimalMedia key={item.label} icon={item.icon} label={item.label} />
+            <MinimalMedia
+              key={item.label}
+              icon={item.icon}
+              label={item.label}
+              motionKey="icons-panels"
+            />
           ))}
         </div>
       </MinimalSection>
 
       <MinimalClosingAction
+        icon={Signpost}
+        tone="plain"
         title="See how it all fits together."
         description="Read the public platform, then the process behind it."
         primaryLabel={CTA_LABELS.explorePlatform}
         primaryHref={CTA_HREFS.home}
         secondaryLabel={CTA_LABELS.readProcess}
         secondaryHref={CTA_HREFS.howItWorks}
+        motionKey="closing"
       />
     </>
   );

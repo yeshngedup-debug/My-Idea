@@ -25,15 +25,12 @@ const nextConfig = {
     return config;
   },
   async redirects() {
-    // The landing page lives at /public. Redirect at the server, before any
-    // rendering starts: a page-level permanentRedirect() is thrown after the
-    // shell has flushed, so the root URL used to answer 200 with a loading
-    // skeleton and only redirect after JavaScript ran. This keeps the first
-    // paint of "/" a real 308 instead of an empty shell.
+    // "/" is the canonical landing URL. Keep /public as a compatibility alias
+    // for old links and bookmarks; Next forwards the query string on redirect.
     return [
       {
-        source: '/',
-        destination: '/public',
+        source: '/public',
+        destination: '/',
         permanent: true,
       },
     ];

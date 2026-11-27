@@ -33,7 +33,9 @@ async function expectNoHorizontalOverflow(page: Page) {
 
 async function expectNoHiddenFirstPaint(page: Page) {
   const hidden = await page
-    .locator('main [data-reveal], main [data-scale-fade]')
+    .locator(
+      'main [data-motion-section], main [data-motion-panel], main [data-motion-group], main [data-motion-item]',
+    )
     .evaluateAll((elements) =>
       elements
         .filter((element) => {
@@ -54,7 +56,7 @@ test.describe('public marketplace', () => {
   test.use({ viewport: PHONE });
 
   test('homepage exposes both audience paths and the trust bar', async ({ page }) => {
-    await page.goto('/public');
+    await page.goto('/');
 
     await expect(page.locator('main h1')).toHaveCount(1);
     await expectVisibleInFirstViewport(page, 'Create student account');
@@ -109,7 +111,7 @@ test.describe('public marketplace', () => {
   });
 
   test('mobile menu owns focus and Escape restores the trigger', async ({ page }) => {
-    await page.goto('/public');
+    await page.goto('/');
 
     const trigger = page.getByRole('button', { name: 'Open menu' });
     await trigger.click();

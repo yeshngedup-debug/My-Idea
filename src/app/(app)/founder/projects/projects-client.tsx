@@ -9,8 +9,9 @@
  * the Tab order; arrow/Home/End move focus and selection together through the
  * shared handler.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { formatBhutanDate } from '@/lib/format';
 import {
@@ -34,6 +35,8 @@ const FILTERS = [
   { value: 'review', label: PROJECT_STATUS_LABEL.review },
   { value: 'completed', label: PROJECT_STATUS_LABEL.completed },
 ] as const;
+
+const FILTER_VALUES: string[] = FILTERS.map((item) => item.value);
 
 const STATUS_DOT: Record<string, string> = {
   open: 'bg-secondary',
@@ -59,6 +62,27 @@ export function ProjectsClient({
   const [filter, setFilter] = useState<string>(
     FILTERS.some((item) => item.value === initialFilter) ? initialFilter : 'all',
   );
+  const pathname = usePathname();
+
+  useEffect(() => {
+    function syncFilterFromUrl() {
+      const value = new URLSearchParams(window.location.search).get('status');
+      setFilter(value && FILTER_VALUES.includes(value) ? value : 'all');
+    }
+
+    window.addEventListener('popstate', syncFilterFromUrl);
+    return () => window.removeEventListener('popstate', syncFilterFromUrl);
+  }, []);
+
+  function handleFilterChange(value: string) {
+    const next = FILTER_VALUES.includes(value) ? value : 'all';
+    setFilter(next);
+    const params = new URLSearchParams(window.location.search);
+    if (next === 'all') params.delete('status');
+    else params.set('status', next);
+    const query = params.toString();
+    window.history.pushState(null, '', query ? `${pathname}?${query}` : pathname);
+  }
 
   const filtered = useMemo(
     () =>
@@ -114,7 +138,7 @@ export function ProjectsClient({
       <SegmentedControl
         options={FILTERS.map((item) => ({ label: item.label, value: item.value }))}
         value={filter}
-        onChange={setFilter}
+        onChange={handleFilterChange}
         ariaLabel="Filter projects by status"
         className="w-full justify-start sm:w-auto"
       />
@@ -131,7 +155,7 @@ export function ProjectsClient({
           action={
             <button
               type="button"
-              onClick={() => setFilter('all')}
+              onClick={() => handleFilterChange('all')}
               className="pressable inline-flex min-h-11 items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-accent transition-colors duration-150 ease-[var(--ease-out)] motion-reduce:transition-none hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               Show all projects
