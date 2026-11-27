@@ -81,15 +81,16 @@ export async function proxy(request: NextRequest) {
 
   if (isAuthPage && user) {
     const { role, ok } = await lookupRole(user.id);
-    if (!ok) return response;
-    const home = role ? ROLE_HOME[role] : undefined;
-    return redirectWithCsp(new URL(home ?? '/', request.url));
+    // A failed lookup must not strand a signed-in user on the auth form, but
+    // it must not grant a role home either. Send them to the public home.
+    return redirectWithCsp(new URL(ok && role ? ROLE_HOME[role] : '/', request.url));
   }
 
   if (isProtected && user) {
     const { role, ok } = await lookupRole(user.id);
-    if (!ok || !role) return response;
-    const home = ROLE_HOME[role];
+    const home = ok && role ? ROLE_HOME[role] : undefined;
+    // Fail closed: no role row, an unknown role, or a lookup error cannot
+    // unlock a protected area. Sensitive reads also re-check server-side.
     if (!home || !ownsPath(pathname, home)) {
       return redirectWithCsp(new URL(home ?? '/', request.url));
     }

@@ -24,5 +24,5 @@ services:
       AWS_REGION: ${AWS_REGION:-}
       NEON_BRANCH_ID: ${NEON_BRANCH_ID:-}
       NEON_FUNCTION_HOST_SUFFIX: ${NEON_FUNCTION_HOST_SUFFIX:-}
-      CONTACT_EMAIL: ${CONTACT_EMAIL:-hello@bhutantech.bt}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-hello@example.com}
     restart: unless-stopped

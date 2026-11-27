@@ -1,11 +1,11 @@
 /**
  * Payment configuration — MVP manual payment details.
  *
- * TODO before real users pay:
- *   1. Replace `accountNumber` with your real Bank of Bhutan account number.
- *   2. Replace `number` (mBoB) with your real mobile banking number.
- *   The values are intentionally empty — the payment screen will show
- *   blanks until you fill them in, so fake numbers can never ship.
+ * Production must set NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER and
+ * NEXT_PUBLIC_PAYMENT_MBOB_NUMBER to the real Bank of Bhutan account and mBoB
+ * number. Never hardcode them here: blank or whitespace-only env values keep
+ * PAYMENT_CONFIGURED false, so the UI pauses new orders instead of asking
+ * founders to pay to a fake or blank destination.
  */
 export const PACKAGES = {
   basic: {
@@ -45,21 +45,21 @@ export const PAYMENT_DETAILS = {
   bank: {
     bankName: 'Bank of Bhutan',
     accountName: 'Bhutan Tech Connect',
-    accountNumber: process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER ?? '', // TODO: real account number in production
+    accountNumber: process.env.NEXT_PUBLIC_PAYMENT_ACCOUNT_NUMBER ?? '',
     branch: 'Thimphu',
   },
   mbob: {
     label: 'mBoB (mobile banking)',
-    number: process.env.NEXT_PUBLIC_PAYMENT_MBOB_NUMBER ?? '', // TODO: real mBoB number in production
+    number: process.env.NEXT_PUBLIC_PAYMENT_MBOB_NUMBER ?? '',
     name: 'Bhutan Tech Connect',
   },
   note: 'Upload your payment screenshot, then an admin confirms it.',
 };
 
 /**
- * False until both real payment destinations are filled in above. The UI
- * blocks new orders and shows an explicit notice instead of blank numbers,
- * so founders cannot pay to nowhere.
+ * False until both real payment destinations are supplied through the
+ * environment. The UI blocks new orders and shows an explicit notice instead
+ * of blank numbers, so founders cannot pay to nowhere.
  */
 export const PAYMENT_CONFIGURED = Boolean(
   PAYMENT_DETAILS.bank.accountNumber.trim() && PAYMENT_DETAILS.mbob.number.trim()

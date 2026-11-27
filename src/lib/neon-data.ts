@@ -1032,11 +1032,11 @@ export async function insertOrder(input: {
     const rows = await sql`
       insert into public.shortlist_orders
         (founder_id, project_id, package, amount, status)
-      select ${input.founderId}, ${input.projectId}, ${input.package}, ${input.amount}, 'pending'
-      where ${input.projectId} is null
+      select ${input.founderId}, ${input.projectId}::uuid, ${input.package}, ${input.amount}, 'pending'
+      where ${input.projectId}::uuid is null
          or exists (
            select 1 from public.projects
-           where id = ${input.projectId} and founder_id = ${input.founderId}
+           where id = ${input.projectId}::uuid and founder_id = ${input.founderId}
          )
       returning id
     `;

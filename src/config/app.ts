@@ -5,7 +5,7 @@
  * must come from a configured public site URL or a fixed fallback — never from
  * the request Host header, which an attacker can control.
  */
-const FALLBACK_APP_URL = 'https://bhutantech.bt';
+const FALLBACK_APP_URL = 'https://myidea-virid.vercel.app';
 
 function isLocalOrigin(value: string): boolean {
   try {
@@ -49,6 +49,8 @@ export const PASSWORD_RECOVERY_COOKIE = 'btc-password-recovery';
 export const PASSWORD_RECOVERY_MAX_AGE_SECONDS = 15 * 60;
 
 export const APP_CONTACT = {
-  email: process.env.CONTACT_EMAIL ?? 'hello@bhutantech.bt',
+  // Production sets CONTACT_EMAIL to the real mailbox; the fallback is an
+  // explicit placeholder, never an old domain that looks authoritative.
+  email: process.env.CONTACT_EMAIL?.trim() || 'hello@example.com',
   name: 'Bhutan Tech Connect',
 };

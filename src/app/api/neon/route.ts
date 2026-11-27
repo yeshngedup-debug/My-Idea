@@ -60,9 +60,11 @@ export async function GET() {
     }
     return NextResponse.json({ ok: true, ...payload });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+    // Keep driver/function error text in server logs only; it can contain
+    // hostnames, SQL fragments or configuration hints.
+    console.error("Neon status query failed", error);
     return NextResponse.json(
-      { ok: false, error: "Neon query failed", detail: message },
+      { ok: false, error: "Neon query failed" },
       { status: 503 },
     );
   }
